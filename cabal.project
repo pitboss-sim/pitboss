@@ -1,0 +1,24 @@
+packages: .
+optimization: 1
+test-show-details: direct
+jobs: $ncpus
+
+package *
+  ghc-options:
+    -j
+    -Wall
+    -Wcompat
+    -Widentities
+    -Wincomplete-record-updates
+    -Wincomplete-uni-patterns
+    -Wpartial-fields
+    -Wredundant-constraints
+  configure-options: --enable-parallel-build
+
+package pitboss
+  coverage: True
+  test-show-details: direct
+
+package pitboss-test
+  coverage: False
+  test-show-details: direct

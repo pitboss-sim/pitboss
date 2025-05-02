@@ -1,0 +1,14 @@
+.DS_Store
+.direnv
+.hpc
+.ignore
+*.swo
+*.swp
+
+attic
+cabal.project.local
+coverage
+dist-*
+report
+
+**/.claude/settings.local.json

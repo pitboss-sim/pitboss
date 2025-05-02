@@ -29,6 +29,12 @@ library
                       Pitboss.Offering
                       Pitboss.Offering.Matter
                       Pitboss.Offering.RuleSet
+                      Pitboss.Strategy.Chart.Error
+                      Pitboss.Strategy.Chart.Overlay
+                      Pitboss.Strategy.Chart.Parse
+                      Pitboss.Strategy.Chart.Types
+                      Pitboss.Strategy.Chart.Validator
+                      Pitboss.Strategy.Types
                       Pitboss.Types.BoundedEnum
                       Pitboss.Types.Index
     -- other-modules:

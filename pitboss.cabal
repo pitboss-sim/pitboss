@@ -29,12 +29,20 @@ library
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Table
+                      Pitboss.Strategy.Chart.Error
+                      Pitboss.Strategy.Chart.Overlay
+                      Pitboss.Strategy.Chart.Parse
+                      Pitboss.Strategy.Chart.Types
+                      Pitboss.Strategy.Chart.Validate
+                      Pitboss.Strategy.Types
                       Pitboss.Types.BoundedEnum
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,
                       array,
+                      containers,
                       random,
+                      text,
     hs-source-dirs:   src
     default-language: GHC2021
 

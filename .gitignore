@@ -1,0 +1,9 @@
+.DS_Store
+.ignore
+*.swo
+*.swp
+
+attic
+dist-*
+
+**/.claude/settings.local.json

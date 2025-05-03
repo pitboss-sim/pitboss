@@ -1,61 +1,73 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Pitboss.Event where
 
-import Pitboss.Data
+import GHC.Generics (Generic)
+import Pitboss.Blackjack.Card (Card)
+import Pitboss.Blackjack.Chips (Chips)
+import Pitboss.Identifier (PlayerId)
+import Pitboss.Types.Index (HandIx, SpotIx)
 
 data GameplayEvent
-  = Player PlayerAction
-  | Dealer DealerAction
+  = PlayerEvent PlayerAction
+  | DealerEvent DealerAction
+  | DerivedEvent Derived
+  deriving (Eq, Show, Generic)
 
 data PlayerAction
-  = ClaimsSpot SpotId
-  | YieldsSpot SpotId
-  | PlacesBet SpotId Chips
-  | RemovesBet SpotId
-  | TakesInsurance SpotId
-  | DeclinesInsurance SpotId
-  | Hits SpotId HandId
-  | Stands SpotId HandId
-  | Doubles SpotId HandId
-  | Splits SpotId HandId HandId
-  | Surrenders SpotId HandId
-  | CompletesHand SpotId HandId PlayerCompletionReason
+  = ClaimsSpot SpotIx
+  | YieldsSpot SpotIx
+  | PlacesBet SpotIx Chips
+  | RemovesBet SpotIx
+  | TakesInsurance SpotIx
+  | DeclinesInsurance SpotIx
+  | Hits SpotIx HandIx
+  | Stands SpotIx HandIx
+  | Doubles SpotIx HandIx
+  | Splits SpotIx HandIx HandIx
+  | Surrenders SpotIx HandIx
   | JoinsGame PlayerId
   | LeavesGame PlayerId
   | RequestsShuffle
-  | CausesDelay SpotId Reason
-  | SignalsReady SpotId
+  | -- | CausesDelay SpotIx Reason
+    SignalsReady SpotIx
+  deriving (Eq, Show, Generic)
 
 data DealerAction
-  = ShufflesShoe
+  = BeginsGame
+  | EndsGame
+  | ShufflesShoe
   | BurnsCard
   | SolicitsBets
-  | DealsFirstCard SpotId HandId Card
-  | DealsSecondCard SpotId HandId Card
+  | DealsCard SpotIx HandIx Card
   | DealsHoleCard Card
   | RevealsHoleCard
   | DealsToSelf Card
-  | HitsSelf Card
-  | StandsSelf
-  | CompletesHand DealerCompletionReason
   | OffersInsurance
   | RejectsInsurance
-  | SettlesChips [(SpotId, SettlementOutcome)]
-  | BeginsGame
-  | EndsGame
+  deriving (Eq, Show, Generic)
 
-data PlayerCompletionReason
+data Derived
+  = PlayerCompletesHand SpotIx HandIx PlayerReason
+  | DealerCompletesHand DealerReason
+  | SpotSettled SpotIx SettlementOutcome
+  deriving (Eq, Show, Generic)
+
+data PlayerReason
   = PlayerStand
   | PlayerBust
   | PlayerBlackjack
   | PlayerTwentyOne
   | PlayerSurrender
   | PlayerOneCardDraw
+  deriving (Eq, Show, Generic)
 
-data DealerCompletionReason
+data DealerReason
   = DealerStand
   | DealerBust
   | DealerBlackjack
   | DealerTwentyOne
+  deriving (Eq, Show, Generic)
 
 data SettlementOutcome
   = PlayerWins Chips
@@ -63,3 +75,4 @@ data SettlementOutcome
   | Push
   | BlackjackWin Chips
   | InsurancePaid Chips
+  deriving (Eq, Show, Generic)

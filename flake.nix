@@ -36,6 +36,7 @@
             cabal-fmt
             cabal-install
             ormolu
+            haskell-language-server
             ;
 
         in
@@ -50,6 +51,7 @@
               cabal-fmt
               cabal-install
               ormolu
+              haskell-language-server
             ];
           };
         }

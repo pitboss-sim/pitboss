@@ -28,7 +28,7 @@ drawCard :: Deck -> Either String (Card, Deck)
 drawCard (Deck [] _) = Left "Deck exhausted"
 drawCard (Deck (c : cs) cut) = Right (c, Deck cs cut)
 
--- | Pure, fast Fisher–Yates shuffle using a random seed
+-- Pure, fast Fisher–Yates shuffle using a random seed
 shuffle :: forall a. StdGen -> [a] -> ([a], StdGen)
 shuffle gen xs = runST $ do
   let n = length xs
@@ -37,7 +37,7 @@ shuffle gen xs = runST $ do
   shuffled <- getElems ar
   pure (shuffled, finalGen)
 
--- | In-place shuffle of the array
+-- In-place shuffle of the array
 shuffleArray :: StdGen -> Int -> STArray s Int a -> ST s StdGen
 shuffleArray g0 n ar = go g0 1
   where

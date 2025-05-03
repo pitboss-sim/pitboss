@@ -1,19 +1,16 @@
 module Pitboss.Blackjack.Hand
   ( maxCardsFor,
     mkHand,
+    Hand (..),
   )
 where
 
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Offering.Matter (DeckCount (..), Matter (matterDecks))
 
-newtype CutPoint = CutPoint Int
-  deriving (Show, Eq)
-
 newtype Hand = Hand [Card]
   deriving (Eq, Show)
 
--- helper
 maxCardsFor :: DeckCount -> Int
 maxCardsFor d = case d of
   D1 -> 11

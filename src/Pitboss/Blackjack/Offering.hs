@@ -1,5 +1,6 @@
 module Pitboss.Blackjack.Offering
   ( mkOffering,
+    Offering,
   )
 where
 

@@ -1,5 +1,7 @@
 module Pitboss.Types.Index
   ( SeatIx,
+    SpotIx,
+    SpotHandIx,
   )
 where
 

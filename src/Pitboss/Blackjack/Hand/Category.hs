@@ -7,7 +7,9 @@ where
 
 import Data.List (sort)
 import Pitboss.Blackjack.Card (Card (..), Rank (..), value)
-import Pitboss.Blackjack.Hand.Types (HandRanks (..))
+
+newtype HandRanks = HandRanks {getHandRanks :: [Rank]}
+  deriving (Eq, Show, Ord)
 
 mkHandRanks :: [Rank] -> HandRanks
 mkHandRanks = HandRanks . sort

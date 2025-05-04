@@ -1,10 +1,12 @@
 module Pitboss.Blackjack.Hand
   ( mkHand,
     Hand (..),
+    module Pitboss.Blackjack.Hand.Category,
   )
 where
 
 import Pitboss.Blackjack.Card (Card)
+import Pitboss.Blackjack.Hand.Category
 import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (matterDecks))
 
 newtype Hand = Hand [Card]

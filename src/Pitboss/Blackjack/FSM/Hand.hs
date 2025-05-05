@@ -14,18 +14,22 @@ data HandPhase
   | Doubling
   | SplitAcesAuto
   | Completed
+  deriving (Eq, Show)
 
 data DoublePotential
   = DoubleOK
   | NoDouble
+  deriving (Eq, Show)
 
 data SplitPotential
   = SplitOK
   | NoSplit
+  deriving (Eq, Show)
 
 data SurrenderPotential
   = SurrenderOK
   | NoSurrender
+  deriving (Eq, Show)
 
 data HandTerminus
   = Stand

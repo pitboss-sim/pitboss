@@ -36,15 +36,19 @@ library
                       Pitboss.Sim.State.Player
                       Pitboss.Sim.State.Player.Lens
                       Pitboss.Sim.State.Player.Mutation
+                      Pitboss.Sim.State.Player.Query
                       Pitboss.Sim.State.Spot
                       Pitboss.Sim.State.Spot.Lens
                       Pitboss.Sim.State.Spot.Mutation
+                      Pitboss.Sim.State.Spot.Query
                       Pitboss.Sim.State.SpotHand
                       Pitboss.Sim.State.SpotHand.Lens
                       Pitboss.Sim.State.SpotHand.Mutation
+                      Pitboss.Sim.State.SpotHand.Query
                       Pitboss.Sim.State.Table
                       Pitboss.Sim.State.Table.Lens
                       Pitboss.Sim.State.Table.Mutation
+                      Pitboss.Sim.State.Table.Query
                       Pitboss.Sim.Types.FiniteMap
                       Pitboss.Sim.Types.Identifier
                       Pitboss.Sim.Types.Occupancy

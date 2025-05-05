@@ -1,1 +1,1 @@
-module Pitboss.Sim.State.Player.Query where
+module Pitboss.Sim.State.Shoe.Query where

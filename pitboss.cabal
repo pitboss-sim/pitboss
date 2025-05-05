@@ -37,6 +37,10 @@ library
                       Pitboss.Sim.State.Player.Lens
                       Pitboss.Sim.State.Player.Mutation
                       Pitboss.Sim.State.Player.Query
+                      Pitboss.Sim.State.Shoe
+                      Pitboss.Sim.State.Shoe.Lens
+                      Pitboss.Sim.State.Shoe.Mutation
+                      Pitboss.Sim.State.Shoe.Query
                       Pitboss.Sim.State.Spot
                       Pitboss.Sim.State.Spot.Lens
                       Pitboss.Sim.State.Spot.Mutation

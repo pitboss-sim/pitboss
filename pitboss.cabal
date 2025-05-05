@@ -30,6 +30,9 @@ library
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Table
+                      Pitboss.FSM.Game.ENHC
+                      Pitboss.FSM.Game.Peek
+                      Pitboss.FSM.Hand
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Overlay
                       Pitboss.Strategy.Chart.Parse
@@ -54,7 +57,7 @@ executable pitboss
     -- other-extensions:
     build-depends:
         base ^>=4.18.2.1,
-        pitboss
+        pitboss,
 
     hs-source-dirs:   app
     default-language: GHC2021

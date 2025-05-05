@@ -52,6 +52,7 @@ library
                       Pitboss.Sim.Types.Identifier
                       Pitboss.Sim.Types.Occupancy
                       Pitboss.Strategy.Chart.Error
+                      Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay
                       Pitboss.Strategy.Chart.Parse
                       Pitboss.Strategy.Chart.Types

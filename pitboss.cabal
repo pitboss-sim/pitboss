@@ -24,6 +24,7 @@ library
                       Pitboss.Blackjack.Deck
                       Pitboss.Blackjack.Hand
                       Pitboss.Blackjack.Hand.Category
+                      Pitboss.Blackjack.Hand.Score
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet

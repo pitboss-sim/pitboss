@@ -13,6 +13,7 @@ module Pitboss.Blackjack.Offering.RuleSet
     canDouble,
     maxSplits,
     canSplitAnotherHand,
+    isH17,
   )
 where
 
@@ -84,3 +85,8 @@ maxSplits SP4 = 4
 
 canSplitAnotherHand :: SplitHands -> Int -> Bool
 canSplitAnotherHand limit current = current < maxSplits limit
+
+isH17 :: RuleSet -> Bool
+isH17 rs = case soft17 rs of
+  HitSoft17 -> True
+  StandSoft17 -> False

@@ -1,6 +1,8 @@
 module Pitboss.Blackjack.Offering
   ( mkOffering,
-    Offering,
+    Offering (..),
+    module Pitboss.Blackjack.Offering.Matter,
+    module Pitboss.Blackjack.Offering.RuleSet,
   )
 where
 
@@ -9,9 +11,9 @@ import Pitboss.Blackjack.Offering.RuleSet (RuleSet)
 
 data Offering = Offering
   { matter :: Matter,
-    ruleset :: RuleSet
+    ruleSet :: RuleSet
   }
   deriving (Show)
 
 mkOffering :: Matter -> RuleSet -> Offering
-mkOffering m r = Offering {matter = m, ruleset = r}
+mkOffering m r = Offering {matter = m, ruleSet = r}

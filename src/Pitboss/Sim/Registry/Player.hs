@@ -7,8 +7,7 @@ newtype PlayerRegistry = PlayerRegistry (Map.Map PlayerId PlayerMeta)
   deriving (Eq, Show)
 
 data PlayerMeta = PlayerMeta
-  {
-    playerName :: String
+  { playerName :: String
   }
 
 emptyRegistry :: PlayerRegistry

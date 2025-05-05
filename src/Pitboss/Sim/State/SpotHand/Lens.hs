@@ -1,11 +1,12 @@
 module Pitboss.Sim.State.SpotHand.Lens where
 
 import Control.Lens (Lens', lens)
+import Pitboss.Blackjack.FSM.Hand (SomeHandFSM)
 import Pitboss.Blackjack.Hand (Hand)
-import Pitboss.Sim.State.SpotHand (SpotHandPlayState (..), SpotHandState (..))
+import Pitboss.Sim.State.SpotHand (SpotHandState (..))
 
-lensSpotHandPlayState :: Lens' SpotHandState SpotHandPlayState
-lensSpotHandPlayState = lens spotHandPlayState (\s x -> s {spotHandPlayState = x})
+lensSpotHandFSM :: Lens' SpotHandState SomeHandFSM
+lensSpotHandFSM = lens spotHandFSM (\s x -> s {spotHandFSM = x})
 
-lensSpotHand :: Lens' SpotHandState Hand
-lensSpotHand = lens spotHand (\s x -> s {spotHand = x})
+lensHand :: Lens' SpotHandState Hand
+lensHand = lens hand (\s x -> s {hand = x})

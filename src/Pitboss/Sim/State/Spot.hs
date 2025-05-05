@@ -20,17 +20,9 @@ data Turn
   | NoHandSelected
   deriving (Eq, Show)
 
-data PauseReason
-  = PlayerRequestedBreak
-  | CasinoIntervention
-  | TechnicalError
-  | ManualPause
-  deriving (Eq, Show)
-
 data SpotState = SpotState
   { hands :: FiniteMap SpotHandIx (Occupancy SpotHandState),
-    turn :: Turn,
-    pauseState :: Maybe PauseReason
+    turn :: Turn
   }
   deriving (Eq, Show)
 
@@ -38,6 +30,5 @@ emptySpot :: SpotState
 emptySpot =
   SpotState
     { hands = emptyFiniteMap Absent,
-      turn = NoHandSelected,
-      pauseState = Nothing
+      turn = NoHandSelected
     }

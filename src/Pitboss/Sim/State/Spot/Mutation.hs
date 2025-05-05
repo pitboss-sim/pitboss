@@ -7,7 +7,8 @@ import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Hand (Hand (..))
 import Pitboss.Sim.State.Spot (SpotHandIx, SpotState (..), Turn (..))
 import Pitboss.Sim.State.Spot.Lens (lensHands)
-import Pitboss.Sim.State.SpotHand (SpotHandPlayState (..), SpotHandState (..))
+import Pitboss.Sim.State.SpotHand (HandFSM (..), HandPhase (..), SomeHandFSM (..), SpotHandState (..), handPhaseOf)
+import Pitboss.Sim.State.SpotHand.Lens (lensSpotHandFSM)
 import Pitboss.Sim.Types.FiniteMap (insertFiniteMap, lookupFiniteMap, toListFiniteMap)
 import Pitboss.Sim.Types.Occupancy (Occupancy (..), isAbsent)
 import Pitboss.Types.BoundedEnum (universe)
@@ -34,14 +35,25 @@ addCardsToSplitPlayHands ::
   Card -> Card -> Card -> Card -> SpotHandIx -> SpotHandIx -> SpotState -> SpotState
 addCardsToSplitPlayHands orig1 new1 orig2 new2 h1 h2 =
   over lensHands $
-    insertFiniteMap h2 (Present (SpotHandState NormalPlay (Hand [orig2, new2])))
-      . insertFiniteMap h1 (Present (SpotHandState NormalPlay (Hand [orig1, new1])))
+    insertFiniteMap h2 (Present (SpotHandState (SomeHandFSM Dealt2FSM) (Hand [orig2, new2])))
+      . insertFiniteMap h1 (Present (SpotHandState (SomeHandFSM Dealt2FSM) (Hand [orig1, new1])))
 
-nextAvailableSpotHand :: SpotState -> Maybe SpotHandIx
-nextAvailableSpotHand spot =
-  let isLive (_, Present (SpotHandState ps _)) = ps == NormalPlay
-      isLive _ = False
-   in fmap fst . safeHead . filter isLive . toListFiniteMap $ spot ^. lensHands
+isLiveHand :: Occupancy SpotHandState -> Bool
+isLiveHand (Present s) =
+  case handPhaseOf (s ^. lensSpotHandFSM) of
+    AwaitingDecision -> True
+    Hitting -> True
+    Doubling -> True
+    SplitAcesAuto -> True
+    _ -> False
+isLiveHand Absent = False
+
+nextAvailableSpotHand :: [SpotHandIx] -> (SpotHandIx -> Occupancy SpotHandState) -> Maybe SpotHandIx
+nextAvailableSpotHand ixs lookupFn =
+  let live = filter (isLiveHand . lookupFn) ixs
+   in case live of
+        [] -> Nothing
+        (x : _) -> Just x
 
 safeHead :: [a] -> Maybe a
 safeHead [] = Nothing

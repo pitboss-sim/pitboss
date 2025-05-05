@@ -12,7 +12,6 @@ import Pitboss.Blackjack.Card (Rank)
 import Pitboss.Strategy.Chart.Parse (ChartEntry (..))
 import Pitboss.Strategy.Chart.Types (HandPrefix, MoveCode)
 
--- Index chart entries by (HandPrefix, Rank)
 indexEntries :: [ChartEntry] -> Map (HandPrefix, Rank) MoveCode
 indexEntries =
   Map.unions . map entryToMap
@@ -20,7 +19,6 @@ indexEntries =
     entryToMap (ChartEntry hp moves') =
       Map.mapKeys (hp,) moves'
 
--- Overlay your custom chart over the baseline
 overlayStrategy :: [ChartEntry] -> [ChartEntry] -> [ChartEntry]
 overlayStrategy baseline custom =
   let baseMap = indexEntries baseline
@@ -28,7 +26,6 @@ overlayStrategy baseline custom =
       combined = Map.union customMap baseMap
    in groupBackToChart combined
 
--- Group back by HandPrefix -> [ChartEntry]
 groupBackToChart :: Map (HandPrefix, Rank) MoveCode -> [ChartEntry]
 groupBackToChart =
   Map.toList

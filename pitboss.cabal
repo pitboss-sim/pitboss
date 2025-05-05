@@ -45,9 +45,6 @@ library
                       Pitboss.Sim.State.Table
                       Pitboss.Sim.State.Table.Lens
                       Pitboss.Sim.State.Table.Mutation
-                      Pitboss.Sim.State.World
-                      Pitboss.Sim.State.World.Lens
-                      Pitboss.Sim.State.World.Mutation
                       Pitboss.Sim.Types.FiniteMap
                       Pitboss.Sim.Types.Identifier
                       Pitboss.Sim.Types.Occupancy

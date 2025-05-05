@@ -14,7 +14,7 @@ import Pitboss.Sim.Types.Occupancy (Occupancy (..), isAbsent)
 import Pitboss.Types.BoundedEnum (universe)
 
 advanceToNextHand :: SpotState -> SpotState
-advanceToNextHand spot@(SpotState handsMap currentTurn _) =
+advanceToNextHand spot@(SpotState handsMap currentTurn) =
   let activeHands = [hid | hid <- universe, lookupFiniteMap hid handsMap /= Just Absent]
    in case currentTurn of
         NoHandSelected ->

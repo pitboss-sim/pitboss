@@ -12,7 +12,7 @@ import Pitboss.Blackjack.Offering (Offering (..))
 import Pitboss.Blackjack.Offering.RuleSet (isH17)
 import Pitboss.Blackjack.Offering.WellKnown (vegas6)
 import Pitboss.Sim.State.Spot
-import Pitboss.Sim.State.SpotHand
+import Pitboss.Sim.State.SpotHand hiding (Blackjack)
 import Pitboss.Sim.State.Table
 import Pitboss.Sim.State.Table.Lens (lensDeck, lensPlayerSpots)
 import Pitboss.Sim.State.Table.Mutation (claimSpot)
@@ -102,9 +102,8 @@ main = do
       let playerHand = Hand [c1, c2]
           spotState =
             SpotState
-              { hands = singletonFiniteMap Hand1 (Present (SpotHandState NormalPlay playerHand)) Absent,
-                turn = Playing Hand1,
-                pauseState = Nothing
+              { hands = singletonFiniteMap Hand1 (Present (mkSpotHandState playerHand)) Absent,
+                turn = Playing Hand1
               }
 
           table2 =

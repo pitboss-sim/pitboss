@@ -2,6 +2,7 @@ module Pitboss.Blackjack.Hand
   ( mkHand,
     Hand (..),
     module Pitboss.Blackjack.Hand.Category,
+    unHand,
   )
 where
 
@@ -11,6 +12,9 @@ import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (matterDecks))
 
 newtype Hand = Hand [Card]
   deriving (Eq, Show)
+
+unHand :: Hand -> [Card]
+unHand (Hand cards) = cards
 
 mkHand :: Matter -> [Card] -> Maybe Hand
 mkHand mat cs

@@ -75,7 +75,10 @@ executable pitboss
     -- other-extensions:
     build-depends:
         base ^>=4.18.2.1,
+        lens,
+        ordered-containers,
         pitboss,
+        random,
 
     hs-source-dirs:   app
     default-language: GHC2021

@@ -19,6 +19,8 @@ import Pitboss.Sim.Types.Occupancy
 import System.Environment (getArgs)
 import System.Random (mkStdGen, randomIO)
 import Text.Read (readMaybe)
+import Pitboss.Sim.State.Table.Lens (lensDeck, lensPlayerSpots)
+import Pitboss.Sim.State.Table.Mutation (claimSpot)
 
 data RoundOutcome
   = PlayerWins
@@ -90,7 +92,7 @@ main = do
   let rng = mkStdGen seed
   let (shuffled, _) = shuffle rng (cardsRemaining (mkDeck (matter vegas6)))
 
-  let table0 = emptyTableState & lensDeck .~ shuffled
+  let table0 = initPeekTableState & lensDeck .~ shuffled
   let table1 = case claimSpot Spot1 table0 of
         Right t -> t
         Left err -> error $ "💥 Failed to claim spot: " ++ err

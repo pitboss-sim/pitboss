@@ -27,6 +27,8 @@ data PeekFSM (p :: PeekPhase) where
 
 deriving instance Show (PeekFSM p)
 
+deriving instance Eq (PeekFSM p)
+
 -- advancement
 
 beginPeek :: PeekFSM 'PeekAwaiting -> PeekFSM 'PeekBets

@@ -25,6 +25,8 @@ data ENHCFSM (p :: ENHCPhase) where
 
 deriving instance Show (ENHCFSM p)
 
+deriving instance Eq (ENHCFSM p)
+
 -- advancement
 
 beginENHC :: ENHCFSM 'ENHCAwaiting -> ENHCFSM 'ENHCBets

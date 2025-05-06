@@ -12,7 +12,6 @@ import Pitboss.Blackjack.Offering (Offering (..))
 import Pitboss.Blackjack.Offering.RuleSet (isH17)
 import Pitboss.Blackjack.Offering.WellKnown (vegas6)
 import Pitboss.Sim.State.Spot
-import Pitboss.Sim.State.SpotHand hiding (Blackjack)
 import Pitboss.Sim.State.Table
 import Pitboss.Sim.State.Table.Lens (lensDeck, lensPlayerSpots)
 import Pitboss.Sim.State.Table.Mutation (claimSpot)
@@ -92,33 +91,35 @@ main = do
   let rng = mkStdGen seed
   let (shuffled, _) = shuffle rng (cardsRemaining (mkDeck (matter vegas6)))
 
+  let actorId = mkActorId (Uid "AAAAAA-00000000")
   let table0 = initPeekTableState & lensDeck .~ shuffled
-  let table1 = case claimSpot Spot1 table0 of
-        Right t -> t
-        Left err -> error $ "💥 Failed to claim spot: " ++ err
 
-  case table1 ^. lensDeck of
-    c1 : c2 : dealer1 : dealer2 : rest ->
-      let playerHand = Hand [c1, c2]
-          spotState =
-            SpotState
-              { hands = singletonFiniteMap Hand1 (Present (mkSpotHandState playerHand)) Absent,
-                turn = Playing Hand1
-              }
+-- let table1 = case claimSpot Spot1 actorId table0 of
+--   Right t -> t
+--   Left err -> error $ "💥 Failed to claim spot: " ++ err
 
-          table2 =
-            table1
-              & lensDeck .~ rest
-              & lensPlayerSpots %~ insertFiniteMap Spot1 (Present spotState)
-
-          dealerInitial = Hand [dealer1, dealer2]
-          (dealerFinal, _) = playDealerHand vegas6 dealerInitial rest
-          outcome = compareHands vegas6 playerHand dealerFinal
-       in do
-            putStrLn $ "🃏 Player was dealt: " ++ show [c1, c2]
-            putStrLn $ "🪭 Dealer was dealt: " ++ show [dealer1, dealer2]
-            putStrLn $ "🤖 Dealer final hand: " ++ show dealerFinal
-            putStrLn $ "📊 Final Spot State: " ++ show (table2 ^. lensPlayerSpots)
-            putStrLn $ "🎯 Outcome: " ++ show outcome
-            putStrLn "✅ Round complete."
-    _ -> error "⛔ Not enough cards to play a round."
+-- case table1 ^. lensDeck of
+--   c1 : c2 : dealer1 : dealer2 : rest ->
+--     let playerHand = Hand [c1, c2]
+--         spotState =
+--           SpotState
+--             { hands = singletonFiniteMap Hand1 (Present (mkSpotHandState playerHand)) Absent,
+--               turn = Playing Hand1
+--             }
+--
+--         table2 =
+--           table1
+--             & lensDeck .~ rest
+--             & lensPlayerSpots %~ insertFiniteMap Spot1 (Present spotState)
+--
+--         dealerInitial = Hand [dealer1, dealer2]
+--         (dealerFinal, _) = playDealerHand vegas6 dealerInitial rest
+--         outcome = compareHands vegas6 playerHand dealerFinal
+--      in do
+--           putStrLn $ "🃏 Player was dealt: " ++ show [c1, c2]
+--           putStrLn $ "🪭 Dealer was dealt: " ++ show [dealer1, dealer2]
+--           putStrLn $ "🤖 Dealer final hand: " ++ show dealerFinal
+--           putStrLn $ "📊 Final Spot State: " ++ show (table2 ^. lensPlayerSpots)
+--           putStrLn $ "🎯 Outcome: " ++ show outcome
+--           putStrLn "✅ Round complete."
+--   _ -> error "⛔ Not enough cards to play a round."

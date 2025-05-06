@@ -4,17 +4,19 @@ module Pitboss.Sim.State.Spot.Mutation where
 
 import Control.Lens hiding (universe)
 import Pitboss.Blackjack.Card (Card)
+import Pitboss.Blackjack.FSM.Hand (HandFSM (..), HandPhase (..), SomeHandFSM (..))
 import Pitboss.Blackjack.Hand (Hand (..))
 import Pitboss.Sim.State.Spot (SpotHandIx, SpotState (..), Turn (..))
 import Pitboss.Sim.State.Spot.Lens (lensHands)
-import Pitboss.Sim.State.SpotHand (HandFSM (..), HandPhase (..), SomeHandFSM (..), SpotHandState (..), handPhaseOf)
+import Pitboss.Sim.State.SpotHand (SpotHandState (..), handPhaseOf)
 import Pitboss.Sim.State.SpotHand.Lens (lensSpotHandFSM)
 import Pitboss.Sim.Types.FiniteMap (insertFiniteMap, lookupFiniteMap, toListFiniteMap)
 import Pitboss.Sim.Types.Occupancy (Occupancy (..), isAbsent)
+import Pitboss.Sim.World.Identifier (SpotId)
 import Pitboss.Types.BoundedEnum (universe)
 
 advanceToNextHand :: SpotState -> SpotState
-advanceToNextHand spot@(SpotState handsMap currentTurn) =
+advanceToNextHand spot@(SpotState handsMap currentTurn _) =
   let activeHands = [hid | hid <- universe, lookupFiniteMap hid handsMap /= Just Absent]
    in case currentTurn of
         NoHandSelected ->
@@ -32,11 +34,19 @@ nextFreeHands spot =
   [hid | (hid, occ) <- toListFiniteMap (spot ^. lensHands), isAbsent occ]
 
 addCardsToSplitPlayHands ::
-  Card -> Card -> Card -> Card -> SpotHandIx -> SpotHandIx -> SpotState -> SpotState
-addCardsToSplitPlayHands orig1 new1 orig2 new2 h1 h2 =
+  SpotId ->
+  Card ->
+  Card ->
+  Card ->
+  Card ->
+  SpotHandIx ->
+  SpotHandIx ->
+  SpotState ->
+  SpotState
+addCardsToSplitPlayHands sid orig1 new1 orig2 new2 h1 h2 =
   over lensHands $
-    insertFiniteMap h2 (Present (SpotHandState (SomeHandFSM Dealt2FSM) (Hand [orig2, new2])))
-      . insertFiniteMap h1 (Present (SpotHandState (SomeHandFSM Dealt2FSM) (Hand [orig1, new1])))
+    insertFiniteMap h2 (Present (SpotHandState (SomeHandFSM Dealt2FSM) (Hand [orig2, new2]) sid))
+      . insertFiniteMap h1 (Present (SpotHandState (SomeHandFSM Dealt2FSM) (Hand [orig1, new1]) sid))
 
 isLiveHand :: Occupancy SpotHandState -> Bool
 isLiveHand (Present s) =

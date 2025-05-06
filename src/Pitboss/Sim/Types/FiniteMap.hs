@@ -21,6 +21,10 @@ instance (Ord k) => Ixed (FiniteMap k v) where
 instance (Ord k) => At (FiniteMap k v) where
   at k f (FiniteMap m) = fmap FiniteMap (at k f m)
 
+deriving instance Foldable (FiniteMap k)
+
+deriving instance Traversable (FiniteMap k)
+
 emptyFiniteMap :: (BoundedEnum k, Ord k) => v -> FiniteMap k v
 emptyFiniteMap defaultValue =
   FiniteMap (Map.fromList [(k, defaultValue) | k <- universe])

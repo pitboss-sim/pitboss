@@ -7,13 +7,13 @@ import Pitboss.Sim.Types.Occupancy (Occupancy (..))
 import Pitboss.Types.BoundedEnum (universe)
 
 extractHand :: SpotState -> SpotHandIx -> Maybe SpotHandState
-extractHand (SpotState handsMap _turn) hid =
+extractHand (SpotState handsMap _turn _) hid =
   case lookupFiniteMap hid handsMap of
     Just (Present handState) -> Just handState
     _ -> Nothing
 
 getSelectedHand :: SpotState -> Maybe (SpotHandIx, SpotHandState)
-getSelectedHand (SpotState handsMap turn') =
+getSelectedHand (SpotState handsMap turn' _) =
   case turn' of
     Playing hid ->
       case lookupFiniteMap hid handsMap of
@@ -22,7 +22,7 @@ getSelectedHand (SpotState handsMap turn') =
     NoHandSelected -> Nothing
 
 advanceToNextHand :: SpotState -> SpotState
-advanceToNextHand spot@(SpotState handsMap currentTurn) =
+advanceToNextHand spot@(SpotState handsMap currentTurn _) =
   let activeHands = [hid | hid <- universe, lookupFiniteMap hid handsMap /= Just Absent]
    in case currentTurn of
         NoHandSelected ->

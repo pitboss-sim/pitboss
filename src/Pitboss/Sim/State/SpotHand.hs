@@ -1,31 +1,29 @@
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.Sim.State.SpotHand
-  ( SpotHandState (..),
-    handPhaseOf,
-    module Pitboss.Blackjack.FSM.Hand,
-    mkSpotHandState,
-  )
-where
+module Pitboss.Sim.State.SpotHand where
 
 import Pitboss.Blackjack.FSM.Hand
 import Pitboss.Blackjack.Hand (Hand)
+import Pitboss.Sim.World.Identifier (SpotId)
 
 data SpotHandState = SpotHandState
   { spotHandFSM :: SomeHandFSM,
-    hand :: Hand
+    hand :: Hand,
+    spotId :: SpotId
   }
 
-mkSpotHandState :: Hand -> SpotHandState
+mkSpotHandState :: Hand -> SpotId -> SpotHandState
 mkSpotHandState = SpotHandState (SomeHandFSM PreDealFSM)
 
 instance Eq SpotHandState where
-  SpotHandState fsm1 h1 == SpotHandState fsm2 h2 =
-    handPhaseOf fsm1 == handPhaseOf fsm2 && h1 == h2
+  SpotHandState fsm1 h1 aid1 == SpotHandState fsm2 h2 aid2 =
+    handPhaseOf fsm1 == handPhaseOf fsm2 && h1 == h2 && aid1 == aid2
 
 instance Show SpotHandState where
-  show (SpotHandState fsm hand) =
-    "SpotHandState { phase = "
+  show (SpotHandState fsm hand sid) =
+    "SpotHandState { spotId = "
+      ++ show sid
+      ++ ", phase = "
       ++ show (handPhaseOf fsm)
       ++ ", hand = "
       ++ show hand

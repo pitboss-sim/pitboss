@@ -8,6 +8,7 @@ import Pitboss.Sim.Types.FiniteMap
     emptyFiniteMap,
   )
 import Pitboss.Sim.Types.Occupancy (Occupancy (..))
+import Pitboss.Sim.World.Identifier (ActorId)
 import Pitboss.Types.BoundedEnum (BoundedEnum)
 
 data SpotHandIx = Hand1 | Hand2 | Hand3 | Hand4
@@ -22,13 +23,15 @@ data Turn
 
 data SpotState = SpotState
   { hands :: FiniteMap SpotHandIx (Occupancy SpotHandState),
-    turn :: Turn
+    turn :: Turn,
+    spotActorId :: ActorId
   }
   deriving (Eq, Show)
 
-emptySpot :: SpotState
-emptySpot =
+initSpot :: ActorId -> SpotState
+initSpot aid =
   SpotState
     { hands = emptyFiniteMap Absent,
-      turn = NoHandSelected
+      turn = NoHandSelected,
+      spotActorId = aid
     }

@@ -8,6 +8,34 @@ import Pitboss.Blackjack.Chips (Chips)
 import Pitboss.Sim.Types.Identifier (PlayerId)
 import Pitboss.Sim.Types.Index (SpotHandIx, SpotIx)
 
+data DealerActorEvent
+  = DealerAssigned DealerId TableId
+  | DealerStartedDealing DealerId TableId
+  | DealerPausedBetweenRounds DealerId
+  | DealerStartedShuffling DealerId
+  | DealerFinishedShuffling DealerId
+  | DealerRelievedFrom DealerId TableId
+  | DealerWentIdle DealerId
+
+data PlayerActorEvent
+  = PlayerClaimedSpot SpotId
+  | PlayerYieldedSpot SpotId
+  | PlayerPlacedBet SpotHandId Chips
+  | PlayerRemovedBet SpotHandId Chips
+  | PlayerTakesInsurance SpotId
+  | PlayerDeclinesInsurance SpotId
+  | PlayerActxHits SpotId SpotHandIx
+  | PlayerStands SpotId SpotHandIx
+  | PlayerDoubles SpotId SpotHandIx
+  | PlayerSplits SpotId SpotHandIx SpotHandIx
+  | PlayerSurrenders SpotId SpotHandIx
+  | PlayerJoinsGame PlayerId
+  | PlayerLeavesGame PlayerId
+  | PlayerRequestsShuffle
+  | -- | CausesDelay SpotId Reason
+    PlayerSignalsReady SpotId
+  deriving (Eq, Show, Generic)
+
 data GameplayEvent
   = PlayerEvent PlayerAction
   | DealerEvent DealerAction

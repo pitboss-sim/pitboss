@@ -1,9 +1,10 @@
 module Pitboss.Sim.State.Table.Mutation where
 
-import Pitboss.Sim.State.Spot (SpotState, emptySpot)
+import Pitboss.Sim.State.Spot (SpotState, initSpot)
 import Pitboss.Sim.State.Table (TableSpotIx, TableState (..))
 import Pitboss.Sim.Types.FiniteMap (FiniteMap, insertFiniteMap, lookupFiniteMap)
 import Pitboss.Sim.Types.Occupancy (Occupancy (..))
+import Pitboss.Sim.World.Identifier (ActorId)
 
 updateSpot :: TableSpotIx -> (SpotState -> SpotState) -> FiniteMap TableSpotIx (Occupancy SpotState) -> FiniteMap TableSpotIx (Occupancy SpotState)
 updateSpot sid f spots =
@@ -14,11 +15,11 @@ updateSpot sid f spots =
       Just Absent -> error "Cannot update absent spot"
       Nothing -> error "Spot does not exist"
 
-claimSpot :: TableSpotIx -> TableState fsm -> Either String (TableState fsm)
-claimSpot spotId ts =
+claimSpot :: TableSpotIx -> ActorId -> TableState fsm -> Either String (TableState fsm)
+claimSpot spotId actorId ts =
   case lookupFiniteMap spotId (playerSpots ts) of
     Just Absent ->
-      let updatedSpots = insertFiniteMap spotId (Present emptySpot) (playerSpots ts)
+      let updatedSpots = insertFiniteMap spotId (Present (initSpot actorId)) (playerSpots ts)
        in Right ts {playerSpots = updatedSpots}
     Just (Present _) ->
       Left $ "Spot " ++ show spotId ++ " is already claimed."

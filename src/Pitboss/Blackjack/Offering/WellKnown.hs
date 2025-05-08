@@ -4,7 +4,20 @@ module Pitboss.Blackjack.Offering.WellKnown where
 
 import Pitboss.Blackjack.Offering (Offering, mkOffering)
 import Pitboss.Blackjack.Offering.Matter (Dealt (..), DeckCount (..), Matter (..))
-import Pitboss.Blackjack.Offering.RuleSet (DASRule (..), DoubleRule (..), Payout (..), Pen (..), ResplitAcesAllowed (NoResplitAces, ResplitAces), RuleSet (..), Soft17Rule (..), SplitAcesAllowed (..), SplitAcesFrozen (..), SplitHands (..), Surrender (..))
+import Pitboss.Blackjack.Offering.RuleSet
+  ( DASRule (..),
+    DoubleRule (..),
+    HoleCardRule (..),
+    Payout (..),
+    Pen (..),
+    ResplitAcesAllowed (..),
+    RuleSet (..),
+    Soft17Rule (..),
+    SplitAcesAllowed (..),
+    SplitAcesFrozen (..),
+    SplitHands (..),
+    Surrender (..),
+  )
 
 -- | Standard 6-deck Vegas shoe game
 vegas6 :: Offering
@@ -27,7 +40,8 @@ vegas6 =
           splitHands = SP4,
           surrender = Late,
           payout = P3_2,
-          pen = PenFrac 5 6
+          pen = PenFrac 5 6,
+          holeCardRule = Peek
         }
 
 -- | Single-deck downtown pitch game (face-down!)
@@ -40,7 +54,6 @@ downtownSingleDeck =
         { matterDecks = D1,
           matterDealt = Pitch
         }
-
     ruleSet =
       RuleSet
         { soft17 = HitSoft17,
@@ -52,5 +65,6 @@ downtownSingleDeck =
           splitHands = SP2,
           surrender = NoSurrender,
           payout = P6_5,
-          pen = PenCards 50
+          pen = PenCards 50,
+          holeCardRule = Peek
         }

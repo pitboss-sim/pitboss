@@ -2,6 +2,11 @@ module Pitboss.Blackjack.Offering.RuleSet where
 
 import GHC.TypeLits (Nat)
 
+data HoleCardRule
+  = Peek
+  | ENHC
+  deriving (Eq, Show)
+
 data Soft17Rule = StandSoft17 | HitSoft17
   deriving (Show, Eq)
 
@@ -42,7 +47,8 @@ data Pen
   deriving (Show, Eq)
 
 data RuleSet = RuleSet
-  { soft17 :: Soft17Rule,
+  { holeCardRule :: HoleCardRule,
+    soft17 :: Soft17Rule,
     das :: DASRule,
     doubling :: DoubleRule,
     splitAcesAllowed :: SplitAcesAllowed,

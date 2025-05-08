@@ -22,10 +22,6 @@ library
                       Pitboss.Blackjack.Card
                       Pitboss.Blackjack.Chips
                       Pitboss.Blackjack.Deck
-                      Pitboss.Blackjack.FSM.Hand
-                      Pitboss.Blackjack.FSM.Round
-                      Pitboss.Blackjack.FSM.Round.ENHC
-                      Pitboss.Blackjack.FSM.Round.Peek
                       Pitboss.Blackjack.Hand
                       Pitboss.Blackjack.Hand.Category
                       Pitboss.Blackjack.Hand.Score

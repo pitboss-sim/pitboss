@@ -43,6 +43,9 @@ betsPlacedENHC ENHCBetsFSM = ENHCDealFSM
 dealCardsENHC :: ENHCFSM 'ENHCDeal -> ENHCFSM 'ENHCEarlySurrender
 dealCardsENHC ENHCDealFSM = ENHCEarlySurrenderFSM
 
+insuranceDecidedENHC :: ENHCFSM 'ENHCEarlySurrender -> ENHCFSM 'ENHCPlayers
+insuranceDecidedENHC = resolveEarlySurrenderENHC -- shim, for uniformity
+
 resolveEarlySurrenderENHC :: ENHCFSM 'ENHCEarlySurrender -> ENHCFSM 'ENHCPlayers
 resolveEarlySurrenderENHC ENHCEarlySurrenderFSM = ENHCPlayersFSM
 

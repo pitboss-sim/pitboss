@@ -5,10 +5,11 @@
 
 module Pitboss.Blackjack.FSM.Round where
 
+import Pitboss.Blackjack.FSM.Hand (AbandonedReason (..), SomeHandFSM, mkHandFSMAbandoned)
 import Pitboss.Blackjack.FSM.Round.ENHC (ENHCFSM (..), ENHCPhase (..), dealCardsENHC)
 import Pitboss.Blackjack.FSM.Round.Peek (PeekFSM (..), PeekPhase (..), dealCardsPeek)
 import Pitboss.Blackjack.FSM.Types.Transitionable (Transitionable (..))
-import Pitboss.Blackjack.Offering.RuleSet (RuleSet (..), Surrender (..))
+import Pitboss.Blackjack.Offering.RuleSet (InsuranceOutcome (..), RuleSet (..), Surrender (..))
 
 data RoundFlavor = IsPeek | IsENHC
 
@@ -55,6 +56,17 @@ roundPhase = \case
     ENHCDealerFSM -> Dealer
     ENHCSettleFSM -> Settle
     ENHCCompleteFSM -> Complete
+
+abandonHandDueToSurrender :: RuleSet -> Bool -> SomeHandFSM
+abandonHandDueToSurrender _ early =
+  if early
+    then mkHandFSMAbandoned (Surrender Early)
+    else mkHandFSMAbandoned (Surrender Late)
+
+abandonHandDueToInsurance :: Bool -> SomeHandFSM
+abandonHandDueToInsurance evenMoney =
+  mkHandFSMAbandoned $
+    if evenMoney then Insurance PaidEvenMoney else Insurance Paid
 
 maybeEnterEarlySurrenderPeek ::
   RuleSet ->

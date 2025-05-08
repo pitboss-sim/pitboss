@@ -15,6 +15,7 @@ data PeekPhase
   | PeekEarlySurrender
   | PeekPeek
   | PeekInsuranceDecision
+  | PeekInsuranceSettled
   | PeekPlayers
   | PeekDealer
   | PeekSettle
@@ -27,6 +28,7 @@ data PeekFSM (p :: PeekPhase) where
   PeekEarlySurrenderFSM :: PeekFSM 'PeekEarlySurrender
   PeekPeekFSM :: PeekFSM 'PeekPeek
   PeekInsuranceDecisionFSM :: PeekFSM 'PeekInsuranceDecision
+  PeekInsuranceSettledFSM :: PeekFSM 'PeekInsuranceSettled
   PeekPlayersFSM :: PeekFSM 'PeekPlayers
   PeekDealerFSM :: PeekFSM 'PeekDealer
   PeekSettleFSM :: PeekFSM 'PeekSettle
@@ -47,6 +49,9 @@ betsPlacedPeek PeekBetsFSM = PeekDealFSM
 dealCardsPeek :: PeekFSM 'PeekDeal -> PeekFSM 'PeekEarlySurrender
 dealCardsPeek PeekDealFSM = PeekEarlySurrenderFSM
 
+earlySurrenderBlackjackPeek :: PeekFSM 'PeekEarlySurrender -> PeekFSM 'PeekComplete
+earlySurrenderBlackjackPeek PeekEarlySurrenderFSM = PeekCompleteFSM
+
 resolveEarlySurrenderPeek :: PeekFSM 'PeekEarlySurrender -> PeekFSM 'PeekPeek
 resolveEarlySurrenderPeek PeekEarlySurrenderFSM = PeekPeekFSM
 
@@ -56,8 +61,11 @@ dealerBlackjackPeek PeekPeekFSM = PeekCompleteFSM
 dealerNoBlackjackPeek :: PeekFSM 'PeekPeek -> PeekFSM 'PeekInsuranceDecision
 dealerNoBlackjackPeek PeekPeekFSM = PeekInsuranceDecisionFSM
 
-insuranceDecidedPeek :: PeekFSM 'PeekInsuranceDecision -> PeekFSM 'PeekPlayers
-insuranceDecidedPeek PeekInsuranceDecisionFSM = PeekPlayersFSM
+insuranceDecidedPeek :: PeekFSM 'PeekInsuranceDecision -> PeekFSM 'PeekInsuranceSettled
+insuranceDecidedPeek PeekInsuranceDecisionFSM = PeekInsuranceSettledFSM
+
+proceedToPlayersPeek :: PeekFSM 'PeekInsuranceSettled -> PeekFSM 'PeekPlayers
+proceedToPlayersPeek PeekInsuranceSettledFSM = PeekPlayersFSM
 
 finishPlayersPeek :: PeekFSM 'PeekPlayers -> PeekFSM 'PeekDealer
 finishPlayersPeek PeekPlayersFSM = PeekDealerFSM
@@ -76,6 +84,7 @@ instance Transitionable (PeekFSM p) where
     PeekEarlySurrenderFSM -> AwaitInput
     PeekPeekFSM -> AwaitInput
     PeekInsuranceDecisionFSM -> AwaitInput
+    PeekInsuranceSettledFSM -> AutoAdvance
     PeekPlayersFSM -> AwaitInput
     PeekDealerFSM -> AutoAdvance
     PeekSettleFSM -> AutoAdvance

@@ -29,6 +29,12 @@ library
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
+                      Pitboss.Mechanics.Hand.FSM
+                      Pitboss.Mechanics.Round.FSM
+                      Pitboss.Mechanics.Round.FSM.ENHC
+                      Pitboss.Mechanics.Round.FSM.Peek
+                      Pitboss.Mechanics.Types.PhaseTag
+                      Pitboss.Mechanics.Types.Transitionable
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay

@@ -7,6 +7,9 @@ data HoleCardRule
   | ENHC
   deriving (Eq, Show)
 
+data InsuranceOutcome = Lost | Paid | PaidEvenMoney
+  deriving (Eq, Show)
+
 data Soft17Rule = StandSoft17 | HitSoft17
   deriving (Show, Eq)
 

@@ -34,7 +34,6 @@ library
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.Blackjack.Table
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay

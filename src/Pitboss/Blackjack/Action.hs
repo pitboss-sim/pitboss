@@ -8,9 +8,9 @@ data PlayerAction
   | Surrender
   | TakeInsurance
   | DeclineInsurance
-  deriving (Eq, Show, Ord, Enum, Bounded)
+  deriving (Eq, Show, Ord, Enum)
 
 data DealerAction
   = DealerHit
   | DealerStand
-  deriving (Eq, Show, Ord, Enum, Bounded)
+  deriving (Eq, Show, Ord, Enum)

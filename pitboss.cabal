@@ -29,6 +29,13 @@ library
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
+                      Pitboss.Registry.State.Hand
+                      Pitboss.Registry.State.Round
+                      Pitboss.Registry.State.Spot
+                      Pitboss.Registry.State.Types.BoundedEnum
+                      Pitboss.Registry.State.Types.FiniteMap
+                      Pitboss.Registry.Types.Identifier
+                      Pitboss.Registry.Types.Registry
                       Pitboss.Sim.FSM.Hand
                       Pitboss.Sim.FSM.Round
                       Pitboss.Sim.FSM.Round.ENHC
@@ -46,6 +53,9 @@ library
     build-depends:    base ^>=4.18.2.1,
                       array,
                       containers,
+                      hashable,
+                      insert-ordered-containers,
+                      lens,
                       random,
                       text,
     hs-source-dirs:   src

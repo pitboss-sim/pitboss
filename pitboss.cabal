@@ -29,25 +29,6 @@ library
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.World
-                      Pitboss.World.Constructors
-                      Pitboss.World.State.Actor
-                      Pitboss.World.State.Hand
-                      Pitboss.World.State.Offering
-                      Pitboss.World.State.Round
-                      Pitboss.World.State.Shoe
-                      Pitboss.World.State.Spot
-                      Pitboss.World.State.Table
-                      Pitboss.World.State.Types.BoundedEnum
-                      Pitboss.World.State.Types.Clocked
-                      Pitboss.World.State.Types.DeltaDriven
-                      Pitboss.World.State.Types.FiniteMap
-                      Pitboss.World.State.Types.Occupancy
-                      Pitboss.World.State.Types.Reversible
-                      Pitboss.World.State.Types.Snapshot
-                      Pitboss.World.Types.EntityRef
-                      Pitboss.World.Types.Identifier
-                      Pitboss.World.Types.Registry
                       Pitboss.Sim.FSM.Hand
                       Pitboss.Sim.FSM.Round
                       Pitboss.Sim.FSM.Round.ENHC
@@ -61,6 +42,31 @@ library
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
+                      Pitboss.Trace
+                      Pitboss.Trace.Delta.Actor
+                      Pitboss.Trace.Delta.Hand
+                      Pitboss.Trace.Delta.Offering
+                      Pitboss.Trace.Delta.Round
+                      Pitboss.Trace.Delta.Shoe
+                      Pitboss.Trace.Delta.Spot
+                      Pitboss.Trace.Delta.Table
+                      Pitboss.Trace.Delta.Types.Clocked
+                      Pitboss.Trace.Delta.Types.DeltaDriven
+                      Pitboss.Trace.Delta.Types.Reversible
+                      Pitboss.Trace.Entity.Actor
+                      Pitboss.Trace.Entity.Hand
+                      Pitboss.Trace.Entity.Offering
+                      Pitboss.Trace.Entity.Round
+                      Pitboss.Trace.Entity.Shoe
+                      Pitboss.Trace.Entity.Spot
+                      Pitboss.Trace.Entity.Table
+                      Pitboss.Trace.FiniteMap
+                      Pitboss.Trace.FiniteMap.BoundedEnum
+                      Pitboss.Trace.FiniteMap.Occupancy
+                      Pitboss.Trace.Registry
+                      Pitboss.Trace.Registry.EntityRef
+                      Pitboss.Trace.Registry.Identifier
+                      Pitboss.Trace.Snapshot
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,

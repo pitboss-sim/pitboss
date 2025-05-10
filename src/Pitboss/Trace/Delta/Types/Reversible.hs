@@ -1,4 +1,4 @@
-module Pitboss.World.State.Types.Reversible where
+module Pitboss.Trace.Delta.Types.Reversible where
 
 class Reversible d where
   invert :: d -> Maybe d

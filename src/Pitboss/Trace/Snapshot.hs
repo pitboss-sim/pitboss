@@ -1,14 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Pitboss.World.State.Types.Snapshot where
+module Pitboss.Trace.Snapshot where
 
 import Data.Aeson (FromJSON, KeyValue ((.=)), ToJSON, object, parseJSON, toJSON, withObject, (.:))
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics (Generic)
-import Pitboss.World.State.Types.Clocked (Clocked (..), Tick)
-import Pitboss.World.State.Types.DeltaDriven (DeltaDriven (..))
-import Pitboss.World.Types.EntityRef (EntityRef (..))
+import Pitboss.Trace.Delta.Types.Clocked
+import Pitboss.Trace.Delta.Types.DeltaDriven
+import Pitboss.Trace.Registry.EntityRef
 
 data StateSnapshot entity delta = StateSnapshot
   { entity :: entity,

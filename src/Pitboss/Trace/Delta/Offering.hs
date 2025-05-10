@@ -1,31 +1,12 @@
-module Pitboss.World.State.Offering where
+module Pitboss.Trace.Delta.Offering where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Offering.Matter
 import Pitboss.Blackjack.Offering.RuleSet
-import Pitboss.World.State.Types.Clocked
-import Pitboss.World.State.Types.DeltaDriven
-
-mkOfferingState :: Tick -> Matter -> RuleSet -> OfferingState
-mkOfferingState t m r =
-  OfferingState
-    { _tick = t,
-      _offeringMatter = m,
-      _offeringRules = r
-    }
-
-data OfferingState = OfferingState
-  { _tick :: Tick,
-    _offeringMatter :: Matter,
-    _offeringRules :: RuleSet
-  }
-  deriving (Eq, Show, Generic)
-
-instance ToJSON OfferingState
-
-instance FromJSON OfferingState
+import Pitboss.Trace.Delta.Types.DeltaDriven
+import Pitboss.Trace.Entity.Offering
 
 data OfferingDelta
   = SetMatter Matter
@@ -36,10 +17,6 @@ data OfferingDelta
 instance ToJSON OfferingDelta
 
 instance FromJSON OfferingDelta
-
-instance Clocked OfferingState where
-  tick = _tick
-  setTick t os = os {_tick = t}
 
 instance DeltaDriven OfferingState OfferingDelta where
   applyDelta d os = case d of

@@ -2,11 +2,11 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.World.State.Types.FiniteMap where
+module Pitboss.Trace.FiniteMap where
 
 import Control.Lens (At (..), Index, IxValue, Ixed (..))
 import Data.Map.Strict qualified as Map
-import Pitboss.World.State.Types.BoundedEnum (BoundedEnum, universe)
+import Pitboss.Trace.FiniteMap.BoundedEnum
 
 newtype FiniteMap k v = FiniteMap (Map.Map k v)
   deriving (Eq, Show, Functor)

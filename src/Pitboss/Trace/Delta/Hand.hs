@@ -2,46 +2,18 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.World.State.Hand where
+module Pitboss.Trace.Delta.Hand where
 
-import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Card (Card)
-import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.Blackjack.Hand.Category (categorize)
+import Pitboss.Blackjack.Card
 import Pitboss.Blackjack.Hand.Category qualified as HC
-import Pitboss.Sim.FSM.Hand (HandFSM (..), HandPhase (..), SomeHandFSM (..))
-import Pitboss.World.State.Types.Clocked (Clocked (..), Tick)
-import Pitboss.World.State.Types.DeltaDriven qualified as DD
-import Pitboss.World.State.Types.Reversible (Reversible (..))
-import Pitboss.World.State.Types.Snapshot (StateSnapshot (..), applySnapshotDelta)
-
-mkHandState :: Tick -> [Card] -> Chips -> Int -> Int -> HandState
-mkHandState t cards bet depth ix =
-  HandState
-    { _tick = t,
-      _handCards = cards,
-      _originalBet = bet,
-      _splitDepth = depth,
-      _handIx = ix
-    }
-
-data HandState = HandState
-  { _tick :: Tick,
-    _handCards :: [Card],
-    _originalBet :: Chips,
-    _splitDepth :: Int,
-    _handIx :: Int
-  }
-  deriving (Eq, Show, Generic)
-
-instance ToJSON HandState
-
-instance FromJSON HandState
-
-instance Clocked HandState where
-  tick = _tick
-  setTick t hs = hs {_tick = t}
+import Pitboss.Sim.FSM.Hand
+import Pitboss.Trace.Delta.Types.Clocked
+import Pitboss.Trace.Delta.Types.DeltaDriven qualified as DD
+import Pitboss.Trace.Delta.Types.Reversible
+import Pitboss.Trace.Entity.Hand
+import Pitboss.Trace.Snapshot
 
 data HandDelta
   = AddCard Card
@@ -125,7 +97,7 @@ handPhaseFromState :: HandState -> HandPhase
 handPhaseFromState hs =
   let cards = _handCards hs
       bet = _originalBet hs
-   in case categorize cards of
+   in case HC.categorize cards of
         HC.Blackjack ->
           NaturalBlackjack
         _

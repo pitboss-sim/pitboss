@@ -1,36 +1,14 @@
-module Pitboss.World.State.Table where
+module Pitboss.Trace.Delta.Table where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.World.State.Offering (OfferingState)
-import Pitboss.World.State.Round (RoundState)
-import Pitboss.World.State.Types.Clocked
-import Pitboss.World.State.Types.DeltaDriven
-import Pitboss.World.Types.EntityRef (EntityRef)
-
-mkTableState :: Tick -> String -> EntityRef OfferingState -> Chips -> TableState
-mkTableState t name offering _minBet =
-  TableState
-    { _tick = t,
-      _tableName = name,
-      _currentRound = Nothing,
-      _offeringUsed = offering,
-      _minBet = _minBet
-    }
-
-data TableState = TableState
-  { _tick :: Tick,
-    _tableName :: String,
-    _currentRound :: Maybe (EntityRef RoundState),
-    _offeringUsed :: EntityRef OfferingState,
-    _minBet :: Chips
-  }
-  deriving (Eq, Show, Generic)
-
-instance ToJSON TableState
-
-instance FromJSON TableState
+import Pitboss.Trace.Delta.Types.Clocked
+import Pitboss.Trace.Delta.Types.DeltaDriven
+import Pitboss.Trace.Entity.Offering hiding (_tick)
+import Pitboss.Trace.Entity.Round hiding (_tick)
+import Pitboss.Trace.Entity.Table
+import Pitboss.Trace.Registry.EntityRef
 
 data TableDelta
   = SetOffering (EntityRef OfferingState)

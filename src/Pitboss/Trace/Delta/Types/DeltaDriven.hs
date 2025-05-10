@@ -1,7 +1,7 @@
 {-# LANGUAGE FunctionalDependencies #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.World.State.Types.DeltaDriven where
+module Pitboss.Trace.Delta.Types.DeltaDriven where
 
 class DeltaDriven entity delta | entity -> delta where
   applyDelta :: delta -> entity -> entity

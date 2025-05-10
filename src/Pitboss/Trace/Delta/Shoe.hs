@@ -1,29 +1,10 @@
-module Pitboss.World.State.Shoe where
+module Pitboss.Trace.Delta.Shoe where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
-import Pitboss.World.State.Types.Clocked
-import Pitboss.World.State.Types.DeltaDriven
-
-mkShoeState :: Tick -> [Card] -> Maybe Int -> ShoeState
-mkShoeState t cards cut =
-  ShoeState
-    { _tick = t,
-      _cardsRemaining = cards,
-      _cutPoint = cut
-    }
-
-data ShoeState = ShoeState
-  { _tick :: Tick,
-    _cardsRemaining :: [Card],
-    _cutPoint :: Maybe Int
-  }
-  deriving (Eq, Show, Generic)
-
-instance ToJSON ShoeState
-
-instance FromJSON ShoeState
+import Pitboss.Trace.Delta.Types.DeltaDriven
+import Pitboss.Trace.Entity.Shoe
 
 data ShoeDelta
   = DrawCard Card
@@ -34,10 +15,6 @@ data ShoeDelta
 instance ToJSON ShoeDelta
 
 instance FromJSON ShoeDelta
-
-instance Clocked ShoeState where
-  tick = _tick
-  setTick t ss = ss {_tick = t}
 
 instance DeltaDriven ShoeState ShoeDelta where
   applyDelta d ss = case d of

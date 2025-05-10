@@ -1,4 +1,4 @@
-module Pitboss.World.State.Types.BoundedEnum where
+module Pitboss.Trace.FiniteMap.BoundedEnum where
 
 class (Enum a, Bounded a) => BoundedEnum a
 

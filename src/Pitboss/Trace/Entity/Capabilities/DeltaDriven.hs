@@ -2,60 +2,79 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.World.State.Hand where
+module Pitboss.Trace.Entity.Capabilities.DeltaDriven where
 
-import Data.Aeson (FromJSON, ToJSON)
-import GHC.Generics (Generic)
-import Pitboss.Blackjack.Card (Card)
-import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.Blackjack.Hand.Category (categorize)
-import Pitboss.Blackjack.Hand.Category qualified as HC
-import Pitboss.Sim.FSM.Hand (HandFSM (..), HandPhase (..), SomeHandFSM (..))
-import Pitboss.World.State.Types.Clocked (Clocked (..), Tick)
-import Pitboss.World.State.Types.DeltaDriven qualified as DD
-import Pitboss.World.State.Types.Reversible (Reversible (..))
-import Pitboss.World.State.Types.Snapshot (StateSnapshot (..), applySnapshotDelta)
+import Pitboss.Blackjack.Hand.Category
+import Pitboss.Blackjack.Offering
+import Pitboss.Sim.FSM.Hand hiding (Blackjack)
+import Pitboss.Trace.Entity.Actor
+import Pitboss.Trace.Entity.Hand
+import Pitboss.Trace.Entity.Offering
+import Pitboss.Trace.Entity.Spot
+import Pitboss.Trace.Entity.Table
+import Pitboss.Trace.Entity.Types.FiniteMap
+import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 
-mkHandState :: Tick -> [Card] -> Chips -> Int -> Int -> HandState
-mkHandState t cards bet depth ix =
-  HandState
-    { _tick = t,
-      _handCards = cards,
-      _originalBet = bet,
-      _splitDepth = depth,
-      _handIx = ix
-    }
+class DeltaDriven entity delta | entity -> delta where
+  applyDelta :: delta -> entity -> entity
+  previewDelta :: delta -> entity -> Maybe entity
+  describeDelta :: delta -> entity -> String
 
-data HandState = HandState
-  { _tick :: Tick,
-    _handCards :: [Card],
-    _originalBet :: Chips,
-    _splitDepth :: Int,
-    _handIx :: Int
-  }
-  deriving (Eq, Show, Generic)
+-- validateDelta :: delta -> entity -> Either String delta
+-- validateDelta d _ = Right d
 
-instance ToJSON HandState
+data TimedDelta d t = TimedDelta {timestamp :: t, delta :: d}
 
-instance FromJSON HandState
+instance DeltaDriven ActorState ActorDelta where
+  applyDelta delta = \case
+    PlayerActorState t p -> case delta of
+      RenameActor name -> PlayerActorState t (p {_playerName = name})
+      _ -> PlayerActorState t p
+    DealerActorState t d -> case delta of
+      RenameActor name -> DealerActorState t (d {_dealerName = name})
+      AssignTable tid -> DealerActorState t (d {_assignedTable = Just tid})
+      UnassignTable -> DealerActorState t (d {_assignedTable = Nothing})
 
-instance Clocked HandState where
-  tick = _tick
-  setTick t hs = hs {_tick = t}
+  describeDelta :: ActorDelta -> entity -> String
+  describeDelta d _ = case d of
+    RenameActor name -> "Renamed actor to " ++ name
+    AssignTable tid -> "Assigned to table " ++ show tid
+    UnassignTable -> "Unassigned from table"
 
-data HandDelta
-  = AddCard Card
-  | RemoveCard Card
-  | ReplaceCards [Card] [Card]
-  | ReplaceHandIndex Int Int
-  | ReplaceSplitDepth Int Int
-  deriving (Eq, Show, Generic)
+  previewDelta d s = Just (applyDelta d s)
 
-instance ToJSON HandDelta
+instance DeltaDriven OfferingState OfferingDelta where
+  applyDelta d os = case d of
+    SetMatter m -> os {_offeringMatter = m}
+    SetRules r -> os {_offeringRules = r}
+    ReplaceOffering (Offering m r) -> os {_offeringMatter = m, _offeringRules = r}
 
-instance FromJSON HandDelta
+  describeDelta :: OfferingDelta -> entity -> String
+  describeDelta d _ = case d of
+    SetMatter _ -> "Updated matter config"
+    SetRules _ -> "Updated rule set"
+    ReplaceOffering _ -> "Replaced full offering"
 
-instance DD.DeltaDriven HandState HandDelta where
+  previewDelta d os = Just (applyDelta d os)
+
+instance DeltaDriven SpotState SpotDelta where
+  applyDelta d ss = case d of
+    SetOccupied b -> ss {_spotOccupied = b}
+    SetSpotLabel lbl -> ss {_spotLabel = lbl}
+    SetHand ix hs ->
+      ss {_spotHands = insertFiniteMap ix (Present hs) (_spotHands ss)}
+    ClearHand ix ->
+      ss {_spotHands = insertFiniteMap ix Absent (_spotHands ss)}
+
+  previewDelta d ss = Just (applyDelta d ss)
+
+  describeDelta d _ = case d of
+    SetOccupied b -> "Set occupied to " ++ show b
+    SetSpotLabel lbl -> "Set spot label to " ++ lbl
+    SetHand ix _ -> "Set hand " ++ show ix
+    ClearHand ix -> "Cleared hand " ++ show ix
+
+instance DeltaDriven HandState HandDelta where
   applyDelta delta hs = case delta of
     AddCard c ->
       hs {_handCards = _handCards hs ++ [c]}
@@ -68,7 +87,7 @@ instance DD.DeltaDriven HandState HandDelta where
     ReplaceSplitDepth _ new ->
       hs {_splitDepth = new}
 
-  previewDelta d hs = Just (DD.applyDelta d hs)
+  previewDelta d hs = Just (applyDelta d hs)
 
   describeDelta d _ = case d of
     AddCard c -> "Added card: " ++ show c
@@ -85,28 +104,20 @@ instance DD.DeltaDriven HandState HandDelta where
 --     ReplaceHandIndex _ _ -> Right d
 --     ReplaceSplitDepth _ _ -> Right d
 
-instance Reversible HandDelta where
-  invert = \case
-    AddCard c -> Just (RemoveCard c)
-    RemoveCard c -> Just (AddCard c)
-    ReplaceCards old new -> Just (ReplaceCards new old)
-    ReplaceHandIndex from to -> Just (ReplaceHandIndex to from)
-    ReplaceSplitDepth from to -> Just (ReplaceSplitDepth to from)
-
 class Validates entity delta err | entity -> delta, entity -> err where
   validateDelta :: delta -> entity -> Either err delta
 
-applyIfValid ::
-  (Clocked entity, Validates entity delta err, DD.DeltaDriven entity delta) =>
-  (Tick -> Tick) ->
-  delta ->
-  StateSnapshot entity delta ->
-  Either err (StateSnapshot entity delta)
-applyIfValid bumpTick delta snapshot@(StateSnapshot entity _) =
-  case validateDelta delta entity of
-    Left err -> Left err
-    Right _ -> Right (applySnapshotDelta bumpTick delta snapshot)
-
+-- applyIfValid ::
+--   (Clocked entity, Validates entity delta err, DeltaDriven entity delta) =>
+--   (Tick -> Tick) ->
+--   delta ->
+--   StateSnapshot entity delta ->
+--   Either err (StateSnapshot entity delta)
+-- applyIfValid bumpTick delta snapshot@(StateSnapshot entity _) =
+--   case validateDelta delta entity of
+--     Left err -> Left err
+--     Right _ -> Right (applySnapshotDelta bumpTick delta snapshot)
+--
 -- instance Validates HandState HandDelta HandDeltaViolation where
 --   validateDelta delta _handState =
 --     let phase = handPhase delta
@@ -126,7 +137,7 @@ handPhaseFromState hs =
   let cards = _handCards hs
       bet = _originalBet hs
    in case categorize cards of
-        HC.Blackjack ->
+        Blackjack ->
           NaturalBlackjack
         _
           | null cards && bet == 0 ->
@@ -255,3 +266,20 @@ validateInPhase phase d = case d of
 --   HittingFSM             -> Hitting
 --   OneCardDrawFSM reason  -> OneCardDraw reason
 --   ResolvedFSM res        -> Resolved res
+
+instance DeltaDriven TableState TableDelta where
+  applyDelta delta ts = case delta of
+    SetOffering ref -> ts {_offeringUsed = ref}
+    SetMinBet amt -> ts {_minBet = amt}
+    SetTableName name -> ts {_tableName = name}
+    StartRound ref -> ts {_currentRound = Just ref}
+    EndRound -> ts {_currentRound = Nothing}
+
+  describeDelta delta _ = case delta of
+    SetOffering _ -> "Set offering (frozen ref)"
+    SetMinBet amt -> "Set minimum bet to " ++ show amt
+    SetTableName name -> "Set table name to " ++ name
+    StartRound rid -> "Started round " ++ show rid
+    EndRound -> "Ended current round"
+
+  previewDelta delta ts = Just (applyDelta delta ts)

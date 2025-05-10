@@ -4,7 +4,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.World.Types.Registry where
+module Pitboss.Trace.Registry where
 
 -- registry utilities
 
@@ -12,7 +12,7 @@ import Data.Bits (shiftL, (.|.))
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
-import Pitboss.World.Types.Identifier
+import Pitboss.Trace.Registry.Identifier
 
 -- uid extraction
 

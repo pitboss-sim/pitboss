@@ -1,8 +1,8 @@
-module Pitboss.World.Types.EntityRef where
+module Pitboss.Trace.Registry.EntityRef where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.World.State.Types.Clocked (Tick)
+import Pitboss.Trace.Entity.Capabilities.Clocked
 
 data EntityRef e = EntityRef
   { refTick :: Tick,

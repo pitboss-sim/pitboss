@@ -1,4 +1,4 @@
-module Pitboss.World.State.Types.Occupancy where
+module Pitboss.Trace.Entity.Types.FiniteMap.Occupancy where
 
 data Occupancy a
   = Absent

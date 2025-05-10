@@ -1,33 +1,31 @@
 {-# LANGUAGE DerivingStrategies #-}
 
-module Pitboss.World where
+module Pitboss.Trace where
 
 import Control.Lens (Lens', lens)
 import GHC.Generics (Generic)
-import Pitboss.World.State.Actor
-import Pitboss.World.State.Hand
-import Pitboss.World.State.Offering (OfferingState)
-import Pitboss.World.State.Round
-import Pitboss.World.State.Shoe
-import Pitboss.World.State.Spot
-import Pitboss.World.Types.Identifier
-import Pitboss.World.Types.Registry
+import Pitboss.Trace.Entity.Actor
+import Pitboss.Trace.Entity.Hand
+import Pitboss.Trace.Entity.Offering
+import Pitboss.Trace.Entity.Spot
+import Pitboss.Trace.Registry
+import Pitboss.Trace.Registry.Identifier
 
 -- global simulation state
 
-data WorldState = WorldState
+data Trace = Trace
   { _offeringsReg :: Registry OfferingId OfferingState,
     _actorsReg :: Registry ActorId ActorState,
-    _shoesReg :: Registry ShoeId ShoeState,
-    _roundsReg :: Registry RoundId RoundState,
+    _shoesReg :: Registry ShoeId SpotState,
+    _roundsReg :: Registry RoundId HandState,
     _spotsReg :: Registry SpotId SpotState,
     _spotHandsReg :: Registry HandId HandState
   }
   deriving stock (Generic, Show)
 
-emptyWorldState :: WorldState
-emptyWorldState =
-  WorldState
+emptyTrace :: Trace
+emptyTrace =
+  Trace
     { _offeringsReg = mempty,
       _actorsReg = mempty,
       _shoesReg = mempty,
@@ -38,20 +36,20 @@ emptyWorldState =
 
 -- lenses
 
-lensOfferings :: Lens' WorldState (Registry OfferingId OfferingState)
+lensOfferings :: Lens' Trace (Registry OfferingId OfferingState)
 lensOfferings = lens _offeringsReg (\s x -> s {_offeringsReg = x})
 
-lensActors :: Lens' WorldState (Registry ActorId ActorState)
+lensActors :: Lens' Trace (Registry ActorId ActorState)
 lensActors = lens _actorsReg (\s x -> s {_actorsReg = x})
 
-lensShoes :: Lens' WorldState (Registry ShoeId ShoeState)
+lensShoes :: Lens' Trace (Registry ShoeId SpotState)
 lensShoes = lens _shoesReg (\s x -> s {_shoesReg = x})
 
-lensRounds :: Lens' WorldState (Registry RoundId RoundState)
+lensRounds :: Lens' Trace (Registry Bounded HandState)
 lensRounds = lens _roundsReg (\s x -> s {_roundsReg = x})
 
-lensSpots :: Lens' WorldState (Registry SpotId SpotState)
+lensSpots :: Lens' Trace (Registry SpotId SpotState)
 lensSpots = lens _spotsReg (\s x -> s {_spotsReg = x})
 
-lensHands :: Lens' WorldState (Registry HandId HandState)
+lensHands :: Lens' Trace (Registry HandId HandState)
 lensHands = lens _spotHandsReg (\s x -> s {_spotHandsReg = x})

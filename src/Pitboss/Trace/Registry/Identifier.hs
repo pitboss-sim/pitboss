@@ -3,7 +3,7 @@
 
 -- globally unique identifiers
 
-module Pitboss.World.Types.Identifier where
+module Pitboss.Trace.Registry.Identifier where
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Bits (shiftL, (.|.))

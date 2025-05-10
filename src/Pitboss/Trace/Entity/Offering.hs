@@ -1,12 +1,11 @@
-module Pitboss.World.State.Offering where
+module Pitboss.Trace.Entity.Offering where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Offering.Matter
 import Pitboss.Blackjack.Offering.RuleSet
-import Pitboss.World.State.Types.Clocked
-import Pitboss.World.State.Types.DeltaDriven
+import Pitboss.Trace.Entity.Capabilities.Clocked
 
 mkOfferingState :: Tick -> Matter -> RuleSet -> OfferingState
 mkOfferingState t m r =
@@ -27,6 +26,10 @@ instance ToJSON OfferingState
 
 instance FromJSON OfferingState
 
+instance Clocked OfferingState where
+  tick = _tick
+  setTick t os = os {_tick = t}
+
 data OfferingDelta
   = SetMatter Matter
   | SetRules RuleSet
@@ -36,21 +39,3 @@ data OfferingDelta
 instance ToJSON OfferingDelta
 
 instance FromJSON OfferingDelta
-
-instance Clocked OfferingState where
-  tick = _tick
-  setTick t os = os {_tick = t}
-
-instance DeltaDriven OfferingState OfferingDelta where
-  applyDelta d os = case d of
-    SetMatter m -> os {_offeringMatter = m}
-    SetRules r -> os {_offeringRules = r}
-    ReplaceOffering (Offering m r) -> os {_offeringMatter = m, _offeringRules = r}
-
-  describeDelta :: OfferingDelta -> entity -> String
-  describeDelta d _ = case d of
-    SetMatter _ -> "Updated matter config"
-    SetRules _ -> "Updated rule set"
-    ReplaceOffering _ -> "Replaced full offering"
-
-  previewDelta d os = Just (applyDelta d os)

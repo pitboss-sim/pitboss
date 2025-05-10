@@ -4,14 +4,14 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE StandaloneDeriving #-}
 
-module Pitboss.Sim.FSM.Hand where
+module Pitboss.Mechanics.Hand.FSM where
 
 import Pitboss.Blackjack.Card (Rank (..))
 import Pitboss.Blackjack.Hand (Hand (..), unHand)
 import Pitboss.Blackjack.Hand.Category qualified as HC
 import Pitboss.Blackjack.Hand.Score qualified as HS
 import Pitboss.Blackjack.Offering.RuleSet (InsuranceOutcome (..), RuleSet (..), Surrender (..), isH17)
-import Pitboss.Sim.FSM.Types.Transitionable
+import Pitboss.Mechanics.Types.Transitionable
 
 -- shared types
 

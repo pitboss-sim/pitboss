@@ -1,6 +1,6 @@
 {-# LANGUAGE FunctionalDependencies #-}
 
-module Pitboss.Sim.FSM.Types.PhaseTag where
+module Pitboss.Mechanics.Types.PhaseTag where
 
 data RoundPhase
   = Awaiting

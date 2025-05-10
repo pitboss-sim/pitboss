@@ -6,6 +6,7 @@
 
 module Pitboss.Sim.FSM.Round.ENHC where
 
+import Pitboss.Sim.FSM.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
 import Pitboss.Sim.FSM.Types.Transitionable (TransitionPhase (..), Transitionable (..))
 
 data ENHCPhase
@@ -57,6 +58,17 @@ finishDealerENHC ENHCDealerFSM = ENHCSettleFSM
 
 resolvePayoutsENHC :: ENHCFSM 'ENHCSettle -> ENHCFSM 'ENHCComplete
 resolvePayoutsENHC ENHCSettleFSM = ENHCCompleteFSM
+
+instance PhaseTag ENHCFSM RoundPhase where
+  phaseTag = \case
+    ENHCAwaitingFSM -> Awaiting
+    ENHCBetsFSM -> Bets
+    ENHCDealFSM -> Deal
+    ENHCEarlySurrenderFSM -> EarlySurrender
+    ENHCPlayersFSM -> Players
+    ENHCDealerFSM -> Dealer
+    ENHCSettleFSM -> Settle
+    ENHCCompleteFSM -> Complete
 
 instance Transitionable (ENHCFSM p) where
   transitionType = \case

@@ -9,6 +9,7 @@ import Pitboss.Blackjack.Offering.RuleSet (InsuranceOutcome (..), RuleSet (..), 
 import Pitboss.Sim.FSM.Hand (AbandonedReason (..), SomeHandFSM, mkHandFSMAbandoned)
 import Pitboss.Sim.FSM.Round.ENHC (ENHCFSM (..), ENHCPhase (..), dealCardsENHC)
 import Pitboss.Sim.FSM.Round.Peek (PeekFSM (..), PeekPhase (..), dealCardsPeek)
+import Pitboss.Sim.FSM.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
 import Pitboss.Sim.FSM.Types.Transitionable (Transitionable (..))
 
 data RoundFlavor = IsPeek | IsENHC
@@ -21,19 +22,6 @@ roundFlavor = \case
 data RoundFSM where
   PeekRound :: PeekFSM p -> RoundFSM
   ENHCRound :: ENHCFSM p -> RoundFSM
-
-data RoundPhase
-  = Awaiting
-  | Bets
-  | Deal
-  | EarlySurrender
-  | InsuranceDecision
-  | InsuranceSettled
-  | Peek
-  | Players
-  | Dealer
-  | Settle
-  | Complete
 
 roundPhase :: RoundFSM -> RoundPhase
 roundPhase = \case
@@ -90,6 +78,11 @@ maybeEnterEarlySurrenderENHC rules fsm =
 
 class AtDecisionPoint fsm where
   toPlayersPhase :: fsm -> Maybe fsm
+
+phaseTagRoundFSM :: RoundFSM -> RoundPhase
+phaseTagRoundFSM = \case
+  PeekRound f -> phaseTag f
+  ENHCRound f -> phaseTag f
 
 instance AtDecisionPoint (PeekFSM p) where
   toPlayersPhase = \case

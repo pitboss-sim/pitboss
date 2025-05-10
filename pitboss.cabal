@@ -52,6 +52,7 @@ library
                       Pitboss.Sim.FSM.Round
                       Pitboss.Sim.FSM.Round.ENHC
                       Pitboss.Sim.FSM.Round.Peek
+                      Pitboss.Sim.FSM.Types.PhaseTag
                       Pitboss.Sim.FSM.Types.Transitionable
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret

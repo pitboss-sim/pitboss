@@ -6,6 +6,7 @@
 
 module Pitboss.Sim.FSM.Round.Peek where
 
+import Pitboss.Sim.FSM.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
 import Pitboss.Sim.FSM.Types.Transitionable (TransitionPhase (..), Transitionable (..))
 
 data PeekPhase
@@ -75,6 +76,20 @@ finishDealerPeek PeekDealerFSM = PeekSettleFSM
 
 resolvePayoutsPeek :: PeekFSM 'PeekSettle -> PeekFSM 'PeekComplete
 resolvePayoutsPeek PeekSettleFSM = PeekCompleteFSM
+
+instance PhaseTag PeekFSM RoundPhase where
+  phaseTag = \case
+    PeekAwaitingFSM -> Awaiting
+    PeekBetsFSM -> Bets
+    PeekDealFSM -> Deal
+    PeekEarlySurrenderFSM -> EarlySurrender
+    PeekPeekFSM -> Peek
+    PeekInsuranceDecisionFSM -> InsuranceDecision
+    PeekInsuranceSettledFSM -> InsuranceSettled
+    PeekPlayersFSM -> Players
+    PeekDealerFSM -> Dealer
+    PeekSettleFSM -> Settle
+    PeekCompleteFSM -> Complete
 
 instance Transitionable (PeekFSM p) where
   transitionType = \case

@@ -7,7 +7,7 @@ data Offering = Offering
   { matter :: Matter,
     ruleSet :: RuleSet
   }
-  deriving (Show)
+  deriving (Eq, Show)
 
 mkOffering :: Matter -> RuleSet -> Offering
 mkOffering m r = Offering {matter = m, ruleSet = r}

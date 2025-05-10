@@ -1,53 +1,103 @@
 module Pitboss.Blackjack.Offering.RuleSet where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import GHC.TypeLits (Nat)
 
 data HoleCardRule
   = Peek
   | ENHC
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance FromJSON HoleCardRule
+
+instance ToJSON HoleCardRule
 
 data InsuranceOutcome = Lost | Paid | PaidEvenMoney
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance FromJSON InsuranceOutcome
+
+instance ToJSON InsuranceOutcome
 
 data Soft17Rule = StandSoft17 | HitSoft17
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON Soft17Rule
+
+instance ToJSON Soft17Rule
 
 data DASRule = DAS | NoDAS
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON DASRule
+
+instance ToJSON DASRule
 
 data DoubleRule
   = DoubleAny
   | Double9_10
   | Double9_11
   | Double10_11
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON DoubleRule
+
+instance ToJSON DoubleRule
 
 data SplitAcesAllowed = NoSplitAces | SplitAces
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON SplitAcesAllowed
+
+instance ToJSON SplitAcesAllowed
 
 data ResplitAcesAllowed = NoResplitAces | ResplitAces
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON ResplitAcesAllowed
+
+instance ToJSON ResplitAcesAllowed
 
 data SplitAcesFrozen = OneCardOnly | FullPlay
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON SplitAcesFrozen
+
+instance ToJSON SplitAcesFrozen
 
 data SplitHands
   = SP2
   | SP3
   | SP4
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON SplitHands
+
+instance ToJSON SplitHands
 
 data Surrender = Early | Late | NoSurrender
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON Surrender
+
+instance ToJSON Surrender
 
 data Payout = P3_2 | P6_5
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON Payout
+
+instance ToJSON Payout
 
 data Pen
   = PenCards Nat
   | PenFrac Nat Nat
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON Pen
+
+instance ToJSON Pen
 
 data RuleSet = RuleSet
   { holeCardRule :: HoleCardRule,
@@ -62,7 +112,11 @@ data RuleSet = RuleSet
     payout :: Payout,
     pen :: Pen
   }
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance FromJSON RuleSet
+
+instance ToJSON RuleSet
 
 canDouble :: DoubleRule -> Int -> Bool
 canDouble DoubleAny _ = True

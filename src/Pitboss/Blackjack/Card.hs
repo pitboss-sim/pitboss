@@ -1,13 +1,28 @@
 module Pitboss.Blackjack.Card where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
+
 data Suit = Hearts | Diamonds | Clubs | Spades
-  deriving (Show, Eq, Enum)
+  deriving (Show, Eq, Enum, Generic)
+
+instance ToJSON Suit
+
+instance FromJSON Suit
 
 data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Jack | Queen | King | Ace
-  deriving (Show, Eq, Enum, Ord)
+  deriving (Show, Eq, Enum, Ord, Generic)
+
+instance ToJSON Rank
+
+instance FromJSON Rank
 
 data Card = Card {rank :: Rank, suit :: Suit}
-  deriving (Show, Eq)
+  deriving (Show, Eq, Generic)
+
+instance ToJSON Card
+
+instance FromJSON Card
 
 value :: Card -> Int
 value (Card Two _) = 2

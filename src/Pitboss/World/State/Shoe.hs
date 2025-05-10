@@ -1,21 +1,32 @@
 module Pitboss.World.State.Shoe where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.World.State.Types.Clocked
 import Pitboss.World.State.Types.DeltaDriven
+import Pitboss.World.State.Types.Snapshot (StateSnapshot, defaultSnapshot)
 
 data ShoeState = ShoeState
   { shoeTick :: Tick,
     cardsRemaining :: [Card],
     cutPoint :: Maybe Int
   }
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance ToJSON ShoeState
+
+instance FromJSON ShoeState
 
 data ShoeDelta
   = DrawCard Card
   | SetCutPoint (Maybe Int)
   | RefillShoe [Card]
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance ToJSON ShoeDelta
+
+instance FromJSON ShoeDelta
 
 instance Clocked ShoeState where
   tick = shoeTick
@@ -34,3 +45,15 @@ instance DeltaDriven ShoeState ShoeDelta where
     RefillShoe cards -> "Refilled shoe with " ++ show (length cards) ++ " cards"
 
   previewDelta d ss = Just (applyDelta d ss)
+
+defaultShoeState :: Tick -> [Card] -> Maybe Int -> ShoeState
+defaultShoeState t cards cut =
+  ShoeState
+    { shoeTick = t,
+      cardsRemaining = cards,
+      cutPoint = cut
+    }
+
+defaultShoeSnapshot :: Tick -> [Card] -> Maybe Int -> StateSnapshot ShoeState ShoeDelta
+defaultShoeSnapshot t cards cut =
+  defaultSnapshot (defaultShoeState t cards cut)

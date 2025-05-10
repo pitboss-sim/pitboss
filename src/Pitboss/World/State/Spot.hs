@@ -6,6 +6,7 @@ import Pitboss.World.State.Types.Clocked
 import Pitboss.World.State.Types.DeltaDriven
 import Pitboss.World.State.Types.FiniteMap (FiniteMap, emptyFiniteMap, insertFiniteMap)
 import Pitboss.World.State.Types.Occupancy (Occupancy (..))
+import Pitboss.World.State.Types.Snapshot (StateSnapshot, defaultSnapshot)
 
 data HandIx = Hand1 | Hand2 | Hand3 | Hand4
   deriving (Eq, Ord, Show, Enum, Bounded)
@@ -56,3 +57,7 @@ defaultSpotState t label =
       spotLabel = label,
       spotHands = emptyFiniteMap Absent
     }
+
+defaultSpotSnapshot :: Tick -> String -> StateSnapshot SpotState SpotDelta
+defaultSpotSnapshot t label =
+  defaultSnapshot (defaultSpotState t label)

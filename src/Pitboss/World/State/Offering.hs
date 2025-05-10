@@ -1,23 +1,34 @@
 module Pitboss.World.State.Offering where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Offering.Matter
 import Pitboss.Blackjack.Offering.RuleSet
 import Pitboss.World.State.Types.Clocked
 import Pitboss.World.State.Types.DeltaDriven
+import Pitboss.World.State.Types.Snapshot (StateSnapshot (..), defaultSnapshot)
 
 data OfferingState = OfferingState
   { offeringTick :: Tick,
     offeringMatter :: Matter,
     offeringRules :: RuleSet
   }
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance ToJSON OfferingState
+
+instance FromJSON OfferingState
 
 data OfferingDelta
   = SetMatter Matter
   | SetRules RuleSet
   | ReplaceOffering Offering
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance ToJSON OfferingDelta
+
+instance FromJSON OfferingDelta
 
 instance Clocked OfferingState where
   tick = offeringTick
@@ -36,3 +47,15 @@ instance DeltaDriven OfferingState OfferingDelta where
     ReplaceOffering _ -> "Replaced full offering"
 
   previewDelta d os = Just (applyDelta d os)
+
+defaultOfferingState :: Tick -> Matter -> RuleSet -> OfferingState
+defaultOfferingState t m r =
+  OfferingState
+    { offeringTick = t,
+      offeringMatter = m,
+      offeringRules = r
+    }
+
+defaultOfferingSnapshot :: Tick -> Matter -> RuleSet -> StateSnapshot OfferingState OfferingDelta
+defaultOfferingSnapshot t m r =
+  defaultSnapshot (defaultOfferingState t m r)

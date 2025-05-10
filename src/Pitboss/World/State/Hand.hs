@@ -1,9 +1,12 @@
 module Pitboss.World.State.Hand where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips (Chips)
 import Pitboss.World.State.Types.Clocked (Clocked (..), Tick)
 import Pitboss.World.State.Types.DeltaDriven (DeltaDriven (..))
+import Pitboss.World.State.Types.Snapshot (StateSnapshot, defaultSnapshot)
 
 data HandState = HandState
   { handTick :: Tick,
@@ -12,7 +15,11 @@ data HandState = HandState
     splitDepth :: Int,
     handIx :: Int
   }
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance ToJSON HandState
+
+instance FromJSON HandState
 
 data HandDelta
   = SetCards [Card]
@@ -20,7 +27,11 @@ data HandDelta
   | SetSplitDepth Int
   | IncrementSplitDepth
   | SetHandIndex Int
-  deriving (Eq, Show)
+  deriving (Eq, Show, Generic)
+
+instance ToJSON HandDelta
+
+instance FromJSON HandDelta
 
 instance Clocked HandState where
   tick = handTick
@@ -42,3 +53,17 @@ instance DeltaDriven HandState HandDelta where
     SetSplitDepth d' -> "Set split depth to " ++ show d'
     IncrementSplitDepth -> "Incremented split depth"
     SetHandIndex ix -> "Set hand index to " ++ show ix
+
+defaultHandState :: Tick -> [Card] -> Chips -> Int -> Int -> HandState
+defaultHandState t cards bet depth ix =
+  HandState
+    { handTick = t,
+      handCards = cards,
+      originalBet = bet,
+      splitDepth = depth,
+      handIx = ix
+    }
+
+defaultHandSnapshot :: Tick -> [Card] -> Chips -> Int -> Int -> StateSnapshot HandState HandDelta
+defaultHandSnapshot t cards bet depth ix =
+  defaultSnapshot (defaultHandState t cards bet depth ix)

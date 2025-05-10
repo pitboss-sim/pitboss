@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.Capabilities.DeltaDriven where
 
 import Pitboss.Blackjack.Hand.Category
 import Pitboss.Blackjack.Offering
-import Pitboss.Sim.FSM.Hand hiding (Blackjack)
+import Pitboss.Mechanics.Hand.FSM hiding (Blackjack)
 import Pitboss.Trace.Entity.Actor
 import Pitboss.Trace.Entity.Hand
 import Pitboss.Trace.Entity.Offering

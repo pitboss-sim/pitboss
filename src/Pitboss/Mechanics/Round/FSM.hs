@@ -3,14 +3,14 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Sim.FSM.Round where
+module Pitboss.Mechanics.Round.FSM where
 
 import Pitboss.Blackjack.Offering.RuleSet (InsuranceOutcome (..), RuleSet (..), Surrender (..))
-import Pitboss.Sim.FSM.Hand (AbandonedReason (..), SomeHandFSM, mkHandFSMAbandoned)
-import Pitboss.Sim.FSM.Round.ENHC (ENHCFSM (..), ENHCPhase (..), dealCardsENHC)
-import Pitboss.Sim.FSM.Round.Peek (PeekFSM (..), PeekPhase (..), dealCardsPeek)
-import Pitboss.Sim.FSM.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
-import Pitboss.Sim.FSM.Types.Transitionable (Transitionable (..))
+import Pitboss.Mechanics.Hand.FSM (AbandonedReason (..), SomeHandFSM, mkHandFSMAbandoned)
+import Pitboss.Mechanics.Round.FSM.ENHC
+import Pitboss.Mechanics.Round.FSM.Peek
+import Pitboss.Mechanics.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
+import Pitboss.Mechanics.Types.Transitionable (Transitionable (..))
 
 data RoundFlavor = IsPeek | IsENHC
 

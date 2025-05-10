@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE KindSignatures #-}
 
-module Pitboss.Sim.FSM.Types.Transitionable where
+module Pitboss.Mechanics.Types.Transitionable where
 
 import Data.Kind (Type)
 

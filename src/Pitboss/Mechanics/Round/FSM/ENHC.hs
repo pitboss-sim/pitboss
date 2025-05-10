@@ -4,10 +4,10 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE StandaloneDeriving #-}
 
-module Pitboss.Sim.FSM.Round.ENHC where
+module Pitboss.Mechanics.Round.FSM.ENHC where
 
-import Pitboss.Sim.FSM.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
-import Pitboss.Sim.FSM.Types.Transitionable (TransitionPhase (..), Transitionable (..))
+import Pitboss.Mechanics.Types.PhaseTag (PhaseTag (..), RoundPhase (..))
+import Pitboss.Mechanics.Types.Transitionable (TransitionPhase (..), Transitionable (..))
 
 data ENHCPhase
   = ENHCAwaiting

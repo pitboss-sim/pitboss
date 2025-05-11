@@ -69,6 +69,69 @@ library
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
+                      Pitboss.Trace
+                      Pitboss.Trace.Entity
+                      Pitboss.Trace.Entity.Capabilities
+                      Pitboss.Trace.Entity.Dealer.Delta
+                      Pitboss.Trace.Entity.Dealer.Delta.Attrs
+                      Pitboss.Trace.Entity.Dealer.Delta.Modes
+                      Pitboss.Trace.Entity.Dealer.Delta.Rels
+                      Pitboss.Trace.Entity.Dealer.Types
+                      Pitboss.Trace.Entity.DealerHand.Delta
+                      Pitboss.Trace.Entity.DealerHand.Delta.Attrs
+                      Pitboss.Trace.Entity.DealerHand.Delta.Modes
+                      Pitboss.Trace.Entity.DealerHand.Delta.Rels
+                      Pitboss.Trace.Entity.DealerHand.Types
+                      Pitboss.Trace.Entity.DealerRound.Delta
+                      Pitboss.Trace.Entity.DealerRound.Delta.Attrs
+                      Pitboss.Trace.Entity.DealerRound.Delta.Modes
+                      Pitboss.Trace.Entity.DealerRound.Delta.Rels
+                      Pitboss.Trace.Entity.DealerRound.Types
+                      Pitboss.Trace.Entity.Offering.Delta
+                      Pitboss.Trace.Entity.Offering.Delta.Attrs
+                      Pitboss.Trace.Entity.Offering.Delta.Modes
+                      Pitboss.Trace.Entity.Offering.Delta.Rels
+                      Pitboss.Trace.Entity.Offering.Types
+                      Pitboss.Trace.Entity.Player.Delta
+                      Pitboss.Trace.Entity.Player.Delta.Attrs
+                      Pitboss.Trace.Entity.Player.Delta.Modes
+                      Pitboss.Trace.Entity.Player.Delta.Rels
+                      Pitboss.Trace.Entity.Player.Types
+                      Pitboss.Trace.Entity.PlayerHand.Delta
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Attrs
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Modes
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Rels
+                      Pitboss.Trace.Entity.PlayerHand.Types
+                      Pitboss.Trace.Entity.PlayerSpot.Delta
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Attrs
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Modes
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Rels
+                      Pitboss.Trace.Entity.PlayerSpot.Types
+                      Pitboss.Trace.Entity.Table.Delta
+                      Pitboss.Trace.Entity.Table.Delta.Attrs
+                      Pitboss.Trace.Entity.Table.Delta.Modes
+                      Pitboss.Trace.Entity.Table.Delta.Rels
+                      Pitboss.Trace.Entity.Table.Types
+                      Pitboss.Trace.Entity.TableShoe.Delta
+                      Pitboss.Trace.Entity.TableShoe.Types
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Attrs
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Modes
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Rels
+                      Pitboss.Trace.Entity.TableShoeCursor.Types
+                      Pitboss.Trace.Entity.Types
+                      Pitboss.Trace.Entity.Types.FiniteMap
+                      Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
+                      Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
+                      Pitboss.Trace.Entity.Types.Meta
+                      Pitboss.Trace.Registry
+                      Pitboss.Trace.Snapshot
+                      Pitboss.Trace.Timeline
+                      Pitboss.Trace.Types
+                      Pitboss.Trace.Types.EntityRef
+                      Pitboss.Trace.Types.Identifier
+                      Pitboss.Trace.Types.Uid
+
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,
@@ -76,6 +139,9 @@ library
                       aeson-pretty,
                       array,
                       containers,
+                      hashable,
+                      insert-ordered-containers,
+                      lens,
                       random,
                       text,
     hs-source-dirs:   src

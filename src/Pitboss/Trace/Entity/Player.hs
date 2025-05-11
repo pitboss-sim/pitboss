@@ -1,52 +1,67 @@
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE OverloadedStrings #-}
+
 module Pitboss.Trace.Entity.Player where
 
-import Data.Aeson (FromJSON, ToJSON)
-import GHC.Generics (Generic)
-import Pitboss.Blackjack.Chips (Chips)
+import Pitboss.FSM.DealerRoundFSM
+import Pitboss.FSM.PlayerTableFSM
 import Pitboss.Trace.Entity.Capabilities.Clocked
+import Pitboss.Trace.Entity.Capabilities.DeltaDriven
+import Pitboss.Trace.Entity.Capabilities.Reversible
+import Pitboss.Trace.Entity.Types.FiniteMap
+import Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
+import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 import Pitboss.Trace.Timeline.Identifier
 
-data PlayerEntity = PlayerEntity
-  { _tick :: Tick,
-    _state :: PlayerState,
-    -- _fsm :: SomePlayerFSM, -- TBD
-    _rels :: PlayerEntityRelations
-  }
-  deriving (Show, Eq, Generic)
-
-instance ToJSON PlayerEntity
-
-instance FromJSON PlayerEntity
-
 data PlayerState = PlayerState
-  { _playerName :: String,
-    _bankroll :: Chips
+  { fsm :: SomePlayerTableFSM,
+    interrupt :: Maybe (InterruptReason, Tick),
+    assignedTable :: Maybe TableId,
+    playingSpots :: FiniteMap PlayerSpotIx (Occupancy SpotId)
   }
-  deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerState
+deriving instance Show PlayerState
 
-instance FromJSON PlayerState
+deriving instance Eq PlayerState
 
-instance Clocked PlayerEntity where
-  tick = _tick
-  setTick t p = p {_tick = t}
+data PlayerSpotIx = PlayerSpot1 | PlayerSpot2 | PlayerSpot3 | PlayerSpot4
+  deriving (Eq, Show, Ord, Enum, Bounded)
+
+instance BoundedEnum PlayerSpotIx
 
 data PlayerDelta
-  = RenamePlayer String
-  | SetBankroll Chips
-  deriving (Eq, Show, Generic)
+  = ReplacePlayerFSM SomePlayerTableFSM SomePlayerTableFSM
+  | ReplaceAssignedTable (Maybe TableId) (Maybe TableId)
+  | ReplaceInterrupt (Maybe (InterruptReason, Tick)) (Maybe (InterruptReason, Tick))
+  | ReplaceSpotClaim PlayerSpotIx (Occupancy SpotId) (Occupancy SpotId)
+  deriving (Eq, Show)
 
-instance ToJSON PlayerDelta
+instance Reversible PlayerDelta where
+  invert = \case
+    ReplacePlayerFSM old new -> Just $ ReplacePlayerFSM new old
+    ReplaceAssignedTable old new -> Just $ ReplaceAssignedTable new old
+    ReplaceInterrupt old new -> Just $ ReplaceInterrupt new old
+    ReplaceSpotClaim ix old new -> Just $ ReplaceSpotClaim ix new old
 
-instance FromJSON PlayerDelta
+instance DeltaDriven PlayerState PlayerDelta where
+  applyDelta delta s = case delta of
+    ReplacePlayerFSM _ new ->
+      s {fsm = new}
+    ReplaceAssignedTable _ new ->
+      s {assignedTable = new}
+    ReplaceInterrupt _ new ->
+      s {interrupt = new}
+    ReplaceSpotClaim ix _ new ->
+      s {playingSpots = insertFiniteMap ix new (playingSpots s)}
 
-data PlayerEntityRelations = PlayerEntityRelations
-  { _clonedFrom :: Maybe PlayerId,
-    _seatedAt :: Maybe TableId
-  }
-  deriving (Eq, Show, Generic)
+  previewDelta delta s = Just (applyDelta delta s)
 
-instance ToJSON PlayerEntityRelations
-
-instance FromJSON PlayerEntityRelations
+  describeDelta delta _ = case delta of
+    ReplacePlayerFSM _ new ->
+      "Set FSM to: " ++ show new
+    ReplaceAssignedTable _ new ->
+      "Set assigned table: " ++ maybe "None" show new
+    ReplaceInterrupt _ new ->
+      "Set interrupt: " ++ maybe "None" (const "Some") new
+    ReplaceSpotClaim ix _ new ->
+      "Set spot claim at " ++ show ix ++ " to " ++ show new

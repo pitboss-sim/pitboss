@@ -6,38 +6,39 @@ module Pitboss.Trace.Entity.Dealer where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.FSM.DealerHandFSM
+import Pitboss.Trace.Entity.Capabilities.Clocked
 import Pitboss.Trace.Entity.Table hiding (_tick)
 import Pitboss.Trace.Timeline.EntityRef
 import Pitboss.Trace.Timeline.Identifier
 
--- data DealerEntity = DealerEntity
---   { _tick :: Tick,
---     _state :: DealerState,
---     _fsm :: SomeDealerFSM,
---     _rels :: DealerRelations
---   }
---   deriving (Generic)
---
--- instance Show DealerEntity where
---   show (DealerEntity t s f r) =
---     "DealerEntity { _tick = "
---       ++ show t
---       ++ ", _state = "
---       ++ show s
---       ++ ", _fsm = "
---       ++ show f
---       ++ ", _rels = "
---       ++ show r
---       ++ " }"
---
--- instance Clocked DealerEntity where
---   tick = _tick
---   setTick t d = d {_tick = t}
---
--- instance ToJSON DealerEntity
---
--- instance FromJSON DealerEntity
---
+data DealerEntity = DealerEntity
+  { _tick :: Tick,
+    _state :: DealerState,
+    _fsm :: SomeDealerHandFSM,
+    _rels :: DealerRelations
+  }
+  deriving (Generic)
+
+instance Show DealerEntity where
+  show (DealerEntity t s f r) =
+    "DealerEntity { _tick = "
+      ++ show t
+      ++ ", _state = "
+      ++ show s
+      ++ ", _fsm = "
+      ++ show f
+      ++ ", _rels = "
+      ++ show r
+      ++ " }"
+
+instance Clocked DealerEntity where
+  tick = _tick
+  setTick t d = d {_tick = t}
+
+instance ToJSON DealerEntity
+
+instance FromJSON DealerEntity
+
 data DealerState = DealerState
   { _dealerName :: String,
     _assignedTable :: Maybe (EntityRef TableState)

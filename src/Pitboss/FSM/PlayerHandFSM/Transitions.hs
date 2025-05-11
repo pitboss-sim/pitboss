@@ -1,20 +1,14 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Mechanics.Player.Transitions where
+module Pitboss.FSM.PlayerHandFSM.Transitions where
 
-import Pitboss.Blackjack.Card (Rank (..))
-import Pitboss.Blackjack.Hand (Hand (..), unHand)
+import Pitboss.Blackjack.Card
+import Pitboss.Blackjack.Hand
 import Pitboss.Blackjack.Hand.Category qualified as HC
-import Pitboss.Mechanics.Player.Types
-import Pitboss.Mechanics.Types.Transitionable
-
--- player fsm
--- TBD
-
--- player hand fsm
+import Pitboss.FSM.PlayerHandFSM.Types
+import Pitboss.FSM.Types.Transitionable
 
 initialDecision :: PlayerHandFSM 'Decision 'OKHit 'OKDbl 'OKSpl
 initialDecision = DecisionFSM

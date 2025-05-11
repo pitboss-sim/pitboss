@@ -29,17 +29,38 @@ library
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.Mechanics.Dealer.Guards
-                      Pitboss.Mechanics.Dealer.Transitions
-                      Pitboss.Mechanics.Dealer.Types
-                      Pitboss.Mechanics.Dealer.Types.DealerHandFSM
-                      Pitboss.Mechanics.Dealer.Types.DealerRoundFSM
-                      Pitboss.Mechanics.Dealer.Types.DealerTableFSM
-                      Pitboss.Mechanics.Player.Guards
-                      Pitboss.Mechanics.Player.Transitions
-                      Pitboss.Mechanics.Player.Types
-                      Pitboss.Mechanics.Types.PhaseTag
-                      Pitboss.Mechanics.Types.Transitionable
+                      Pitboss.FSM.DealerHandFSM
+                      Pitboss.FSM.DealerHandFSM.Existential
+                      Pitboss.FSM.DealerHandFSM.JSON
+                      Pitboss.FSM.DealerHandFSM.Laws
+                      Pitboss.FSM.DealerHandFSM.Transitions
+                      Pitboss.FSM.DealerHandFSM.Types
+                      Pitboss.FSM.DealerRoundFSM
+                      Pitboss.FSM.DealerRoundFSM.Existential
+                      Pitboss.FSM.DealerRoundFSM.JSON
+                      Pitboss.FSM.DealerRoundFSM.Laws
+                      Pitboss.FSM.DealerRoundFSM.PhaseTag
+                      Pitboss.FSM.DealerRoundFSM.Transitions
+                      Pitboss.FSM.DealerRoundFSM.Types
+                      Pitboss.FSM.DealerTableFSM
+                      Pitboss.FSM.DealerTableFSM.Existential
+                      Pitboss.FSM.DealerTableFSM.JSON
+                      Pitboss.FSM.DealerTableFSM.Laws
+                      Pitboss.FSM.DealerTableFSM.Transitions
+                      Pitboss.FSM.DealerTableFSM.Types
+                      Pitboss.FSM.PlayerHandFSM
+                      Pitboss.FSM.PlayerHandFSM.Existential
+                      Pitboss.FSM.PlayerHandFSM.JSON
+                      Pitboss.FSM.PlayerHandFSM.Laws
+                      Pitboss.FSM.PlayerHandFSM.Transitions
+                      Pitboss.FSM.PlayerHandFSM.Types
+                      Pitboss.FSM.PlayerSpotFSM
+                      Pitboss.FSM.PlayerSpotFSM.Existential
+                      Pitboss.FSM.PlayerSpotFSM.JSON
+                      Pitboss.FSM.PlayerSpotFSM.Laws
+                      Pitboss.FSM.PlayerSpotFSM.Transitions
+                      Pitboss.FSM.PlayerSpotFSM.Types
+                      Pitboss.FSM.Types.Transitionable
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay

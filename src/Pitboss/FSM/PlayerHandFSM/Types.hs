@@ -1,15 +1,19 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE StandaloneDeriving #-}
 
-module Pitboss.Mechanics.Player.Types where
+module Pitboss.FSM.PlayerHandFSM.Types where
 
-import Pitboss.Blackjack.Offering.RuleSet (InsuranceOutcome (..), Surrender (..))
-import Pitboss.Mechanics.Types.Transitionable
+import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.FSM.Types.Transitionable
 
--- shared types
+data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
+  AbandonedFSM :: AbandonedReason -> PlayerHandFSM ('Abandoned reason) 'NoHit 'NoDbl 'NoSpl
+  BlackjackFSM :: PlayerHandFSM 'NaturalBlackjack 'NoHit 'NoDbl 'NoSpl
+  DecisionFSM :: PlayerHandFSM 'Decision h d s
+  HittingFSM :: PlayerHandFSM 'Hitting h d s
+  OneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
+  ResolvedFSM :: HandResolution -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
 
 data AbandonedReason
   = Surrender Surrender
@@ -49,29 +53,9 @@ data ODbl = OKDbl | NoDbl
 
 data OSpl = OKSpl | NoSpl
 
--- player fsm
--- TBD
-
--- player hand fsm
-
-data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
-  AbandonedFSM :: AbandonedReason -> PlayerHandFSM ('Abandoned reason) 'NoHit 'NoDbl 'NoSpl
-  BlackjackFSM :: PlayerHandFSM 'NaturalBlackjack 'NoHit 'NoDbl 'NoSpl
-  DecisionFSM :: PlayerHandFSM 'Decision h d s
-  HittingFSM :: PlayerHandFSM 'Hitting h d s
-  OneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
-  ResolvedFSM :: HandResolution -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
-
 deriving instance Show (PlayerHandFSM p h d s)
 
 deriving instance Eq (PlayerHandFSM p h d s)
-
-data SomePlayerHandFSM = forall p h d s. SomePlayerHandFSM (PlayerHandFSM p h d s)
-
-mkPlayerHandFSMAbandoned :: AbandonedReason -> SomePlayerHandFSM
-mkPlayerHandFSMAbandoned reason = SomePlayerHandFSM (AbandonedFSM reason)
-
--- transitionable instances
 
 instance Transitionable (PlayerHandFSM p h d s) where
   transitionType = \case

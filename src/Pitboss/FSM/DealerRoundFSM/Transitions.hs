@@ -2,48 +2,14 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Mechanics.Dealer.Transitions where
+module Pitboss.FSM.DealerRoundFSM.Transitions where
 
-import Pitboss.Blackjack.Hand
-import Pitboss.Blackjack.Hand.Score hiding (Blackjack)
-import Pitboss.Blackjack.Offering.RuleSet hiding (Peek)
-import Pitboss.Mechanics.Dealer.Types.DealerRoundFSM
-import Pitboss.Mechanics.Player.Types hiding (DealerBlackjack)
-import Pitboss.Mechanics.Types.PhaseTag
+import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.FSM.DealerRoundFSM.Existential
+import Pitboss.FSM.DealerRoundFSM.Types
+import Pitboss.FSM.PlayerHandFSM
 
--- hand fsm
--- TBD
-
--- dealer round fsm
-
-roundFlavor :: DealerRoundFSM -> DealerRoundFlavor
-roundFlavor = \case
-  PeekDealerRound _ -> IsPeek
-  ENHCDealerRound _ -> IsENHC
-
-roundPhase :: DealerRoundFSM -> DealerRoundPhase
-roundPhase = \case
-  PeekDealerRound (SomePeekFSM f) -> case f of
-    PeekAwaitingFSM -> Awaiting
-    PeekBetsFSM -> Bets
-    PeekDealFSM -> Deal
-    PeekEarlySurrenderFSM -> EarlySurrender
-    PeekPeekFSM -> Peek
-    PeekInsuranceDecisionFSM -> InsuranceDecision
-    PeekInsuranceSettledFSM -> InsuranceSettled
-    PeekPlayersFSM -> Players
-    PeekDealerFSM -> Dealer
-    PeekSettleFSM -> Settle
-    PeekCompleteFSM -> Complete
-  ENHCDealerRound (SomeENHCFSM f) -> case f of
-    ENHCAwaitingFSM -> Awaiting
-    ENHCBetsFSM -> Bets
-    ENHCDealFSM -> Deal
-    ENHCEarlySurrenderFSM -> EarlySurrender
-    ENHCPlayersFSM -> Players
-    ENHCDealerFSM -> Dealer
-    ENHCSettleFSM -> Settle
-    ENHCCompleteFSM -> Complete
+-- some dealer round fsm
 
 abandonHandDueToSurrender :: RuleSet -> Bool -> SomePlayerHandFSM
 abandonHandDueToSurrender _ early =
@@ -73,11 +39,6 @@ maybeEnterEarlySurrenderENHC rules fsm =
   case surrender rules of
     Early -> Right (dealCardsENHC fsm)
     _ -> Left ENHCPlayersFSM
-
-phaseTagDealerRoundFSM :: DealerRoundFSM -> DealerRoundPhase
-phaseTagDealerRoundFSM = \case
-  PeekDealerRound (SomePeekFSM f) -> phaseTag f
-  ENHCDealerRound (SomeENHCFSM f) -> phaseTag f
 
 atPlayersPhase :: DealerRoundFSM -> Bool
 atPlayersPhase = \case
@@ -147,17 +108,3 @@ finishDealerPeek PeekDealerFSM = PeekSettleFSM
 
 resolvePayoutsPeek :: PeekFSM 'PeekSettle -> PeekFSM 'PeekComplete
 resolvePayoutsPeek PeekSettleFSM = PeekCompleteFSM
-
--- dealer hand fsm
-
-dealerShouldHit :: RuleSet -> Hand -> Bool
-dealerShouldHit ruleset hand = case dealerHandTotal hand of
-  Nothing -> False -- busted
-  Just DealerBlackjack -> False
-  Just (Total n soft) -> n < 17 || (n == 17 && soft && isH17 ruleset)
-
-resolveDealerHand :: Hand -> HandResolution
-resolveDealerHand hand = case dealerHandTotal hand of
-  Nothing -> Bust
-  Just DealerBlackjack -> Blackjack
-  Just _ -> Stand

@@ -76,7 +76,17 @@ library
                       Pitboss.Strategy.Types
                       Pitboss.Trace
                       Pitboss.Trace.Entity.Capabilities.Clocked
+                      Pitboss.Trace.Entity.Capabilities.DeltaDriven
                       Pitboss.Trace.Entity.Capabilities.Reversible
+                      Pitboss.Trace.Entity.Dealer
+                      Pitboss.Trace.Entity.DealerHand
+                      Pitboss.Trace.Entity.Offering
+                      Pitboss.Trace.Entity.Player
+                      Pitboss.Trace.Entity.PlayerHand
+                      Pitboss.Trace.Entity.Round
+                      Pitboss.Trace.Entity.Shoe
+                      Pitboss.Trace.Entity.Spot
+                      Pitboss.Trace.Entity.Table
                       Pitboss.Trace.Entity.Types.FiniteMap
                       Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
                       Pitboss.Trace.Entity.Types.FiniteMap.Occupancy

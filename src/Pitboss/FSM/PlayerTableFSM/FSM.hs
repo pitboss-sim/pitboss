@@ -1,21 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE StandaloneDeriving #-}
 
-module Pitboss.FSM.PlayerTableFSM.Types where
+module Pitboss.FSM.PlayerTableFSM.FSM where
 
+import Pitboss.FSM.PlayerTableFSM.Phase
 import Pitboss.FSM.Types.Transitionable
-
-data PlayerPhase
-  = Idle
-  | ChoosingTable
-  | PlacingBet
-  | PlayingHand
-  | Observing
-  | Done
-  deriving (Eq, Show)
 
 data PlayerTableFSM (p :: PlayerPhase) where
   IdleFSM :: PlayerTableFSM 'Idle

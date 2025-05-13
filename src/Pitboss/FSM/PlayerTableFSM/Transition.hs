@@ -1,9 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.FSM.PlayerTableFSM.Transitions where
+module Pitboss.FSM.PlayerTableFSM.Transition where
 
-import Pitboss.FSM.PlayerTableFSM.Types
+import Pitboss.FSM.PlayerTableFSM.FSM
+import Pitboss.FSM.PlayerTableFSM.Phase
 
 beginChoosingTable :: PlayerTableFSM 'Idle -> PlayerTableFSM 'ChoosingTable
 beginChoosingTable IdleFSM = ChoosingTableFSM

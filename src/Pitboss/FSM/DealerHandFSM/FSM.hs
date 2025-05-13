@@ -1,26 +1,12 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.FSM.DealerHandFSM.Types where
+module Pitboss.FSM.DealerHandFSM.FSM where
 
-import GHC.Generics
-import Pitboss.FSM.DealerRoundFSM hiding (Interrupted)
+import Pitboss.FSM.DealerHandFSM.Phase
+import Pitboss.FSM.DealerRoundFSM.Phase hiding (Interrupted)
 import Pitboss.FSM.Types.Transitionable
-
-data DealerHandResolution
-  = DealerBlackjack
-  | DealerStand
-  | DealerBust
-  deriving (Eq, Show, Generic)
-
-data DealerHandPhase
-  = Dealing
-  | Evaluating
-  | Resolved DealerHandResolution
-  | Interrupted InterruptReason
-  deriving (Eq, Show, Generic)
 
 data DealerHandFSM (p :: DealerHandPhase) where
   DealingFSM :: DealerHandFSM 'Dealing

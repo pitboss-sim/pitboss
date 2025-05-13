@@ -2,9 +2,9 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.FSM.PlayerHandFSM.Types where
+module Pitboss.FSM.PlayerHandFSM.FSM where
 
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.FSM.PlayerHandFSM.Phase
 import Pitboss.FSM.Types.Transitionable
 
 data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
@@ -13,39 +13,7 @@ data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
   DecisionFSM :: PlayerHandFSM 'Decision h d s
   HittingFSM :: PlayerHandFSM 'Hitting h d s
   OneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
-  ResolvedFSM :: HandResolution -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
-
-data AbandonedReason
-  = Surrender Surrender
-  | Insurance InsuranceOutcome
-  deriving (Eq, Show)
-
-data HandPhase
-  = Abandoned AbandonedReason
-  | NaturalBlackjack
-  | Decision
-  | Hitting
-  | OneCardDraw OneCardDrawReason
-  | Resolved HandResolution
-  deriving (Eq, Show)
-
-data HandResolution
-  = Surrendered
-  | Blackjack
-  | Stand
-  | Bust
-  | Push
-  | SplitNonAces
-  | SplitAces
-  | DealerBlackjack
-  | Void BankrollImpact
-  deriving (Eq, Show)
-
-data OneCardDrawReason = Double | SplitAce
-  deriving (Eq, Show)
-
-data BankrollImpact = Loss | Refund
-  deriving (Eq, Show)
+  ResolvedFSM :: PlayerHandResolution -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
 
 data OHit = OKHit | NoHit
 

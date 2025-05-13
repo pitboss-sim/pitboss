@@ -1,17 +1,77 @@
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-dodgy-exports #-}
 {-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module Pitboss.FSM.PlayerTableFSM
-  ( module Pitboss.FSM.PlayerTableFSM.Existential,
-    module Pitboss.FSM.PlayerTableFSM.JSON,
-    module Pitboss.FSM.PlayerTableFSM.Laws,
-    module Pitboss.FSM.PlayerTableFSM.Transitions,
-    module Pitboss.FSM.PlayerTableFSM.Types,
+  ( module Pitboss.FSM.PlayerTableFSM.FSM,
+    module Pitboss.FSM.PlayerTableFSM.Phase,
+    module Pitboss.FSM.PlayerTableFSM.Transition,
+    SomePlayerTableFSM (..),
+    mkPlayerTableFSMIdle,
+    mkPlayerTableFSMChoosing,
+    mkPlayerTableFSMBetting,
+    mkPlayerTableFSMPlaying,
+    mkPlayerTableFSMObserving,
+    mkPlayerTableFSMDone,
   )
 where
 
-import Pitboss.FSM.PlayerTableFSM.Existential
-import Pitboss.FSM.PlayerTableFSM.JSON
-import Pitboss.FSM.PlayerTableFSM.Laws
-import Pitboss.FSM.PlayerTableFSM.Transitions
-import Pitboss.FSM.PlayerTableFSM.Types
+import Data.Aeson.Types
+import Pitboss.FSM.PlayerTableFSM.FSM
+import Pitboss.FSM.PlayerTableFSM.Phase
+import Pitboss.FSM.PlayerTableFSM.Transition
+
+mkPlayerTableFSMIdle :: SomePlayerTableFSM
+mkPlayerTableFSMIdle = SomePlayerTableFSM IdleFSM
+
+mkPlayerTableFSMChoosing :: SomePlayerTableFSM
+mkPlayerTableFSMChoosing = SomePlayerTableFSM ChoosingTableFSM
+
+mkPlayerTableFSMBetting :: SomePlayerTableFSM
+mkPlayerTableFSMBetting = SomePlayerTableFSM PlacingBetFSM
+
+mkPlayerTableFSMPlaying :: SomePlayerTableFSM
+mkPlayerTableFSMPlaying = SomePlayerTableFSM PlayingHandFSM
+
+mkPlayerTableFSMObserving :: SomePlayerTableFSM
+mkPlayerTableFSMObserving = SomePlayerTableFSM ObservingFSM
+
+mkPlayerTableFSMDone :: SomePlayerTableFSM
+mkPlayerTableFSMDone = SomePlayerTableFSM DoneFSM
+
+data SomePlayerTableFSM = forall p. SomePlayerTableFSM (PlayerTableFSM p)
+
+instance Show SomePlayerTableFSM where
+  show (SomePlayerTableFSM fsm) = show fsm
+
+instance Eq SomePlayerTableFSM where
+  SomePlayerTableFSM f1 == SomePlayerTableFSM f2 = case (f1, f2) of
+    (IdleFSM, IdleFSM) -> True
+    (ChoosingTableFSM, ChoosingTableFSM) -> True
+    (PlacingBetFSM, PlacingBetFSM) -> True
+    (PlayingHandFSM, PlayingHandFSM) -> True
+    (ObservingFSM, ObservingFSM) -> True
+    (DoneFSM, DoneFSM) -> True
+    _ -> False
+
+instance ToJSON SomePlayerTableFSM where
+  toJSON (SomePlayerTableFSM fsm) = case fsm of
+    IdleFSM -> object ["tag" .= String "Idle"]
+    ChoosingTableFSM -> object ["tag" .= String "ChoosingTable"]
+    PlacingBetFSM -> object ["tag" .= String "PlacingBet"]
+    PlayingHandFSM -> object ["tag" .= String "PlayingHand"]
+    ObservingFSM -> object ["tag" .= String "Observing"]
+    DoneFSM -> object ["tag" .= String "Done"]
+
+instance FromJSON SomePlayerTableFSM where
+  parseJSON = withObject "SomePlayerTableFSM" $ \obj -> do
+    tag <- obj .: "tag"
+    case tag of
+      "Idle" -> pure $ SomePlayerTableFSM IdleFSM
+      "ChoosingTable" -> pure $ SomePlayerTableFSM ChoosingTableFSM
+      "PlacingBet" -> pure $ SomePlayerTableFSM PlacingBetFSM
+      "PlayingHand" -> pure $ SomePlayerTableFSM PlayingHandFSM
+      "Observing" -> pure $ SomePlayerTableFSM ObservingFSM
+      "Done" -> pure $ SomePlayerTableFSM DoneFSM
+      _ -> fail $ "Unknown tag for SomePlayerTableFSM: " ++ tag

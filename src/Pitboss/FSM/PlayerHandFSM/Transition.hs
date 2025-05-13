@@ -1,14 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE LambdaCase #-}
 
-module Pitboss.FSM.PlayerHandFSM.Transitions where
+module Pitboss.FSM.PlayerHandFSM.Transition where
 
 import Pitboss.Blackjack.Card
 import Pitboss.Blackjack.Hand
 import Pitboss.Blackjack.Hand.Category qualified as HC
-import Pitboss.FSM.PlayerHandFSM.Types
-import Pitboss.FSM.Types.Transitionable
+import Pitboss.FSM.PlayerHandFSM.FSM
+import Pitboss.FSM.PlayerHandFSM.Phase
 
 initialDecision :: PlayerHandFSM 'Decision 'OKHit 'OKDbl 'OKSpl
 initialDecision = DecisionFSM
@@ -31,7 +30,7 @@ resolveStand DecisionFSM = ResolvedFSM Stand
 resolveBust :: PlayerHandFSM 'Hitting h d s -> PlayerHandFSM ('Resolved 'Bust) 'NoHit 'NoDbl 'NoSpl
 resolveBust HittingFSM = ResolvedFSM Bust
 
-resolveOneCardDraw :: HandResolution -> PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
+resolveOneCardDraw :: PlayerHandResolution -> PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
 resolveOneCardDraw res (OneCardDrawFSM _) = ResolvedFSM res
 
 resolveSplit :: Hand -> PlayerHandFSM 'Decision h d s -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
@@ -47,20 +46,3 @@ resolveDealerBlackjack _ = ResolvedFSM DealerBlackjack
 
 resolveVoid :: BankrollImpact -> PlayerHandFSM p h d s -> PlayerHandFSM ('Resolved ('Void impact)) 'NoHit 'NoDbl 'NoSpl
 resolveVoid impact _ = ResolvedFSM (Void impact)
-
--- player hand helpers
-
-isHandTerminal :: PlayerHandFSM p h d s -> Bool
-isHandTerminal fsm =
-  case transitionType fsm of
-    TerminalPhase -> True
-    _ -> False
-
-resolutionImpact :: HandResolution -> Maybe BankrollImpact
-resolutionImpact = \case
-  Surrendered -> Just Refund
-  Push -> Just Refund
-  Bust -> Just Loss
-  DealerBlackjack -> Just Loss
-  Void i -> Just i
-  _ -> Nothing -- needs dealer comparison

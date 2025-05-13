@@ -1,39 +1,51 @@
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
+
 module Pitboss.Trace.Entity.Shoe where
 
-import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Trace.Entity.Capabilities.Clocked
-
-mkShoeState :: Tick -> [Card] -> Maybe Int -> ShoeState
-mkShoeState t cards cut =
-  ShoeState
-    { _tick = t,
-      _cardsRemaining = cards,
-      _cutPoint = cut
-    }
+import Pitboss.Trace.Entity.Capabilities.Reversible
 
 data ShoeState = ShoeState
-  { _tick :: Tick,
-    _cardsRemaining :: [Card],
-    _cutPoint :: Maybe Int
+  { _shoeCards :: [Card]
   }
   deriving (Eq, Show, Generic)
+
+data ShoeEntity = ShoeEntity
+  { _tick :: Tick,
+    _state :: ShoeState
+  }
+  deriving (Eq, Show, Generic)
+
+mkShoeEntity :: Tick -> [Card] -> ShoeEntity
+mkShoeEntity t cards = ShoeEntity t (ShoeState cards)
+
+instance Clocked ShoeEntity where
+  tick = _tick
+  setTick t s = s {_tick = t}
+
+data ShoeEntityDelta = NoShoeDelta
+  deriving (Eq, Show, Generic)
+
+instance ToJSON ShoeEntity
+
+instance FromJSON ShoeEntity
 
 instance ToJSON ShoeState
 
 instance FromJSON ShoeState
 
-instance Clocked ShoeState where
-  tick = _tick
-  setTick t ss = ss {_tick = t}
+instance ToJSON ShoeEntityDelta
 
-data ShoeDelta
-  = DrawCard Card
-  | SetCutPoint (Maybe Int)
-  | RefillShoe [Card]
-  deriving (Eq, Show, Generic)
+instance FromJSON ShoeEntityDelta
 
-instance ToJSON ShoeDelta
-
-instance FromJSON ShoeDelta
+instance Reversible ShoeEntityDelta where
+  invert = \case
+    NoShoeDelta -> Right NoShoeDelta

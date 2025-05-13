@@ -1,15 +1,30 @@
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Pitboss.Trace.Entity.Types.FiniteMap where
 
 import Control.Lens (At (..), Index, IxValue, Ixed (..))
+import Data.Aeson
 import Data.Map.Strict qualified as Map
 import Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
 
 newtype FiniteMap k v = FiniteMap (Map.Map k v)
   deriving (Eq, Show, Functor)
+
+instance (ToJSON k, ToJSON v, Ord k, ToJSONKey k) => ToJSON (FiniteMap k v) where
+  toJSON (FiniteMap m) = toJSON m
+
+instance (FromJSON k, FromJSON v, Ord k, FromJSONKey k) => FromJSON (FiniteMap k v) where
+  parseJSON v = FiniteMap <$> parseJSON v
+
+instance (BoundedEnum k, Ord k, Semigroup v, Monoid v) => Monoid (FiniteMap k v) where
+  mempty = emptyFiniteMap mempty
+
+instance (BoundedEnum k, Ord k, Semigroup v) => Semigroup (FiniteMap k v) where
+  FiniteMap a <> FiniteMap b =
+    FiniteMap (Map.fromList [(k, a Map.! k <> b Map.! k) | k <- universe])
 
 type instance Index (FiniteMap k v) = k
 

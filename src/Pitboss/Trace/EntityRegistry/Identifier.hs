@@ -1,13 +1,14 @@
-{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 -- globally unique identifiers
 
-module Pitboss.Trace.Timeline.Identifier where
+module Pitboss.Trace.EntityRegistry.Identifier where
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Bits (shiftL, (.|.))
-import Data.Char (intToDigit, toUpper)
+import Data.Char (toUpper)
 import Data.Hashable (Hashable (..))
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
@@ -20,7 +21,8 @@ import System.Random (StdGen, randomR)
 -- base UID
 
 newtype Uid = Uid {unUid :: String}
-  deriving (Eq, Ord, Show, Generic, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Show, Generic)
+  deriving newtype (ToJSON, FromJSON, ToJSONKey, FromJSONKey)
 
 instance Hashable Uid where
   hashWithSalt salt (Uid s) = hashWithSalt salt (uidToWord64 (Uid s))
@@ -41,7 +43,9 @@ generateUid counter gen =
 -- identifiers
 
 newtype OfferingId = OfferingId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show OfferingId where show (OfferingId (Uid u)) = "F" ++ u
 
@@ -49,7 +53,9 @@ mkOfferingId :: Uid -> OfferingId
 mkOfferingId = OfferingId
 
 newtype DealerId = DealerId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show DealerId where show (DealerId (Uid u)) = "A" ++ u
 
@@ -57,7 +63,9 @@ mkDealerId :: Uid -> DealerId
 mkDealerId = DealerId
 
 newtype DealerHandId = DealerHandId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show DealerHandId where show (DealerHandId (Uid u)) = "A" ++ u
 
@@ -65,7 +73,9 @@ mkDealerHandId :: Uid -> DealerHandId
 mkDealerHandId = DealerHandId
 
 newtype PlayerId = PlayerId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show PlayerId where show (PlayerId (Uid u)) = "A" ++ u
 
@@ -73,7 +83,9 @@ mkPlayerId :: Uid -> PlayerId
 mkPlayerId = PlayerId
 
 newtype PlayerHandId = PlayerHandId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show PlayerHandId where show (PlayerHandId (Uid u)) = "A" ++ u
 
@@ -81,7 +93,9 @@ mkPlayerHandId :: Uid -> PlayerHandId
 mkPlayerHandId = PlayerHandId
 
 newtype TableId = TableId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show TableId where show (TableId (Uid u)) = "T" ++ u
 
@@ -89,7 +103,9 @@ mkTableId :: Uid -> TableId
 mkTableId = TableId
 
 newtype ShoeId = ShoeId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show ShoeId where show (ShoeId (Uid u)) = "S" ++ u
 
@@ -97,23 +113,29 @@ mkShoeId :: Uid -> ShoeId
 mkShoeId = ShoeId
 
 newtype RoundId = RoundId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show RoundId where show (RoundId (Uid u)) = "R" ++ u
 
 mkRoundId :: Uid -> RoundId
 mkRoundId = RoundId
 
-newtype SpotId = SpotId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+newtype PlayerSpotId = PlayerSpotId Uid
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
-instance Show SpotId where show (SpotId (Uid u)) = "O" ++ u
+instance Show PlayerSpotId where show (PlayerSpotId (Uid u)) = "O" ++ u
 
-mkSpotId :: Uid -> SpotId
-mkSpotId = SpotId
+mkPlayerSpotId :: Uid -> PlayerSpotId
+mkPlayerSpotId = PlayerSpotId
 
 newtype HandId = HandId Uid
-  deriving (Eq, Ord, Generic, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
+  deriving stock (Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSON, FromJSON)
+  deriving (ToJSONKey, FromJSONKey) via Uid
 
 instance Show HandId where show (HandId (Uid u)) = "H" ++ u
 
@@ -123,7 +145,14 @@ mkHandId = HandId
 -- Crockford base32 helpers
 
 showPaddedBase32 :: Int -> Int -> String
-showPaddedBase32 n width = padLeft '0' width (showIntAtBase 32 intToDigit n "")
+showPaddedBase32 n width = padLeft '0' width (showIntAtBase 32 showBase32Digit n "")
+
+showBase32Digit :: Int -> Char
+showBase32Digit n
+  | n >= 0 && n < length base32Chars = base32Chars !! n
+  | otherwise = error $ "Invalid base32 digit: " ++ show n
+  where
+    base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 
 padLeft :: Char -> Int -> String -> String
 padLeft c width str = replicate (width - length str) c ++ str

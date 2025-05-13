@@ -1,4 +1,4 @@
-module Pitboss.Trace.Timeline.EntityRef where
+module Pitboss.Trace.EntityRegistry.EntityRef where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

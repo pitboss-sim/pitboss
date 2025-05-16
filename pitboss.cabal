@@ -70,9 +70,49 @@ library
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
                       Pitboss.Trace
-                      Pitboss.Trace.Entity.Capabilities.Clocked
-                      Pitboss.Trace.Entity.Capabilities.DeltaDriven
-                      Pitboss.Trace.Entity.Capabilities.Reversible
+                      Pitboss.Trace.Capabilities.Clocked
+                      Pitboss.Trace.Delta.Capabilities.Incremental
+                      Pitboss.Trace.Delta.Capabilities.Reversible
+                      Pitboss.Trace.Delta.Dealer
+                      Pitboss.Trace.Delta.Dealer.FSM
+                      Pitboss.Trace.Delta.Dealer.Relation
+                      Pitboss.Trace.Delta.Dealer.State
+                      Pitboss.Trace.Delta.DealerHand
+                      Pitboss.Trace.Delta.DealerHand.FSM
+                      Pitboss.Trace.Delta.DealerHand.Relation
+                      Pitboss.Trace.Delta.DealerHand.State
+                      Pitboss.Trace.Delta.DealerRound
+                      Pitboss.Trace.Delta.DealerRound.FSM
+                      Pitboss.Trace.Delta.DealerRound.Relation
+                      Pitboss.Trace.Delta.DealerRound.State
+                      Pitboss.Trace.Delta.Offering
+                      Pitboss.Trace.Delta.Offering.FSM
+                      Pitboss.Trace.Delta.Offering.Relation
+                      Pitboss.Trace.Delta.Offering.State
+                      Pitboss.Trace.Delta.Player
+                      Pitboss.Trace.Delta.Player.FSM
+                      Pitboss.Trace.Delta.Player.Relation
+                      Pitboss.Trace.Delta.Player.State
+                      Pitboss.Trace.Delta.PlayerHand
+                      Pitboss.Trace.Delta.PlayerHand.FSM
+                      Pitboss.Trace.Delta.PlayerHand.Relation
+                      Pitboss.Trace.Delta.PlayerHand.State
+                      Pitboss.Trace.Delta.PlayerSpot
+                      Pitboss.Trace.Delta.PlayerSpot.FSM
+                      Pitboss.Trace.Delta.PlayerSpot.Relation
+                      Pitboss.Trace.Delta.PlayerSpot.State
+                      Pitboss.Trace.Delta.Shoe
+                      Pitboss.Trace.Delta.Shoe.FSM
+                      Pitboss.Trace.Delta.Shoe.Relation
+                      Pitboss.Trace.Delta.Shoe.State
+                      Pitboss.Trace.Delta.ShoeCursor
+                      Pitboss.Trace.Delta.ShoeCursor.FSM
+                      Pitboss.Trace.Delta.ShoeCursor.Relation
+                      Pitboss.Trace.Delta.ShoeCursor.State
+                      Pitboss.Trace.Delta.Table
+                      Pitboss.Trace.Delta.Table.FSM
+                      Pitboss.Trace.Delta.Table.Relation
+                      Pitboss.Trace.Delta.Table.State
                       Pitboss.Trace.Entity.Dealer
                       Pitboss.Trace.Entity.DealerHand
                       Pitboss.Trace.Entity.DealerRound
@@ -86,10 +126,13 @@ library
                       Pitboss.Trace.Entity.Types.FiniteMap
                       Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
                       Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
-                      Pitboss.Trace.EntityRegistry
-                      Pitboss.Trace.EntityRegistry.EntityRef
-                      Pitboss.Trace.EntityRegistry.Identifier
+                      Pitboss.Trace.Entity.Types.Meta
+                      Pitboss.Trace.Registry
+                      Pitboss.Trace.Types.EntityRef
+                      Pitboss.Trace.Types.Identifier
+                      Pitboss.Trace.Types.Uid
                       Pitboss.Trace.Snapshot
+                      Pitboss.Trace.Timeline
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,

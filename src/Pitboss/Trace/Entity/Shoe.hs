@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
@@ -10,42 +9,33 @@ module Pitboss.Trace.Entity.Shoe where
 import Data.Aeson
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
-import Pitboss.Trace.Entity.Capabilities.Clocked
-import Pitboss.Trace.Entity.Capabilities.Reversible
+import Pitboss.Trace.Entity.Types.Meta
+import Pitboss.Trace.Types.Identifier
+
+mkShoe :: Meta ShoeId -> [Card] -> Shoe
+mkShoe meta cards = Shoe meta (ShoeState cards)
+
+mkShoeState :: [Card] -> ShoeState
+mkShoeState = ShoeState
+
+mkShoeRelations :: a
+mkShoeRelations = undefined
+
+data Shoe = Shoe
+  { _meta :: Meta ShoeId,
+    _state :: ShoeState
+  }
+  deriving (Eq, Show, Generic)
 
 data ShoeState = ShoeState
   { _shoeCards :: [Card]
   }
   deriving (Eq, Show, Generic)
 
-data ShoeEntity = ShoeEntity
-  { _tick :: Tick,
-    _state :: ShoeState
-  }
-  deriving (Eq, Show, Generic)
+instance ToJSON Shoe
 
-mkShoeEntity :: Tick -> [Card] -> ShoeEntity
-mkShoeEntity t cards = ShoeEntity t (ShoeState cards)
-
-instance Clocked ShoeEntity where
-  tick = _tick
-  setTick t s = s {_tick = t}
-
-data ShoeEntityDelta = NoShoeDelta
-  deriving (Eq, Show, Generic)
-
-instance ToJSON ShoeEntity
-
-instance FromJSON ShoeEntity
+instance FromJSON Shoe
 
 instance ToJSON ShoeState
 
 instance FromJSON ShoeState
-
-instance ToJSON ShoeEntityDelta
-
-instance FromJSON ShoeEntityDelta
-
-instance Reversible ShoeEntityDelta where
-  invert = \case
-    NoShoeDelta -> Right NoShoeDelta

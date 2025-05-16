@@ -1,4 +1,4 @@
-module Pitboss.Trace.Entity.Capabilities.Reversible where
+module Pitboss.Trace.Delta.Capabilities.Reversible where
 
 class Reversible d where
   invert :: d -> Either InversionError d

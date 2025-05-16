@@ -6,50 +6,66 @@ module Pitboss.Trace where
 import Control.Lens (Lens', lens)
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
-import GHC.Generics (Generic)
-import Pitboss.Trace.Entity.Dealer
-import Pitboss.Trace.Entity.DealerHand
-import Pitboss.Trace.Entity.DealerRound
-import Pitboss.Trace.Entity.Offering
-import Pitboss.Trace.Entity.Player
-import Pitboss.Trace.Entity.PlayerHand
-import Pitboss.Trace.Entity.PlayerSpot
-import Pitboss.Trace.Entity.Shoe
-import Pitboss.Trace.Entity.Table
-import Pitboss.Trace.EntityRegistry
-import Pitboss.Trace.EntityRegistry.Identifier
+import GHC.Generics
+import Pitboss.Trace.Delta.Dealer
+import Pitboss.Trace.Delta.DealerHand
+import Pitboss.Trace.Delta.DealerRound
+import Pitboss.Trace.Delta.Offering
+import Pitboss.Trace.Delta.Player
+import Pitboss.Trace.Delta.PlayerHand
+import Pitboss.Trace.Delta.PlayerSpot
+import Pitboss.Trace.Delta.Shoe
+import Pitboss.Trace.Delta.ShoeCursor
+import Pitboss.Trace.Delta.Table
+import Pitboss.Trace.Registry
+import Pitboss.Trace.Types.Identifier
 
--- global simulation state
+type Offerings = Registry DealerHandId OfferingDelta
 
-type DealerHandRegistry = EntityRegistry DealerHandId DealerHandEntity
+type Tables = Registry DealerHandId TableDelta
+
+type Shoes = Registry DealerHandId ShoeDelta
+
+type ShoeCursors = Registry DealerHandId ShoeCursorDelta
+
+type Dealers = Registry DealerHandId DealerDelta
+
+type DealerRounds = Registry DealerHandId DealerRoundDelta
+
+type DealerHands = Registry DealerHandId DealerHandDelta
+
+type Players = Registry DealerHandId PlayerDelta
+
+type PlayerSpots = Registry DealerHandId PlayerSpotDelta
+
+type PlayerHands = Registry DealerHandId PlayerHandDelta
 
 data Trace = Trace
-  { _offeringsEntityRegistry :: EntityRegistry OfferingId OfferingEntity,
-    _dealersEntityRegistry :: EntityRegistry DealerId DealerEntity,
-    _dealerHandsEntityRegistry :: DealerHandRegistry,
-    _playersEntityRegistry :: EntityRegistry PlayerId PlayerEntity,
-    _playerHandsEntityRegistry :: EntityRegistry PlayerHandId PlayerHandEntity,
-    _shoesEntityRegistry :: EntityRegistry ShoeId ShoeEntity,
-    _roundsEntityRegistry :: EntityRegistry RoundId DealerRoundEntity,
-    _spotsEntityRegistry :: EntityRegistry PlayerSpotId PlayerSpotEntity,
-    _tablesEntityRegistry :: EntityRegistry TableId TableEntity
+  { _offerings :: Offerings,
+    _tables :: Tables,
+    _shoes :: Shoes,
+    _dealers :: Dealers,
+    _dealerHands :: DealerHands,
+    _dealerRounds :: DealerRounds,
+    _players :: Players,
+    _playerSpots :: PlayerSpots,
+    _playerHands :: PlayerHands
   }
-  deriving (Generic)
+  deriving (Eq, Generic)
 
-instance ToJSON Trace
-
--- instance ToJSON Trace where
---   toJSON (Trace o d dh p ph s r sp) =
---     object
---       [ "offerings" .= o,
---         "dealers" .= d,
---         "dealerHands" .= dh,
---         "players" .= p,
---         "playerHands" .= ph,
---         "shoes" .= s,
---         "rounds" .= r,
---         "spots" .= sp
---       ]
+instance ToJSON Trace where
+  toJSON (Trace o t s d dr dh p ps ph) =
+    object
+      [ "offerings" .= o,
+        "tables" .= t,
+        "shoes" .= s,
+        "dealers" .= d,
+        "dealerRounds" .= dr,
+        "dealerHands" .= dh,
+        "players" .= p,
+        "playerSpots" .= ps,
+        "playerHands" .= ph
+      ]
 
 instance Show Trace where
   show (Trace o d dh p ph s r sp t) =
@@ -66,44 +82,47 @@ instance Show Trace where
         "  Tables: " ++ showKeys t
       ]
     where
-      showKeys = show . IHM.keys
+      showKeys = show . IHM.keys . unRegistry
 
 emptyTrace :: Trace
 emptyTrace =
   Trace
-    { _offeringsEntityRegistry = mempty,
-      _dealersEntityRegistry = mempty,
-      _dealerHandsEntityRegistry = mempty,
-      _playersEntityRegistry = mempty,
-      _playerHandsEntityRegistry = mempty,
-      _shoesEntityRegistry = mempty,
-      _roundsEntityRegistry = mempty,
-      _spotsEntityRegistry = mempty,
-      _tablesEntityRegistry = mempty
+    { _offerings = mempty,
+      _tables = mempty,
+      _shoes = mempty,
+      _dealers = mempty,
+      _dealerHands = mempty,
+      _dealerRounds = mempty,
+      _players = mempty,
+      _playerSpots = mempty,
+      _playerHands = mempty
     }
 
 -- lenses
 
-lensOfferings :: Lens' Trace (EntityRegistry OfferingId OfferingEntity)
-lensOfferings = lens _offeringsEntityRegistry (\s x -> s {_offeringsEntityRegistry = x})
+lensOfferings :: Lens' Trace Offerings
+lensOfferings = lens _offerings (\s x -> s {_offerings = x})
 
-lensDealers :: Lens' Trace (EntityRegistry DealerId DealerEntity)
-lensDealers = lens _dealersEntityRegistry (\s x -> s {_dealersEntityRegistry = x})
+lensTables :: Lens' Trace Tables
+lensTables = lens _tables (\s x -> s {_tables = x})
 
-lensDealerHands :: Lens' Trace DealerHandRegistry
-lensDealerHands = lens _dealerHandsEntityRegistry (\s x -> s {_dealerHandsEntityRegistry = x})
+lensShoes :: Lens' Trace Shoes
+lensShoes = lens _shoes (\s x -> s {_shoes = x})
 
-lensPlayers :: Lens' Trace (EntityRegistry PlayerId PlayerEntity)
-lensPlayers = lens _playersEntityRegistry (\s x -> s {_playersEntityRegistry = x})
+lensDealers :: Lens' Trace Dealers
+lensDealers = lens _dealers (\s x -> s {_dealers = x})
 
-lensPlayerHands :: Lens' Trace (EntityRegistry PlayerId PlayerHandEntity)
-lensPlayerHands = lens _playerHandsEntityRegistry (\s x -> s {_playerHandsEntityRegistry = x})
+lensDealerRounds :: Lens' Trace DealerRounds
+lensDealerRounds = lens _dealerRounds (\s x -> s {_dealerRounds = x})
 
-lensShoes :: Lens' Trace (EntityRegistry ShoeId ShoeEntity)
-lensShoes = lens _shoesEntityRegistry (\s x -> s {_shoesEntityRegistry = x})
+lensDealerHands :: Lens' Trace DealerHands
+lensDealerHands = lens _dealerHands (\s x -> s {_dealerHands = x})
 
-lensRounds :: Lens' Trace (EntityRegistry RoundId DealerRoundEntity)
-lensRounds = lens _roundsEntityRegistry (\s x -> s {_roundsEntityRegistry = x})
+lensPlayers :: Lens' Trace Players
+lensPlayers = lens _players (\s x -> s {_players = x})
 
-lensSpots :: Lens' Trace (EntityRegistry PlayerSpotId PlayerSpotEntity)
-lensSpots = lens _spotsEntityRegistry (\s x -> s {_spotsEntityRegistry = x})
+lensPlayerSpots :: Lens' Trace PlayerSpots
+lensPlayerSpots = lens _playerSpots (\s x -> s {_playerSpots = x})
+
+lensPlayerHands :: Lens' Trace PlayerHands
+lensPlayerHands = lens _playerHands (\s x -> s {_playerHands = x})

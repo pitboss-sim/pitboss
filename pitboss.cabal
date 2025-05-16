@@ -29,38 +29,38 @@ library
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.FSM.DealerHandFSM
-                      Pitboss.FSM.DealerHandFSM.FSM
-                      Pitboss.FSM.DealerHandFSM.Phase
-                      Pitboss.FSM.DealerHandFSM.Transition
-                      Pitboss.FSM.DealerRoundFSM
-                      Pitboss.FSM.DealerRoundFSM.ENHC
-                      Pitboss.FSM.DealerRoundFSM.ENHC.FSM
-                      Pitboss.FSM.DealerRoundFSM.ENHC.Phase
-                      Pitboss.FSM.DealerRoundFSM.ENHC.Transition
-                      Pitboss.FSM.DealerRoundFSM.Peek
-                      Pitboss.FSM.DealerRoundFSM.Peek.FSM
-                      Pitboss.FSM.DealerRoundFSM.Peek.Phase
-                      Pitboss.FSM.DealerRoundFSM.Peek.Transition
-                      Pitboss.FSM.DealerRoundFSM.Phase
-                      Pitboss.FSM.DealerRoundFSM.Typeclass.AtDecisionPoint
-                      Pitboss.FSM.DealerRoundFSM.Typeclass.PhaseTag
-                      Pitboss.FSM.DealerTableFSM
-                      Pitboss.FSM.DealerTableFSM.FSM
-                      Pitboss.FSM.DealerTableFSM.Phase
-                      Pitboss.FSM.DealerTableFSM.Transition
-                      Pitboss.FSM.PlayerHandFSM
-                      Pitboss.FSM.PlayerHandFSM.FSM
-                      Pitboss.FSM.PlayerHandFSM.Phase
-                      Pitboss.FSM.PlayerHandFSM.Transition
-                      Pitboss.FSM.PlayerSpotFSM
-                      Pitboss.FSM.PlayerSpotFSM.FSM
-                      Pitboss.FSM.PlayerSpotFSM.Phase
-                      Pitboss.FSM.PlayerSpotFSM.Transition
-                      Pitboss.FSM.PlayerTableFSM
-                      Pitboss.FSM.PlayerTableFSM.FSM
-                      Pitboss.FSM.PlayerTableFSM.Phase
-                      Pitboss.FSM.PlayerTableFSM.Transition
+                      Pitboss.FSM.DealerHand
+                      Pitboss.FSM.DealerHand.FSM
+                      Pitboss.FSM.DealerHand.Phase
+                      Pitboss.FSM.DealerHand.Transition
+                      Pitboss.FSM.DealerRound
+                      Pitboss.FSM.DealerRound.ENHC
+                      Pitboss.FSM.DealerRound.ENHC.FSM
+                      Pitboss.FSM.DealerRound.ENHC.Phase
+                      Pitboss.FSM.DealerRound.ENHC.Transition
+                      Pitboss.FSM.DealerRound.Peek
+                      Pitboss.FSM.DealerRound.Peek.FSM
+                      Pitboss.FSM.DealerRound.Peek.Phase
+                      Pitboss.FSM.DealerRound.Peek.Transition
+                      Pitboss.FSM.DealerRound.Phase
+                      Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
+                      Pitboss.FSM.DealerRound.Typeclass.PhaseTag
+                      Pitboss.FSM.DealerTable
+                      Pitboss.FSM.DealerTable.FSM
+                      Pitboss.FSM.DealerTable.Phase
+                      Pitboss.FSM.DealerTable.Transition
+                      Pitboss.FSM.PlayerHand
+                      Pitboss.FSM.PlayerHand.FSM
+                      Pitboss.FSM.PlayerHand.Phase
+                      Pitboss.FSM.PlayerHand.Transition
+                      Pitboss.FSM.PlayerSpot
+                      Pitboss.FSM.PlayerSpot.FSM
+                      Pitboss.FSM.PlayerSpot.Phase
+                      Pitboss.FSM.PlayerSpot.Transition
+                      Pitboss.FSM.PlayerTable
+                      Pitboss.FSM.PlayerTable.FSM
+                      Pitboss.FSM.PlayerTable.Phase
+                      Pitboss.FSM.PlayerTable.Transition
                       Pitboss.FSM.Types.Transitionable
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret

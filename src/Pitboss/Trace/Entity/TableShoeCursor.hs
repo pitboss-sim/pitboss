@@ -5,6 +5,7 @@
 
 module Pitboss.Trace.Entity.TableShoeCursor where
 
+import Data.Aeson.Types
 import GHC.Generics (Generic)
 import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
@@ -30,13 +31,13 @@ data TableShoeCursorEntity = TableShoeCursorEntity
   }
   deriving (Eq, Show, Generic)
 
-data TableShoeCursorEntityModes = TableShoeCursorEntityModes
-  {
+data TableShoeCursorEntityAttrs = TableShoeCursorEntityAttrs
+  { _tableShoeCursorEntityAttrsOffset :: Int
   }
   deriving (Eq, Show, Generic)
 
-data TableShoeCursorEntityAttrs = TableShoeCursorEntityAttrs
-  { _tableShoeCursorEntityAttrsOffset :: Int
+data TableShoeCursorEntityModes = TableShoeCursorEntityModes
+  {
   }
   deriving (Eq, Show, Generic)
 
@@ -44,3 +45,19 @@ data TableShoeCursorEntityRels = TableShoeCursorEntityRels
   { _tableShoeCursorEntityRelsPointsToTableShoe :: EntityRef TableShoeEntityId
   }
   deriving (Eq, Show, Generic)
+
+instance ToJSON TableShoeCursorEntity
+
+instance FromJSON TableShoeCursorEntity
+
+instance ToJSON TableShoeCursorEntityAttrs
+
+instance FromJSON TableShoeCursorEntityAttrs
+
+instance ToJSON TableShoeCursorEntityModes
+
+instance FromJSON TableShoeCursorEntityModes
+
+instance ToJSON TableShoeCursorEntityRels
+
+instance FromJSON TableShoeCursorEntityRels

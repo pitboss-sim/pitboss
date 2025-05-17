@@ -23,6 +23,9 @@ mkPlayerSpotEntity = PlayerSpotEntity
 mkPlayerSpotEntityAttrs :: PlayerSpotIx -> Chips -> PlayerSpotEntityAttrs
 mkPlayerSpotEntityAttrs = PlayerSpotEntityAttrs
 
+mkPlayerSpotEntityModes :: SomePlayerSpotFSM -> PlayerSpotEntityModes
+mkPlayerSpotEntityModes = PlayerSpotEntityModes
+
 mkPlayerSpotEntityRels :: EntityRef PlayerEntityId -> EntityRef DealerRoundEntityId -> FiniteMap PlayerSpotHandIx (Occupancy (EntityRef PlayerHandEntityId)) -> PlayerSpotEntityRels
 mkPlayerSpotEntityRels = PlayerSpotEntityRels
 

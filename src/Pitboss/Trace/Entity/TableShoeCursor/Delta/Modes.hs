@@ -4,25 +4,19 @@ module Pitboss.Trace.Entity.TableShoeCursor.Delta.Modes where
 
 import Data.Aeson
 import GHC.Generics
+import Pitboss.Trace.Entity
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.TableShoeCursor
 
-data TableShoeCursorEntityModesDelta
-  = Nothing
+data TableShoeCursorEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental TableShoeCursorEntityModesDelta where
   type Entity TableShoeCursorEntityModesDelta = TableShoeCursorEntityModes
-
-  applyDelta _ _ = undefined
-  previewDelta delta entity = Just $ applyDelta delta entity
-  describeDelta _ _ = undefined
-
-instance ToJSON TableShoeCursorEntityModesDelta where
-  toJSON = undefined
-
-instance FromJSON TableShoeCursorEntityModesDelta where
-  parseJSON = undefined
+  applyDelta NoopModes e = e
+  previewDelta NoopModes = Just
+  describeDelta NoopModes _ = "Noop FSM delta"
 
 instance Reversible TableShoeCursorEntityModesDelta where
-  invert = undefined
+  invert NoopModes = Right NoopModes
+
+instance ToJSON TableShoeCursorEntityModesDelta

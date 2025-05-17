@@ -18,6 +18,9 @@ mkTableEntity = TableEntity
 mkTableEntityAttrs :: String -> Maybe (EntityRef DealerRoundEntityId) -> EntityRef OfferingEntityId -> Chips -> TableEntityAttrs
 mkTableEntityAttrs = TableEntityAttrs
 
+mkTableEntityModes :: Maybe (EntityRef DealerEntityId) -> TableEntityModes
+mkTableEntityModes = TableEntityModes
+
 mkTableEntityRels :: Maybe (EntityRef DealerEntityId) -> TableEntityRels
 mkTableEntityRels = TableEntityRels
 

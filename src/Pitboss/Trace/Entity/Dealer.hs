@@ -18,6 +18,9 @@ mkDealerEntity = DealerEntity
 mkDealerEntityAttrs :: String -> Maybe (EntityRef TableEntityId) -> DealerEntityAttrs
 mkDealerEntityAttrs = DealerEntityAttrs
 
+mkDealerEntityModes :: SomeDealerTableFSM -> DealerRoundFSM -> SomeDealerHandFSM -> DealerEntityModes
+mkDealerEntityModes = DealerEntityModes
+
 mkDealerEntityRels :: Maybe (EntityRef DealerRoundEntityId) -> Maybe (EntityRef DealerHandEntityId) -> DealerEntityRels
 mkDealerEntityRels = DealerEntityRels
 

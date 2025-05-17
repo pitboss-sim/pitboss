@@ -19,6 +19,9 @@ mkDealerHandEntity = DealerHandEntity
 mkDealerHandEntityAttrs :: [Card] -> DealerHandEntityAttrs
 mkDealerHandEntityAttrs = DealerHandEntityAttrs
 
+mkDealerHandEntityModes :: SomeDealerHandFSM -> DealerHandEntityModes
+mkDealerHandEntityModes = DealerHandEntityModes
+
 mkDealerHandEntityRels :: EntityRef PlayerSpotEntityId -> EntityRef DealerRoundEntityId -> EntityRef DealerEntityId -> DealerHandEntityRels
 mkDealerHandEntityRels = DealerHandEntityRels
 

@@ -20,6 +20,9 @@ mkPlayerHandEntity = PlayerHandEntity
 mkPlayerHandEntityAttrs :: [Card] -> Chips -> Int -> Int -> PlayerHandEntityAttrs
 mkPlayerHandEntityAttrs = PlayerHandEntityAttrs
 
+mkPlayerHandEntityModes :: SomePlayerHandFSM -> PlayerHandEntityModes
+mkPlayerHandEntityModes = PlayerHandEntityModes
+
 mkPlayerHandEntityRels :: EntityRef PlayerSpotEntityId -> EntityRef DealerRoundEntityId -> EntityRef PlayerEntityId -> PlayerHandEntityRels
 mkPlayerHandEntityRels = PlayerHandEntityRels
 

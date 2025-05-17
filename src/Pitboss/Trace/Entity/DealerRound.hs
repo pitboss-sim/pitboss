@@ -18,6 +18,9 @@ mkDealerRoundEntityAttrs n = DealerRoundEntityAttrs n False
 mkDealerRoundEntity :: Meta DealerRoundEntityId -> DealerRoundEntityAttrs -> DealerRoundEntityModes -> DealerRoundEntityRels -> DealerRoundEntity
 mkDealerRoundEntity = DealerRoundEntity
 
+mkDealerRoundEntityModes :: DealerRoundEntityModes
+mkDealerRoundEntityModes = DealerRoundEntityModes
+
 mkDealerRoundEntityRels :: EntityRef TableShoeEntityId -> DealerRoundEntityRels
 mkDealerRoundEntityRels = DealerRoundEntityRels
 

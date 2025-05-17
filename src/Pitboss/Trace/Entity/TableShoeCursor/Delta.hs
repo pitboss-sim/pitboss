@@ -26,10 +26,6 @@ data TableShoeCursorEntityDelta
   | TableShoeCursorEntityRelsDelta TableShoeCursorEntityRelsDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON TableShoeCursorEntityDelta
-
-instance FromJSON TableShoeCursorEntityDelta
-
 instance Incremental TableShoeCursorEntityDelta where
   type Entity TableShoeCursorEntityDelta = TableShoeCursorEntity
 

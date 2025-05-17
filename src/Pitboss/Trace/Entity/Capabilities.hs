@@ -1,4 +1,4 @@
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeFamilyDependencies #-}
 
 module Pitboss.Trace.Entity.Capabilities where
 
@@ -10,7 +10,7 @@ import Pitboss.Trace.Types.Uid
 -- delta application
 
 class Incremental delta where
-  type Entity delta
+  type Entity delta = result | result -> delta
 
   applyDelta :: delta -> Entity delta -> Entity delta
   previewDelta :: delta -> Entity delta -> Maybe (Entity delta)

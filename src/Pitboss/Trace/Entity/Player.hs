@@ -1,49 +1,70 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
+
 module Pitboss.Trace.Entity.Player where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips (Chips)
+import Pitboss.FSM.PlayerHand
+import Pitboss.FSM.PlayerSpot
+import Pitboss.FSM.PlayerTable
 import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkPlayer :: Meta (EntityRef PlayerEntityId) -> PlayerState -> PlayerRelations -> Player
-mkPlayer = Player
+mkPlayerEntity :: Meta (EntityRef PlayerEntityId) -> PlayerEntityAttrs -> PlayerEntityModes -> PlayerEntityRels -> PlayerEntity
+mkPlayerEntity = PlayerEntity
 
-mkPlayerState :: String -> Chips -> PlayerState
-mkPlayerState = PlayerState
+mkPlayerEntityAttrs :: String -> Chips -> PlayerEntityAttrs
+mkPlayerEntityAttrs = PlayerEntityAttrs
 
-mkPlayerRelations :: Maybe (EntityRef PlayerEntityId) -> Maybe (EntityRef TableEntityId) -> PlayerRelations
-mkPlayerRelations = PlayerRelations
+mkPlayerEntityModes :: SomePlayerTableFSM -> SomePlayerSpotFSM -> SomePlayerHandFSM -> PlayerEntityModes
+mkPlayerEntityModes = PlayerEntityModes
 
-data Player = Player
-  { _playerMeta :: Meta (EntityRef PlayerEntityId),
-    _playerState :: PlayerState,
-    -- _playerFsm :: SomePlayerFSM -- TBD
-    _playerRels :: PlayerRelations
+mkPlayerEntityRels :: Maybe (EntityRef PlayerEntityId) -> Maybe (EntityRef TableEntityId) -> PlayerEntityRels
+mkPlayerEntityRels = PlayerEntityRels
+
+data PlayerEntity = PlayerEntity
+  { _playerEntityMeta :: Meta (EntityRef PlayerEntityId),
+    _playerEntityAttrs :: PlayerEntityAttrs,
+    _playerEntityModes :: PlayerEntityModes,
+    _playerEntityRels :: PlayerEntityRels
   }
   deriving (Show, Eq, Generic)
 
-data PlayerState = PlayerState
-  { _playerStatePlayerName :: String,
-    _playerStateBankroll :: Chips
+data PlayerEntityAttrs = PlayerEntityAttrs
+  { _playerEntityAttrsPlayerName :: String,
+    _playerEntityAttrsBankroll :: Chips
   }
   deriving (Eq, Show, Generic)
 
-data PlayerRelations = PlayerRelations
-  { _playerRelsClonedFrom :: Maybe (EntityRef PlayerEntityId),
-    _playerRelsSeatedAt :: Maybe (EntityRef TableEntityId)
+data PlayerEntityModes = PlayerEntityModes
+  { _playerEntityModesPlayerTable :: SomePlayerTableFSM,
+    _playerEntityModesPlayerSpot :: SomePlayerSpotFSM,
+    _playerEntityModesPlayerHand :: SomePlayerHandFSM
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON Player
+data PlayerEntityRels = PlayerEntityRels
+  { _playerEntityRelsClonedFrom :: Maybe (EntityRef PlayerEntityId),
+    _playerEntityRelsSeatedAt :: Maybe (EntityRef TableEntityId)
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON Player
+instance ToJSON PlayerEntity
 
-instance ToJSON PlayerState
+instance FromJSON PlayerEntity
 
-instance FromJSON PlayerState
+instance ToJSON PlayerEntityAttrs
 
-instance ToJSON PlayerRelations
+instance FromJSON PlayerEntityAttrs
 
-instance FromJSON PlayerRelations
+instance ToJSON PlayerEntityModes
+
+instance FromJSON PlayerEntityModes
+
+instance ToJSON PlayerEntityRels
+
+instance FromJSON PlayerEntityRels

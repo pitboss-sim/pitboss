@@ -17,6 +17,9 @@ mkOffering = OfferingEntity
 mkOfferingEntityAttrs :: O.Offering -> OfferingEntityAttrs
 mkOfferingEntityAttrs = OfferingEntityAttrs
 
+mkOfferingEntityModes :: OfferingEntityModes
+mkOfferingEntityModes = OfferingEntityModes
+
 mkOfferingEntityRels :: OfferingEntityRels
 mkOfferingEntityRels = OfferingEntityRels []
 
@@ -34,7 +37,7 @@ data OfferingEntityAttrs = OfferingEntityAttrs
   deriving (Eq, Show, Generic)
 
 data OfferingEntityModes = OfferingEntityModes
-  { _offeringEntityModesOffering :: O.Offering
+  {
   }
   deriving (Eq, Show, Generic)
 

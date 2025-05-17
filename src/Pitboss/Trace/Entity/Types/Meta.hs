@@ -2,7 +2,7 @@ module Pitboss.Trace.Entity.Types.Meta where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.Trace.Capabilities.Clocked
+import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Types.Uid
 
 data Meta id = Meta

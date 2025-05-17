@@ -10,9 +10,10 @@ import Data.Aeson
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Trace.Entity.Types.Meta
+import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkShoe :: Meta ShoeId -> [Card] -> Shoe
+mkShoe :: Meta (EntityRef ShoeId) -> [Card] -> Shoe
 mkShoe meta cards = Shoe meta (ShoeState cards)
 
 mkShoeState :: [Card] -> ShoeState
@@ -22,13 +23,18 @@ mkShoeRelations :: a
 mkShoeRelations = undefined
 
 data Shoe = Shoe
-  { _meta :: Meta ShoeId,
-    _state :: ShoeState
+  { _shoeMeta :: Meta (EntityRef ShoeId),
+    _shoeState :: ShoeState
   }
   deriving (Eq, Show, Generic)
 
 data ShoeState = ShoeState
-  { _shoeCards :: [Card]
+  { _shoeStateCards :: [Card]
+  }
+  deriving (Eq, Show, Generic)
+
+data ShoeRels = ShoeRels
+  {
   }
   deriving (Eq, Show, Generic)
 
@@ -39,3 +45,7 @@ instance FromJSON Shoe
 instance ToJSON ShoeState
 
 instance FromJSON ShoeState
+
+instance ToJSON ShoeRels
+
+instance FromJSON ShoeRels

@@ -21,19 +21,19 @@ mkOfferingRelations :: OfferingRelations
 mkOfferingRelations = OfferingRelations []
 
 data Offering = Offering
-  { _meta :: Meta OfferingId,
-    _state :: OfferingState,
-    _rels :: OfferingRelations
+  { _offeringMeta :: Meta OfferingId,
+    _offeringState :: OfferingState,
+    _offeringRels :: OfferingRelations
   }
   deriving (Eq, Show, Generic)
 
 data OfferingState = OfferingState
-  { _offering :: O.Offering
+  { _offeringStateOffering :: O.Offering
   }
   deriving (Eq, Show, Generic)
 
 data OfferingRelations = OfferingRelations
-  { _associatedTables :: [TableId]
+  { _offeringRelsAssociatedTables :: [TableId]
   }
   deriving (Eq, Show, Generic)
 

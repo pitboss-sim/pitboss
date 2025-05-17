@@ -1,24 +1,15 @@
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE StandaloneDeriving #-}
 
 module Pitboss.Trace.Types.EntityRef where
 
 import Data.Aeson
 import GHC.Generics
-import Pitboss.Trace.Capabilities.Clocked (Tick)
+import Pitboss.Trace.Entity.Capabilities
 
-data EntityRef id where
-  EntityRef ::
-    { refTick :: Tick,
-      refIdentifier :: id
-    } ->
-    EntityRef id
-
-deriving instance (Eq id) => Eq (EntityRef id)
-
-deriving instance (Show id) => Show (EntityRef id)
-
-deriving instance (Generic id) => Generic (EntityRef id)
+data EntityRef id
+  = TimelessRef id
+  | ClockedRef Tick id
+  deriving (Eq, Show, Generic)
 
 instance (ToJSON id, Generic id) => ToJSON (EntityRef id)
 

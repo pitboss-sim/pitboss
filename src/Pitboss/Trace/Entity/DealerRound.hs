@@ -22,20 +22,20 @@ mkDealerRoundRelations :: EntityRef ShoeId -> DealerRoundRelations
 mkDealerRoundRelations = DealerRoundRelations
 
 data DealerRound = DealerRound
-  { _meta :: Meta DealerRoundId,
-    _state :: DealerRoundState,
-    _rels :: DealerRoundRelations
+  { _dealerRoundMeta :: Meta DealerRoundId,
+    _dealerRoundState :: DealerRoundState,
+    _dealerRoundRels :: DealerRoundRelations
   }
   deriving (Eq, Show, Generic)
 
 data DealerRoundState = DealerRoundState
-  { _roundNumber :: Int,
-    _isActive :: Bool
+  { _dealerRoundStateNumber :: Int,
+    _dealerRoundStateIsActive :: Bool
   }
   deriving (Eq, Show, Generic)
 
 data DealerRoundRelations = DealerRoundRelations
-  { _shoeUsed :: EntityRef ShoeId
+  { _dealerRoundRelsShoeUsed :: EntityRef ShoeId
   }
   deriving (Eq, Show, Generic)
 

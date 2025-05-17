@@ -4,34 +4,35 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips (Chips)
 import Pitboss.Trace.Entity.Types.Meta
+import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkPlayer :: Meta PlayerId -> PlayerState -> PlayerRelations -> Player
+mkPlayer :: Meta (EntityRef PlayerId) -> PlayerState -> PlayerRelations -> Player
 mkPlayer = Player
 
 mkPlayerState :: String -> Chips -> PlayerState
 mkPlayerState = PlayerState
 
-mkPlayerRelations :: Maybe PlayerId -> Maybe TableId -> PlayerRelations
+mkPlayerRelations :: Maybe (EntityRef PlayerId) -> Maybe (EntityRef TableId) -> PlayerRelations
 mkPlayerRelations = PlayerRelations
 
 data Player = Player
-  { _meta :: Meta PlayerId,
-    _state :: PlayerState,
-    -- _fsm :: SomePlayerFSM, -- TBD
-    _rels :: PlayerRelations
+  { _playerMeta :: Meta (EntityRef PlayerId),
+    _playerState :: PlayerState,
+    -- _playerFsm :: SomePlayerFSM -- TBD
+    _playerRels :: PlayerRelations
   }
   deriving (Show, Eq, Generic)
 
 data PlayerState = PlayerState
-  { _playerName :: String,
-    _bankroll :: Chips
+  { _playerStatePlayerName :: String,
+    _playerStateBankroll :: Chips
   }
   deriving (Eq, Show, Generic)
 
 data PlayerRelations = PlayerRelations
-  { _clonedFrom :: Maybe PlayerId,
-    _seatedAt :: Maybe TableId
+  { _playerRelsClonedFrom :: Maybe (EntityRef PlayerId),
+    _playerRelsSeatedAt :: Maybe (EntityRef TableId)
   }
   deriving (Eq, Show, Generic)
 

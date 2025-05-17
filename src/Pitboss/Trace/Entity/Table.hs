@@ -18,26 +18,26 @@ mkTable = Table
 mkTableState :: String -> Maybe (EntityRef DealerRoundId) -> EntityRef OfferingId -> Chips -> TableState
 mkTableState = TableState
 
-mkTableRelations :: Maybe DealerId -> TableRelations
+mkTableRelations :: Maybe (EntityRef DealerId) -> TableRelations
 mkTableRelations = TableRelations
 
 data Table = Table
-  { _meta :: Meta TableId,
-    _state :: TableState,
-    _rels :: TableRelations
+  { _tableMeta :: Meta TableId,
+    _tableState :: TableState,
+    _tableRels :: TableRelations
   }
   deriving (Eq, Show, Generic)
 
 data TableState = TableState
-  { _tableName :: String,
-    _currentRound :: Maybe (EntityRef DealerRoundId),
-    _offeringUsed :: EntityRef OfferingId,
-    _minBet :: Chips
+  { _tableStateName :: String,
+    _tableStateCurrentRound :: Maybe (EntityRef DealerRoundId),
+    _tableStateOfferingUsed :: EntityRef OfferingId,
+    _tableStateMinBet :: Chips
   }
   deriving (Eq, Show, Generic)
 
 data TableRelations = TableRelations
-  { _managedByDealer :: Maybe DealerId
+  { _tableRelsManagedByDealer :: Maybe (EntityRef DealerId)
   }
   deriving (Eq, Show, Generic)
 

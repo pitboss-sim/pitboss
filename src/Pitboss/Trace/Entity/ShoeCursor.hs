@@ -7,30 +7,31 @@ module Pitboss.Trace.Entity.ShoeCursor where
 
 import GHC.Generics (Generic)
 import Pitboss.Trace.Entity.Types.Meta
+import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkShoeCursor :: Meta ShoeCursorId -> ShoeCursorRelations -> ShoeCursorState -> ShoeCursor
+mkShoeCursor :: Meta (EntityRef ShoeCursorId) -> ShoeCursorRelations -> ShoeCursorState -> ShoeCursor
 mkShoeCursor = ShoeCursor
 
 mkShoeCursorState :: Int -> ShoeCursorState
 mkShoeCursorState = ShoeCursorState
 
-mkShoeCursorRelations :: ShoeId -> ShoeCursorRelations
+mkShoeCursorRelations :: EntityRef ShoeId -> ShoeCursorRelations
 mkShoeCursorRelations = ShoeCursorRelations
 
 data ShoeCursor = ShoeCursor
-  { _meta :: Meta ShoeCursorId,
-    _rels :: ShoeCursorRelations,
-    _state :: ShoeCursorState
+  { _shoeCursorMeta :: Meta (EntityRef ShoeCursorId),
+    _shoeCursorRels :: ShoeCursorRelations,
+    _shoeCursorState :: ShoeCursorState
   }
   deriving (Eq, Show, Generic)
 
 data ShoeCursorState = ShoeCursorState
-  { _offset :: Int
+  { _shoeCursorStateOffset :: Int
   }
   deriving (Eq, Show, Generic)
 
 data ShoeCursorRelations = ShoeCursorRelations
-  { _pointsToShoe :: ShoeId
+  { _shoeCursorRelsPointsToShoe :: EntityRef ShoeId
   }
   deriving (Eq, Show, Generic)

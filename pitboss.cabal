@@ -70,69 +70,84 @@ library
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
                       Pitboss.Trace
-                      Pitboss.Trace.Capabilities.Clocked
-                      Pitboss.Trace.Delta.Capabilities.Incremental
-                      Pitboss.Trace.Delta.Capabilities.Reversible
-                      Pitboss.Trace.Delta.Dealer
-                      Pitboss.Trace.Delta.Dealer.FSM
-                      Pitboss.Trace.Delta.Dealer.Relation
-                      Pitboss.Trace.Delta.Dealer.State
-                      Pitboss.Trace.Delta.DealerHand
-                      Pitboss.Trace.Delta.DealerHand.FSM
-                      Pitboss.Trace.Delta.DealerHand.Relation
-                      Pitboss.Trace.Delta.DealerHand.State
-                      Pitboss.Trace.Delta.DealerRound
-                      Pitboss.Trace.Delta.DealerRound.FSM
-                      Pitboss.Trace.Delta.DealerRound.Relation
-                      Pitboss.Trace.Delta.DealerRound.State
-                      Pitboss.Trace.Delta.Offering
-                      Pitboss.Trace.Delta.Offering.FSM
-                      Pitboss.Trace.Delta.Offering.Relation
-                      Pitboss.Trace.Delta.Offering.State
-                      Pitboss.Trace.Delta.Player
-                      Pitboss.Trace.Delta.Player.FSM
-                      Pitboss.Trace.Delta.Player.Relation
-                      Pitboss.Trace.Delta.Player.State
-                      Pitboss.Trace.Delta.PlayerHand
-                      Pitboss.Trace.Delta.PlayerHand.FSM
-                      Pitboss.Trace.Delta.PlayerHand.Relation
-                      Pitboss.Trace.Delta.PlayerHand.State
-                      Pitboss.Trace.Delta.PlayerSpot
-                      Pitboss.Trace.Delta.PlayerSpot.FSM
-                      Pitboss.Trace.Delta.PlayerSpot.Relation
-                      Pitboss.Trace.Delta.PlayerSpot.State
-                      Pitboss.Trace.Delta.Shoe
-                      Pitboss.Trace.Delta.Shoe.FSM
-                      Pitboss.Trace.Delta.Shoe.Relation
-                      Pitboss.Trace.Delta.Shoe.State
-                      Pitboss.Trace.Delta.ShoeCursor
-                      Pitboss.Trace.Delta.ShoeCursor.FSM
-                      Pitboss.Trace.Delta.ShoeCursor.Relation
-                      Pitboss.Trace.Delta.ShoeCursor.State
-                      Pitboss.Trace.Delta.Table
-                      Pitboss.Trace.Delta.Table.FSM
-                      Pitboss.Trace.Delta.Table.Relation
-                      Pitboss.Trace.Delta.Table.State
+                      Pitboss.Trace.Entity
+                      Pitboss.Trace.Entity.Capabilities
+                      Pitboss.Trace.Entity.Capabilities.Clocked
+                      Pitboss.Trace.Entity.Capabilities.Incremental
+                      Pitboss.Trace.Entity.Capabilities.Reversible
                       Pitboss.Trace.Entity.Dealer
+                      Pitboss.Trace.Entity.Dealer.Delta
+                      Pitboss.Trace.Entity.Dealer.Delta.FSM
+                      Pitboss.Trace.Entity.Dealer.Delta.Relation
+                      Pitboss.Trace.Entity.Dealer.Delta.State
+                      Pitboss.Trace.Entity.Dealer.Types
                       Pitboss.Trace.Entity.DealerHand
+                      Pitboss.Trace.Entity.DealerHand.Delta
+                      Pitboss.Trace.Entity.DealerHand.Delta.FSM
+                      Pitboss.Trace.Entity.DealerHand.Delta.Relation
+                      Pitboss.Trace.Entity.DealerHand.Delta.State
+                      Pitboss.Trace.Entity.DealerHand.Types
                       Pitboss.Trace.Entity.DealerRound
+                      Pitboss.Trace.Entity.DealerRound.Delta
+                      Pitboss.Trace.Entity.DealerRound.Delta.FSM
+                      Pitboss.Trace.Entity.DealerRound.Delta.Relation
+                      Pitboss.Trace.Entity.DealerRound.Delta.State
+                      Pitboss.Trace.Entity.DealerRound.Types
                       Pitboss.Trace.Entity.Offering
+                      Pitboss.Trace.Entity.Offering.Delta
+                      Pitboss.Trace.Entity.Offering.Delta.FSM
+                      Pitboss.Trace.Entity.Offering.Delta.Relation
+                      Pitboss.Trace.Entity.Offering.Delta.State
+                      Pitboss.Trace.Entity.Offering.Types
                       Pitboss.Trace.Entity.Player
+                      Pitboss.Trace.Entity.Player.Delta
+                      Pitboss.Trace.Entity.Player.Delta.FSM
+                      Pitboss.Trace.Entity.Player.Delta.Relation
+                      Pitboss.Trace.Entity.Player.Delta.State
+                      Pitboss.Trace.Entity.Player.Types
                       Pitboss.Trace.Entity.PlayerHand
+                      Pitboss.Trace.Entity.PlayerHand.Delta
+                      Pitboss.Trace.Entity.PlayerHand.Delta.FSM
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Relation
+                      Pitboss.Trace.Entity.PlayerHand.Delta.State
+                      Pitboss.Trace.Entity.PlayerHand.Types
                       Pitboss.Trace.Entity.PlayerSpot
+                      Pitboss.Trace.Entity.PlayerSpot.Delta
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.FSM
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Relation
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.State
+                      Pitboss.Trace.Entity.PlayerSpot.Types
                       Pitboss.Trace.Entity.Shoe
+                      Pitboss.Trace.Entity.Shoe.Delta
+                      Pitboss.Trace.Entity.Shoe.Delta.FSM
+                      Pitboss.Trace.Entity.Shoe.Delta.Relation
+                      Pitboss.Trace.Entity.Shoe.Delta.State
+                      Pitboss.Trace.Entity.Shoe.Types
                       Pitboss.Trace.Entity.ShoeCursor
+                      Pitboss.Trace.Entity.ShoeCursor.Delta
+                      Pitboss.Trace.Entity.ShoeCursor.Delta.FSM
+                      Pitboss.Trace.Entity.ShoeCursor.Delta.Relation
+                      Pitboss.Trace.Entity.ShoeCursor.Delta.State
+                      Pitboss.Trace.Entity.ShoeCursor.Types
                       Pitboss.Trace.Entity.Table
+                      Pitboss.Trace.Entity.Table.Delta
+                      Pitboss.Trace.Entity.Table.Delta.FSM
+                      Pitboss.Trace.Entity.Table.Delta.Relation
+                      Pitboss.Trace.Entity.Table.Delta.State
+                      Pitboss.Trace.Entity.Table.Types
+                      Pitboss.Trace.Entity.Types
                       Pitboss.Trace.Entity.Types.FiniteMap
                       Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
                       Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
                       Pitboss.Trace.Entity.Types.Meta
                       Pitboss.Trace.Registry
+                      Pitboss.Trace.Snapshot
+                      Pitboss.Trace.Timeline
+                      Pitboss.Trace.Types
                       Pitboss.Trace.Types.EntityRef
                       Pitboss.Trace.Types.Identifier
                       Pitboss.Trace.Types.Uid
-                      Pitboss.Trace.Snapshot
-                      Pitboss.Trace.Timeline
+
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,

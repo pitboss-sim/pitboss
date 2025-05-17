@@ -11,47 +11,47 @@ import Pitboss.Trace.Entity.Table
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-data TableStateDelta
+data TableEntityAttrsDelta
   = SetTableName String String
   | SetMinBet Chips Chips
-  | SetOffering (EntityRef OfferingId) (EntityRef OfferingId)
-  | StartRound (Maybe (EntityRef DealerRoundId)) (EntityRef DealerRoundId)
-  | EndRound (EntityRef DealerRoundId)
+  | SetOffering (EntityRef OfferingEntityId) (EntityRef OfferingEntityId)
+  | StartRound (Maybe (EntityRef DealerRoundEntityId)) (EntityRef DealerRoundEntityId)
+  | EndRound (EntityRef DealerRoundEntityId)
   deriving (Eq, Show, Generic)
 
-instance ToJSON TableStateDelta
+instance ToJSON TableEntityAttrsDelta
 
-instance FromJSON TableStateDelta
+instance FromJSON TableEntityAttrsDelta
 
-instance Incremental TableStateDelta where
-  type Entity TableStateDelta = TableState
+instance Incremental TableEntityAttrsDelta where
+  type Entity TableEntityAttrsDelta = TableEntityAttrs
 
   applyDelta delta s = case delta of
-    SetTableName _ new -> s {_tableStateName = new}
-    SetMinBet _ new -> s {_tableStateMinBet = new}
-    SetOffering _ new -> s {_tableStateOfferingUsed = new}
-    StartRound _ new -> s {_tableStateCurrentRound = Just new}
-    EndRound _ -> s {_tableStateCurrentRound = Nothing}
+    SetTableName _ new -> s {_tableEntityAttrsName = new}
+    SetMinBet _ new -> s {_tableEntityAttrsMinBet = new}
+    SetOffering _ new -> s {_tableEntityAttrsOfferingUsed = new}
+    StartRound _ new -> s {_tableEntityAttrsCurrentRound = Just new}
+    EndRound _ -> s {_tableEntityAttrsCurrentRound = Nothing}
 
   previewDelta delta entity = case delta of
     SetTableName old _ ->
-      if old == _tableStateName entity
+      if old == _tableEntityAttrsName entity
         then Just $ applyDelta delta entity
         else Nothing
     SetMinBet old _ ->
-      if old == _tableStateMinBet entity
+      if old == _tableEntityAttrsMinBet entity
         then Just $ applyDelta delta entity
         else Nothing
     SetOffering old _ ->
-      if old == _tableStateOfferingUsed entity
+      if old == _tableEntityAttrsOfferingUsed entity
         then Just $ applyDelta delta entity
         else Nothing
     StartRound prev _ ->
-      if _tableStateCurrentRound entity == prev
+      if _tableEntityAttrsCurrentRound entity == prev
         then Just $ applyDelta delta entity
         else Nothing
     EndRound old ->
-      if _tableStateCurrentRound entity == Just old
+      if _tableEntityAttrsCurrentRound entity == Just old
         then Just $ applyDelta delta entity
         else Nothing
 
@@ -67,7 +67,7 @@ instance Incremental TableStateDelta where
     EndRound old ->
       "Ended round: " ++ show old
 
-instance Reversible TableStateDelta where
+instance Reversible TableEntityAttrsDelta where
   invert = \case
     SetTableName old new -> Right (SetTableName new old)
     SetMinBet old new -> Right (SetMinBet new old)

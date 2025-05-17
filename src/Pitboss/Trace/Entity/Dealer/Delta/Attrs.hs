@@ -10,39 +10,39 @@ import Pitboss.Trace.Entity.Dealer
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-data DealerStateDelta
+data DealerEntityAttrsDelta
   = RenameDealer String String
-  | ReplaceAssignedTable (Maybe (EntityRef TableId)) (Maybe (EntityRef TableId))
+  | ReplaceAssignedTable (Maybe (EntityRef TableEntityId)) (Maybe (EntityRef TableEntityId))
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerStateDelta
+instance ToJSON DealerEntityAttrsDelta
 
-instance FromJSON DealerStateDelta
+instance FromJSON DealerEntityAttrsDelta
 
-instance Incremental DealerStateDelta where
-  type Entity DealerStateDelta = DealerState
+instance Incremental DealerEntityAttrsDelta where
+  type Entity DealerEntityAttrsDelta = DealerEntityAttrs
 
-  applyDelta :: DealerStateDelta -> DealerState -> DealerState
+  applyDelta :: DealerEntityAttrsDelta -> DealerEntityAttrs -> DealerEntityAttrs
   applyDelta delta state = case delta of
-    RenameDealer _ new -> state {_dealerStateName = new}
-    ReplaceAssignedTable _ new -> state {_dealerStateAssignedTable = new}
+    RenameDealer _ new -> state {_dealerEntityAttrsName = new}
+    ReplaceAssignedTable _ new -> state {_dealerEntityAttrsAssignedTable = new}
 
-  previewDelta :: DealerStateDelta -> DealerState -> Maybe DealerState
+  previewDelta :: DealerEntityAttrsDelta -> DealerEntityAttrs -> Maybe DealerEntityAttrs
   previewDelta delta state = case delta of
     RenameDealer _ _ -> Just $ applyDelta delta state
     ReplaceAssignedTable old _ ->
-      if _dealerStateAssignedTable state == old
+      if _dealerEntityAttrsAssignedTable state == old
         then Just $ applyDelta delta state
         else Nothing
 
-  describeDelta :: DealerStateDelta -> DealerState -> String
+  describeDelta :: DealerEntityAttrsDelta -> DealerEntityAttrs -> String
   describeDelta delta _ = case delta of
     RenameDealer old new ->
       "Renamed dealer: " ++ old ++ " → " ++ new
     ReplaceAssignedTable old new ->
       "Reassigned dealer table: " ++ show old ++ " → " ++ show new
 
-instance Reversible DealerStateDelta where
+instance Reversible DealerEntityAttrsDelta where
   invert = \case
     RenameDealer old new -> Right (RenameDealer new old)
     ReplaceAssignedTable old new -> Right (ReplaceAssignedTable new old)

@@ -12,36 +12,36 @@ import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-data PlayerSpotRelationsDelta
-  = UpdatePlayer (EntityRef PlayerId) (EntityRef PlayerId)
-  | UpdateRound (EntityRef DealerRoundId) (EntityRef DealerRoundId)
-  | UpdateHandOccupancy (PlayerSpotHandIx, Occupancy (EntityRef PlayerHandId)) (PlayerSpotHandIx, Occupancy (EntityRef PlayerHandId))
+data PlayerSpotEntityRelsDelta
+  = UpdatePlayer (EntityRef PlayerEntityId) (EntityRef PlayerEntityId)
+  | UpdateRound (EntityRef DealerRoundEntityId) (EntityRef DealerRoundEntityId)
+  | UpdateHandOccupancy (PlayerSpotHandIx, Occupancy (EntityRef PlayerHandEntityId)) (PlayerSpotHandIx, Occupancy (EntityRef PlayerHandEntityId))
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotRelationsDelta
+instance ToJSON PlayerSpotEntityRelsDelta
 
-instance FromJSON PlayerSpotRelationsDelta
+instance FromJSON PlayerSpotEntityRelsDelta
 
-instance Incremental PlayerSpotRelationsDelta where
-  type Entity PlayerSpotRelationsDelta = PlayerSpotRelations
+instance Incremental PlayerSpotEntityRelsDelta where
+  type Entity PlayerSpotEntityRelsDelta = PlayerSpotEntityRels
 
   applyDelta delta rels = case delta of
-    UpdatePlayer _ new -> rels {_playerSpotRelsPlayerId = new}
-    UpdateRound _ new -> rels {_playerSpotRelsRoundId = new}
+    UpdatePlayer _ new -> rels {_playerSpotEntityRelsPlayerEntityId = new}
+    UpdateRound _ new -> rels {_playerSpotEntityRelsRoundEntityId = new}
     UpdateHandOccupancy (_, _) (k, v) ->
-      rels {_playerSpotRelsHandOccupancy = insertFiniteMap k v (_playerSpotRelsHandOccupancy rels)}
+      rels {_playerSpotEntityRelsHandOccupancy = insertFiniteMap k v (_playerSpotEntityRelsHandOccupancy rels)}
 
   previewDelta delta rels = case delta of
     UpdatePlayer old _ ->
-      if _playerSpotRelsPlayerId rels == old
+      if _playerSpotEntityRelsPlayerEntityId rels == old
         then Just $ applyDelta delta rels
         else Nothing
     UpdateRound old _ ->
-      if _playerSpotRelsRoundId rels == old
+      if _playerSpotEntityRelsRoundEntityId rels == old
         then Just $ applyDelta delta rels
         else Nothing
     UpdateHandOccupancy (oldK, oldV) _ ->
-      case lookupFiniteMap oldK (_playerSpotRelsHandOccupancy rels) of
+      case lookupFiniteMap oldK (_playerSpotEntityRelsHandOccupancy rels) of
         Just actualV
           | actualV == oldV ->
               Just $ applyDelta delta rels
@@ -53,7 +53,7 @@ instance Incremental PlayerSpotRelationsDelta where
     UpdateHandOccupancy (k1, v1) (k2, v2) ->
       "Updated hand occupancy: " ++ show k1 ++ "=" ++ show v1 ++ " → " ++ show k2 ++ "=" ++ show v2
 
-instance Reversible PlayerSpotRelationsDelta where
+instance Reversible PlayerSpotEntityRelsDelta where
   invert = \case
     UpdatePlayer old new -> Right (UpdatePlayer new old)
     UpdateRound old new -> Right (UpdateRound new old)

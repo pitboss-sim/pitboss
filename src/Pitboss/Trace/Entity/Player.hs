@@ -7,17 +7,17 @@ import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkPlayer :: Meta (EntityRef PlayerId) -> PlayerState -> PlayerRelations -> Player
+mkPlayer :: Meta (EntityRef PlayerEntityId) -> PlayerState -> PlayerRelations -> Player
 mkPlayer = Player
 
 mkPlayerState :: String -> Chips -> PlayerState
 mkPlayerState = PlayerState
 
-mkPlayerRelations :: Maybe (EntityRef PlayerId) -> Maybe (EntityRef TableId) -> PlayerRelations
+mkPlayerRelations :: Maybe (EntityRef PlayerEntityId) -> Maybe (EntityRef TableEntityId) -> PlayerRelations
 mkPlayerRelations = PlayerRelations
 
 data Player = Player
-  { _playerMeta :: Meta (EntityRef PlayerId),
+  { _playerMeta :: Meta (EntityRef PlayerEntityId),
     _playerState :: PlayerState,
     -- _playerFsm :: SomePlayerFSM -- TBD
     _playerRels :: PlayerRelations
@@ -31,8 +31,8 @@ data PlayerState = PlayerState
   deriving (Eq, Show, Generic)
 
 data PlayerRelations = PlayerRelations
-  { _playerRelsClonedFrom :: Maybe (EntityRef PlayerId),
-    _playerRelsSeatedAt :: Maybe (EntityRef TableId)
+  { _playerRelsClonedFrom :: Maybe (EntityRef PlayerEntityId),
+    _playerRelsSeatedAt :: Maybe (EntityRef TableEntityId)
   }
   deriving (Eq, Show, Generic)
 

@@ -10,29 +10,29 @@ import Pitboss.Trace.Entity.Dealer
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-data DealerRelationsDelta
-  = UpdateRound (Maybe (EntityRef DealerRoundId)) (Maybe (EntityRef DealerRoundId))
-  | UpdateHand (Maybe (EntityRef DealerHandId)) (Maybe (EntityRef DealerHandId))
+data DealerEntityRelsDelta
+  = UpdateRound (Maybe (EntityRef DealerRoundEntityId)) (Maybe (EntityRef DealerRoundEntityId))
+  | UpdateHand (Maybe (EntityRef DealerHandEntityId)) (Maybe (EntityRef DealerHandEntityId))
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRelationsDelta
+instance ToJSON DealerEntityRelsDelta
 
-instance FromJSON DealerRelationsDelta
+instance FromJSON DealerEntityRelsDelta
 
-instance Incremental DealerRelationsDelta where
-  type Entity DealerRelationsDelta = DealerRelations
+instance Incremental DealerEntityRelsDelta where
+  type Entity DealerEntityRelsDelta = DealerEntityRels
 
   applyDelta delta rels = case delta of
-    UpdateRound _ new -> rels {_dealerRelsCurrentRound = new}
-    UpdateHand _ new -> rels {_dealerRelsActiveHand = new}
+    UpdateRound _ new -> rels {_dealerEntityRelsCurrentRound = new}
+    UpdateHand _ new -> rels {_dealerEntityRelsActiveHand = new}
 
   previewDelta delta state = case delta of
     UpdateRound old _ ->
-      if _dealerRelsCurrentRound state == old
+      if _dealerEntityRelsCurrentRound state == old
         then Just $ applyDelta delta state
         else Nothing
     UpdateHand old _ ->
-      if _dealerRelsActiveHand state == old
+      if _dealerEntityRelsActiveHand state == old
         then Just $ applyDelta delta state
         else Nothing
 
@@ -42,7 +42,7 @@ instance Incremental DealerRelationsDelta where
     UpdateHand old new ->
       "Updated dealer hand: " ++ show old ++ " → " ++ show new
 
-instance Reversible DealerRelationsDelta where
+instance Reversible DealerEntityRelsDelta where
   invert = \case
     UpdateRound old new -> Right (UpdateRound new old)
     UpdateHand old new -> Right (UpdateHand new old)

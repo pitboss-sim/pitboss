@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.Player.Delta
   ( module Pitboss.Trace.Entity.Player.Delta.Attrs,
     module Pitboss.Trace.Entity.Player.Delta.Modes,
     module Pitboss.Trace.Entity.Player.Delta.Rels,
-    PlayerDelta (..),
+    PlayerEntityDelta (..),
   )
 where
 
@@ -19,19 +19,19 @@ import Pitboss.Trace.Entity.Player.Delta.Attrs
 import Pitboss.Trace.Entity.Player.Delta.Modes
 import Pitboss.Trace.Entity.Player.Delta.Rels
 
-data PlayerDelta
+data PlayerEntityDelta
   = RenamePlayer String
   | SetBankroll Chips
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerDelta
+instance ToJSON PlayerEntityDelta
 
-instance FromJSON PlayerDelta
+instance FromJSON PlayerEntityDelta
 
-instance Incremental PlayerDelta where
-  type Entity PlayerDelta = Player
+instance Incremental PlayerEntityDelta where
+  type Entity PlayerEntityDelta = Player
 
-  applyDelta d e = e {_playerState = applyPlayerDelta d (_playerState e)}
+  applyDelta d e = e {_playerState = applyPlayerEntityDelta d (_playerState e)}
 
   previewDelta d e = Just (applyDelta d e)
 
@@ -39,7 +39,7 @@ instance Incremental PlayerDelta where
     RenamePlayer name -> "Renamed player to " ++ name
     SetBankroll chips -> "Set bankroll to " ++ show chips
 
-applyPlayerDelta :: PlayerDelta -> PlayerState -> PlayerState
-applyPlayerDelta d s = case d of
+applyPlayerEntityDelta :: PlayerEntityDelta -> PlayerState -> PlayerState
+applyPlayerEntityDelta d s = case d of
   RenamePlayer name -> s {_playerStatePlayerName = name}
   SetBankroll c -> s {_playerStateBankroll = c}

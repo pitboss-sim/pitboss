@@ -8,29 +8,29 @@ import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.DealerRound
 
-data DealerRoundStateDelta
-  = SetDealerRoundNumber Int
+data DealerRoundEntityAttrsDelta
+  = SetDealerRoundEntityNumber Int
   | SetActive Bool
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRoundStateDelta
+instance ToJSON DealerRoundEntityAttrsDelta
 
-instance FromJSON DealerRoundStateDelta
+instance FromJSON DealerRoundEntityAttrsDelta
 
-instance Incremental DealerRoundStateDelta where
-  type Entity DealerRoundStateDelta = DealerRoundState
+instance Incremental DealerRoundEntityAttrsDelta where
+  type Entity DealerRoundEntityAttrsDelta = DealerRoundEntityAttrs
 
   applyDelta delta state = case delta of
-    SetDealerRoundNumber n -> state {_dealerRoundStateNumber = n}
-    SetActive b -> state {_dealerRoundStateIsActive = b}
+    SetDealerRoundEntityNumber n -> state {_dealerRoundEntityAttrsNumber = n}
+    SetActive b -> state {_dealerRoundEntityAttrsIsActive = b}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta delta _ = case delta of
     SetActive b -> "Set round active: " ++ show b
-    SetDealerRoundNumber n -> "Set round number to " ++ show n
+    SetDealerRoundEntityNumber n -> "Set round number to " ++ show n
 
-instance Reversible DealerRoundStateDelta where
+instance Reversible DealerRoundEntityAttrsDelta where
   invert = \case
-    SetDealerRoundNumber _ -> Left NotInvertible
+    SetDealerRoundEntityNumber _ -> Left NotInvertible
     SetActive b -> Right (SetActive (not b))

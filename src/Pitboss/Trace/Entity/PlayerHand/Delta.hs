@@ -7,7 +7,7 @@ module Pitboss.Trace.Entity.PlayerHand.Delta
   ( module Pitboss.Trace.Entity.PlayerHand.Delta.Attrs,
     module Pitboss.Trace.Entity.PlayerHand.Delta.Modes,
     module Pitboss.Trace.Entity.PlayerHand.Delta.Rels,
-    PlayerHandDelta (..),
+    PlayerHandEntityDelta (..),
   )
 where
 
@@ -19,36 +19,36 @@ import Pitboss.Trace.Entity.PlayerHand.Delta.Attrs
 import Pitboss.Trace.Entity.PlayerHand.Delta.Modes
 import Pitboss.Trace.Entity.PlayerHand.Delta.Rels
 
-data PlayerHandDelta
-  = PlayerHandStateDelta PlayerHandStateDelta
-  | PlayerHandRelationsDelta PlayerHandRelationsDelta
-  | PlayerHandFSMDelta PlayerHandFSMDelta
+data PlayerHandEntityDelta
+  = PlayerHandEntityAttrsDelta PlayerHandEntityAttrsDelta
+  | PlayerHandEntityRelsDelta PlayerHandEntityRelsDelta
+  | PlayerHandEntityModesDelta PlayerHandEntityModesDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandDelta
+instance ToJSON PlayerHandEntityDelta
 
-instance FromJSON PlayerHandDelta
+instance FromJSON PlayerHandEntityDelta
 
-instance Incremental PlayerHandDelta where
-  type Entity PlayerHandDelta = PlayerHand
+instance Incremental PlayerHandEntityDelta where
+  type Entity PlayerHandEntityDelta = PlayerHandEntity
 
   applyDelta delta entity = case delta of
-    PlayerHandStateDelta d ->
-      entity {_playerHandState = applyDelta d (_playerHandState entity)}
-    PlayerHandRelationsDelta d ->
-      entity {_playerHandRels = applyDelta d (_playerHandRels entity)}
-    PlayerHandFSMDelta d ->
-      applyDelta d entity
+    PlayerHandEntityAttrsDelta d ->
+      entity {_playerHandEntityAttrs = applyDelta d (_playerHandEntityAttrs entity)}
+    PlayerHandEntityRelsDelta d ->
+      entity {_playerHandEntityRels = applyDelta d (_playerHandEntityRels entity)}
+    PlayerHandEntityModesDelta d ->
+      entity {_playerHandEntityModes = applyDelta d (_playerHandEntityModes entity)}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta delta entity = case delta of
-    PlayerHandStateDelta sd -> describeDelta sd (_playerHandState entity)
-    PlayerHandRelationsDelta rd -> describeDelta rd (_playerHandRels entity)
-    PlayerHandFSMDelta _ -> "FSM replaced"
+    PlayerHandEntityAttrsDelta sd -> describeDelta sd (_playerHandEntityAttrs entity)
+    PlayerHandEntityRelsDelta rd -> describeDelta rd (_playerHandEntityRels entity)
+    PlayerHandEntityModesDelta _ -> "FSM replaced"
 
-instance Reversible PlayerHandDelta where
+instance Reversible PlayerHandEntityDelta where
   invert = \case
-    PlayerHandStateDelta d -> PlayerHandStateDelta <$> invert d
-    PlayerHandRelationsDelta d -> PlayerHandRelationsDelta <$> invert d
-    PlayerHandFSMDelta d -> PlayerHandFSMDelta <$> invert d
+    PlayerHandEntityAttrsDelta d -> PlayerHandEntityAttrsDelta <$> invert d
+    PlayerHandEntityRelsDelta d -> PlayerHandEntityRelsDelta <$> invert d
+    PlayerHandEntityModesDelta d -> PlayerHandEntityModesDelta <$> invert d

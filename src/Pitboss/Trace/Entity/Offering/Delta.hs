@@ -7,7 +7,7 @@ module Pitboss.Trace.Entity.Offering.Delta
   ( module Pitboss.Trace.Entity.Offering.Delta.Attrs,
     module Pitboss.Trace.Entity.Offering.Delta.Modes,
     module Pitboss.Trace.Entity.Offering.Delta.Rels,
-    OfferingDelta (..),
+    OfferingEntityDelta (..),
   )
 where
 
@@ -19,29 +19,29 @@ import Pitboss.Trace.Entity.Offering.Delta.Attrs
 import Pitboss.Trace.Entity.Offering.Delta.Modes
 import Pitboss.Trace.Entity.Offering.Delta.Rels
 
-data OfferingDelta
-  = OfferingStateDelta OfferingStateDelta
-  | OfferingRelationsDelta OfferingRelationsDelta
+data OfferingEntityDelta
+  = OfferingEntityAttrsDelta OfferingEntityAttrsDelta
+  | OfferingEntityRelsDelta OfferingEntityRelsDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON OfferingDelta
+instance ToJSON OfferingEntityDelta
 
-instance FromJSON OfferingDelta
+instance FromJSON OfferingEntityDelta
 
-instance Incremental OfferingDelta where
-  type Entity OfferingDelta = Offering
+instance Incremental OfferingEntityDelta where
+  type Entity OfferingEntityDelta = OfferingEntity
 
   applyDelta delta entity = case delta of
-    OfferingStateDelta d -> entity {_offeringState = applyDelta d (_offeringState entity)}
-    OfferingRelationsDelta d -> entity {_offeringRels = applyDelta d (_offeringRels entity)}
+    OfferingEntityAttrsDelta d -> entity {_offeringEntityAttrs = applyDelta d (_offeringEntityAttrs entity)}
+    OfferingEntityRelsDelta d -> entity {_offeringEntityRels = applyDelta d (_offeringEntityRels entity)}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta delta entity = case delta of
-    OfferingStateDelta sd -> describeDelta sd (_offeringState entity)
-    OfferingRelationsDelta rd -> describeDelta rd (_offeringRels entity)
+    OfferingEntityAttrsDelta sd -> describeDelta sd (_offeringEntityAttrs entity)
+    OfferingEntityRelsDelta rd -> describeDelta rd (_offeringEntityRels entity)
 
-instance Reversible OfferingDelta where
+instance Reversible OfferingEntityDelta where
   invert = \case
-    OfferingStateDelta d -> OfferingStateDelta <$> invert d
-    OfferingRelationsDelta d -> OfferingRelationsDelta <$> invert d
+    OfferingEntityAttrsDelta d -> OfferingEntityAttrsDelta <$> invert d
+    OfferingEntityRelsDelta d -> OfferingEntityRelsDelta <$> invert d

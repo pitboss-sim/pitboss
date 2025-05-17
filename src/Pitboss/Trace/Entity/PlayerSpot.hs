@@ -1,5 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
 
 module Pitboss.Trace.Entity.PlayerSpot where
 
@@ -14,16 +17,16 @@ import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkPlayerSpot :: Meta (EntityRef PlayerSpotId) -> SomePlayerSpotFSM -> PlayerSpotState -> PlayerSpotRelations -> PlayerSpot
-mkPlayerSpot = PlayerSpot
+mkPlayerSpotEntity :: Meta (EntityRef PlayerSpotEntityId) -> PlayerSpotEntityAttrs -> PlayerSpotEntityModes -> PlayerSpotEntityRels -> PlayerSpotEntity
+mkPlayerSpotEntity = PlayerSpotEntity
 
-mkPlayerSpotState :: PlayerSpotIx -> Chips -> PlayerSpotState
-mkPlayerSpotState = PlayerSpotState
+mkPlayerSpotEntityAttrs :: PlayerSpotIx -> Chips -> PlayerSpotEntityAttrs
+mkPlayerSpotEntityAttrs = PlayerSpotEntityAttrs
 
-mkPlayerSpotRelations :: EntityRef PlayerId -> EntityRef DealerRoundId -> FiniteMap PlayerSpotHandIx (Occupancy (EntityRef PlayerHandId)) -> PlayerSpotRelations
-mkPlayerSpotRelations = PlayerSpotRelations
+mkPlayerSpotEntityRels :: EntityRef PlayerEntityId -> EntityRef DealerRoundEntityId -> FiniteMap PlayerSpotHandIx (Occupancy (EntityRef PlayerHandEntityId)) -> PlayerSpotEntityRels
+mkPlayerSpotEntityRels = PlayerSpotEntityRels
 
-data PlayerSpotIx = PlayerSpot1 | PlayerSpot2 | PlayerSpot3 | PlayerSpot4
+data PlayerSpotIx = PlayerSpotEntity1 | PlayerSpotEntity2 | PlayerSpotEntity3 | PlayerSpotEntity4
   deriving (Eq, Show, Ord, Enum, Bounded, Generic)
 
 instance ToJSONKey PlayerSpotIx
@@ -36,7 +39,7 @@ instance FromJSON PlayerSpotIx
 
 instance BoundedEnum PlayerSpotIx
 
-data PlayerSpotHandIx = PlayerSpotHand1 | PlayerSpotHand2 | PlayerSpotHand3 | PlayerSpotHand4
+data PlayerSpotHandIx = PlayerSpotEntityHand1 | PlayerSpotEntityHand2 | PlayerSpotEntityHand3 | PlayerSpotEntityHand4
   deriving (Eq, Show, Ord, Enum, Bounded, Generic)
 
 instance ToJSONKey PlayerSpotHandIx
@@ -49,35 +52,44 @@ instance FromJSON PlayerSpotHandIx
 
 instance BoundedEnum PlayerSpotHandIx
 
-data PlayerSpot = PlayerSpot
-  { _playerSpotMeta :: Meta (EntityRef PlayerSpotId),
-    _playerSpotFsm :: SomePlayerSpotFSM,
-    _playerSpotState :: PlayerSpotState,
-    _playerSpotRels :: PlayerSpotRelations
+data PlayerSpotEntity = PlayerSpotEntity
+  { _playerSpotEntityMeta :: Meta (EntityRef PlayerSpotEntityId),
+    _playerSpotEntityAttrs :: PlayerSpotEntityAttrs,
+    _playerSpotEntityModes :: PlayerSpotEntityModes,
+    _playerSpotEntityRels :: PlayerSpotEntityRels
   }
   deriving (Eq, Show, Generic)
 
-data PlayerSpotState = PlayerSpotState
-  { _playerSpotStateSpotIndex :: PlayerSpotIx,
-    _playerSpotStateWager :: Chips
+data PlayerSpotEntityAttrs = PlayerSpotEntityAttrs
+  { _playerSpotEntityAttrsSpotIndex :: PlayerSpotIx,
+    _playerSpotEntityAttrsWager :: Chips
   }
   deriving (Eq, Show, Generic)
 
-data PlayerSpotRelations = PlayerSpotRelations
-  { _playerSpotRelsPlayerId :: EntityRef PlayerId,
-    _playerSpotRelsRoundId :: EntityRef DealerRoundId,
-    _playerSpotRelsHandOccupancy :: FiniteMap PlayerSpotHandIx (Occupancy (EntityRef PlayerHandId))
+data PlayerSpotEntityModes = PlayerSpotEntityModes
+  { _playerSpotEntityModesPlayerSpot :: SomePlayerSpotFSM
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpot
+data PlayerSpotEntityRels = PlayerSpotEntityRels
+  { _playerSpotEntityRelsPlayerEntityId :: EntityRef PlayerEntityId,
+    _playerSpotEntityRelsRoundEntityId :: EntityRef DealerRoundEntityId,
+    _playerSpotEntityRelsHandOccupancy :: FiniteMap PlayerSpotHandIx (Occupancy (EntityRef PlayerHandEntityId))
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON PlayerSpot
+instance ToJSON PlayerSpotEntity
 
-instance ToJSON PlayerSpotState
+instance FromJSON PlayerSpotEntity
 
-instance FromJSON PlayerSpotState
+instance ToJSON PlayerSpotEntityAttrs
 
-instance ToJSON PlayerSpotRelations
+instance FromJSON PlayerSpotEntityAttrs
 
-instance FromJSON PlayerSpotRelations
+instance ToJSON PlayerSpotEntityModes
+
+instance FromJSON PlayerSpotEntityModes
+
+instance ToJSON PlayerSpotEntityRels
+
+instance FromJSON PlayerSpotEntityRels

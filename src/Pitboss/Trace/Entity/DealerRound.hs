@@ -12,41 +12,51 @@ import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkDealerRoundState :: Int -> DealerRoundState
-mkDealerRoundState n = DealerRoundState n False
+mkDealerRoundEntityAttrs :: Int -> DealerRoundEntityAttrs
+mkDealerRoundEntityAttrs n = DealerRoundEntityAttrs n False
 
-mkDealerRound :: Meta DealerRoundId -> DealerRoundState -> DealerRoundRelations -> DealerRound
-mkDealerRound = DealerRound
+mkDealerRoundEntity :: Meta DealerRoundEntityId -> DealerRoundEntityAttrs -> DealerRoundEntityModes -> DealerRoundEntityRels -> DealerRoundEntity
+mkDealerRoundEntity = DealerRoundEntity
 
-mkDealerRoundRelations :: EntityRef ShoeId -> DealerRoundRelations
-mkDealerRoundRelations = DealerRoundRelations
+mkDealerRoundEntityRels :: EntityRef TableShoeEntityId -> DealerRoundEntityRels
+mkDealerRoundEntityRels = DealerRoundEntityRels
 
-data DealerRound = DealerRound
-  { _dealerRoundMeta :: Meta DealerRoundId,
-    _dealerRoundState :: DealerRoundState,
-    _dealerRoundRels :: DealerRoundRelations
+data DealerRoundEntity = DealerRoundEntity
+  { _dealerRoundEntityMeta :: Meta DealerRoundEntityId,
+    _dealerRoundEntityAttrs :: DealerRoundEntityAttrs,
+    _dealerRoundEntityModes :: DealerRoundEntityModes,
+    _dealerRoundEntityRels :: DealerRoundEntityRels
   }
   deriving (Eq, Show, Generic)
 
-data DealerRoundState = DealerRoundState
-  { _dealerRoundStateNumber :: Int,
-    _dealerRoundStateIsActive :: Bool
+data DealerRoundEntityAttrs = DealerRoundEntityAttrs
+  { _dealerRoundEntityAttrsNumber :: Int,
+    _dealerRoundEntityAttrsIsActive :: Bool
   }
   deriving (Eq, Show, Generic)
 
-data DealerRoundRelations = DealerRoundRelations
-  { _dealerRoundRelsShoeUsed :: EntityRef ShoeId
+data DealerRoundEntityModes = DealerRoundEntityModes
+  {
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRound
+data DealerRoundEntityRels = DealerRoundEntityRels
+  { _dealerRoundEntityRelsTableShoeUsed :: EntityRef TableShoeEntityId
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON DealerRound
+instance ToJSON DealerRoundEntity
 
-instance ToJSON DealerRoundState
+instance FromJSON DealerRoundEntity
 
-instance FromJSON DealerRoundState
+instance ToJSON DealerRoundEntityAttrs
 
-instance ToJSON DealerRoundRelations
+instance FromJSON DealerRoundEntityAttrs
 
-instance FromJSON DealerRoundRelations
+instance ToJSON DealerRoundEntityModes
+
+instance FromJSON DealerRoundEntityModes
+
+instance ToJSON DealerRoundEntityRels
+
+instance FromJSON DealerRoundEntityRels

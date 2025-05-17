@@ -9,27 +9,27 @@ import Pitboss.Blackjack.Offering as O
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.Offering
 
-data OfferingStateDelta
+data OfferingEntityAttrsDelta
   = ReplaceOffering O.Offering O.Offering
   deriving (Eq, Show, Generic)
 
-instance ToJSON OfferingStateDelta
+instance ToJSON OfferingEntityAttrsDelta
 
-instance FromJSON OfferingStateDelta
+instance FromJSON OfferingEntityAttrsDelta
 
-instance Reversible OfferingStateDelta where
+instance Reversible OfferingEntityAttrsDelta where
   invert = \case
     ReplaceOffering old new -> Right (ReplaceOffering new old)
 
-instance Incremental OfferingStateDelta where
-  type Entity OfferingStateDelta = OfferingState
+instance Incremental OfferingEntityAttrsDelta where
+  type Entity OfferingEntityAttrsDelta = OfferingEntityAttrs
 
   applyDelta delta state = case delta of
-    ReplaceOffering _ new -> state {_offeringStateOffering = new}
+    ReplaceOffering _ new -> state {_offeringEntityAttrsOffering = new}
 
   previewDelta delta state = case delta of
     ReplaceOffering old _ ->
-      if old == _offeringStateOffering state
+      if old == _offeringEntityAttrsOffering state
         then Just $ applyDelta delta state
         else Nothing
 

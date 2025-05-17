@@ -13,27 +13,25 @@ import Pitboss.FSM.DealerTable
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.Dealer
 
-data DealerFSMDelta
+data DealerEntityModesDelta
   = ReplaceTableFSM SomeDealerTableFSM SomeDealerTableFSM
   | ReplaceRoundFSM DealerRoundFSM DealerRoundFSM
   | ReplaceHandFSM SomeDealerHandFSM SomeDealerHandFSM
   deriving (Eq, Show, Generic)
 
-instance Incremental DealerFSMDelta where
-  type Entity DealerFSMDelta = Dealer
+instance Incremental DealerEntityModesDelta where
+  type Entity DealerEntityModesDelta = DealerEntityModes
 
-  applyDelta :: DealerFSMDelta -> Dealer -> Dealer
   applyDelta delta entity =
-    let (ft, fr, fh) = (_dealerFsmTable entity, _dealerFsmRound entity, _dealerFsmHand entity)
+    let (ft, fr, fh) = (_dealerEntityModesDealerTable entity, _dealerEntityModesDealerRound entity, _dealerEntityModesDealerHand entity)
         (ft', fr', fh') = case delta of
           ReplaceTableFSM _ new -> (new, fr, fh)
           ReplaceRoundFSM _ new -> (ft, new, fh)
           ReplaceHandFSM _ new -> (ft, fr, new)
-     in entity {_dealerFsmTable = ft', _dealerFsmRound = fr', _dealerFsmHand = fh'}
+     in entity {_dealerEntityModesDealerTable = ft', _dealerEntityModesDealerRound = fr', _dealerEntityModesDealerHand = fh'}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
-  previewDelta :: DealerFSMDelta -> Dealer -> Maybe Dealer
   describeDelta delta _ = case delta of
     ReplaceTableFSM _ _ ->
       "Replaced DealerTableFSM"
@@ -42,7 +40,7 @@ instance Incremental DealerFSMDelta where
     ReplaceHandFSM _ _ ->
       "Replaced DealerHandFSM"
 
-instance ToJSON DealerFSMDelta where
+instance ToJSON DealerEntityModesDelta where
   toJSON = \case
     ReplaceTableFSM _ new ->
       object ["tag" .= String "ReplaceTableFSM", "new" .= new]
@@ -51,8 +49,8 @@ instance ToJSON DealerFSMDelta where
     ReplaceHandFSM _ new ->
       object ["tag" .= String "ReplaceHandFSM", "new" .= new]
 
-instance FromJSON DealerFSMDelta where
-  parseJSON = withObject "DealerFSMDelta" $ \obj -> do
+instance FromJSON DealerEntityModesDelta where
+  parseJSON = withObject "DealerEntityModesDelta" $ \obj -> do
     tag <- obj .: "tag"
     case tag :: Text of
       "ReplaceTableFSM" ->
@@ -61,9 +59,9 @@ instance FromJSON DealerFSMDelta where
         ReplaceRoundFSM undefined <$> obj .: "new"
       "ReplaceHandFSM" ->
         ReplaceHandFSM undefined <$> obj .: "new"
-      _ -> fail $ "Unknown tag for DealerFSMDelta: " ++ unpack tag
+      _ -> fail $ "Unknown tag for DealerEntityModesDelta: " ++ unpack tag
 
-instance Reversible DealerFSMDelta where
+instance Reversible DealerEntityModesDelta where
   invert = \case
     ReplaceTableFSM old new -> Right (ReplaceTableFSM new old)
     ReplaceRoundFSM old new -> Right (ReplaceRoundFSM new old)

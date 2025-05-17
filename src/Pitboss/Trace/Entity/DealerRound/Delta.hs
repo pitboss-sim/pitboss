@@ -9,7 +9,7 @@ module Pitboss.Trace.Entity.DealerRound.Delta
   ( module Pitboss.Trace.Entity.DealerRound.Delta.Attrs,
     module Pitboss.Trace.Entity.DealerRound.Delta.Modes,
     module Pitboss.Trace.Entity.DealerRound.Delta.Rels,
-    DealerRoundDelta (..),
+    DealerRoundEntityDelta (..),
   )
 where
 
@@ -21,30 +21,30 @@ import Pitboss.Trace.Entity.DealerRound.Delta.Attrs
 import Pitboss.Trace.Entity.DealerRound.Delta.Modes
 import Pitboss.Trace.Entity.DealerRound.Delta.Rels
 
-data DealerRoundDelta
-  = DealerRoundStateDelta DealerRoundStateDelta
-  | DealerRoundRelationsDelta DealerRoundRelationsDelta
+data DealerRoundEntityDelta
+  = DealerRoundEntityAttrsDelta DealerRoundEntityAttrsDelta
+  | DealerRoundEntityRelsDelta DealerRoundEntityRelsDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRoundDelta
+instance ToJSON DealerRoundEntityDelta
 
-instance FromJSON DealerRoundDelta
+instance FromJSON DealerRoundEntityDelta
 
-instance Incremental DealerRoundDelta where
-  type Entity DealerRoundDelta = DealerRound
+instance Incremental DealerRoundEntityDelta where
+  type Entity DealerRoundEntityDelta = DealerRoundEntity
 
   applyDelta delta entity = case delta of
-    DealerRoundStateDelta rd -> entity {_dealerRoundState = applyDelta rd (_dealerRoundState entity)}
-    DealerRoundRelationsDelta sd -> entity {_dealerRoundRels = applyDelta sd (_dealerRoundRels entity)}
+    DealerRoundEntityAttrsDelta rd -> entity {_dealerRoundEntityAttrs = applyDelta rd (_dealerRoundEntityAttrs entity)}
+    DealerRoundEntityRelsDelta sd -> entity {_dealerRoundEntityRels = applyDelta sd (_dealerRoundEntityRels entity)}
 
   previewDelta delta e = Just $ applyDelta delta e
 
   describeDelta delta _ = case delta of
-    DealerRoundStateDelta (SetDealerRoundNumber n) -> "Set round number to " ++ show n
-    DealerRoundStateDelta (SetActive b) -> "Set round active: " ++ show b
-    DealerRoundRelationsDelta _ -> "Updated shoe used"
+    DealerRoundEntityAttrsDelta (SetDealerRoundEntityNumber n) -> "Set round number to " ++ show n
+    DealerRoundEntityAttrsDelta (SetActive b) -> "Set round active: " ++ show b
+    DealerRoundEntityRelsDelta _ -> "Updated shoe used"
 
-instance Reversible DealerRoundDelta where
+instance Reversible DealerRoundEntityDelta where
   invert = \case
-    DealerRoundStateDelta delta -> DealerRoundStateDelta <$> invert delta
-    DealerRoundRelationsDelta delta -> DealerRoundRelationsDelta <$> invert delta
+    DealerRoundEntityAttrsDelta delta -> DealerRoundEntityAttrsDelta <$> invert delta
+    DealerRoundEntityRelsDelta delta -> DealerRoundEntityRelsDelta <$> invert delta

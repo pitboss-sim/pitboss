@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.DealerHand.Delta
   ( module Pitboss.Trace.Entity.DealerHand.Delta.Attrs,
     module Pitboss.Trace.Entity.DealerHand.Delta.Modes,
     module Pitboss.Trace.Entity.DealerHand.Delta.Rels,
-    DealerHandDelta (..),
+    DealerHandEntityDelta (..),
   )
 where
 
@@ -18,33 +18,33 @@ import Pitboss.Trace.Entity.DealerHand.Delta.Attrs
 import Pitboss.Trace.Entity.DealerHand.Delta.Modes
 import Pitboss.Trace.Entity.DealerHand.Delta.Rels
 
-data DealerHandDelta
-  = DealerHandStateDelta DealerHandStateDelta
-  | DealerHandRelationsDelta DealerHandRelationsDelta
-  | DealerHandFSMDelta DealerHandFSMDelta
+data DealerHandEntityDelta
+  = DealerHandEntityAttrsDelta DealerHandEntityAttrsDelta
+  | DealerHandEntityModesDelta DealerHandEntityModesDelta
+  | DealerHandEntityRelsDelta DealerHandEntityRelsDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerHandDelta
+instance ToJSON DealerHandEntityDelta
 
-instance FromJSON DealerHandDelta
+instance FromJSON DealerHandEntityDelta
 
-instance Incremental DealerHandDelta where
-  type Entity DealerHandDelta = DealerHand
+instance Incremental DealerHandEntityDelta where
+  type Entity DealerHandEntityDelta = DealerHandEntity
 
   applyDelta delta entity = case delta of
-    DealerHandStateDelta d -> entity {_dealerHandState = applyDelta d (_dealerHandState entity)}
-    DealerHandRelationsDelta d -> entity {_dealerHandRels = applyDelta d (_dealerHandRels entity)}
-    DealerHandFSMDelta d -> applyDelta d entity
+    DealerHandEntityAttrsDelta d -> entity {_dealerHandEntityAttrs = applyDelta d (_dealerHandEntityAttrs entity)}
+    DealerHandEntityModesDelta d -> entity {_dealerHandEntityModes = applyDelta d (_dealerHandEntityModes entity)}
+    DealerHandEntityRelsDelta d -> entity {_dealerHandEntityRels = applyDelta d (_dealerHandEntityRels entity)}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta delta entity = case delta of
-    DealerHandStateDelta sd -> describeDelta sd (_dealerHandState entity)
-    DealerHandRelationsDelta rd -> describeDelta rd (_dealerHandRels entity)
-    DealerHandFSMDelta _ -> "FSM replaced"
+    DealerHandEntityAttrsDelta sd -> describeDelta sd (_dealerHandEntityAttrs entity)
+    DealerHandEntityModesDelta _ -> "Modes replaced"
+    DealerHandEntityRelsDelta rd -> describeDelta rd (_dealerHandEntityRels entity)
 
-instance Reversible DealerHandDelta where
+instance Reversible DealerHandEntityDelta where
   invert = \case
-    DealerHandStateDelta d -> DealerHandStateDelta <$> invert d
-    DealerHandRelationsDelta d -> DealerHandRelationsDelta <$> invert d
-    DealerHandFSMDelta d -> DealerHandFSMDelta <$> invert d
+    DealerHandEntityAttrsDelta d -> DealerHandEntityAttrsDelta <$> invert d
+    DealerHandEntityModesDelta d -> DealerHandEntityModesDelta <$> invert d
+    DealerHandEntityRelsDelta d -> DealerHandEntityRelsDelta <$> invert d

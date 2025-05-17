@@ -13,43 +13,52 @@ import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkDealerHand :: Meta (EntityRef DealerHandId) -> SomeDealerHandFSM -> DealerHandState -> DealerHandRelations -> DealerHand
-mkDealerHand = DealerHand
+mkDealerHandEntity :: Meta (EntityRef DealerHandEntityId) -> DealerHandEntityAttrs -> DealerHandEntityModes -> DealerHandEntityRels -> DealerHandEntity
+mkDealerHandEntity = DealerHandEntity
 
-mkDealerHandState :: [Card] -> DealerHandState
-mkDealerHandState = DealerHandState
+mkDealerHandEntityAttrs :: [Card] -> DealerHandEntityAttrs
+mkDealerHandEntityAttrs = DealerHandEntityAttrs
 
-mkDealerHandRelations :: EntityRef PlayerSpotId -> EntityRef DealerRoundId -> EntityRef DealerId -> DealerHandRelations
-mkDealerHandRelations = DealerHandRelations
+mkDealerHandEntityRels :: EntityRef PlayerSpotEntityId -> EntityRef DealerRoundEntityId -> EntityRef DealerEntityId -> DealerHandEntityRels
+mkDealerHandEntityRels = DealerHandEntityRels
 
-data DealerHand = DealerHand
-  { _dealerHandMeta :: Meta (EntityRef DealerHandId),
-    _dealerHandFsm :: SomeDealerHandFSM,
-    _dealerHandState :: DealerHandState,
-    _dealerHandRels :: DealerHandRelations
+data DealerHandEntity = DealerHandEntity
+  { _dealerHandEntityMeta :: Meta (EntityRef DealerHandEntityId),
+    _dealerHandEntityAttrs :: DealerHandEntityAttrs,
+    _dealerHandEntityModes :: DealerHandEntityModes,
+    _dealerHandEntityRels :: DealerHandEntityRels
   }
   deriving (Eq, Show, Generic)
 
-data DealerHandState = DealerHandState
-  { _dealerHandStateHandCards :: [Card]
+data DealerHandEntityAttrs = DealerHandEntityAttrs
+  { _dealerHandEntityAttrsHandCards :: [Card]
   }
   deriving (Eq, Show, Generic)
 
-data DealerHandRelations = DealerHandRelations
-  { _dealerHandRelsBelongsToPlayerSpot :: EntityRef PlayerSpotId,
-    _dealerHandRelsBelongsToRound :: EntityRef DealerRoundId,
-    _dealerHandRelsOwnedByDealer :: EntityRef DealerId
+data DealerHandEntityModes = DealerHandEntityModes
+  { _dealerHandEntityModesDealerHand :: SomeDealerHandFSM
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerHand
+data DealerHandEntityRels = DealerHandEntityRels
+  { _dealerHandEntityRelsBelongsToPlayerSpot :: EntityRef PlayerSpotEntityId,
+    _dealerHandEntityRelsBelongsToDealerRound :: EntityRef DealerRoundEntityId,
+    _dealerHandEntityRelsOwnedByDealer :: EntityRef DealerEntityId
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON DealerHand
+instance ToJSON DealerHandEntity
 
-instance ToJSON DealerHandState
+instance FromJSON DealerHandEntity
 
-instance FromJSON DealerHandState
+instance ToJSON DealerHandEntityAttrs
 
-instance ToJSON DealerHandRelations
+instance FromJSON DealerHandEntityAttrs
 
-instance FromJSON DealerHandRelations
+instance ToJSON DealerHandEntityModes
+
+instance FromJSON DealerHandEntityModes
+
+instance ToJSON DealerHandEntityRels
+
+instance FromJSON DealerHandEntityRels

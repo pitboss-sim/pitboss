@@ -11,40 +11,50 @@ import Pitboss.Blackjack.Offering qualified as O
 import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.Identifier
 
-mkOffering :: Meta OfferingId -> OfferingState -> OfferingRelations -> Offering
-mkOffering = Offering
+mkOffering :: Meta OfferingEntityId -> OfferingEntityAttrs -> OfferingEntityModes -> OfferingEntityRels -> OfferingEntity
+mkOffering = OfferingEntity
 
-mkOfferingState :: O.Offering -> OfferingState
-mkOfferingState = OfferingState
+mkOfferingEntityAttrs :: O.Offering -> OfferingEntityAttrs
+mkOfferingEntityAttrs = OfferingEntityAttrs
 
-mkOfferingRelations :: OfferingRelations
-mkOfferingRelations = OfferingRelations []
+mkOfferingEntityRels :: OfferingEntityRels
+mkOfferingEntityRels = OfferingEntityRels []
 
-data Offering = Offering
-  { _offeringMeta :: Meta OfferingId,
-    _offeringState :: OfferingState,
-    _offeringRels :: OfferingRelations
+data OfferingEntity = OfferingEntity
+  { _offeringEntityMeta :: Meta OfferingEntityId,
+    _offeringEntityAttrs :: OfferingEntityAttrs,
+    _offeringEntityModes :: OfferingEntityModes,
+    _offeringEntityRels :: OfferingEntityRels
   }
   deriving (Eq, Show, Generic)
 
-data OfferingState = OfferingState
-  { _offeringStateOffering :: O.Offering
+data OfferingEntityAttrs = OfferingEntityAttrs
+  { _offeringEntityAttrsOffering :: O.Offering
   }
   deriving (Eq, Show, Generic)
 
-data OfferingRelations = OfferingRelations
-  { _offeringRelsAssociatedTables :: [TableId]
+data OfferingEntityModes = OfferingEntityModes
+  { _offeringEntityModesOffering :: O.Offering
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON Offering
+data OfferingEntityRels = OfferingEntityRels
+  { _offeringEntityRelsAssociatedTables :: [TableEntityId]
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON Offering
+instance ToJSON OfferingEntity
 
-instance ToJSON OfferingState
+instance FromJSON OfferingEntity
 
-instance FromJSON OfferingState
+instance ToJSON OfferingEntityAttrs
 
-instance ToJSON OfferingRelations
+instance FromJSON OfferingEntityAttrs
 
-instance FromJSON OfferingRelations
+instance ToJSON OfferingEntityModes
+
+instance FromJSON OfferingEntityModes
+
+instance ToJSON OfferingEntityRels
+
+instance FromJSON OfferingEntityRels

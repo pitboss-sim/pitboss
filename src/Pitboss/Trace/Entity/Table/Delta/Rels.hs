@@ -11,28 +11,28 @@ import Pitboss.Trace.Entity.Table
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-data TableRelationsDelta
-  = AssignDealer (Maybe (EntityRef DealerId)) (EntityRef DealerId)
-  | UnassignDealer (EntityRef DealerId)
+data TableEntityRelsDelta
+  = AssignDealer (Maybe (EntityRef DealerEntityId)) (EntityRef DealerEntityId)
+  | UnassignDealer (EntityRef DealerEntityId)
   deriving (Eq, Show, Generic)
 
-instance ToJSON TableRelationsDelta
+instance ToJSON TableEntityRelsDelta
 
-instance FromJSON TableRelationsDelta
+instance FromJSON TableEntityRelsDelta
 
-instance Incremental TableRelationsDelta where
-  type Entity TableRelationsDelta = TableRelations
+instance Incremental TableEntityRelsDelta where
+  type Entity TableEntityRelsDelta = TableEntityRels
 
   applyDelta delta rels = case delta of
-    AssignDealer _ new -> rels {_tableRelsManagedByDealer = pure new}
-    UnassignDealer _ -> rels {_tableRelsManagedByDealer = Nothing}
+    AssignDealer _ new -> rels {_tableEntityRelsManagedByDealer = pure new}
+    UnassignDealer _ -> rels {_tableEntityRelsManagedByDealer = Nothing}
 
   previewDelta delta entity = case delta of
     AssignDealer old _ ->
-      if _tableRelsManagedByDealer entity == old
+      if _tableEntityRelsManagedByDealer entity == old
         then Just $ applyDelta delta entity
         else Nothing
-    UnassignDealer old -> case _tableRelsManagedByDealer entity of
+    UnassignDealer old -> case _tableEntityRelsManagedByDealer entity of
       Just old' ->
         if old == old'
           then Just $ applyDelta delta entity
@@ -45,7 +45,7 @@ instance Incremental TableRelationsDelta where
     UnassignDealer old ->
       "Unassigned dealer: " ++ show old
 
-instance Reversible TableRelationsDelta where
+instance Reversible TableEntityRelsDelta where
   invert = \case
     AssignDealer prev new -> Right (AssignDealer (Just new) (fromMaybe undefined prev))
     UnassignDealer old -> Right (AssignDealer (Just old) old)

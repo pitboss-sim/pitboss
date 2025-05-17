@@ -7,7 +7,7 @@ module Pitboss.Trace.Entity.Dealer.Delta
   ( module Pitboss.Trace.Entity.Dealer.Delta.Attrs,
     module Pitboss.Trace.Entity.Dealer.Delta.Modes,
     module Pitboss.Trace.Entity.Dealer.Delta.Rels,
-    DealerDelta (..),
+    DealerEntityDelta (..),
   )
 where
 
@@ -19,35 +19,36 @@ import Pitboss.Trace.Entity.Dealer.Delta.Attrs
 import Pitboss.Trace.Entity.Dealer.Delta.Modes
 import Pitboss.Trace.Entity.Dealer.Delta.Rels
 
-data DealerDelta
-  = DealerStateDelta DealerStateDelta
-  | DealerRelationsDelta DealerRelationsDelta
-  | DealerFSMDelta DealerFSMDelta
+data DealerEntityDelta
+  = DealerEntityAttrsDelta DealerEntityAttrsDelta
+  | DealerEntityRelsDelta DealerEntityRelsDelta
+  | DealerEntityModesDelta DealerEntityModesDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerDelta
+instance ToJSON DealerEntityDelta
 
-instance FromJSON DealerDelta
+instance FromJSON DealerEntityDelta
 
-instance Incremental DealerDelta where
-  type Entity DealerDelta = Dealer
+instance Incremental DealerEntityDelta where
+  type Entity DealerEntityDelta = DealerEntity
 
   applyDelta delta entity = case delta of
-    DealerStateDelta d ->
-      entity {_dealerState = applyDelta d (_dealerState entity)}
-    DealerRelationsDelta d ->
-      entity {_dealerRels = applyDelta d (_dealerRels entity)}
-    DealerFSMDelta d -> applyDelta d entity
+    DealerEntityAttrsDelta d ->
+      entity {_dealerEntityAttrs = applyDelta d (_dealerEntityAttrs entity)}
+    DealerEntityModesDelta d ->
+      entity {_dealerEntityModes = applyDelta d (_dealerEntityModes entity)}
+    DealerEntityRelsDelta d ->
+      entity {_dealerEntityRels = applyDelta d (_dealerEntityRels entity)}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta delta entity = case delta of
-    DealerStateDelta sd -> describeDelta sd (_dealerState entity)
-    DealerRelationsDelta rd -> describeDelta rd (_dealerRels entity)
-    DealerFSMDelta fd -> describeDelta fd entity
+    DealerEntityAttrsDelta sd -> describeDelta sd (_dealerEntityAttrs entity)
+    DealerEntityModesDelta fd -> describeDelta fd (_dealerEntityModes entity)
+    DealerEntityRelsDelta rd -> describeDelta rd (_dealerEntityRels entity)
 
-instance Reversible DealerDelta where
+instance Reversible DealerEntityDelta where
   invert = \case
-    DealerStateDelta d -> DealerStateDelta <$> invert d
-    DealerRelationsDelta d -> DealerRelationsDelta <$> invert d
-    DealerFSMDelta d -> DealerFSMDelta <$> invert d
+    DealerEntityModesDelta d -> DealerEntityModesDelta <$> invert d
+    DealerEntityAttrsDelta d -> DealerEntityAttrsDelta <$> invert d
+    DealerEntityRelsDelta d -> DealerEntityRelsDelta <$> invert d

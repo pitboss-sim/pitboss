@@ -9,29 +9,29 @@ import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.Offering
 import Pitboss.Trace.Types.Identifier
 
-data OfferingRelationsDelta
-  = AddTable TableId
-  | RemoveTable TableId
+data OfferingEntityRelsDelta
+  = AddTable TableEntityId
+  | RemoveTable TableEntityId
   deriving (Eq, Show, Generic)
 
-instance ToJSON OfferingRelationsDelta
+instance ToJSON OfferingEntityRelsDelta
 
-instance FromJSON OfferingRelationsDelta
+instance FromJSON OfferingEntityRelsDelta
 
-instance Incremental OfferingRelationsDelta where
-  type Entity OfferingRelationsDelta = OfferingRelations
+instance Incremental OfferingEntityRelsDelta where
+  type Entity OfferingEntityRelsDelta = OfferingEntityRels
 
   applyDelta delta rels = case delta of
-    AddTable tid -> rels {_offeringRelsAssociatedTables = tid : _offeringRelsAssociatedTables rels}
-    RemoveTable tid -> rels {_offeringRelsAssociatedTables = filter (/= tid) (_offeringRelsAssociatedTables rels)}
+    AddTable tid -> rels {_offeringEntityRelsAssociatedTables = tid : _offeringEntityRelsAssociatedTables rels}
+    RemoveTable tid -> rels {_offeringEntityRelsAssociatedTables = filter (/= tid) (_offeringEntityRelsAssociatedTables rels)}
 
   previewDelta delta rels = case delta of
     AddTable tid ->
-      if tid `notElem` _offeringRelsAssociatedTables rels
+      if tid `notElem` _offeringEntityRelsAssociatedTables rels
         then Just $ applyDelta delta rels
         else Nothing
     RemoveTable tid ->
-      if tid `elem` _offeringRelsAssociatedTables rels
+      if tid `elem` _offeringEntityRelsAssociatedTables rels
         then Just $ applyDelta delta rels
         else Nothing
 
@@ -41,7 +41,7 @@ instance Incremental OfferingRelationsDelta where
     RemoveTable tid ->
       "Removed table from offering: " ++ show tid
 
-instance Reversible OfferingRelationsDelta where
+instance Reversible OfferingEntityRelsDelta where
   invert = \case
     AddTable tid -> Right (RemoveTable tid)
     RemoveTable tid -> Right (AddTable tid)

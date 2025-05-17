@@ -9,26 +9,26 @@ import Pitboss.FSM.PlayerSpot
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.PlayerSpot
 
-data PlayerSpotFSMDelta
+data PlayerSpotEntityModesDelta
   = ReplaceFSM SomePlayerSpotFSM SomePlayerSpotFSM
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotFSMDelta
+instance ToJSON PlayerSpotEntityModesDelta
 
-instance FromJSON PlayerSpotFSMDelta
+instance FromJSON PlayerSpotEntityModesDelta
 
-instance Incremental PlayerSpotFSMDelta where
-  type Entity PlayerSpotFSMDelta = PlayerSpot
+instance Incremental PlayerSpotEntityModesDelta where
+  type Entity PlayerSpotEntityModesDelta = PlayerSpotEntityModes
 
-  applyDelta (ReplaceFSM _ new) entity = entity {_playerSpotFsm = new}
+  applyDelta (ReplaceFSM _ new) entity = entity {_playerSpotEntityModesPlayerSpot = new}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta _ _ = "Placeholder"
 
-instance Reversible PlayerSpotFSMDelta where
+instance Reversible PlayerSpotEntityModesDelta where
   invert = \case
     ReplaceFSM old new -> Right (ReplaceFSM new old)
 
-describePlayerSpotFSMDelta :: PlayerSpotFSMDelta -> String
-describePlayerSpotFSMDelta _ = "Replaced PlayerSpot FSM"
+describePlayerSpotEntityModesDelta :: PlayerSpotEntityModesDelta -> String
+describePlayerSpotEntityModesDelta _ = "Replaced PlayerSpot FSM"

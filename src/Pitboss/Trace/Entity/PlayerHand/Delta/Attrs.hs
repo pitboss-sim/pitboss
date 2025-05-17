@@ -9,7 +9,7 @@ import Pitboss.Blackjack.Card
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.PlayerHand
 
-data PlayerHandStateDelta
+data PlayerHandEntityAttrsDelta
   = AddCard Card
   | RemoveCard Card
   | ReplaceCards [Card] [Card]
@@ -17,27 +17,27 @@ data PlayerHandStateDelta
   | ReplaceSplitDepth Int Int
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandStateDelta
+instance ToJSON PlayerHandEntityAttrsDelta
 
-instance FromJSON PlayerHandStateDelta
+instance FromJSON PlayerHandEntityAttrsDelta
 
-instance Incremental PlayerHandStateDelta where
-  type Entity PlayerHandStateDelta = PlayerHandState
+instance Incremental PlayerHandEntityAttrsDelta where
+  type Entity PlayerHandEntityAttrsDelta = PlayerHandEntityAttrs
 
   applyDelta delta state = case delta of
-    AddCard c -> state {_playerHandStateHandCards = _playerHandStateHandCards state ++ [c]}
-    RemoveCard c -> state {_playerHandStateHandCards = filter (/= c) (_playerHandStateHandCards state)}
-    ReplaceCards _ new -> state {_playerHandStateHandCards = new}
-    ReplacePlayerHandIndex _ new -> state {_playerHandStateHandIx = new}
-    ReplaceSplitDepth _ new -> state {_playerHandStateSplitDepth = new}
+    AddCard c -> state {_playerHandEntityAttrsHandCards = _playerHandEntityAttrsHandCards state ++ [c]}
+    RemoveCard c -> state {_playerHandEntityAttrsHandCards = filter (/= c) (_playerHandEntityAttrsHandCards state)}
+    ReplaceCards _ new -> state {_playerHandEntityAttrsHandCards = new}
+    ReplacePlayerHandIndex _ new -> state {_playerHandEntityAttrsHandIx = new}
+    ReplaceSplitDepth _ new -> state {_playerHandEntityAttrsSplitDepth = new}
 
   previewDelta delta state = case delta of
     ReplacePlayerHandIndex old _ ->
-      if old == _playerHandStateHandIx state
+      if old == _playerHandEntityAttrsHandIx state
         then Just $ applyDelta delta state
         else Nothing
     ReplaceSplitDepth old _ ->
-      if old == _playerHandStateSplitDepth state
+      if old == _playerHandEntityAttrsSplitDepth state
         then Just $ applyDelta delta state
         else Nothing
     _ -> Just $ applyDelta delta state
@@ -49,7 +49,7 @@ instance Incremental PlayerHandStateDelta where
     ReplacePlayerHandIndex old new -> "Changed hand index: " ++ show old ++ " → " ++ show new
     ReplaceSplitDepth old new -> "Changed split depth: " ++ show old ++ " → " ++ show new
 
-instance Reversible PlayerHandStateDelta where
+instance Reversible PlayerHandEntityAttrsDelta where
   invert = \case
     AddCard c -> Right (RemoveCard c)
     RemoveCard c -> Right (AddCard c)

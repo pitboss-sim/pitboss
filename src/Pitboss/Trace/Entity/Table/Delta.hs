@@ -8,7 +8,7 @@ module Pitboss.Trace.Entity.Table.Delta
   ( module Pitboss.Trace.Entity.Table.Delta.Attrs,
     module Pitboss.Trace.Entity.Table.Delta.Modes,
     module Pitboss.Trace.Entity.Table.Delta.Rels,
-    TableDelta (..),
+    TableEntityDelta (..),
   )
 where
 
@@ -20,29 +20,29 @@ import Pitboss.Trace.Entity.Table.Delta.Attrs
 import Pitboss.Trace.Entity.Table.Delta.Modes
 import Pitboss.Trace.Entity.Table.Delta.Rels
 
-data TableDelta
-  = TableStateDelta TableStateDelta
-  | TableRelationsDelta TableRelationsDelta
+data TableEntityDelta
+  = TableEntityAttrsDelta TableEntityAttrsDelta
+  | TableEntityRelsDelta TableEntityRelsDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON TableDelta
+instance ToJSON TableEntityDelta
 
-instance FromJSON TableDelta
+instance FromJSON TableEntityDelta
 
-instance Incremental TableDelta where
-  type Entity TableDelta = Table
+instance Incremental TableEntityDelta where
+  type Entity TableEntityDelta = TableEntity
 
   applyDelta delta entity = case delta of
-    TableStateDelta d -> entity {_tableState = applyDelta d (_tableState entity)}
-    TableRelationsDelta d -> entity {_tableRels = applyDelta d (_tableRels entity)}
+    TableEntityAttrsDelta d -> entity {_tableEntityAttrs = applyDelta d (_tableEntityAttrs entity)}
+    TableEntityRelsDelta d -> entity {_tableEntityRels = applyDelta d (_tableEntityRels entity)}
 
   previewDelta delta entity = case delta of
-    TableStateDelta _ -> Just $ applyDelta delta entity
-    TableRelationsDelta _ -> Just $ applyDelta delta entity
+    TableEntityAttrsDelta _ -> Just $ applyDelta delta entity
+    TableEntityRelsDelta _ -> Just $ applyDelta delta entity
 
   describeDelta = describeDelta
 
-instance Reversible TableDelta where
+instance Reversible TableEntityDelta where
   invert = \case
-    TableStateDelta d -> TableStateDelta <$> invert d
-    TableRelationsDelta d -> TableRelationsDelta <$> invert d
+    TableEntityAttrsDelta d -> TableEntityAttrsDelta <$> invert d
+    TableEntityRelsDelta d -> TableEntityRelsDelta <$> invert d

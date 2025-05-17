@@ -7,7 +7,7 @@ module Pitboss.Trace.Entity.PlayerSpot.Delta
   ( module Pitboss.Trace.Entity.PlayerSpot.Delta.Attrs,
     module Pitboss.Trace.Entity.PlayerSpot.Delta.Modes,
     module Pitboss.Trace.Entity.PlayerSpot.Delta.Rels,
-    PlayerSpotDelta (..),
+    PlayerSpotEntityDelta (..),
   )
 where
 
@@ -19,35 +19,36 @@ import Pitboss.Trace.Entity.PlayerSpot.Delta.Attrs
 import Pitboss.Trace.Entity.PlayerSpot.Delta.Modes
 import Pitboss.Trace.Entity.PlayerSpot.Delta.Rels
 
-data PlayerSpotDelta
-  = PlayerSpotStateDelta PlayerSpotStateDelta
-  | PlayerSpotRelationsDelta PlayerSpotRelationsDelta
-  | PlayerSpotFSMDelta PlayerSpotFSMDelta
+data PlayerSpotEntityDelta
+  = PlayerSpotEntityAttrsDelta PlayerSpotEntityAttrsDelta
+  | PlayerSpotEntityModesDelta PlayerSpotEntityModesDelta
+  | PlayerSpotEntityRelsDelta PlayerSpotEntityRelsDelta
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotDelta
+instance ToJSON PlayerSpotEntityDelta
 
-instance FromJSON PlayerSpotDelta
+instance FromJSON PlayerSpotEntityDelta
 
-instance Incremental PlayerSpotDelta where
-  type Entity PlayerSpotDelta = PlayerSpot
+instance Incremental PlayerSpotEntityDelta where
+  type Entity PlayerSpotEntityDelta = PlayerSpotEntity
 
   applyDelta delta entity = case delta of
-    PlayerSpotStateDelta sd ->
-      entity {_playerSpotState = applyDelta sd (_playerSpotState entity)}
-    PlayerSpotRelationsDelta rd ->
-      entity {_playerSpotRels = applyDelta rd (_playerSpotRels entity)}
-    PlayerSpotFSMDelta fd -> applyDelta fd entity
+    PlayerSpotEntityAttrsDelta sd ->
+      entity {_playerSpotEntityAttrs = applyDelta sd (_playerSpotEntityAttrs entity)}
+    PlayerSpotEntityModesDelta fd ->
+      entity {_playerSpotEntityModes = applyDelta fd (_playerSpotEntityModes entity)}
+    PlayerSpotEntityRelsDelta rd ->
+      entity {_playerSpotEntityRels = applyDelta rd (_playerSpotEntityRels entity)}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta d entity = case d of
-    PlayerSpotStateDelta sd -> describeDelta sd (_playerSpotState entity)
-    PlayerSpotRelationsDelta rd -> describeDelta rd (_playerSpotRels entity)
-    PlayerSpotFSMDelta fd -> describeDelta fd entity
+    PlayerSpotEntityAttrsDelta sd -> describeDelta sd (_playerSpotEntityAttrs entity)
+    PlayerSpotEntityModesDelta fd -> describeDelta fd (_playerSpotEntityModes entity)
+    PlayerSpotEntityRelsDelta rd -> describeDelta rd (_playerSpotEntityRels entity)
 
-instance Reversible PlayerSpotDelta where
+instance Reversible PlayerSpotEntityDelta where
   invert = \case
-    PlayerSpotStateDelta d -> PlayerSpotStateDelta <$> invert d
-    PlayerSpotRelationsDelta d -> PlayerSpotRelationsDelta <$> invert d
-    PlayerSpotFSMDelta d -> PlayerSpotFSMDelta <$> invert d
+    PlayerSpotEntityAttrsDelta d -> PlayerSpotEntityAttrsDelta <$> invert d
+    PlayerSpotEntityModesDelta d -> PlayerSpotEntityModesDelta <$> invert d
+    PlayerSpotEntityRelsDelta d -> PlayerSpotEntityRelsDelta <$> invert d

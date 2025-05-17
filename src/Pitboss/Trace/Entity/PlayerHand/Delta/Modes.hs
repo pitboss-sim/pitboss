@@ -8,22 +8,22 @@ import Pitboss.FSM.PlayerHand
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.PlayerHand
 
-data PlayerHandFSMDelta
+data PlayerHandEntityModesDelta
   = ReplaceFSM SomePlayerHandFSM SomePlayerHandFSM
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandFSMDelta
+instance ToJSON PlayerHandEntityModesDelta
 
-instance FromJSON PlayerHandFSMDelta
+instance FromJSON PlayerHandEntityModesDelta
 
-instance Incremental PlayerHandFSMDelta where
-  type Entity PlayerHandFSMDelta = PlayerHand
+instance Incremental PlayerHandEntityModesDelta where
+  type Entity PlayerHandEntityModesDelta = PlayerHandEntityModes
 
-  applyDelta (ReplaceFSM _ new) entity = entity {_playerHandFsm = new}
+  applyDelta (ReplaceFSM _ new) entity = entity {_playerHandEntityFsm = new}
 
   previewDelta delta entity = Just $ applyDelta delta entity
 
   describeDelta (ReplaceFSM _ new) _ = "FSM replaced:" ++ show new
 
-instance Reversible PlayerHandFSMDelta where
+instance Reversible PlayerHandEntityModesDelta where
   invert (ReplaceFSM old new) = Right (ReplaceFSM new old)

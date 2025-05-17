@@ -114,24 +114,20 @@ library
                       Pitboss.Trace.Entity.PlayerSpot.Delta.Modes
                       Pitboss.Trace.Entity.PlayerSpot.Delta.Rels
                       Pitboss.Trace.Entity.PlayerSpot.Types
-                      Pitboss.Trace.Entity.Shoe
-                      Pitboss.Trace.Entity.Shoe.Delta
-                      Pitboss.Trace.Entity.Shoe.Delta.Attrs
-                      Pitboss.Trace.Entity.Shoe.Delta.Modes
-                      Pitboss.Trace.Entity.Shoe.Delta.Rels
-                      Pitboss.Trace.Entity.Shoe.Types
-                      Pitboss.Trace.Entity.ShoeCursor
-                      Pitboss.Trace.Entity.ShoeCursor.Delta
-                      Pitboss.Trace.Entity.ShoeCursor.Delta.Attrs
-                      Pitboss.Trace.Entity.ShoeCursor.Delta.Modes
-                      Pitboss.Trace.Entity.ShoeCursor.Delta.Rels
-                      Pitboss.Trace.Entity.ShoeCursor.Types
                       Pitboss.Trace.Entity.Table
                       Pitboss.Trace.Entity.Table.Delta
                       Pitboss.Trace.Entity.Table.Delta.Attrs
                       Pitboss.Trace.Entity.Table.Delta.Modes
                       Pitboss.Trace.Entity.Table.Delta.Rels
                       Pitboss.Trace.Entity.Table.Types
+                      Pitboss.Trace.Entity.TableShoe
+                      Pitboss.Trace.Entity.TableShoe.Delta
+                      Pitboss.Trace.Entity.TableShoeCursor
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Attrs
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Modes
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Rels
+                      Pitboss.Trace.Entity.TableShoeCursor.Types
                       Pitboss.Trace.Entity.Types
                       Pitboss.Trace.Entity.Types.FiniteMap
                       Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum

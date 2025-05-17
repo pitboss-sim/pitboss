@@ -10,45 +10,45 @@ import Pitboss.Trace.Entity.PlayerHand
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-data PlayerHandRelationsDelta
-  = UpdatePlayerSpot (EntityRef PlayerSpotId) (EntityRef PlayerSpotId)
-  | UpdateRound (EntityRef DealerRoundId) (EntityRef DealerRoundId)
-  | UpdatePlayer (EntityRef PlayerId) (EntityRef PlayerId)
+data PlayerHandEntityRelsDelta
+  = UpdatePlayerSpot (EntityRef PlayerSpotEntityId) (EntityRef PlayerSpotEntityId)
+  | UpdateDealerRound (EntityRef DealerRoundEntityId) (EntityRef DealerRoundEntityId)
+  | UpdatePlayer (EntityRef PlayerEntityId) (EntityRef PlayerEntityId)
   deriving (Eq, Show, Generic)
 
-instance Incremental PlayerHandRelationsDelta where
-  type Entity PlayerHandRelationsDelta = PlayerHandRelations
+instance Incremental PlayerHandEntityRelsDelta where
+  type Entity PlayerHandEntityRelsDelta = PlayerHandEntityRels
 
   applyDelta delta rels = case delta of
-    UpdatePlayerSpot _ new -> rels {_playerHandRelsBelongsToPlayerSpot = new}
-    UpdateRound _ new -> rels {_playerHandRelsBelongsToRound = new}
-    UpdatePlayer _ new -> rels {_playerHandRelsOwnedByPlayer = new}
+    UpdatePlayerSpot _ new -> rels {_playerHandEntityRelsBelongsToPlayerSpot = new}
+    UpdateDealerRound _ new -> rels {_playerHandEntityRelsBelongsToDealerRound = new}
+    UpdatePlayer _ new -> rels {_playerHandEntityRelsOwnedByPlayer = new}
 
   previewDelta delta state = case delta of
     UpdatePlayerSpot old _ ->
-      if old == _playerHandRelsBelongsToPlayerSpot state
+      if old == _playerHandEntityRelsBelongsToPlayerSpot state
         then Just $ applyDelta delta state
         else Nothing
-    UpdateRound old _ ->
-      if old == _playerHandRelsBelongsToRound state
+    UpdateDealerRound old _ ->
+      if old == _playerHandEntityRelsBelongsToDealerRound state
         then Just $ applyDelta delta state
         else Nothing
     UpdatePlayer old _ ->
-      if old == _playerHandRelsOwnedByPlayer state
+      if old == _playerHandEntityRelsOwnedByPlayer state
         then Just $ applyDelta delta state
         else Nothing
 
   describeDelta delta _ = case delta of
-    UpdateRound old new -> "Changed round: " ++ show old ++ " → " ++ show new
+    UpdateDealerRound old new -> "Changed round: " ++ show old ++ " → " ++ show new
     UpdatePlayer old new -> "Changed player: " ++ show old ++ " → " ++ show new
     UpdatePlayerSpot old new -> "Changed spot: " ++ show old ++ " → " ++ show new
 
-instance ToJSON PlayerHandRelationsDelta
+instance ToJSON PlayerHandEntityRelsDelta
 
-instance FromJSON PlayerHandRelationsDelta
+instance FromJSON PlayerHandEntityRelsDelta
 
-instance Reversible PlayerHandRelationsDelta where
+instance Reversible PlayerHandEntityRelsDelta where
   invert = \case
     UpdatePlayerSpot old new -> Right (UpdatePlayerSpot new old)
-    UpdateRound old new -> Right (UpdateRound new old)
+    UpdateDealerRound old new -> Right (UpdateDealerRound new old)
     UpdatePlayer old new -> Right (UpdatePlayer new old)

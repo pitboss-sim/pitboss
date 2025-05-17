@@ -9,23 +9,23 @@ import Pitboss.Blackjack.Card
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.DealerHand
 
-data DealerHandStateDelta
+data DealerHandEntityAttrsDelta
   = AddCard Card
   | RemoveCard Card
   | ReplaceCards [Card] [Card]
   deriving (Eq, Show, Generic)
 
-instance ToJSON DealerHandStateDelta
+instance ToJSON DealerHandEntityAttrsDelta
 
-instance FromJSON DealerHandStateDelta
+instance FromJSON DealerHandEntityAttrsDelta
 
-instance Incremental DealerHandStateDelta where
-  type Entity DealerHandStateDelta = DealerHandState
+instance Incremental DealerHandEntityAttrsDelta where
+  type Entity DealerHandEntityAttrsDelta = DealerHandEntityAttrs
 
   applyDelta delta state = case delta of
-    AddCard c -> state {_dealerHandStateHandCards = c : _dealerHandStateHandCards state}
-    RemoveCard c -> state {_dealerHandStateHandCards = filter (/= c) (_dealerHandStateHandCards state)}
-    ReplaceCards _ new -> state {_dealerHandStateHandCards = new}
+    AddCard c -> state {_dealerHandEntityAttrsHandCards = c : _dealerHandEntityAttrsHandCards state}
+    RemoveCard c -> state {_dealerHandEntityAttrsHandCards = filter (/= c) (_dealerHandEntityAttrsHandCards state)}
+    ReplaceCards _ new -> state {_dealerHandEntityAttrsHandCards = new}
 
   previewDelta delta state = Just $ applyDelta delta state
 
@@ -34,7 +34,7 @@ instance Incremental DealerHandStateDelta where
     RemoveCard c -> "Removed card: " ++ show c
     ReplaceCards old new -> "Replaced cards: " ++ show old ++ " → " ++ show new
 
-instance Reversible DealerHandStateDelta where
+instance Reversible DealerHandEntityAttrsDelta where
   invert = \case
     AddCard c -> Right (RemoveCard c)
     RemoveCard c -> Right (AddCard c)

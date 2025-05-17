@@ -6,51 +6,60 @@ module Pitboss.Trace.Entity.Dealer where
 import Data.Aeson.Types
 import GHC.Generics (Generic)
 import Pitboss.FSM.DealerHand
-import Pitboss.FSM.DealerRound hiding (Dealer)
+import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
 import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkDealer :: Meta (EntityRef DealerId) -> DealerState -> SomeDealerTableFSM -> DealerRoundFSM -> SomeDealerHandFSM -> DealerRelations -> Dealer
-mkDealer = Dealer
+mkDealerEntity :: Meta (EntityRef DealerEntityId) -> DealerEntityAttrs -> DealerEntityModes -> DealerEntityRels -> DealerEntity
+mkDealerEntity = DealerEntity
 
-mkDealerState :: String -> Maybe (EntityRef TableId) -> DealerState
-mkDealerState = DealerState
+mkDealerEntityAttrs :: String -> Maybe (EntityRef TableEntityId) -> DealerEntityAttrs
+mkDealerEntityAttrs = DealerEntityAttrs
 
-mkDealerRelations :: Maybe (EntityRef DealerRoundId) -> Maybe (EntityRef DealerHandId) -> DealerRelations
-mkDealerRelations = DealerRelations
+mkDealerEntityRels :: Maybe (EntityRef DealerRoundEntityId) -> Maybe (EntityRef DealerHandEntityId) -> DealerEntityRels
+mkDealerEntityRels = DealerEntityRels
 
-data Dealer = Dealer
-  { _dealerMeta :: Meta (EntityRef DealerId),
-    _dealerState :: DealerState,
-    _dealerFsmTable :: SomeDealerTableFSM,
-    _dealerFsmRound :: DealerRoundFSM,
-    _dealerFsmHand :: SomeDealerHandFSM,
-    _dealerRels :: DealerRelations
+data DealerEntity = DealerEntity
+  { _dealerEntityMeta :: Meta (EntityRef DealerEntityId),
+    _dealerEntityAttrs :: DealerEntityAttrs,
+    _dealerEntityModes :: DealerEntityModes,
+    _dealerEntityRels :: DealerEntityRels
   }
   deriving (Eq, Show, Generic)
 
-data DealerState = DealerState
-  { _dealerStateName :: String,
-    _dealerStateAssignedTable :: Maybe (EntityRef TableId)
+data DealerEntityAttrs = DealerEntityAttrs
+  { _dealerEntityAttrsName :: String,
+    _dealerEntityAttrsAssignedTable :: Maybe (EntityRef TableEntityId)
   }
   deriving (Eq, Show, Generic)
 
-data DealerRelations = DealerRelations
-  { _dealerRelsCurrentRound :: Maybe (EntityRef DealerRoundId),
-    _dealerRelsActiveHand :: Maybe (EntityRef DealerHandId)
+data DealerEntityModes = DealerEntityModes
+  { _dealerEntityModesDealerTable :: SomeDealerTableFSM,
+    _dealerEntityModesDealerRound :: DealerRoundFSM,
+    _dealerEntityModesDealerHand :: SomeDealerHandFSM
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON Dealer
+data DealerEntityRels = DealerEntityRels
+  { _dealerEntityRelsCurrentRound :: Maybe (EntityRef DealerRoundEntityId),
+    _dealerEntityRelsActiveHand :: Maybe (EntityRef DealerHandEntityId)
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON Dealer
+instance ToJSON DealerEntity
 
-instance ToJSON DealerState
+instance FromJSON DealerEntity
 
-instance FromJSON DealerState
+instance ToJSON DealerEntityAttrs
 
-instance ToJSON DealerRelations
+instance FromJSON DealerEntityAttrs
 
-instance FromJSON DealerRelations
+instance ToJSON DealerEntityModes
+
+instance FromJSON DealerEntityModes
+
+instance ToJSON DealerEntityRels
+
+instance FromJSON DealerEntityRels

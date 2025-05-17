@@ -14,36 +14,35 @@ import Pitboss.Trace.Entity.Offering.Delta
 import Pitboss.Trace.Entity.Player.Delta
 import Pitboss.Trace.Entity.PlayerHand.Delta
 import Pitboss.Trace.Entity.PlayerSpot.Delta
-import Pitboss.Trace.Entity.Shoe.Delta
-import Pitboss.Trace.Entity.ShoeCursor.Delta
 import Pitboss.Trace.Entity.Table.Delta
+import Pitboss.Trace.Entity.TableShoeCursor.Delta
 import Pitboss.Trace.Registry
 import Pitboss.Trace.Types.Identifier
 
-type Offerings = Registry DealerHandId OfferingDelta
+type Offerings = Registry DealerHandEntityId OfferingEntityDelta
 
-type Tables = Registry DealerHandId TableDelta
+type Tables = Registry DealerHandEntityId TableEntityDelta
 
-type Shoes = Registry DealerHandId ShoeDelta
+type TableShoes = Registry DealerHandEntityId DealerHandEntityDelta
 
-type ShoeCursors = Registry DealerHandId ShoeCursorDelta
+type TableShoeCursors = Registry DealerHandEntityId TableShoeCursorEntityDelta
 
-type Dealers = Registry DealerHandId DealerDelta
+type Dealers = Registry DealerHandEntityId DealerEntityDelta
 
-type DealerRounds = Registry DealerHandId DealerRoundDelta
+type DealerRounds = Registry DealerHandEntityId DealerRoundEntityDelta
 
-type DealerHands = Registry DealerHandId DealerHandDelta
+type DealerHands = Registry DealerHandEntityId DealerHandEntityDelta
 
-type Players = Registry DealerHandId PlayerDelta
+type Players = Registry DealerHandEntityId PlayerEntityDelta
 
-type PlayerSpots = Registry DealerHandId PlayerSpotDelta
+type PlayerSpots = Registry DealerHandEntityId PlayerSpotEntityDelta
 
-type PlayerHands = Registry DealerHandId PlayerHandDelta
+type PlayerHands = Registry DealerHandEntityId PlayerHandEntityDelta
 
 data Trace = Trace
   { _offerings :: Offerings,
     _tables :: Tables,
-    _shoes :: Shoes,
+    _tableShoes :: TableShoes,
     _dealers :: Dealers,
     _dealerHands :: DealerHands,
     _dealerRounds :: DealerRounds,
@@ -76,7 +75,7 @@ instance Show Trace where
         "  DealerHands: " ++ showKeys dh,
         "  Players: " ++ showKeys p,
         "  PlayerHands: " ++ showKeys ph,
-        "  Shoes: " ++ showKeys s,
+        "  TableShoes: " ++ showKeys s,
         "  Rounds: " ++ showKeys r,
         "  Spots: " ++ showKeys sp,
         "  Tables: " ++ showKeys t
@@ -89,7 +88,7 @@ emptyTrace =
   Trace
     { _offerings = mempty,
       _tables = mempty,
-      _shoes = mempty,
+      _tableShoes = mempty,
       _dealers = mempty,
       _dealerHands = mempty,
       _dealerRounds = mempty,
@@ -106,8 +105,8 @@ lensOfferings = lens _offerings (\s x -> s {_offerings = x})
 lensTables :: Lens' Trace Tables
 lensTables = lens _tables (\s x -> s {_tables = x})
 
-lensShoes :: Lens' Trace Shoes
-lensShoes = lens _shoes (\s x -> s {_shoes = x})
+lensTableShoes :: Lens' Trace TableShoes
+lensTableShoes = lens _tableShoes (\s x -> s {_tableShoes = x})
 
 lensDealers :: Lens' Trace Dealers
 lensDealers = lens _dealers (\s x -> s {_dealers = x})

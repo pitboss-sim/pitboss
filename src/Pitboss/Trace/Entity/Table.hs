@@ -12,43 +12,53 @@ import Pitboss.Trace.Entity.Types.Meta
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkTable :: Pitboss.Trace.Entity.Types.Meta.Meta TableId -> TableState -> TableRelations -> Table
-mkTable = Table
+mkTableEntity :: Meta TableEntityId -> TableEntityAttrs -> TableEntityModes -> TableEntityRels -> TableEntity
+mkTableEntity = TableEntity
 
-mkTableState :: String -> Maybe (EntityRef DealerRoundId) -> EntityRef OfferingId -> Chips -> TableState
-mkTableState = TableState
+mkTableEntityAttrs :: String -> Maybe (EntityRef DealerRoundEntityId) -> EntityRef OfferingEntityId -> Chips -> TableEntityAttrs
+mkTableEntityAttrs = TableEntityAttrs
 
-mkTableRelations :: Maybe (EntityRef DealerId) -> TableRelations
-mkTableRelations = TableRelations
+mkTableEntityRels :: Maybe (EntityRef DealerEntityId) -> TableEntityRels
+mkTableEntityRels = TableEntityRels
 
-data Table = Table
-  { _tableMeta :: Meta TableId,
-    _tableState :: TableState,
-    _tableRels :: TableRelations
+data TableEntity = TableEntity
+  { _tableEntityMeta :: Meta TableEntityId,
+    _tableEntityAttrs :: TableEntityAttrs,
+    _tableEntityModes :: TableEntityModes,
+    _tableEntityRels :: TableEntityRels
   }
   deriving (Eq, Show, Generic)
 
-data TableState = TableState
-  { _tableStateName :: String,
-    _tableStateCurrentRound :: Maybe (EntityRef DealerRoundId),
-    _tableStateOfferingUsed :: EntityRef OfferingId,
-    _tableStateMinBet :: Chips
+data TableEntityAttrs = TableEntityAttrs
+  { _tableEntityAttrsName :: String,
+    _tableEntityAttrsCurrentRound :: Maybe (EntityRef DealerRoundEntityId),
+    _tableEntityAttrsOfferingUsed :: EntityRef OfferingEntityId,
+    _tableEntityAttrsMinBet :: Chips
   }
   deriving (Eq, Show, Generic)
 
-data TableRelations = TableRelations
-  { _tableRelsManagedByDealer :: Maybe (EntityRef DealerId)
+data TableEntityModes = TableEntityModes
+  { _tableEntityModesManagedByDealer :: Maybe (EntityRef DealerEntityId)
   }
   deriving (Eq, Show, Generic)
 
-instance ToJSON Table
+data TableEntityRels = TableEntityRels
+  { _tableEntityRelsManagedByDealer :: Maybe (EntityRef DealerEntityId)
+  }
+  deriving (Eq, Show, Generic)
 
-instance FromJSON Table
+instance ToJSON TableEntity
 
-instance ToJSON TableState
+instance FromJSON TableEntity
 
-instance FromJSON TableState
+instance ToJSON TableEntityModes
 
-instance ToJSON TableRelations
+instance FromJSON TableEntityModes
 
-instance FromJSON TableRelations
+instance ToJSON TableEntityAttrs
+
+instance FromJSON TableEntityAttrs
+
+instance ToJSON TableEntityRels
+
+instance FromJSON TableEntityRels

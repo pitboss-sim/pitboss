@@ -9,23 +9,23 @@ import Pitboss.Blackjack.Chips
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.PlayerSpot
 
-data PlayerSpotStateDelta
+data PlayerSpotEntityAttrsDelta
   = ReplaceWager Chips Chips
   deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotStateDelta
+instance ToJSON PlayerSpotEntityAttrsDelta
 
-instance FromJSON PlayerSpotStateDelta
+instance FromJSON PlayerSpotEntityAttrsDelta
 
-instance Incremental PlayerSpotStateDelta where
-  type Entity PlayerSpotStateDelta = PlayerSpotState
+instance Incremental PlayerSpotEntityAttrsDelta where
+  type Entity PlayerSpotEntityAttrsDelta = PlayerSpotEntityAttrs
 
   applyDelta delta state = case delta of
-    ReplaceWager _ new -> state {_playerSpotStateWager = new}
+    ReplaceWager _ new -> state {_playerSpotEntityAttrsWager = new}
 
   previewDelta delta state = case delta of
     ReplaceWager old _ ->
-      if _playerSpotStateWager state == old
+      if _playerSpotEntityAttrsWager state == old
         then Just $ applyDelta delta state
         else Nothing
 
@@ -33,6 +33,6 @@ instance Incremental PlayerSpotStateDelta where
     ReplaceWager old new ->
       "Replaced wager: " ++ show old ++ " → " ++ show new
 
-instance Reversible PlayerSpotStateDelta where
+instance Reversible PlayerSpotEntityAttrsDelta where
   invert = \case
     ReplaceWager old new -> Right (ReplaceWager new old)

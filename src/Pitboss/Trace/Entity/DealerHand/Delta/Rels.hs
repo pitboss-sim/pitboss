@@ -21,7 +21,7 @@ instance ToJSON DealerHandEntityRelsDelta
 instance FromJSON DealerHandEntityRelsDelta
 
 instance Incremental DealerHandEntityRelsDelta where
-  type Entity DealerHandEntityRelsDelta = DealerHandEntityRels
+  type Target DealerHandEntityRelsDelta = DealerHandEntityRels
 
   applyDelta delta rels = case delta of
     UpdatePlayerSpot _ new -> rels {_dealerHandEntityRelsBelongsToPlayerSpot = new}

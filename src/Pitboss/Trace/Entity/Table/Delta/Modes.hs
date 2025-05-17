@@ -10,7 +10,7 @@ data TableEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental TableEntityModesDelta where
-  type Entity TableEntityModesDelta = TableEntityModes
+  type Target TableEntityModesDelta = TableEntityModes
   applyDelta NoopModes e = e
   previewDelta NoopModes = Just
   describeDelta NoopModes _ = "Noop FSM delta"

@@ -30,7 +30,7 @@ instance ToJSON TableEntityDelta
 instance FromJSON TableEntityDelta
 
 instance Incremental TableEntityDelta where
-  type Entity TableEntityDelta = TableEntity
+  type Target TableEntityDelta = TableEntity
 
   applyDelta delta entity = case delta of
     TableEntityAttrsDelta d -> entity {_tableEntityAttrs = applyDelta d (_tableEntityAttrs entity)}

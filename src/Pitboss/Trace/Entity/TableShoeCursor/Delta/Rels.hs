@@ -19,7 +19,7 @@ instance ToJSON TableShoeCursorEntityRelsDelta
 instance FromJSON TableShoeCursorEntityRelsDelta
 
 instance Incremental TableShoeCursorEntityRelsDelta where
-  type Entity TableShoeCursorEntityRelsDelta = TableShoeCursorEntityRels
+  type Target TableShoeCursorEntityRelsDelta = TableShoeCursorEntityRels
 
   applyDelta delta rels = case delta of
     UpdateTableShoe _ new -> rels {_tableShoeCursorEntityRelsPointsToTableShoe = new}

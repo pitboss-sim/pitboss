@@ -19,7 +19,7 @@ instance ToJSON OfferingEntityRelsDelta
 instance FromJSON OfferingEntityRelsDelta
 
 instance Incremental OfferingEntityRelsDelta where
-  type Entity OfferingEntityRelsDelta = OfferingEntityRels
+  type Target OfferingEntityRelsDelta = OfferingEntityRels
 
   applyDelta delta rels = case delta of
     AddTable tid -> rels {_offeringEntityRelsAssociatedTables = tid : _offeringEntityRelsAssociatedTables rels}

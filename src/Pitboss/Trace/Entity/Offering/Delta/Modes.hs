@@ -11,7 +11,7 @@ data OfferingEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental OfferingEntityModesDelta where
-  type Entity OfferingEntityModesDelta = OfferingEntityModes
+  type Target OfferingEntityModesDelta = OfferingEntityModes
   applyDelta NoopModes e = e
   previewDelta NoopModes = Just
   describeDelta NoopModes _ = "Noop FSM delta"

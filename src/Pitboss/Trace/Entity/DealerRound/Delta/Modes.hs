@@ -11,7 +11,7 @@ data DealerRoundEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental DealerRoundEntityModesDelta where
-  type Entity DealerRoundEntityModesDelta = DealerRoundEntityModes
+  type Target DealerRoundEntityModesDelta = DealerRoundEntityModes
   applyDelta NoopModes e = e
   previewDelta NoopModes = Just
   describeDelta NoopModes _ = "Noop FSM delta"

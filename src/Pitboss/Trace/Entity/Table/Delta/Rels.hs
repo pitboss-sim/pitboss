@@ -21,7 +21,7 @@ instance ToJSON TableEntityRelsDelta
 instance FromJSON TableEntityRelsDelta
 
 instance Incremental TableEntityRelsDelta where
-  type Entity TableEntityRelsDelta = TableEntityRels
+  type Target TableEntityRelsDelta = TableEntityRels
 
   applyDelta delta rels = case delta of
     AssignDealer _ new -> rels {_tableEntityRelsManagedByDealer = pure new}

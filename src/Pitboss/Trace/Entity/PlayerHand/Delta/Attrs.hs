@@ -22,7 +22,7 @@ instance ToJSON PlayerHandEntityAttrsDelta
 instance FromJSON PlayerHandEntityAttrsDelta
 
 instance Incremental PlayerHandEntityAttrsDelta where
-  type Entity PlayerHandEntityAttrsDelta = PlayerHandEntityAttrs
+  type Target PlayerHandEntityAttrsDelta = PlayerHandEntityAttrs
 
   applyDelta delta state = case delta of
     AddCard c -> state {_playerHandEntityAttrsHandCards = _playerHandEntityAttrsHandCards state ++ [c]}

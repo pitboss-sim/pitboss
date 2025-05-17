@@ -20,7 +20,7 @@ instance ToJSON PlayerEntityRelsDelta
 instance FromJSON PlayerEntityRelsDelta
 
 instance Incremental PlayerEntityRelsDelta where
-  type Entity PlayerEntityRelsDelta = PlayerEntityRels
+  type Target PlayerEntityRelsDelta = PlayerEntityRels
 
   applyDelta delta r = case delta of
     UpdateCloneOf _ new -> r {_playerEntityRelsClonedFrom = new}

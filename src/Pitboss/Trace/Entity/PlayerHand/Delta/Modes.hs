@@ -17,7 +17,7 @@ instance ToJSON PlayerHandEntityModesDelta
 instance FromJSON PlayerHandEntityModesDelta
 
 instance Incremental PlayerHandEntityModesDelta where
-  type Entity PlayerHandEntityModesDelta = PlayerHandEntityModes
+  type Target PlayerHandEntityModesDelta = PlayerHandEntityModes
 
   applyDelta (ReplaceFSM _ new) entity = entity {_playerHandEntityFsm = new}
 

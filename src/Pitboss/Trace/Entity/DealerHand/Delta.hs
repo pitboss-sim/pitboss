@@ -29,7 +29,7 @@ instance ToJSON DealerHandEntityDelta
 instance FromJSON DealerHandEntityDelta
 
 instance Incremental DealerHandEntityDelta where
-  type Entity DealerHandEntityDelta = DealerHandEntity
+  type Target DealerHandEntityDelta = DealerHandEntity
 
   applyDelta delta entity = case delta of
     DealerHandEntityAttrsDelta d -> entity {_dealerHandEntityAttrs = applyDelta d (_dealerHandEntityAttrs entity)}

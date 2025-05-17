@@ -18,7 +18,7 @@ instance ToJSON PlayerSpotEntityAttrsDelta
 instance FromJSON PlayerSpotEntityAttrsDelta
 
 instance Incremental PlayerSpotEntityAttrsDelta where
-  type Entity PlayerSpotEntityAttrsDelta = PlayerSpotEntityAttrs
+  type Target PlayerSpotEntityAttrsDelta = PlayerSpotEntityAttrs
 
   applyDelta delta state = case delta of
     ReplaceWager _ new -> state {_playerSpotEntityAttrsWager = new}

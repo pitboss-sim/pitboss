@@ -19,7 +19,7 @@ instance ToJSON TableShoeCursorEntityAttrsDelta
 instance FromJSON TableShoeCursorEntityAttrsDelta
 
 instance Incremental TableShoeCursorEntityAttrsDelta where
-  type Entity TableShoeCursorEntityAttrsDelta = TableShoeCursorEntityAttrs
+  type Target TableShoeCursorEntityAttrsDelta = TableShoeCursorEntityAttrs
 
   applyDelta delta state = case delta of
     Advance n -> state {_tableShoeCursorEntityAttrsOffset = _tableShoeCursorEntityAttrsOffset state + n}

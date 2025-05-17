@@ -23,7 +23,7 @@ instance ToJSON PlayerSpotEntityRelsDelta
 instance FromJSON PlayerSpotEntityRelsDelta
 
 instance Incremental PlayerSpotEntityRelsDelta where
-  type Entity PlayerSpotEntityRelsDelta = PlayerSpotEntityRels
+  type Target PlayerSpotEntityRelsDelta = PlayerSpotEntityRels
 
   applyDelta delta rels = case delta of
     UpdatePlayer _ new -> rels {_playerSpotEntityRelsPlayerEntityId = new}

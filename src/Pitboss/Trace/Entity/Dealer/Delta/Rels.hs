@@ -20,7 +20,7 @@ instance ToJSON DealerEntityRelsDelta
 instance FromJSON DealerEntityRelsDelta
 
 instance Incremental DealerEntityRelsDelta where
-  type Entity DealerEntityRelsDelta = DealerEntityRels
+  type Target DealerEntityRelsDelta = DealerEntityRels
 
   applyDelta delta rels = case delta of
     UpdateRound _ new -> rels {_dealerEntityRelsCurrentRound = new}

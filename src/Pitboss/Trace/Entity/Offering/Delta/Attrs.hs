@@ -22,7 +22,7 @@ instance Reversible OfferingEntityAttrsDelta where
     ReplaceOffering old new -> Right (ReplaceOffering new old)
 
 instance Incremental OfferingEntityAttrsDelta where
-  type Entity OfferingEntityAttrsDelta = OfferingEntityAttrs
+  type Target OfferingEntityAttrsDelta = OfferingEntityAttrs
 
   applyDelta delta state = case delta of
     ReplaceOffering _ new -> state {_offeringEntityAttrsOffering = new}

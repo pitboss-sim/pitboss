@@ -19,7 +19,7 @@ instance ToJSON PlayerEntityAttrsDelta
 instance FromJSON PlayerEntityAttrsDelta
 
 instance Incremental PlayerEntityAttrsDelta where
-  type Entity PlayerEntityAttrsDelta = PlayerEntityAttrs
+  type Target PlayerEntityAttrsDelta = PlayerEntityAttrs
 
   applyDelta delta s = case delta of
     RenamePlayer _ new -> s {_playerEntityAttrsPlayerName = new}

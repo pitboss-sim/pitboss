@@ -11,7 +11,7 @@ data PlayerEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental PlayerEntityModesDelta where
-  type Entity PlayerEntityModesDelta = PlayerEntityModes
+  type Target PlayerEntityModesDelta = PlayerEntityModes
   applyDelta NoopModes e = e
   previewDelta NoopModes = Just
   describeDelta NoopModes _ = "Noop FSM delta"

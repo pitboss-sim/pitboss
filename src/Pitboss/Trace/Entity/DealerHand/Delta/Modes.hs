@@ -13,7 +13,7 @@ data DealerHandEntityModesDelta
   deriving (Eq, Show, Generic)
 
 instance Incremental DealerHandEntityModesDelta where
-  type Entity DealerHandEntityModesDelta = DealerHandEntityModes
+  type Target DealerHandEntityModesDelta = DealerHandEntityModes
 
   applyDelta (ReplaceFSM _ new) entity = entity {_dealerHandEntityModesDealerHand = new}
 

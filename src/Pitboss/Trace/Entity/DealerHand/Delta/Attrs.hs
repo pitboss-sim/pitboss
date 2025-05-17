@@ -20,7 +20,7 @@ instance ToJSON DealerHandEntityAttrsDelta
 instance FromJSON DealerHandEntityAttrsDelta
 
 instance Incremental DealerHandEntityAttrsDelta where
-  type Entity DealerHandEntityAttrsDelta = DealerHandEntityAttrs
+  type Target DealerHandEntityAttrsDelta = DealerHandEntityAttrs
 
   applyDelta delta state = case delta of
     AddCard c -> state {_dealerHandEntityAttrsHandCards = c : _dealerHandEntityAttrsHandCards state}

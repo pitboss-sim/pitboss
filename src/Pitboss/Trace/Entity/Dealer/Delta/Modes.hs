@@ -20,7 +20,7 @@ data DealerEntityModesDelta
   deriving (Eq, Show, Generic)
 
 instance Incremental DealerEntityModesDelta where
-  type Entity DealerEntityModesDelta = DealerEntityModes
+  type Target DealerEntityModesDelta = DealerEntityModes
 
   applyDelta delta entity =
     let (ft, fr, fh) = (_dealerEntityModesDealerTable entity, _dealerEntityModesDealerRound entity, _dealerEntityModesDealerHand entity)

@@ -29,7 +29,7 @@ instance ToJSON OfferingEntityDelta
 instance FromJSON OfferingEntityDelta
 
 instance Incremental OfferingEntityDelta where
-  type Entity OfferingEntityDelta = OfferingEntity
+  type Target OfferingEntityDelta = OfferingEntity
 
   applyDelta delta entity = case delta of
     OfferingEntityAttrsDelta d -> entity {_offeringEntityAttrs = applyDelta d (_offeringEntityAttrs entity)}

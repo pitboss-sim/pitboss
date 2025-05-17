@@ -17,7 +17,7 @@ data PlayerHandEntityRelsDelta
   deriving (Eq, Show, Generic)
 
 instance Incremental PlayerHandEntityRelsDelta where
-  type Entity PlayerHandEntityRelsDelta = PlayerHandEntityRels
+  type Target PlayerHandEntityRelsDelta = PlayerHandEntityRels
 
   applyDelta delta rels = case delta of
     UpdatePlayerSpot _ new -> rels {_playerHandEntityRelsBelongsToPlayerSpot = new}

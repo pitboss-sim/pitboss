@@ -14,7 +14,7 @@ data TableShoeEntityDelta
   deriving (Eq, Show, Generic)
 
 instance Incremental TableShoeEntityDelta where
-  type Entity TableShoeEntityDelta = TableShoeEntity
+  type Target TableShoeEntityDelta = TableShoeEntity
 
   applyDelta Noop e = e
   previewDelta Noop = Just

@@ -18,7 +18,7 @@ instance ToJSON DealerRoundEntityAttrsDelta
 instance FromJSON DealerRoundEntityAttrsDelta
 
 instance Incremental DealerRoundEntityAttrsDelta where
-  type Entity DealerRoundEntityAttrsDelta = DealerRoundEntityAttrs
+  type Target DealerRoundEntityAttrsDelta = DealerRoundEntityAttrs
 
   applyDelta delta state = case delta of
     SetDealerRoundEntityNumber n -> state {_dealerRoundEntityAttrsNumber = n}

@@ -24,7 +24,7 @@ instance ToJSON TableEntityAttrsDelta
 instance FromJSON TableEntityAttrsDelta
 
 instance Incremental TableEntityAttrsDelta where
-  type Entity TableEntityAttrsDelta = TableEntityAttrs
+  type Target TableEntityAttrsDelta = TableEntityAttrs
 
   applyDelta delta s = case delta of
     SetTableName _ new -> s {_tableEntityAttrsName = new}

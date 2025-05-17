@@ -27,7 +27,7 @@ data TableShoeCursorEntityDelta
   deriving (Eq, Show, Generic)
 
 instance Incremental TableShoeCursorEntityDelta where
-  type Entity TableShoeCursorEntityDelta = TableShoeCursorEntity
+  type Target TableShoeCursorEntityDelta = TableShoeCursorEntity
 
   applyDelta delta entity = case delta of
     TableShoeCursorEntityAttrsDelta d ->

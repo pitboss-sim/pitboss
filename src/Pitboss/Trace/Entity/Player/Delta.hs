@@ -29,7 +29,7 @@ instance ToJSON PlayerEntityDelta
 instance FromJSON PlayerEntityDelta
 
 instance Incremental PlayerEntityDelta where
-  type Entity PlayerEntityDelta = PlayerEntity
+  type Target PlayerEntityDelta = PlayerEntity
 
   applyDelta delta e = case delta of
     PlayerEntityAttrsDelta d -> e {_playerEntityAttrs = applyDelta d (_playerEntityAttrs e)}

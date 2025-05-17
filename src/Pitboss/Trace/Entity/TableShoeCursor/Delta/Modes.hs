@@ -11,7 +11,7 @@ data TableShoeCursorEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental TableShoeCursorEntityModesDelta where
-  type Entity TableShoeCursorEntityModesDelta = TableShoeCursorEntityModes
+  type Target TableShoeCursorEntityModesDelta = TableShoeCursorEntityModes
   applyDelta NoopModes e = e
   previewDelta NoopModes = Just
   describeDelta NoopModes _ = "Noop FSM delta"

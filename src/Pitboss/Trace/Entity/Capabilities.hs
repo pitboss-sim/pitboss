@@ -10,14 +10,14 @@ import Pitboss.Trace.Types.Uid
 -- delta application
 
 class Incremental delta where
-  type Entity delta = result | result -> delta
+  type Target delta = target | target -> delta
 
-  applyDelta :: delta -> Entity delta -> Entity delta
-  previewDelta :: delta -> Entity delta -> Maybe (Entity delta)
-  describeDelta :: delta -> Entity delta -> String
+  applyDelta :: delta -> Target delta -> Target delta
+  previewDelta :: delta -> Target delta -> Maybe (Target delta)
+  describeDelta :: delta -> Target delta -> String
 
 class (Incremental delta) => Identifiable delta where
-  entityToId :: delta -> Entity delta -> Uid
+  entityToId :: delta -> Target delta -> Uid
 
 newtype Tick = Tick Word64
   deriving (Eq, Ord, Show, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)

@@ -7,22 +7,14 @@ import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
 import Pitboss.Trace.Entity.DealerRound
 
-data DealerRoundEntityModesDelta
-  = Nothing
+data DealerRoundEntityModesDelta = NoopModes
   deriving (Eq, Show, Generic)
 
 instance Incremental DealerRoundEntityModesDelta where
   type Entity DealerRoundEntityModesDelta = DealerRoundEntityModes
-
-  applyDelta _ _ = undefined
-  previewDelta delta entity = Just $ applyDelta delta entity
-  describeDelta _ _ = undefined
-
-instance ToJSON DealerRoundEntityModesDelta where
-  toJSON = undefined
-
-instance FromJSON DealerRoundEntityModesDelta where
-  parseJSON = undefined
+  applyDelta NoopModes e = e
+  previewDelta NoopModes = Just
+  describeDelta NoopModes _ = "Noop FSM delta"
 
 instance Reversible DealerRoundEntityModesDelta where
-  invert = undefined
+  invert NoopModes = Right NoopModes

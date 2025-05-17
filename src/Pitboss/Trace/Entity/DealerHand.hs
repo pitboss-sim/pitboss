@@ -1,44 +1,44 @@
 {-# LANGUAGE GADTs #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
 
 module Pitboss.Trace.Entity.DealerHand where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
-import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.FSM.DealerHandFSM
+import Pitboss.FSM.DealerHand
 import Pitboss.Trace.Entity.Types.Meta
+import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkDealerHand :: Meta DealerHandId -> SomeDealerHandFSM -> DealerHandState -> DealerHandRelations -> DealerHand
+mkDealerHand :: Meta (EntityRef DealerHandId) -> SomeDealerHandFSM -> DealerHandState -> DealerHandRelations -> DealerHand
 mkDealerHand = DealerHand
 
-mkDealerHandState :: [Card] -> Chips -> Int -> Int -> DealerHandState
+mkDealerHandState :: [Card] -> DealerHandState
 mkDealerHandState = DealerHandState
 
-mkDealerHandRelations :: PlayerSpotId -> DealerRoundId -> DealerId -> DealerHandRelations
+mkDealerHandRelations :: EntityRef PlayerSpotId -> EntityRef DealerRoundId -> EntityRef DealerId -> DealerHandRelations
 mkDealerHandRelations = DealerHandRelations
 
 data DealerHand = DealerHand
-  { _meta :: Meta DealerHandId,
-    _fsm :: SomeDealerHandFSM,
-    _state :: DealerHandState,
-    _rels :: DealerHandRelations
+  { _dealerHandMeta :: Meta (EntityRef DealerHandId),
+    _dealerHandFsm :: SomeDealerHandFSM,
+    _dealerHandState :: DealerHandState,
+    _dealerHandRels :: DealerHandRelations
   }
   deriving (Eq, Show, Generic)
 
 data DealerHandState = DealerHandState
-  { _handCards :: [Card],
-    _originalBet :: Chips,
-    _splitDepth :: Int,
-    _handIx :: Int
+  { _dealerHandStateHandCards :: [Card]
   }
   deriving (Eq, Show, Generic)
 
 data DealerHandRelations = DealerHandRelations
-  { _belongsToPlayerSpot :: PlayerSpotId,
-    _belongsToRound :: DealerRoundId,
-    _ownedByDealer :: DealerId
+  { _dealerHandRelsBelongsToPlayerSpot :: EntityRef PlayerSpotId,
+    _dealerHandRelsBelongsToRound :: EntityRef DealerRoundId,
+    _dealerHandRelsOwnedByDealer :: EntityRef DealerId
   }
   deriving (Eq, Show, Generic)
 

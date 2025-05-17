@@ -3,7 +3,16 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Trace.Entity.Types.FiniteMap where
+module Pitboss.Trace.Entity.Types.FiniteMap
+  ( FiniteMap (..),
+    insertFiniteMap,
+    lookupFiniteMap,
+    keysFiniteMap,
+    toListFiniteMap,
+    mapFiniteMapWithKey,
+    singletonFiniteMap,
+  )
+where
 
 import Control.Lens (At (..), Index, IxValue, Ixed (..))
 import Data.Aeson

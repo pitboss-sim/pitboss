@@ -6,39 +6,40 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.FSM.PlayerHandFSM
+import Pitboss.FSM.PlayerHand
 import Pitboss.Trace.Entity.Types.Meta
+import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 
-mkPlayerHand :: Meta PlayerHandId -> SomePlayerHandFSM -> PlayerHandState -> PlayerHandRelations -> PlayerHand
+mkPlayerHand :: Meta (EntityRef PlayerHandId) -> SomePlayerHandFSM -> PlayerHandState -> PlayerHandRelations -> PlayerHand
 mkPlayerHand = PlayerHand
 
 mkPlayerHandState :: [Card] -> Chips -> Int -> Int -> PlayerHandState
 mkPlayerHandState = PlayerHandState
 
-mkPlayerHandRelations :: PlayerSpotId -> DealerRoundId -> PlayerId -> PlayerHandRelations
+mkPlayerHandRelations :: EntityRef PlayerSpotId -> EntityRef DealerRoundId -> EntityRef PlayerId -> PlayerHandRelations
 mkPlayerHandRelations = PlayerHandRelations
 
 data PlayerHand = PlayerHand
-  { _meta :: Meta PlayerHandId,
-    _fsm :: SomePlayerHandFSM,
-    _state :: PlayerHandState,
-    _rels :: PlayerHandRelations
+  { _playerHandMeta :: Meta (EntityRef PlayerHandId),
+    _playerHandFsm :: SomePlayerHandFSM,
+    _playerHandState :: PlayerHandState,
+    _playerHandRels :: PlayerHandRelations
   }
   deriving (Eq, Show, Generic)
 
 data PlayerHandState = PlayerHandState
-  { _handCards :: [Card],
-    _originalBet :: Chips,
-    _splitDepth :: Int,
-    _handIx :: Int
+  { _playerHandStateHandCards :: [Card],
+    _playerHandStateOriginalBet :: Chips,
+    _playerHandStateSplitDepth :: Int,
+    _playerHandStateHandIx :: Int
   }
   deriving (Eq, Show, Generic)
 
 data PlayerHandRelations = PlayerHandRelations
-  { _belongsToPlayerSpot :: PlayerSpotId,
-    _belongsToRound :: DealerRoundId,
-    _ownedByPlayer :: PlayerId
+  { _playerHandRelsBelongsToPlayerSpot :: EntityRef PlayerSpotId,
+    _playerHandRelsBelongsToRound :: EntityRef DealerRoundId,
+    _playerHandRelsOwnedByPlayer :: EntityRef PlayerId
   }
   deriving (Eq, Show, Generic)
 

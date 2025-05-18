@@ -12,8 +12,8 @@ module Pitboss.Trace.Entity.PlayerHand.Delta (
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
+import Pitboss.Trace.Entity
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.PlayerHand
 import Pitboss.Trace.Entity.PlayerHand.Delta.Attrs
 import Pitboss.Trace.Entity.PlayerHand.Delta.Modes
 import Pitboss.Trace.Entity.PlayerHand.Delta.Rels

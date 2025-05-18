@@ -14,8 +14,8 @@ where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
+import Pitboss.Trace.Entity
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Offering
 import Pitboss.Trace.Entity.Offering.Delta.Attrs
 import Pitboss.Trace.Entity.Offering.Delta.Modes
 import Pitboss.Trace.Entity.Offering.Delta.Rels

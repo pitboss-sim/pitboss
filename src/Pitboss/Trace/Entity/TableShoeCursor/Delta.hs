@@ -11,8 +11,8 @@ module Pitboss.Trace.Entity.TableShoeCursor.Delta (
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
+import Pitboss.Trace.Entity
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.TableShoeCursor
 import Pitboss.Trace.Entity.TableShoeCursor.Delta.Attrs
 import Pitboss.Trace.Entity.TableShoeCursor.Delta.Modes
 import Pitboss.Trace.Entity.TableShoeCursor.Delta.Rels

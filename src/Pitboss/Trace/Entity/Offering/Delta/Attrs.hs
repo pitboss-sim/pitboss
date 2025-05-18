@@ -7,7 +7,7 @@ import Data.Aeson
 import GHC.Generics
 import Pitboss.Blackjack.Offering as O
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Offering
+import Pitboss.Trace.Entity.Offering.Types
 
 data OfferingEntityAttrsDelta
     = ReplaceOffering O.Offering O.Offering

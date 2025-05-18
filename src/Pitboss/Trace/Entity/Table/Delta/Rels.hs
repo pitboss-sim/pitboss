@@ -7,7 +7,7 @@ import Data.Aeson
 import Data.Maybe
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Table
+import Pitboss.Trace.Entity.Table.Types
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 

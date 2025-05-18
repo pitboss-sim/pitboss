@@ -9,7 +9,7 @@ module Pitboss.Trace.Entity.DealerRound.Delta.Rels where
 import Data.Aeson
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.DealerRound
+import Pitboss.Trace.Entity.DealerRound.Types
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 

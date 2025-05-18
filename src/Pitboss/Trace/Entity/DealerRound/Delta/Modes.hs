@@ -5,7 +5,7 @@ module Pitboss.Trace.Entity.DealerRound.Delta.Modes where
 import Data.Aeson
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.DealerRound
+import Pitboss.Trace.Entity.DealerRound.Types
 
 data DealerRoundEntityModesDelta = NoopModes
     deriving (Eq, Show, Generic)

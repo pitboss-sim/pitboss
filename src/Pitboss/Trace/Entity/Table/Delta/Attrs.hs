@@ -7,7 +7,7 @@ import Data.Aeson
 import GHC.Generics
 import Pitboss.Blackjack.Chips
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Table
+import Pitboss.Trace.Entity.Table.Types
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 

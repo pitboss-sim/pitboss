@@ -11,7 +11,7 @@ import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Dealer
+import Pitboss.Trace.Entity.Dealer.Types
 
 data DealerEntityModesDelta
     = ReplaceTableFSM SomeDealerTableFSM SomeDealerTableFSM

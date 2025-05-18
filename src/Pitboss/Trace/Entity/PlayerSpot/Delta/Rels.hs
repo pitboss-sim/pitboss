@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.PlayerSpot.Delta.Rels where
 import Data.Aeson
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.PlayerSpot
+import Pitboss.Trace.Entity.PlayerSpot.Types
 import Pitboss.Trace.Entity.Types.FiniteMap
 import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 import Pitboss.Trace.Types.EntityRef

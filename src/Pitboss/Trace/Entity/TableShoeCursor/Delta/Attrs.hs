@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.TableShoeCursor.Delta.Attrs where
 import Data.Aeson
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.TableShoeCursor
+import Pitboss.Trace.Entity.TableShoeCursor.Types
 
 data TableShoeCursorEntityAttrsDelta
     = Advance Int

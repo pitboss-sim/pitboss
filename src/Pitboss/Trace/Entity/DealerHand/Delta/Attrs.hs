@@ -7,7 +7,7 @@ import Data.Aeson
 import GHC.Generics
 import Pitboss.Blackjack.Card
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.DealerHand
+import Pitboss.Trace.Entity.DealerHand.Types
 
 data DealerHandEntityAttrsDelta
     = AddCard Card

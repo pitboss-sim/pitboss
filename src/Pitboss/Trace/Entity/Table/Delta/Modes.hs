@@ -4,8 +4,8 @@ module Pitboss.Trace.Entity.Table.Delta.Modes where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics
-import Pitboss.Trace.Entity
 import Pitboss.Trace.Entity.Capabilities
+import Pitboss.Trace.Entity.Table.Types
 
 data TableEntityModesDelta = NoopModes
     deriving (Eq, Show, Generic)

@@ -6,7 +6,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics
 import Pitboss.FSM.DealerHand
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.DealerHand
+import Pitboss.Trace.Entity.DealerHand.Types
 
 data DealerHandEntityModesDelta
     = ReplaceFSM SomeDealerHandFSM SomeDealerHandFSM

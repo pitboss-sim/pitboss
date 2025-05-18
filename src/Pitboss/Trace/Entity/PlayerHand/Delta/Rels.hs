@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.PlayerHand.Delta.Rels where
 import Data.Aeson
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.PlayerHand
+import Pitboss.Trace.Entity.PlayerHand.Types
 import Pitboss.Trace.Types.EntityRef
 import Pitboss.Trace.Types.Identifier
 

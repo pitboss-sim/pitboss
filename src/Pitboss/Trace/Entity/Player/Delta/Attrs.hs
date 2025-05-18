@@ -7,7 +7,7 @@ import Data.Aeson
 import GHC.Generics
 import Pitboss.Blackjack.Chips
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Player
+import Pitboss.Trace.Entity.Player.Types
 
 data PlayerEntityAttrsDelta
     = RenamePlayer String String

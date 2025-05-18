@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.Offering.Delta.Rels where
 import Data.Aeson
 import GHC.Generics
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.Offering
+import Pitboss.Trace.Entity.Offering.Types
 import Pitboss.Trace.Types.Identifier
 
 data OfferingEntityRelsDelta

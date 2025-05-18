@@ -4,8 +4,8 @@ module Pitboss.Trace.Entity.Offering.Delta.Modes where
 
 import Data.Aeson
 import GHC.Generics
-import Pitboss.Trace.Entity
 import Pitboss.Trace.Entity.Capabilities
+import Pitboss.Trace.Entity.Offering.Types
 
 data OfferingEntityModesDelta = NoopModes
     deriving (Eq, Show, Generic)

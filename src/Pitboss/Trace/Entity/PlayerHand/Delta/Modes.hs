@@ -6,7 +6,7 @@ import Data.Aeson
 import GHC.Generics
 import Pitboss.FSM.PlayerHand
 import Pitboss.Trace.Entity.Capabilities
-import Pitboss.Trace.Entity.PlayerHand
+import Pitboss.Trace.Entity.PlayerHand.Types
 
 data PlayerHandEntityModesDelta
     = ReplaceFSM SomePlayerHandFSM SomePlayerHandFSM

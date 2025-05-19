@@ -7,15 +7,7 @@ import Control.Lens (Lens', lens)
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics
-import Pitboss.Trace.Entity.Dealer.Delta
-import Pitboss.Trace.Entity.DealerHand.Delta
-import Pitboss.Trace.Entity.DealerRound.Delta
-import Pitboss.Trace.Entity.Offering.Delta
-import Pitboss.Trace.Entity.Player.Delta
-import Pitboss.Trace.Entity.PlayerHand.Delta
-import Pitboss.Trace.Entity.PlayerSpot.Delta
-import Pitboss.Trace.Entity.Table.Delta
-import Pitboss.Trace.Entity.TableShoeCursor.Delta
+import Pitboss.Trace.Entity.Delta
 import Pitboss.Trace.Registry
 import Pitboss.Trace.Types.Identifier
 

@@ -73,16 +73,31 @@ library
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
+                      Pitboss.Trace.Entity.Capability.Extractable
+                      Pitboss.Trace.Entity.Capability.Incremental
+                      Pitboss.Trace.Entity.Capability.Replaceable
+                      Pitboss.Trace.Entity.Capability.Reversible
+                      Pitboss.Trace.Entity.Dealer.Delta
                       Pitboss.Trace.Entity.Dealer.Entity
-                      Pitboss.Trace.Entity.Entity
+                      Pitboss.Trace.Entity.DealerHand.Delta
                       Pitboss.Trace.Entity.DealerHand.Entity
+                      Pitboss.Trace.Entity.DealerRound.Delta
                       Pitboss.Trace.Entity.DealerRound.Entity
+                      Pitboss.Trace.Entity.Delta
+                      Pitboss.Trace.Entity.Entity
+                      Pitboss.Trace.Entity.Offering.Delta
                       Pitboss.Trace.Entity.Offering.Entity
+                      Pitboss.Trace.Entity.Player.Delta
                       Pitboss.Trace.Entity.Player.Entity
+                      Pitboss.Trace.Entity.PlayerHand.Delta
                       Pitboss.Trace.Entity.PlayerHand.Entity
+                      Pitboss.Trace.Entity.PlayerSpot.Delta
                       Pitboss.Trace.Entity.PlayerSpot.Entity
+                      Pitboss.Trace.Entity.Table.Delta
                       Pitboss.Trace.Entity.Table.Entity
+                      Pitboss.Trace.Entity.TableShoe.Delta
                       Pitboss.Trace.Entity.TableShoe.Entity
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta
                       Pitboss.Trace.Entity.TableShoeCursor.Entity
                       Pitboss.Trace.Entity.Types
                       Pitboss.Trace.Entity.Types.EntityId

@@ -38,6 +38,13 @@ library
                       Pitboss.Blackjack.Types
                       Pitboss.Blackjack.Types.Core
                       Pitboss.Blackjack.WellKnown
+                      Pitboss.Causality.Entity.Decomposable
+                      Pitboss.Causality.Entity.Lenses
+                      Pitboss.Causality.Entity.Replaceable
+                      Pitboss.Causality.Entity.Types
+                      Pitboss.Causality.Entity.Witnessable
+                      Pitboss.Causality.Types.Core
+                      Pitboss.Causality.Types.FiniteMap
                       Pitboss.FSM
                       Pitboss.FSM.Bout
                       Pitboss.FSM.Dealer.Hand
@@ -61,6 +68,9 @@ library
                       aeson-pretty,
                       array,
                       containers,
+                      hashable,
+                      insert-ordered-containers,
+                      lens,
                       random,
                       text,
     hs-source-dirs:   src

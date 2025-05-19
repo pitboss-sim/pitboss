@@ -71,15 +71,53 @@ library
                       Pitboss.Strategy.Types
                       Pitboss.Trace.Entity
                       Pitboss.Trace.Entity.Capabilities
+                      Pitboss.Trace.Entity.Dealer.Delta
+                      Pitboss.Trace.Entity.Dealer.Delta.Attrs
+                      Pitboss.Trace.Entity.Dealer.Delta.Modes
+                      Pitboss.Trace.Entity.Dealer.Delta.Rels
                       Pitboss.Trace.Entity.Dealer.Types
+                      Pitboss.Trace.Entity.DealerHand.Delta
+                      Pitboss.Trace.Entity.DealerHand.Delta.Attrs
+                      Pitboss.Trace.Entity.DealerHand.Delta.Modes
+                      Pitboss.Trace.Entity.DealerHand.Delta.Rels
                       Pitboss.Trace.Entity.DealerHand.Types
+                      Pitboss.Trace.Entity.DealerRound.Delta
+                      Pitboss.Trace.Entity.DealerRound.Delta.Attrs
+                      Pitboss.Trace.Entity.DealerRound.Delta.Modes
+                      Pitboss.Trace.Entity.DealerRound.Delta.Rels
                       Pitboss.Trace.Entity.DealerRound.Types
+                      Pitboss.Trace.Entity.Delta
+                      Pitboss.Trace.Entity.Offering.Delta
+                      Pitboss.Trace.Entity.Offering.Delta.Attrs
+                      Pitboss.Trace.Entity.Offering.Delta.Modes
+                      Pitboss.Trace.Entity.Offering.Delta.Rels
                       Pitboss.Trace.Entity.Offering.Types
+                      Pitboss.Trace.Entity.Player.Delta
+                      Pitboss.Trace.Entity.Player.Delta.Attrs
+                      Pitboss.Trace.Entity.Player.Delta.Modes
+                      Pitboss.Trace.Entity.Player.Delta.Rels
                       Pitboss.Trace.Entity.Player.Types
+                      Pitboss.Trace.Entity.PlayerHand.Delta
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Attrs
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Modes
+                      Pitboss.Trace.Entity.PlayerHand.Delta.Rels
                       Pitboss.Trace.Entity.PlayerHand.Types
+                      Pitboss.Trace.Entity.PlayerSpot.Delta
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Attrs
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Modes
+                      Pitboss.Trace.Entity.PlayerSpot.Delta.Rels
                       Pitboss.Trace.Entity.PlayerSpot.Types
+                      Pitboss.Trace.Entity.Table.Delta
+                      Pitboss.Trace.Entity.Table.Delta.Attrs
+                      Pitboss.Trace.Entity.Table.Delta.Modes
+                      Pitboss.Trace.Entity.Table.Delta.Rels
                       Pitboss.Trace.Entity.Table.Types
+                      Pitboss.Trace.Entity.TableShoe.Delta
                       Pitboss.Trace.Entity.TableShoe.Types
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Attrs
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Modes
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta.Rels
                       Pitboss.Trace.Entity.TableShoeCursor.Types
                       Pitboss.Trace.Entity.Types
                       Pitboss.Trace.Entity.Types.EntityId

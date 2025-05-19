@@ -66,6 +66,15 @@ library
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.State.Entity.Capability.Decomposable
+                      Pitboss.State.Entity.Entity
+                      Pitboss.State.Entity.Meta
+                      Pitboss.State.Entity.Types
+                      Pitboss.State.Entity.Types.Id
+                      Pitboss.State.Entity.Types.Id.Uid
+                      Pitboss.State.Entity.Types.FiniteMap
+                      Pitboss.State.Entity.Types.FiniteMap.BoundedEnum
+                      Pitboss.State.Entity.Types.FiniteMap.Occupancy
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay
@@ -73,6 +82,7 @@ library
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
+
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,
@@ -80,6 +90,9 @@ library
                       aeson-pretty,
                       array,
                       containers,
+                      hashable,
+                      insert-ordered-containers,
+                      lens,
                       random,
                       text,
     hs-source-dirs:   src

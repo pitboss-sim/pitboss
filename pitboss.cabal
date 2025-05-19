@@ -86,6 +86,9 @@ library
                       Pitboss.Trace.Entity.Types.FiniteMap
                       Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
                       Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
+                      Pitboss.Trace.Registry
+                      Pitboss.Trace.Timeline
+                      Pitboss.Trace.Types
 
     -- other-modules:
     -- other-extensions:

@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Trace.Entity.Dealer.Types where
+module Pitboss.Trace.Entity.Dealer.Entity where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

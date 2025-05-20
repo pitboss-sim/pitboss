@@ -7,6 +7,7 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card
 import Pitboss.FSM.DealerHand
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkDealerHandEntityAttrs :: [Card] -> DealerHandEntityAttrs

@@ -7,6 +7,7 @@ import GHC.Generics (Generic)
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkDealerEntityAttrs :: String -> Maybe (ClockedRef TableEntityId) -> DealerEntityAttrs

@@ -8,6 +8,7 @@ import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card
 import Pitboss.Blackjack.Chips
 import Pitboss.FSM.PlayerHand
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkPlayerHandEntityAttrs :: [Card] -> Chips -> Int -> Int -> PlayerHandEntityAttrs

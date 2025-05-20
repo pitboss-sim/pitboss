@@ -7,7 +7,7 @@ module Pitboss.Trace.Timeline where
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import GHC.Generics (Generic)
-import Pitboss.Trace.Entity.Capabilities
+import Pitboss.Trace.Entity.Types
 
 newtype Timeline a where
     Timeline :: {unTimeline :: InsOrdHashMap Tick [a]} -> Timeline a

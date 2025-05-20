@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use newtype instead of data" #-}
-module Pitboss.Trace.Entity.TableShoeCursor.Types where
+module Pitboss.Trace.Entity.TableShoeCursor.Entity where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

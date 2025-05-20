@@ -14,8 +14,8 @@ import Data.Bits (shiftL, (.|.))
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Data.Word (Word64)
 import GHC.Generics
+import Pitboss.Trace.Entity.Types.EntityId.Uid
 import Pitboss.Trace.Timeline
-import Pitboss.Trace.Types.Uid
 
 -- delta timeline per type
 

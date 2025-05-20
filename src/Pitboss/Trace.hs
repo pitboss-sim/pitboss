@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -7,37 +8,30 @@ import Control.Lens (Lens', lens)
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics
-import Pitboss.Trace.Entity.Dealer.Delta
-import Pitboss.Trace.Entity.DealerHand.Delta
-import Pitboss.Trace.Entity.DealerRound.Delta
-import Pitboss.Trace.Entity.Offering.Delta
-import Pitboss.Trace.Entity.Player.Delta
-import Pitboss.Trace.Entity.PlayerHand.Delta
-import Pitboss.Trace.Entity.PlayerSpot.Delta
-import Pitboss.Trace.Entity.Table.Delta
-import Pitboss.Trace.Entity.TableShoeCursor.Delta
+import Pitboss.Trace.Entity.Delta
+import Pitboss.Trace.Entity.Types
+import Pitboss.Trace.Entity.Types.EntityId
 import Pitboss.Trace.Registry
-import Pitboss.Trace.Types.Identifier
 
-type Offerings = Registry DealerHandEntityId OfferingEntityDelta
+type Offerings = Registry DealerHandEntityId (Delta 'OfferingEntity)
 
-type Tables = Registry DealerHandEntityId TableEntityDelta
+type Tables = Registry DealerHandEntityId (Delta 'DealerHandEntity)
 
-type TableShoes = Registry DealerHandEntityId DealerHandEntityDelta
+type TableShoes = Registry DealerHandEntityId (Delta 'DealerHandEntity)
 
-type TableShoeCursors = Registry DealerHandEntityId TableShoeCursorEntityDelta
+type TableShoeCursors = Registry DealerHandEntityId (Delta 'TableShoeCursorEntity)
 
-type Dealers = Registry DealerHandEntityId DealerEntityDelta
+type Dealers = Registry DealerHandEntityId (Delta 'DealerEntity)
 
-type DealerRounds = Registry DealerHandEntityId DealerRoundEntityDelta
+type DealerRounds = Registry DealerHandEntityId (Delta 'DealerRoundEntity)
 
-type DealerHands = Registry DealerHandEntityId DealerHandEntityDelta
+type DealerHands = Registry DealerHandEntityId (Delta 'DealerHandEntity)
 
-type Players = Registry DealerHandEntityId PlayerEntityDelta
+type Players = Registry DealerHandEntityId (Delta 'PlayerEntity)
 
-type PlayerSpots = Registry DealerHandEntityId PlayerSpotEntityDelta
+type PlayerSpots = Registry DealerHandEntityId (Delta 'PlayerSpotEntity)
 
-type PlayerHands = Registry DealerHandEntityId PlayerHandEntityDelta
+type PlayerHands = Registry DealerHandEntityId (Delta 'PlayerHandEntity)
 
 data Trace = Trace
     { _offerings :: Offerings

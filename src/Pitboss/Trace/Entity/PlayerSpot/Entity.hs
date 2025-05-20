@@ -1,13 +1,15 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 {-# HLINT ignore "Use newtype instead of data" #-}
-module Pitboss.Trace.Entity.PlayerSpot.Types where
+
+module Pitboss.Trace.Entity.PlayerSpot.Entity where
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
 import Pitboss.FSM.PlayerSpot
-import Pitboss.Trace.Entity.Types
+import Pitboss.Trace.Entity.Types.EntityId
+import Pitboss.Trace.Entity.Types.FiniteMap
 import Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
 import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 

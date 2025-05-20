@@ -6,6 +6,7 @@ module Pitboss.Trace.Entity.Table.Types where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkTableEntityAttrs :: String -> Maybe (ClockedRef DealerRoundEntityId) -> ClockedRef OfferingEntityId -> Chips -> TableEntityAttrs

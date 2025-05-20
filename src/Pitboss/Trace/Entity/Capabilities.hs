@@ -1,26 +1,36 @@
 {-# LANGUAGE TypeFamilyDependencies #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Pitboss.Trace.Entity.Capabilities where
 
-import Data.Aeson
-import Data.Hashable
-import Data.Word
-import Pitboss.Trace.Entity.Types.Uid
+import Pitboss.Trace.Entity.Types
+import Data.Maybe (fromMaybe)
+import Pitboss.Trace.Entity.PlayerHand.Delta
+import Pitboss.Trace.Entity.Offering.Delta
+import Pitboss.Trace.Entity.Table.Delta
+
+import Pitboss.Trace.Entity.PlayerSpot.Delta qualified as PS
+import Pitboss.Trace.Entity.PlayerHand.Delta qualified as PH
+import Pitboss.Trace.Entity.Dealer.Delta qualified as D
+import Pitboss.Trace.Entity.DealerHand.Delta qualified as DH
+import Pitboss.Trace.Entity.DealerRound.Delta qualified as DR
+import Pitboss.Trace.Entity.Player.Delta qualified as P
+import Pitboss.Trace.Entity.Table.Delta qualified as T
+import Pitboss.Trace.Entity.TableShoeCursor.Delta qualified as TSC
+import Pitboss.Trace.Entity.Player.Delta
+import Pitboss.Trace.Entity.PlayerSpot.Delta
+import Pitboss.Trace.Entity.DealerHand.Delta
+import Pitboss.Trace.Entity.TableShoeCursor.Delta
+import Pitboss.Trace.Entity.DealerRound.Delta
+import qualified Pitboss.Trace.Entity.Offering.Delta as O
+
+-- time
+
+class Clocked entity where
+    tick :: entity -> Tick
+    setTick :: Tick -> entity -> entity
 
 -- delta application
-
-class Incremental delta where
-    type Target delta = target | target -> delta
-
-    applyDelta :: delta -> Target delta -> Target delta
-    previewDelta :: delta -> Target delta -> Maybe (Target delta)
-    describeDelta :: delta -> Target delta -> String
-
-class (Incremental delta) => Identifiable delta where
-    entityToId :: delta -> Target delta -> Uid
-
-newtype Tick = Tick Word64
-    deriving (Eq, Ord, Show, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
 
 class Reversible d where
     invert :: d -> Either InversionError d
@@ -31,8 +41,130 @@ data InversionError
     | CustomReason String
     deriving (Eq, Show)
 
--- time
+instance Reversible OfferingEntityAttrsDelta where
+    invert = \case
+        ReplaceOffering old new -> Right (ReplaceOffering new old)
 
-class Clocked entity where
-    tick :: entity -> Tick
-    setTick :: Tick -> entity -> entity
+instance Reversible OfferingEntityModesDelta where
+    invert O.NoopModes = Right O.NoopModes
+
+instance Reversible OfferingEntityRelsDelta where
+    invert = \case
+        AddTable tid -> Right (RemoveTable tid)
+        RemoveTable tid -> Right (AddTable tid)
+
+instance Reversible TableEntityAttrsDelta where
+    invert = \case
+        SetTableName old new -> Right (SetTableName new old)
+        SetMinBet old new -> Right (SetMinBet new old)
+        SetOffering old new -> Right (SetOffering new old)
+        StartRound _ new -> Right (EndRound new)
+        EndRound old -> Right (StartRound (Just old) old)
+
+instance Reversible TableEntityModesDelta where
+    invert T.NoopModes = Right T.NoopModes
+
+instance Reversible TableEntityRelsDelta where
+    invert = \case
+        AssignDealer prev new -> Right (AssignDealer (Just new) (fromMaybe undefined prev))
+        UnassignDealer old -> Right (AssignDealer (Just old) old)
+
+instance Reversible TableShoeCursorEntityAttrsDelta where
+    invert = \case
+        Advance n -> Right (Rewind n)
+        Rewind n -> Right (Advance n)
+        ReplaceOffset old new -> Right (ReplaceOffset new old)
+
+instance Reversible TableShoeCursorEntityModesDelta where
+    invert TSC.NoopModes = Right TSC.NoopModes
+
+instance Reversible TableShoeCursorEntityRelsDelta where
+    invert = \case
+        UpdateTableShoe old new -> Right (UpdateTableShoe new old)
+
+instance Reversible DealerRoundEntityAttrsDelta where
+    invert = \case
+        SetDealerRoundEntityNumber _ -> Left NotInvertible
+        SetActive b -> Right (SetActive (not b))
+
+instance Reversible DealerRoundEntityModesDelta where
+    invert DR.NoopModes = Right DR.NoopModes
+
+instance Reversible DealerRoundEntityRelsDelta where
+    invert = \case
+        DR.SetTableShoeUsed _ -> Left NotInvertible
+
+instance Reversible D.DealerEntityAttrsDelta where
+    invert = \case
+        D.RenameDealer old new -> Right (D.RenameDealer new old)
+        D.ReplaceAssignedTable old new -> Right (D.ReplaceAssignedTable new old)
+
+instance Reversible D.DealerEntityModesDelta where
+    invert = \case
+        D.ReplaceTableFSM old new -> Right (D.ReplaceTableFSM new old)
+        D.ReplaceRoundFSM old new -> Right (D.ReplaceRoundFSM new old)
+        D.ReplaceHandFSM old new -> Right (D.ReplaceHandFSM new old)
+
+instance Reversible D.DealerEntityRelsDelta where
+    invert = \case
+        D.UpdateRound old new -> Right (D.UpdateRound new old)
+        D.UpdateHand old new -> Right (D.UpdateHand new old)
+
+instance Reversible DealerHandEntityAttrsDelta where
+    invert = \case
+        DH.AddCard c -> Right (DH.RemoveCard c)
+        DH.RemoveCard c -> Right (DH.AddCard c)
+        DH.ReplaceCards old new -> Right (DH.ReplaceCards new old)
+
+instance Reversible DealerHandEntityModesDelta where
+    invert (DH.ReplaceFSM old new) = Right (DH.ReplaceFSM new old)
+
+instance Reversible DealerHandEntityRelsDelta where
+    invert = \case
+        DH.UpdatePlayerSpot old new -> Right (DH.UpdatePlayerSpot new old)
+        DH.UpdateDealerRound old new -> Right (DH.UpdateDealerRound new old)
+        DH.UpdateDealer old new -> Right (DH.UpdateDealer new old)
+
+instance Reversible PlayerEntityAttrsDelta where
+    invert = \case
+        RenamePlayer old new -> Right (RenamePlayer new old)
+        SetBankroll old new -> Right (SetBankroll new old)
+
+instance Reversible PlayerEntityModesDelta where
+    invert P.NoopModes = Right P.NoopModes
+
+instance Reversible PlayerEntityRelsDelta where
+    invert = \case
+        UpdateCloneOf old new -> Right (UpdateCloneOf new old)
+        UpdateSeatedAt old new -> Right (UpdateSeatedAt new old)
+
+instance Reversible PlayerSpotEntityAttrsDelta where
+    invert = \case
+        ReplaceWager old new -> Right (ReplaceWager new old)
+
+instance Reversible PlayerSpotEntityModesDelta where
+    invert (PS.ReplaceFSM old new) = Right (PS.ReplaceFSM new old)
+
+instance Reversible PlayerSpotEntityRelsDelta where
+    invert = \case
+        PS.UpdatePlayer old new -> Right (PS.UpdatePlayer new old)
+        PS.UpdateRound old new -> Right (PS.UpdateRound new old)
+        PS.UpdateHandOccupancy old new -> Right (PS.UpdateHandOccupancy new old)
+
+instance Reversible PlayerHandEntityAttrsDelta where
+    invert = \case
+        PH.AddCard c -> Right (PH.RemoveCard c)
+        PH.RemoveCard c -> Right (PH.AddCard c)
+        PH.ReplaceCards old new -> Right (PH.ReplaceCards new old)
+        PH.ReplacePlayerHandIndex old new -> Right (PH.ReplacePlayerHandIndex new old)
+        PH.ReplaceSplitDepth old new -> Right (PH.ReplaceSplitDepth new old)
+
+instance Reversible PlayerHandEntityModesDelta where
+    invert (PH.ReplaceFSM old new) = Right (PH.ReplaceFSM new old)
+
+instance Reversible PlayerHandEntityRelsDelta where
+    invert = \case
+        PH.UpdatePlayerSpot old new -> Right (PH.UpdatePlayerSpot new old)
+        PH.UpdateDealerRound old new -> Right (PH.UpdateDealerRound new old)
+        PH.UpdatePlayer old new -> Right (PH.UpdatePlayer new old)
+

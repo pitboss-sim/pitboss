@@ -9,6 +9,7 @@ import Pitboss.Blackjack.Chips
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot
 import Pitboss.FSM.PlayerTable
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkPlayerEntityAttrs :: String -> Chips -> PlayerEntityAttrs

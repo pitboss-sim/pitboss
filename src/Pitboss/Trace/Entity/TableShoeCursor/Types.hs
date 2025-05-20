@@ -5,6 +5,7 @@ module Pitboss.Trace.Entity.TableShoeCursor.Types where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkTableShoeCursorEntityAttrs :: Int -> TableShoeCursorEntityAttrs

@@ -8,6 +8,8 @@ import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
 import Pitboss.FSM.PlayerSpot
 import Pitboss.Trace.Entity.Types
+import Pitboss.Trace.Entity.Types.EntityId
+import Pitboss.Trace.Entity.Types.FiniteMap
 import Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
 import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 

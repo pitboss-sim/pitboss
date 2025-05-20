@@ -6,7 +6,7 @@ module Pitboss.Trace.Entity.Offering.Types where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Offering qualified as O
-import Pitboss.Trace.Entity.Types.EntityId
+import Pitboss.Trace.Entity.Types
 
 mkOfferingEntityAttrs :: O.Offering -> OfferingEntityAttrs
 mkOfferingEntityAttrs = OfferingEntityAttrs

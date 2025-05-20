@@ -6,6 +6,7 @@ module Pitboss.Trace.Entity.TableShoe.Types where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkTableShoeEntityAttrs :: [Card] -> TableShoeEntityAttrs

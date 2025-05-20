@@ -5,6 +5,7 @@ module Pitboss.Trace.Entity.DealerRound.Types where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
+import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkDealerRoundEntityAttrs :: Int -> Bool -> DealerRoundEntityAttrs

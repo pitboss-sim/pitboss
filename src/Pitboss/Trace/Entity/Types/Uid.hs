@@ -2,24 +2,10 @@
 
 module Pitboss.Trace.Entity.Types.Uid where
 
-import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
-import Data.Bits (shiftL, (.|.))
 import Data.Char (toUpper)
-import Data.Hashable (Hashable (..))
-import Data.Map.Strict (Map)
-import Data.Map.Strict qualified as Map
-import Data.Maybe (mapMaybe)
-import Data.Word (Word64)
-import GHC.Generics (Generic)
 import Numeric (showIntAtBase)
+import Pitboss.Trace.Entity.Types
 import System.Random (StdGen, randomR)
-
-newtype Uid = Uid {unUid :: String}
-    deriving stock (Eq, Ord, Show, Generic)
-    deriving newtype (ToJSON, FromJSON, ToJSONKey, FromJSONKey)
-
-instance Hashable Uid where
-    hashWithSalt salt (Uid s) = hashWithSalt salt (uidToWord64 (Uid s))
 
 mkUid :: String -> Maybe Uid
 mkUid s = if isValidUidString s then Just (Uid s) else Nothing
@@ -33,9 +19,6 @@ generateUid counter gen =
      in case mkUid str of
             Just uid -> (uid, gen')
             Nothing -> error "Internal error: generated invalid Uid"
-
-class HasUid a where
-    getUid :: a -> Uid
 
 showPaddedBase32 :: Int -> Int -> String
 showPaddedBase32 n width = padLeft '0' width (showIntAtBase 32 showBase32Digit n "")
@@ -67,19 +50,3 @@ isBase32Char c = toUpper c `elem` "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 
 parseUid :: String -> Maybe Uid
 parseUid = mkUid
-
--- conversion
-
-uidToWord64 :: Uid -> Word64
-uidToWord64 (Uid s) =
-    case break (== '-') s of
-        (prefix, '-' : suffix) ->
-            let digits = mapMaybe decodeBase32Char (prefix ++ suffix)
-             in foldl (\acc d -> (acc `shiftL` 5) .|. fromIntegral d) 0 digits
-        _ -> error $ "Invalid Uid: " ++ s
-
-base32Map :: Map Char Int
-base32Map = Map.fromList $ zip "0123456789ABCDEFGHJKMNPQRSTVWXYZ" [0 .. 31]
-
-decodeBase32Char :: Char -> Maybe Int
-decodeBase32Char = (`Map.lookup` base32Map) . toUpper

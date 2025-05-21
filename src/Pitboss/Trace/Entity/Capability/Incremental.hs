@@ -307,9 +307,13 @@ instance Incremental TableEntityAttrsDelta where
 
 instance Incremental TableEntityModesDelta where
     type Target TableEntityModesDelta = TableEntityModes
-    applyDelta T.NoopModes e = e
-    previewDelta T.NoopModes = Just
-    describeDelta T.NoopModes _ = "Noop FSM delta"
+
+    applyDelta (ReplaceTableFSM _ new) modes =
+        modes{_tableEntityModesFSM = new}
+
+    previewDelta d m = Just $ applyDelta d m
+
+    describeDelta (ReplaceTableFSM _ new) _ = "Replaced DealerTableFSM with " ++ show new
 
 instance Incremental TableEntityRelsDelta where
     type Target TableEntityRelsDelta = TableEntityRels

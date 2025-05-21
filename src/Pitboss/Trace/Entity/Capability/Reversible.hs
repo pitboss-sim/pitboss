@@ -17,7 +17,6 @@ import Pitboss.Trace.Entity.PlayerHand.Delta qualified as PH
 import Pitboss.Trace.Entity.PlayerSpot.Delta
 import Pitboss.Trace.Entity.PlayerSpot.Delta qualified as PS
 import Pitboss.Trace.Entity.Table.Delta
-import Pitboss.Trace.Entity.Table.Delta qualified as T
 import Pitboss.Trace.Entity.TableShoeCursor.Delta
 import Pitboss.Trace.Entity.TableShoeCursor.Delta qualified as TSC
 import Pitboss.Trace.Entity.Types
@@ -64,7 +63,8 @@ instance Reversible TableEntityAttrsDelta where
         EndRound old -> Right (StartRound (Just old) old)
 
 instance Reversible TableEntityModesDelta where
-    invert T.NoopModes = Right T.NoopModes
+    invert = \case
+        ReplaceTableFSM old new -> Right (ReplaceTableFSM new old)
 
 instance Reversible TableEntityRelsDelta where
     invert = \case

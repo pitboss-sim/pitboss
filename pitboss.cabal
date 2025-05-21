@@ -61,6 +61,10 @@ library
                       Pitboss.FSM.PlayerTable.FSM
                       Pitboss.FSM.PlayerTable.Phase
                       Pitboss.FSM.PlayerTable.Transition
+                      Pitboss.FSM.Table
+                      Pitboss.FSM.Table.FSM
+                      Pitboss.FSM.Table.Phase
+                      Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret

@@ -98,8 +98,6 @@ library
                       Pitboss.Trace.Entity.Table.Entity
                       Pitboss.Trace.Entity.TableShoe.Delta
                       Pitboss.Trace.Entity.TableShoe.Entity
-                      Pitboss.Trace.Entity.TableShoeCursor.Delta
-                      Pitboss.Trace.Entity.TableShoeCursor.Entity
                       Pitboss.Trace.Entity.Types
                       Pitboss.Trace.Entity.Types.EntityId
                       Pitboss.Trace.Entity.Types.EntityId.Uid

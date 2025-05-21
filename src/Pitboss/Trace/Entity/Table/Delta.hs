@@ -6,6 +6,7 @@ module Pitboss.Trace.Entity.Table.Delta where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
+import Pitboss.FSM.Table
 import Pitboss.Trace.Entity.Types.EntityId
 
 data TableEntityAttrsDelta
@@ -19,7 +20,8 @@ data TableEntityAttrsDelta
 instance ToJSON TableEntityAttrsDelta
 instance FromJSON TableEntityAttrsDelta
 
-data TableEntityModesDelta = NoopModes
+data TableEntityModesDelta
+    = ReplaceTableFSM SomeTableFSM SomeTableFSM
     deriving (Eq, Show, Generic)
 
 instance ToJSON TableEntityModesDelta

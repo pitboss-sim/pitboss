@@ -6,12 +6,13 @@ module Pitboss.Trace.Entity.Table.Entity where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
+import Pitboss.FSM.Table
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkTableEntityAttrs :: String -> Maybe (ClockedRef DealerRoundEntityId) -> ClockedRef OfferingEntityId -> Chips -> TableEntityAttrs
 mkTableEntityAttrs = TableEntityAttrs
 
-mkTableEntityModes :: Maybe (ClockedRef DealerEntityId) -> TableEntityModes
+mkTableEntityModes :: SomeTableFSM -> TableEntityModes
 mkTableEntityModes = TableEntityModes
 
 mkTableEntityRels :: Maybe (ClockedRef DealerEntityId) -> TableEntityRels
@@ -26,7 +27,7 @@ data TableEntityAttrs = TableEntityAttrs
     deriving (Eq, Show, Generic)
 
 data TableEntityModes = TableEntityModes
-    { _tableEntityModesManagedByDealer :: Maybe (ClockedRef DealerEntityId)
+    { _tableEntityModesFSM :: SomeTableFSM
     }
     deriving (Eq, Show, Generic)
 

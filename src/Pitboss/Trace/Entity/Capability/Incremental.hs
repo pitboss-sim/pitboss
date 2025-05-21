@@ -30,8 +30,6 @@ import Pitboss.Trace.Entity.PlayerSpot.Entity
 import Pitboss.Trace.Entity.Table.Delta
 import Pitboss.Trace.Entity.Table.Delta qualified as T
 import Pitboss.Trace.Entity.Table.Entity
-import Pitboss.Trace.Entity.TableShoeCursor.Delta qualified as TSC
-import Pitboss.Trace.Entity.TableShoeCursor.Entity
 import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 import Pitboss.Trace.Entity.Types.FiniteMap
@@ -67,10 +65,6 @@ type instance RelsDelta 'PlayerSpotEntity = PS.PlayerSpotEntityRelsDelta
 type instance AttrsDelta 'TableEntity = T.TableEntityAttrsDelta
 type instance ModesDelta 'TableEntity = T.TableEntityModesDelta
 type instance RelsDelta 'TableEntity = T.TableEntityRelsDelta
-
-type instance AttrsDelta 'TableShoeCursorEntity = TSC.TableShoeCursorEntityAttrsDelta
-type instance ModesDelta 'TableShoeCursorEntity = TSC.TableShoeCursorEntityModesDelta
-type instance RelsDelta 'TableShoeCursorEntity = TSC.TableShoeCursorEntityRelsDelta
 
 type instance AttrsDelta 'OfferingEntity = O.OfferingEntityAttrsDelta
 type instance ModesDelta 'OfferingEntity = O.OfferingEntityModesDelta
@@ -206,21 +200,6 @@ instance Incremental (Delta 'TableEntity) where
         TableEntityModesDelta d' -> describeDelta d' (getModes e)
         TableEntityRelsDelta d' -> describeDelta d' (getRels e)
 
-instance Incremental (Delta 'TableShoeCursorEntity) where
-    type Target (Delta 'TableShoeCursorEntity) = Entity 'TableShoeCursorEntity
-
-    applyDelta d e = case d of
-        TableShoeCursorEntityAttrsDelta d' -> replaceAttrs e (applyDelta d' (getAttrs e))
-        TableShoeCursorEntityModesDelta d' -> replaceModes e (applyDelta d' (getModes e))
-        TableShoeCursorEntityRelsDelta d' -> replaceRels e (applyDelta d' (getRels e))
-
-    previewDelta d e = Just (applyDelta d e)
-
-    describeDelta d e = case d of
-        TableShoeCursorEntityAttrsDelta d' -> describeDelta d' (getAttrs e)
-        TableShoeCursorEntityModesDelta d' -> describeDelta d' (getModes e)
-        TableShoeCursorEntityRelsDelta d' -> describeDelta d' (getRels e)
-
 -- Note: Delta 'TableShoeEntity is static / Noop only
 instance Incremental (Delta 'TableShoeEntity) where
     type Target (Delta 'TableShoeEntity) = Entity 'TableShoeEntity
@@ -328,40 +307,6 @@ instance Incremental TableEntityRelsDelta where
     describeDelta delta _ = case delta of
         AssignDealer old new -> "Assigned dealer: " ++ maybe "None" show old ++ " -> " ++ show new
         UnassignDealer old -> "Unassigned dealer: " ++ show old
-
-instance Incremental TSC.TableShoeCursorEntityAttrsDelta where
-    type Target TSC.TableShoeCursorEntityAttrsDelta = TableShoeCursorEntityAttrs
-
-    applyDelta delta state = case delta of
-        TSC.Advance n -> state{_tableShoeCursorEntityAttrsOffset = _tableShoeCursorEntityAttrsOffset state + n}
-        TSC.Rewind n -> state{_tableShoeCursorEntityAttrsOffset = _tableShoeCursorEntityAttrsOffset state - n}
-        TSC.ReplaceOffset _ new -> state{_tableShoeCursorEntityAttrsOffset = new}
-
-    previewDelta delta entity = Just $ applyDelta delta entity
-
-    describeDelta delta _ = case delta of
-        TSC.Advance n -> "Advanced cursor by " ++ show n
-        TSC.Rewind n -> "Rewound cursor by " ++ show n
-        TSC.ReplaceOffset old new -> "Offset: " ++ show old ++ " -> " ++ show new
-
-instance Incremental TSC.TableShoeCursorEntityModesDelta where
-    type Target TSC.TableShoeCursorEntityModesDelta = TableShoeCursorEntityModes
-    applyDelta TSC.NoopModes e = e
-    previewDelta TSC.NoopModes = Just
-    describeDelta TSC.NoopModes _ = "Noop FSM delta"
-
-instance Incremental TSC.TableShoeCursorEntityRelsDelta where
-    type Target TSC.TableShoeCursorEntityRelsDelta = TableShoeCursorEntityRels
-
-    applyDelta delta rels = case delta of
-        TSC.UpdateTableShoe _ new -> rels{_tableShoeCursorEntityRelsPointsToTableShoe = new}
-
-    previewDelta delta rels = case delta of
-        TSC.UpdateTableShoe old _ | old == _tableShoeCursorEntityRelsPointsToTableShoe rels -> Just $ applyDelta delta rels
-        _ -> Nothing
-
-    describeDelta (TSC.UpdateTableShoe old new) _ =
-        "Updated cursor shoe ref: " ++ show old ++ " -> " ++ show new
 
 instance Incremental DR.DealerRoundEntityAttrsDelta where
     type Target DR.DealerRoundEntityAttrsDelta = DealerRoundEntityAttrs

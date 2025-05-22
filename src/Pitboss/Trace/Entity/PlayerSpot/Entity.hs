@@ -13,16 +13,16 @@ import Pitboss.Trace.Entity.Types.FiniteMap
 import Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
 import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 
-mkPlayerSpotEntityAttrs :: PlayerSpotIx -> Chips -> PlayerSpotEntityAttrs
-mkPlayerSpotEntityAttrs = PlayerSpotEntityAttrs
+mkEPlayerSpotAttrs :: PlayerSpotIx -> Chips -> EPlayerSpotAttrs
+mkEPlayerSpotAttrs = EPlayerSpotAttrs
 
-mkPlayerSpotEntityModes :: SomePlayerSpotFSM -> PlayerSpotEntityModes
-mkPlayerSpotEntityModes = PlayerSpotEntityModes
+mkEPlayerSpotModes :: SomePlayerSpotFSM -> EPlayerSpotModes
+mkEPlayerSpotModes = EPlayerSpotModes
 
-mkPlayerSpotEntityRels :: ClockedRef PlayerEntityId -> ClockedRef DealerRoundEntityId -> FiniteMap PlayerSpotHandIx (Occupancy (ClockedRef PlayerHandEntityId)) -> PlayerSpotEntityRels
-mkPlayerSpotEntityRels = PlayerSpotEntityRels
+mkEPlayerSpotRels :: ClockedRef EPlayerId -> ClockedRef EDealerRoundId -> FiniteMap PlayerSpotHandIx (Occupancy (ClockedRef EPlayerHandId)) -> EPlayerSpotRels
+mkEPlayerSpotRels = EPlayerSpotRels
 
-data PlayerSpotIx = PlayerSpotEntity1 | PlayerSpotEntity2 | PlayerSpotEntity3 | PlayerSpotEntity4
+data PlayerSpotIx = EPlayerSpot1 | EPlayerSpot2 | EPlayerSpot3 | EPlayerSpot4
     deriving (Eq, Show, Ord, Enum, Bounded, Generic)
 
 instance ToJSONKey PlayerSpotIx
@@ -35,18 +35,18 @@ instance FromJSON PlayerSpotIx
 
 instance BoundedEnum PlayerSpotIx
 
-data PlayerSpotEntityAttrs = PlayerSpotEntityAttrs
-    { _playerSpotEntityAttrsSpotIndex :: PlayerSpotIx
-    , _playerSpotEntityAttrsWager :: Chips
+data EPlayerSpotAttrs = EPlayerSpotAttrs
+    { _psAttrsSpotIndex :: PlayerSpotIx
+    , _psAttrsWager :: Chips
     }
     deriving (Eq, Show, Generic)
 
-data PlayerSpotEntityModes = PlayerSpotEntityModes
-    { _playerSpotEntityModesPlayerSpot :: SomePlayerSpotFSM
+data EPlayerSpotModes = EPlayerSpotModes
+    { _psModesPlayerSpot :: SomePlayerSpotFSM
     }
     deriving (Eq, Show, Generic)
 
-data PlayerSpotHandIx = PlayerSpotEntityHand1 | PlayerSpotEntityHand2 | PlayerSpotEntityHand3 | PlayerSpotEntityHand4
+data PlayerSpotHandIx = EPlayerSpotHand1 | EPlayerSpotHand2 | EPlayerSpotHand3 | EPlayerSpotHand4
     deriving (Eq, Show, Ord, Enum, Bounded, Generic)
 
 instance ToJSONKey PlayerSpotHandIx
@@ -59,21 +59,21 @@ instance FromJSON PlayerSpotHandIx
 
 instance BoundedEnum PlayerSpotHandIx
 
-data PlayerSpotEntityRels = PlayerSpotEntityRels
-    { _playerSpotEntityRelsPlayerEntityId :: ClockedRef PlayerEntityId
-    , _playerSpotEntityRelsRoundEntityId :: ClockedRef DealerRoundEntityId
-    , _playerSpotEntityRelsHandOccupancy :: FiniteMap PlayerSpotHandIx (Occupancy (ClockedRef PlayerHandEntityId))
+data EPlayerSpotRels = EPlayerSpotRels
+    { _psEntityRelsPlayerId :: ClockedRef EPlayerId
+    , _psEntityRelsRoundId :: ClockedRef EDealerRoundId
+    , _psRelsHandOccupancy :: FiniteMap PlayerSpotHandIx (Occupancy (ClockedRef EPlayerHandId))
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotEntityAttrs
+instance ToJSON EPlayerSpotAttrs
 
-instance FromJSON PlayerSpotEntityAttrs
+instance FromJSON EPlayerSpotAttrs
 
-instance ToJSON PlayerSpotEntityModes
+instance ToJSON EPlayerSpotModes
 
-instance FromJSON PlayerSpotEntityModes
+instance FromJSON EPlayerSpotModes
 
-instance ToJSON PlayerSpotEntityRels
+instance ToJSON EPlayerSpotRels
 
-instance FromJSON PlayerSpotEntityRels
+instance FromJSON EPlayerSpotRels

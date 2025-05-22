@@ -9,40 +9,36 @@ import Pitboss.Blackjack.Card
 import Pitboss.FSM.DealerHand
 import Pitboss.Trace.Entity.Types.EntityId
 
-mkDealerHandEntityAttrs :: [Card] -> DealerHandEntityAttrs
-mkDealerHandEntityAttrs = DealerHandEntityAttrs
+mkEDealerHandAttrs :: [Card] -> EDealerHandAttrs
+mkEDealerHandAttrs = EDealerHandAttrs
 
-mkDealerHandEntityModes :: SomeDealerHandFSM -> DealerHandEntityModes
-mkDealerHandEntityModes = DealerHandEntityModes
+mkEDealerHandModes :: SomeDealerHandFSM -> EDealerHandModes
+mkEDealerHandModes = EDealerHandModes
 
-mkDealerHandEntityRels :: ClockedRef PlayerSpotEntityId -> ClockedRef DealerRoundEntityId -> ClockedRef DealerEntityId -> DealerHandEntityRels
-mkDealerHandEntityRels = DealerHandEntityRels
+mkEDealerHandRels :: ClockedRef EDealerRoundId -> ClockedRef EDealerId -> EDealerHandRels
+mkEDealerHandRels = EDealerHandRels
 
-data DealerHandEntityAttrs = DealerHandEntityAttrs
-    { _dealerHandEntityAttrsHandCards :: [Card]
+data EDealerHandAttrs = EDealerHandAttrs
+    { _dhAttrsHandCards :: [Card]
     }
     deriving (Eq, Show, Generic)
 
-data DealerHandEntityModes = DealerHandEntityModes
-    { _dealerHandEntityModesDealerHand :: SomeDealerHandFSM
+data EDealerHandModes = EDealerHandModes
+    { _dhModesDealerHand :: SomeDealerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data DealerHandEntityRels = DealerHandEntityRels
-    { _dealerHandEntityRelsBelongsToPlayerSpot :: ClockedRef PlayerSpotEntityId
-    , _dealerHandEntityRelsBelongsToDealerRound :: ClockedRef DealerRoundEntityId
-    , _dealerHandEntityRelsOwnedByDealer :: ClockedRef DealerEntityId
+data EDealerHandRels = EDealerHandRels
+    { _dhRelsDealerRound :: ClockedRef EDealerRoundId
+    , _dhRelsDealer :: ClockedRef EDealerId
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerHandEntityAttrs
+instance ToJSON EDealerHandAttrs
+instance FromJSON EDealerHandAttrs
 
-instance FromJSON DealerHandEntityAttrs
+instance ToJSON EDealerHandModes
+instance FromJSON EDealerHandModes
 
-instance ToJSON DealerHandEntityModes
-
-instance FromJSON DealerHandEntityModes
-
-instance ToJSON DealerHandEntityRels
-
-instance FromJSON DealerHandEntityRels
+instance ToJSON EDealerHandRels
+instance FromJSON EDealerHandRels

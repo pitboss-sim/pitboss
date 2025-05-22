@@ -4,42 +4,35 @@
 module Pitboss.Trace.Entity.Offering.Entity where
 
 import Data.Aeson (FromJSON, ToJSON)
+import Data.Void (Void)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Offering qualified as O
-import Pitboss.Trace.Entity.Types.EntityId
 
-mkOfferingEntityAttrs :: O.Offering -> OfferingEntityAttrs
-mkOfferingEntityAttrs = OfferingEntityAttrs
+mkEOfferingAttrs :: O.Offering -> EOfferingAttrs
+mkEOfferingAttrs = EOfferingAttrs
 
-mkOfferingEntityModes :: OfferingEntityModes
-mkOfferingEntityModes = OfferingEntityModes
+mkEOfferingModes :: EOfferingModes
+mkEOfferingModes = EOfferingModes undefined
 
-mkOfferingEntityRels :: OfferingEntityRels
-mkOfferingEntityRels = OfferingEntityRels []
+mkEOfferingRels :: EOfferingRels
+mkEOfferingRels = EOfferingRels undefined
 
-data OfferingEntityAttrs = OfferingEntityAttrs
-    { _offeringEntityAttrsOffering :: O.Offering
+data EOfferingAttrs = EOfferingAttrs
+    { _oAttrsOffering :: O.Offering
     }
     deriving (Eq, Show, Generic)
 
-data OfferingEntityModes = OfferingEntityModes
-    {
-    }
+data EOfferingModes = EOfferingModes Void
     deriving (Eq, Show, Generic)
 
-data OfferingEntityRels = OfferingEntityRels
-    { _offeringEntityRelsAssociatedTables :: [TableEntityId]
-    }
+data EOfferingRels = EOfferingRels Void
     deriving (Eq, Show, Generic)
 
-instance ToJSON OfferingEntityAttrs
+instance ToJSON EOfferingAttrs
+instance FromJSON EOfferingAttrs
 
-instance FromJSON OfferingEntityAttrs
+instance ToJSON EOfferingModes
+instance FromJSON EOfferingModes
 
-instance ToJSON OfferingEntityModes
-
-instance FromJSON OfferingEntityModes
-
-instance ToJSON OfferingEntityRels
-
-instance FromJSON OfferingEntityRels
+instance ToJSON EOfferingRels
+instance FromJSON EOfferingRels

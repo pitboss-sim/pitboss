@@ -10,43 +10,43 @@ import Pitboss.Blackjack.Chips
 import Pitboss.FSM.PlayerHand
 import Pitboss.Trace.Entity.Types.EntityId
 
-mkPlayerHandEntityAttrs :: [Card] -> Chips -> Int -> Int -> PlayerHandEntityAttrs
-mkPlayerHandEntityAttrs = PlayerHandEntityAttrs
+mkEPlayerHandAttrs :: [Card] -> Chips -> Int -> Int -> EPlayerHandAttrs
+mkEPlayerHandAttrs = EPlayerHandAttrs
 
-mkPlayerHandEntityModes :: SomePlayerHandFSM -> PlayerHandEntityModes
-mkPlayerHandEntityModes = PlayerHandEntityModes
+mkEPlayerHandModes :: SomePlayerHandFSM -> EPlayerHandModes
+mkEPlayerHandModes = EPlayerHandModes
 
-mkPlayerHandEntityRels :: ClockedRef PlayerSpotEntityId -> ClockedRef DealerRoundEntityId -> ClockedRef PlayerEntityId -> PlayerHandEntityRels
-mkPlayerHandEntityRels = PlayerHandEntityRels
+mkEPlayerHandRels :: ClockedRef EPlayerSpotId -> ClockedRef EDealerRoundId -> ClockedRef EPlayerId -> EPlayerHandRels
+mkEPlayerHandRels = EPlayerHandRels
 
-data PlayerHandEntityAttrs = PlayerHandEntityAttrs
-    { _playerHandEntityAttrsHandCards :: [Card]
-    , _playerHandEntityAttrsOriginalBet :: Chips
-    , _playerHandEntityAttrsSplitDepth :: Int
-    , _playerHandEntityAttrsHandIx :: Int
+data EPlayerHandAttrs = EPlayerHandAttrs
+    { _phAttrsHandCards :: [Card]
+    , _phAttrsOriginalBet :: Chips
+    , _phAttrsSplitDepth :: Int
+    , _phAttrsHandIx :: Int
     }
     deriving (Eq, Show, Generic)
 
-data PlayerHandEntityModes = PlayerHandEntityModes
-    { _playerHandEntityFsm :: SomePlayerHandFSM
+data EPlayerHandModes = EPlayerHandModes
+    { _phFsm :: SomePlayerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data PlayerHandEntityRels = PlayerHandEntityRels
-    { _playerHandEntityRelsBelongsToPlayerSpot :: ClockedRef PlayerSpotEntityId
-    , _playerHandEntityRelsBelongsToDealerRound :: ClockedRef DealerRoundEntityId
-    , _playerHandEntityRelsOwnedByPlayer :: ClockedRef PlayerEntityId
+data EPlayerHandRels = EPlayerHandRels
+    { _phRelsBelongsToPlayerSpot :: ClockedRef EPlayerSpotId
+    , _phRelsBelongsToDealerRound :: ClockedRef EDealerRoundId
+    , _phRelsOwnedByPlayer :: ClockedRef EPlayerId
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandEntityAttrs
+instance ToJSON EPlayerHandAttrs
 
-instance FromJSON PlayerHandEntityAttrs
+instance FromJSON EPlayerHandAttrs
 
-instance ToJSON PlayerHandEntityModes
+instance ToJSON EPlayerHandModes
 
-instance FromJSON PlayerHandEntityModes
+instance FromJSON EPlayerHandModes
 
-instance ToJSON PlayerHandEntityRels
+instance ToJSON EPlayerHandRels
 
-instance FromJSON PlayerHandEntityRels
+instance FromJSON EPlayerHandRels

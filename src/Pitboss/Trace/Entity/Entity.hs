@@ -5,25 +5,25 @@
 
 module Pitboss.Trace.Entity.Entity (
     Entity (..),
-    SomeEntity (..),
-    OfferingEntity,
-    TableEntity,
-    TableShoeEntity,
-    DealerEntity,
-    DealerRoundEntity,
-    DealerHandEntity,
-    PlayerEntity,
-    PlayerSpotEntity,
-    PlayerHandEntity,
-    mkOfferingEntity,
-    mkTableEntity,
-    mkTableShoeEntity,
-    mkDealerEntity,
-    mkDealerRoundEntity,
-    mkDealerHandEntity,
-    mkPlayerEntity,
-    mkPlayerSpotEntity,
-    mkPlayerHandEntity,
+    ESome (..),
+    EOffering,
+    ETable,
+    ETableShoe,
+    EDealer,
+    EDealerRound,
+    EDealerHand,
+    EPlayer,
+    EPlayerSpot,
+    EPlayerHand,
+    mkOffering,
+    mkTable,
+    mkTableShoe,
+    mkDealer,
+    mkDealerRound,
+    mkDealerHand,
+    mkPlayer,
+    mkPlayerSpot,
+    mkPlayerHand,
     entityKind,
 ) where
 
@@ -42,188 +42,188 @@ import Pitboss.Trace.Entity.TableShoe.Entity
 import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
-type OfferingEntity = Entity 'OfferingEntity
-type TableEntity = Entity 'TableEntity
-type TableShoeEntity = Entity 'TableShoeEntity
-type DealerEntity = Entity 'DealerEntity
-type DealerRoundEntity = Entity 'DealerRoundEntity
-type DealerHandEntity = Entity 'DealerHandEntity
-type PlayerEntity = Entity 'PlayerEntity
-type PlayerSpotEntity = Entity 'PlayerSpotEntity
-type PlayerHandEntity = Entity 'PlayerHandEntity
+type EOffering = Entity 'EOffering
+type ETable = Entity 'ETable
+type ETableShoe = Entity 'ETableShoe
+type EDealer = Entity 'EDealer
+type EDealerRound = Entity 'EDealerRound
+type EDealerHand = Entity 'EDealerHand
+type EPlayer = Entity 'EPlayer
+type EPlayerSpot = Entity 'EPlayerSpot
+type EPlayerHand = Entity 'EPlayerHand
 
-mkOfferingEntity ::
-    Meta (ClockedRef OfferingEntityId) ->
-    OfferingEntityAttrs ->
-    OfferingEntityModes ->
-    OfferingEntityRels ->
-    OfferingEntity
-mkOfferingEntity = OfferingEntity'
+mkOffering ::
+    Meta (ClockedRef EOfferingId) ->
+    EOfferingAttrs ->
+    EOfferingModes ->
+    EOfferingRels ->
+    EOffering
+mkOffering = EOffering'
 
-mkTableEntity ::
-    Meta (ClockedRef TableEntityId) ->
-    TableEntityAttrs ->
-    TableEntityModes ->
-    TableEntityRels ->
-    TableEntity
-mkTableEntity = TableEntity'
+mkTable ::
+    Meta (ClockedRef ETableId) ->
+    ETableAttrs ->
+    ETableModes ->
+    ETableRels ->
+    ETable
+mkTable = ETable'
 
-mkTableShoeEntity ::
-    Meta (ClockedRef TableShoeEntityId) ->
-    TableShoeEntityAttrs ->
-    TableShoeEntityModes ->
-    TableShoeEntityRels ->
-    TableShoeEntity
-mkTableShoeEntity = TableShoeEntity'
+mkTableShoe ::
+    Meta (ClockedRef ETableShoeId) ->
+    ETableShoeAttrs ->
+    ETableShoeModes ->
+    ETableShoeRels ->
+    ETableShoe
+mkTableShoe = ETableShoe'
 
-mkDealerEntity ::
-    Meta (ClockedRef DealerEntityId) ->
-    DealerEntityAttrs ->
-    DealerEntityModes ->
-    DealerEntityRels ->
-    DealerEntity
-mkDealerEntity = DealerEntity'
+mkDealer ::
+    Meta (ClockedRef EDealerId) ->
+    EDealerAttrs ->
+    EDealerModes ->
+    EDealerRels ->
+    EDealer
+mkDealer = EDealer'
 
-mkDealerRoundEntity ::
-    Meta (ClockedRef DealerRoundEntityId) ->
-    DealerRoundEntityAttrs ->
-    DealerRoundEntityModes ->
-    DealerRoundEntityRels ->
-    DealerRoundEntity
-mkDealerRoundEntity = DealerRoundEntity'
+mkDealerRound ::
+    Meta (ClockedRef EDealerRoundId) ->
+    EDealerRoundAttrs ->
+    EDealerRoundModes ->
+    EDealerRoundRels ->
+    EDealerRound
+mkDealerRound = EDealerRound'
 
-mkDealerHandEntity ::
-    Meta (ClockedRef DealerHandEntityId) ->
-    DealerHandEntityAttrs ->
-    DealerHandEntityModes ->
-    DealerHandEntityRels ->
-    DealerHandEntity
-mkDealerHandEntity = DealerHandEntity'
+mkDealerHand ::
+    Meta (ClockedRef EDealerHandId) ->
+    EDealerHandAttrs ->
+    EDealerHandModes ->
+    EDealerHandRels ->
+    EDealerHand
+mkDealerHand = EDealerHand'
 
-mkPlayerEntity ::
-    Meta (ClockedRef PlayerEntityId) ->
-    PlayerEntityAttrs ->
-    PlayerEntityModes ->
-    PlayerEntityRels ->
-    PlayerEntity
-mkPlayerEntity = PlayerEntity'
+mkPlayer ::
+    Meta (ClockedRef EPlayerId) ->
+    EPlayerAttrs ->
+    EPlayerModes ->
+    EPlayerRels ->
+    EPlayer
+mkPlayer = EPlayer'
 
-mkPlayerSpotEntity ::
-    Meta (ClockedRef PlayerSpotEntityId) ->
-    PlayerSpotEntityAttrs ->
-    PlayerSpotEntityModes ->
-    PlayerSpotEntityRels ->
-    PlayerSpotEntity
-mkPlayerSpotEntity = PlayerSpotEntity'
+mkPlayerSpot ::
+    Meta (ClockedRef EPlayerSpotId) ->
+    EPlayerSpotAttrs ->
+    EPlayerSpotModes ->
+    EPlayerSpotRels ->
+    EPlayerSpot
+mkPlayerSpot = EPlayerSpot'
 
-mkPlayerHandEntity ::
-    Meta (ClockedRef PlayerHandEntityId) ->
-    PlayerHandEntityAttrs ->
-    PlayerHandEntityModes ->
-    PlayerHandEntityRels ->
-    PlayerHandEntity
-mkPlayerHandEntity = PlayerHandEntity'
+mkPlayerHand ::
+    Meta (ClockedRef EPlayerHandId) ->
+    EPlayerHandAttrs ->
+    EPlayerHandModes ->
+    EPlayerHandRels ->
+    EPlayerHand
+mkPlayerHand = EPlayerHand'
 
 data Entity k where
-    OfferingEntity' ::
-        Meta (ClockedRef OfferingEntityId) ->
-        OfferingEntityAttrs ->
-        OfferingEntityModes ->
-        OfferingEntityRels ->
-        Entity 'OfferingEntity
-    TableEntity' ::
-        Meta (ClockedRef TableEntityId) ->
-        TableEntityAttrs ->
-        TableEntityModes ->
-        TableEntityRels ->
-        Entity 'TableEntity
-    TableShoeEntity' ::
-        Meta (ClockedRef TableShoeEntityId) ->
-        TableShoeEntityAttrs ->
-        TableShoeEntityModes ->
-        TableShoeEntityRels ->
-        Entity 'TableShoeEntity
-    PlayerEntity' ::
-        Meta (ClockedRef PlayerEntityId) ->
-        PlayerEntityAttrs ->
-        PlayerEntityModes ->
-        PlayerEntityRels ->
-        Entity 'PlayerEntity
-    PlayerSpotEntity' ::
-        Meta (ClockedRef PlayerSpotEntityId) ->
-        PlayerSpotEntityAttrs ->
-        PlayerSpotEntityModes ->
-        PlayerSpotEntityRels ->
-        Entity 'PlayerSpotEntity
-    PlayerHandEntity' ::
-        Meta (ClockedRef PlayerHandEntityId) ->
-        PlayerHandEntityAttrs ->
-        PlayerHandEntityModes ->
-        PlayerHandEntityRels ->
-        Entity 'PlayerHandEntity
-    DealerEntity' ::
-        Meta (ClockedRef DealerEntityId) ->
-        DealerEntityAttrs ->
-        DealerEntityModes ->
-        DealerEntityRels ->
-        Entity 'DealerEntity
-    DealerRoundEntity' ::
-        Meta (ClockedRef DealerRoundEntityId) ->
-        DealerRoundEntityAttrs ->
-        DealerRoundEntityModes ->
-        DealerRoundEntityRels ->
-        Entity 'DealerRoundEntity
-    DealerHandEntity' ::
-        Meta (ClockedRef DealerHandEntityId) ->
-        DealerHandEntityAttrs ->
-        DealerHandEntityModes ->
-        DealerHandEntityRels ->
-        Entity 'DealerHandEntity
+    EOffering' ::
+        Meta (ClockedRef EOfferingId) ->
+        EOfferingAttrs ->
+        EOfferingModes ->
+        EOfferingRels ->
+        Entity 'EOffering
+    ETable' ::
+        Meta (ClockedRef ETableId) ->
+        ETableAttrs ->
+        ETableModes ->
+        ETableRels ->
+        Entity 'ETable
+    ETableShoe' ::
+        Meta (ClockedRef ETableShoeId) ->
+        ETableShoeAttrs ->
+        ETableShoeModes ->
+        ETableShoeRels ->
+        Entity 'ETableShoe
+    EPlayer' ::
+        Meta (ClockedRef EPlayerId) ->
+        EPlayerAttrs ->
+        EPlayerModes ->
+        EPlayerRels ->
+        Entity 'EPlayer
+    EPlayerSpot' ::
+        Meta (ClockedRef EPlayerSpotId) ->
+        EPlayerSpotAttrs ->
+        EPlayerSpotModes ->
+        EPlayerSpotRels ->
+        Entity 'EPlayerSpot
+    EPlayerHand' ::
+        Meta (ClockedRef EPlayerHandId) ->
+        EPlayerHandAttrs ->
+        EPlayerHandModes ->
+        EPlayerHandRels ->
+        Entity 'EPlayerHand
+    EDealer' ::
+        Meta (ClockedRef EDealerId) ->
+        EDealerAttrs ->
+        EDealerModes ->
+        EDealerRels ->
+        Entity 'EDealer
+    EDealerRound' ::
+        Meta (ClockedRef EDealerRoundId) ->
+        EDealerRoundAttrs ->
+        EDealerRoundModes ->
+        EDealerRoundRels ->
+        Entity 'EDealerRound
+    EDealerHand' ::
+        Meta (ClockedRef EDealerHandId) ->
+        EDealerHandAttrs ->
+        EDealerHandModes ->
+        EDealerHandRels ->
+        Entity 'EDealerHand
 
 deriving instance Show (Entity k)
 deriving instance Eq (Entity k)
 
-data SomeEntity where
-    SomeEntity :: Entity k -> SomeEntity
+data ESome where
+    ESome :: Entity k -> ESome
 
-instance ToJSON SomeEntity where
-    toJSON (SomeEntity e) = case e of
-        DealerEntity' m a mo r -> tagged "Dealer" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        DealerHandEntity' m a mo r -> tagged "DealerHand" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        DealerRoundEntity' m a mo r -> tagged "DealerRound" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        OfferingEntity' m a mo r -> tagged "Offering" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        PlayerEntity' m a mo r -> tagged "Player" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        PlayerHandEntity' m a mo r -> tagged "PlayerHand" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        PlayerSpotEntity' m a mo r -> tagged "PlayerSpot" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        TableEntity' m a mo r -> tagged "Table" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        TableShoeEntity' m a mo r -> tagged "TableShoe" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+instance ToJSON ESome where
+    toJSON (ESome e) = case e of
+        EDealer' m a mo r -> tagged "Dealer" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        EDealerHand' m a mo r -> tagged "DealerHand" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        EDealerRound' m a mo r -> tagged "DealerRound" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        EOffering' m a mo r -> tagged "Offering" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        EPlayer' m a mo r -> tagged "Player" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        EPlayerHand' m a mo r -> tagged "PlayerHand" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        EPlayerSpot' m a mo r -> tagged "PlayerSpot" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        ETable' m a mo r -> tagged "Table" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
+        ETableShoe' m a mo r -> tagged "TableShoe" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
       where
         tagged :: Text -> [Pair] -> Value
         tagged tag fields = object ["tag" .= tag, "contents" .= object fields]
 
-instance FromJSON SomeEntity where
-    parseJSON = withObject "SomeEntity" $ \o -> do
+instance FromJSON ESome where
+    parseJSON = withObject "ESome" $ \o -> do
         tag <- o .: "tag"
         case tag of
-            "Dealer" -> SomeEntity <$> (DealerEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "DealerHand" -> SomeEntity <$> (DealerHandEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "DealerRound" -> SomeEntity <$> (DealerRoundEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "Offering" -> SomeEntity <$> (OfferingEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "Player" -> SomeEntity <$> (PlayerEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "PlayerHand" -> SomeEntity <$> (PlayerHandEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "PlayerSpot" -> SomeEntity <$> (PlayerSpotEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "Table" -> SomeEntity <$> (TableEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "TableShoe" -> SomeEntity <$> (TableShoeEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            other -> fail $ "Unknown tag in SomeEntity: " ++ other
+            "Dealer" -> ESome <$> (EDealer' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "DealerHand" -> ESome <$> (EDealerHand' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "DealerRound" -> ESome <$> (EDealerRound' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "Offering" -> ESome <$> (EOffering' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "Player" -> ESome <$> (EPlayer' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "PlayerHand" -> ESome <$> (EPlayerHand' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "PlayerSpot" -> ESome <$> (EPlayerSpot' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "Table" -> ESome <$> (ETable' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            "TableShoe" -> ESome <$> (ETableShoe' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
+            other -> fail $ "Unknown tag in ESome: " ++ other
 
 entityKind :: Entity k -> EntityKind
 entityKind = \case
-    DealerEntity'{} -> DealerEntity
-    DealerHandEntity'{} -> DealerHandEntity
-    DealerRoundEntity'{} -> DealerRoundEntity
-    OfferingEntity'{} -> OfferingEntity
-    PlayerEntity'{} -> PlayerEntity
-    PlayerHandEntity'{} -> PlayerHandEntity
-    PlayerSpotEntity'{} -> PlayerSpotEntity
-    TableEntity'{} -> TableEntity
-    TableShoeEntity'{} -> TableShoeEntity
+    EDealer'{} -> EDealer
+    EDealerHand'{} -> EDealerHand
+    EDealerRound'{} -> EDealerRound
+    EOffering'{} -> EOffering
+    EPlayer'{} -> EPlayer
+    EPlayerHand'{} -> EPlayerHand
+    EPlayerSpot'{} -> EPlayerSpot
+    ETable'{} -> ETable
+    ETableShoe'{} -> ETableShoe

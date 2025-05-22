@@ -4,40 +4,51 @@
 module Pitboss.Trace.Entity.TableShoe.Entity where
 
 import Data.Aeson (FromJSON, ToJSON)
+import Data.Map.Strict (Map)
+import Data.Void (Void)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card
 import Pitboss.Trace.Entity.Types.EntityId
 
-mkTableShoeEntityAttrs :: [Card] -> TableShoeEntityAttrs
-mkTableShoeEntityAttrs = TableShoeEntityAttrs
+mkETableShoeAttrs :: [Card] -> Map CardIx CardState -> ETableShoeAttrs
+mkETableShoeAttrs = ETableShoeAttrs'
 
-mkTableShoeEntityModes :: TableShoeEntityModes
-mkTableShoeEntityModes = TableShoeEntityModes
+mkETableShoeModes :: ETableShoeModes
+mkETableShoeModes = ETableShoeModes' undefined
 
-mkTableShoeEntityRels :: ClockedRef TableEntityId -> TableShoeEntityRels
-mkTableShoeEntityRels = TableShoeEntityRels
+mkETableShoeRels :: ClockedRef ETableId -> ETableShoeRels
+mkETableShoeRels = ETableShoeRels'
 
-data TableShoeEntityAttrs = TableShoeEntityAttrs
-    { _shoeEntityAttrsCards :: [Card]
+type CardIx = Int
+
+data CardState
+    = InHand
+    | InDiscard
+    | Burned
+    deriving (Eq, Show, Generic)
+
+instance ToJSON CardState
+instance FromJSON CardState
+
+data ETableShoeAttrs = ETableShoeAttrs'
+    { _tsAttrsCards :: [Card]
+    , _tsAttrsCardStates :: Map CardIx CardState
     }
     deriving (Eq, Show, Generic)
 
-data TableShoeEntityModes = TableShoeEntityModes
+data ETableShoeModes = ETableShoeModes' Void
     deriving (Eq, Show, Generic)
 
-data TableShoeEntityRels = TableShoeEntityRels
-    { _shoeEntityRelsTable :: ClockedRef TableEntityId
+data ETableShoeRels = ETableShoeRels'
+    { _tsRelsTable :: ClockedRef ETableId
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON TableShoeEntityAttrs
+instance ToJSON ETableShoeAttrs
+instance FromJSON ETableShoeAttrs
 
-instance FromJSON TableShoeEntityAttrs
+instance ToJSON ETableShoeModes
+instance FromJSON ETableShoeModes
 
-instance ToJSON TableShoeEntityModes
-
-instance FromJSON TableShoeEntityModes
-
-instance ToJSON TableShoeEntityRels
-
-instance FromJSON TableShoeEntityRels
+instance ToJSON ETableShoeRels
+instance FromJSON ETableShoeRels

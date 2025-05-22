@@ -7,39 +7,39 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Trace.Entity.Types.EntityId
 
-mkDealerRoundEntityAttrs :: Int -> Bool -> DealerRoundEntityAttrs
-mkDealerRoundEntityAttrs = DealerRoundEntityAttrs
+mkEDealerRoundAttrs :: Int -> Bool -> EDealerRoundAttrs
+mkEDealerRoundAttrs = EDealerRoundAttrs
 
-mkDealerRoundEntityModes :: DealerRoundEntityModes
-mkDealerRoundEntityModes = DealerRoundEntityModes
+mkEDealerRoundModes :: EDealerRoundModes
+mkEDealerRoundModes = EDealerRoundModes
 
-mkDealerRoundEntityRels :: ClockedRef TableShoeEntityId -> DealerRoundEntityRels
-mkDealerRoundEntityRels = DealerRoundEntityRels
+mkEDealerRoundRels :: ClockedRef ETableShoeId -> EDealerRoundRels
+mkEDealerRoundRels = EDealerRoundRels
 
-data DealerRoundEntityAttrs = DealerRoundEntityAttrs
-    { _dealerRoundEntityAttrsNumber :: Int
-    , _dealerRoundEntityAttrsIsActive :: Bool
+data EDealerRoundAttrs = EDealerRoundAttrs
+    { _drAttrsNumber :: Int
+    , _drAttrsIsActive :: Bool
     }
     deriving (Eq, Show, Generic)
 
-data DealerRoundEntityModes = DealerRoundEntityModes
+data EDealerRoundModes = EDealerRoundModes
     {
     }
     deriving (Eq, Show, Generic)
 
-data DealerRoundEntityRels = DealerRoundEntityRels
-    { _dealerRoundEntityRelsTableShoeUsed :: ClockedRef TableShoeEntityId
+data EDealerRoundRels = EDealerRoundRels
+    { _drRelsTableShoeUsed :: ClockedRef ETableShoeId
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRoundEntityAttrs
+instance ToJSON EDealerRoundAttrs
 
-instance FromJSON DealerRoundEntityAttrs
+instance FromJSON EDealerRoundAttrs
 
-instance ToJSON DealerRoundEntityModes
+instance ToJSON EDealerRoundModes
 
-instance FromJSON DealerRoundEntityModes
+instance FromJSON EDealerRoundModes
 
-instance ToJSON DealerRoundEntityRels
+instance ToJSON EDealerRoundRels
 
-instance FromJSON DealerRoundEntityRels
+instance FromJSON EDealerRoundRels

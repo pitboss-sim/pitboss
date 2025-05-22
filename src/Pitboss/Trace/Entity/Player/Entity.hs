@@ -4,49 +4,46 @@
 module Pitboss.Trace.Entity.Player.Entity where
 
 import Data.Aeson (FromJSON, ToJSON)
+import Data.Void (Void)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot
 import Pitboss.FSM.PlayerTable
-import Pitboss.Trace.Entity.Types.EntityId
 
-mkPlayerEntityAttrs :: String -> Chips -> PlayerEntityAttrs
-mkPlayerEntityAttrs = PlayerEntityAttrs
+mkEPlayerAttrs :: String -> Chips -> EPlayerAttrs
+mkEPlayerAttrs = EPlayerAttrs'
 
-mkPlayerEntityModes :: SomePlayerTableFSM -> SomePlayerSpotFSM -> SomePlayerHandFSM -> PlayerEntityModes
-mkPlayerEntityModes = PlayerEntityModes
+mkEPlayerModes :: Void -> EPlayerModes
+mkEPlayerModes = EPlayerModes'
 
-mkPlayerEntityRels :: Maybe (ClockedRef PlayerEntityId) -> Maybe (ClockedRef TableEntityId) -> PlayerEntityRels
-mkPlayerEntityRels = PlayerEntityRels
+mkEPlayerRels :: SomePlayerTableFSM -> SomePlayerSpotFSM -> SomePlayerHandFSM -> EPlayerRels
+mkEPlayerRels = EPlayerRels'
 
-data PlayerEntityAttrs = PlayerEntityAttrs
-    { _playerEntityAttrsPlayerName :: String
-    , _playerEntityAttrsBankroll :: Chips
+data EPlayerAttrs = EPlayerAttrs'
+    { _pAttrsName :: String
+    , _pAttrsBankroll :: Chips
     }
     deriving (Eq, Show, Generic)
 
-data PlayerEntityModes = PlayerEntityModes
-    { _playerEntityModesPlayerTable :: SomePlayerTableFSM
-    , _playerEntityModesPlayerSpot :: SomePlayerSpotFSM
-    , _playerEntityModesPlayerHand :: SomePlayerHandFSM
+data EPlayerModes = EPlayerModes' Void
+    deriving (Eq, Show, Generic)
+
+data EPlayerRels = EPlayerRels'
+    { _pRelsPlayerTable :: SomePlayerTableFSM
+    , _pRelsPlayerSpot :: SomePlayerSpotFSM
+    , _pRelsPlayerHand :: SomePlayerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data PlayerEntityRels = PlayerEntityRels
-    { _playerEntityRelsClonedFrom :: Maybe (ClockedRef PlayerEntityId)
-    , _playerEntityRelsSeatedAt :: Maybe (ClockedRef TableEntityId)
-    }
-    deriving (Eq, Show, Generic)
+instance ToJSON EPlayerAttrs
 
-instance ToJSON PlayerEntityAttrs
+instance FromJSON EPlayerAttrs
 
-instance FromJSON PlayerEntityAttrs
+instance ToJSON EPlayerModes
 
-instance ToJSON PlayerEntityModes
+instance FromJSON EPlayerModes
 
-instance FromJSON PlayerEntityModes
+instance ToJSON EPlayerRels
 
-instance ToJSON PlayerEntityRels
-
-instance FromJSON PlayerEntityRels
+instance FromJSON EPlayerRels

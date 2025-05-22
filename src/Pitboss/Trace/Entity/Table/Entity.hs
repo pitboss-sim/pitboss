@@ -9,41 +9,41 @@ import Pitboss.Blackjack.Chips
 import Pitboss.FSM.Table
 import Pitboss.Trace.Entity.Types.EntityId
 
-mkTableEntityAttrs :: String -> Maybe (ClockedRef DealerRoundEntityId) -> ClockedRef OfferingEntityId -> Chips -> TableEntityAttrs
-mkTableEntityAttrs = TableEntityAttrs
+mkETableAttrs :: String -> Maybe (ClockedRef EDealerRoundId) -> ClockedRef EOfferingId -> Chips -> ETableAttrs
+mkETableAttrs = ETableAttrs
 
-mkTableEntityModes :: SomeTableFSM -> TableEntityModes
-mkTableEntityModes = TableEntityModes
+mkETableModes :: SomeTableFSM -> ETableModes
+mkETableModes = ETableModes
 
-mkTableEntityRels :: Maybe (ClockedRef DealerEntityId) -> TableEntityRels
-mkTableEntityRels = TableEntityRels
+mkETableRels :: Maybe (ClockedRef EDealerId) -> ETableRels
+mkETableRels = ETableRels
 
-data TableEntityAttrs = TableEntityAttrs
-    { _tableEntityAttrsName :: String
-    , _tableEntityAttrsCurrentRound :: Maybe (ClockedRef DealerRoundEntityId)
-    , _tableEntityAttrsOfferingUsed :: ClockedRef OfferingEntityId
-    , _tableEntityAttrsMinBet :: Chips
+data ETableAttrs = ETableAttrs
+    { _tAttrsName :: String
+    , _tAttrsCurrentRound :: Maybe (ClockedRef EDealerRoundId)
+    , _tAttrsOfferingUsed :: ClockedRef EOfferingId
+    , _tAttrsMinBet :: Chips
     }
     deriving (Eq, Show, Generic)
 
-data TableEntityModes = TableEntityModes
-    { _tableEntityModesFSM :: SomeTableFSM
+data ETableModes = ETableModes
+    { _tModesFSM :: SomeTableFSM
     }
     deriving (Eq, Show, Generic)
 
-data TableEntityRels = TableEntityRels
-    { _tableEntityRelsManagedByDealer :: Maybe (ClockedRef DealerEntityId)
+data ETableRels = ETableRels
+    { _tRelsManagedByDealer :: Maybe (ClockedRef EDealerId)
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON TableEntityModes
+instance ToJSON ETableModes
 
-instance FromJSON TableEntityModes
+instance FromJSON ETableModes
 
-instance ToJSON TableEntityAttrs
+instance ToJSON ETableAttrs
 
-instance FromJSON TableEntityAttrs
+instance FromJSON ETableAttrs
 
-instance ToJSON TableEntityRels
+instance ToJSON ETableRels
 
-instance FromJSON TableEntityRels
+instance FromJSON ETableRels

@@ -1,4 +1,7 @@
 {-# LANGUAGE DataKinds #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
 
 module Pitboss.Trace.Entity.Dealer.Entity where
 
@@ -9,42 +12,39 @@ import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
 import Pitboss.Trace.Entity.Types.EntityId
 
-mkDealerEntityAttrs :: String -> Maybe (ClockedRef TableEntityId) -> DealerEntityAttrs
-mkDealerEntityAttrs = DealerEntityAttrs
+mkEDealerAttrs :: String -> EDealerAttrs
+mkEDealerAttrs = EDealerAttrs
 
-mkDealerEntityModes :: SomeDealerTableFSM -> DealerRoundFSM -> SomeDealerHandFSM -> DealerEntityModes
-mkDealerEntityModes = DealerEntityModes
+mkEDealerModes :: SomeDealerTableFSM -> DealerRoundFSM -> SomeDealerHandFSM -> EDealerModes
+mkEDealerModes = EDealerModes
 
-mkDealerEntityRels :: Maybe (ClockedRef DealerRoundEntityId) -> Maybe (ClockedRef DealerHandEntityId) -> DealerEntityRels
-mkDealerEntityRels = DealerEntityRels
+mkEDealerRels :: Maybe (ClockedRef ETableId) -> Maybe (ClockedRef EDealerRoundId) -> Maybe (ClockedRef EDealerHandId) -> EDealerRels
+mkEDealerRels = EDealerRels
 
-data DealerEntityAttrs = DealerEntityAttrs
-    { _dealerEntityAttrsName :: String
-    , _dealerEntityAttrsAssignedTable :: Maybe (ClockedRef TableEntityId)
+data EDealerAttrs = EDealerAttrs
+    { _dAttrsName :: String
     }
     deriving (Eq, Show, Generic)
 
-data DealerEntityModes = DealerEntityModes
-    { _dealerEntityModesDealerTable :: SomeDealerTableFSM
-    , _dealerEntityModesDealerRound :: DealerRoundFSM
-    , _dealerEntityModesDealerHand :: SomeDealerHandFSM
+data EDealerModes = EDealerModes
+    { _dModesDealerTable :: SomeDealerTableFSM
+    , _dModesDealerRound :: DealerRoundFSM
+    , _dModesDealerHand :: SomeDealerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data DealerEntityRels = DealerEntityRels
-    { _dealerEntityRelsCurrentRound :: Maybe (ClockedRef DealerRoundEntityId)
-    , _dealerEntityRelsActiveHand :: Maybe (ClockedRef DealerHandEntityId)
+data EDealerRels = EDealerRels
+    { _dRelsActiveTable :: Maybe (ClockedRef ETableId)
+    , _dRelsActiveRound :: Maybe (ClockedRef EDealerRoundId)
+    , _dRelsActiveHand :: Maybe (ClockedRef EDealerHandId)
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerEntityAttrs
+instance ToJSON EDealerAttrs
+instance FromJSON EDealerAttrs
 
-instance FromJSON DealerEntityAttrs
+instance ToJSON EDealerModes
+instance FromJSON EDealerModes
 
-instance ToJSON DealerEntityModes
-
-instance FromJSON DealerEntityModes
-
-instance ToJSON DealerEntityRels
-
-instance FromJSON DealerEntityRels
+instance ToJSON EDealerRels
+instance FromJSON EDealerRels

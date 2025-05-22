@@ -16,15 +16,15 @@ module Pitboss.Trace.Entity.Types.EntityId (
     mkPlayerSpotId,
     mkPlayerHandId,
     module Pitboss.Trace.Entity.Types.EntityId.Uid,
-    OfferingEntityId,
-    TableEntityId,
-    TableShoeEntityId,
-    DealerEntityId,
-    DealerRoundEntityId,
-    DealerHandEntityId,
-    PlayerEntityId,
-    PlayerSpotEntityId,
-    PlayerHandEntityId,
+    EOfferingId,
+    ETableId,
+    ETableShoeId,
+    EDealerId,
+    EDealerRoundId,
+    EDealerHandId,
+    EPlayerId,
+    EPlayerSpotId,
+    EPlayerHandId,
 ) where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
@@ -32,41 +32,41 @@ import GHC.Generics (Generic)
 import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId.Uid
 
-type OfferingEntityId = Id 'OfferingEntity
-type TableEntityId = Id 'TableEntity
-type TableShoeEntityId = Id 'TableShoeEntity
-type DealerEntityId = Id 'DealerEntity
-type DealerRoundEntityId = Id 'DealerRoundEntity
-type DealerHandEntityId = Id 'DealerHandEntity
-type PlayerEntityId = Id 'PlayerEntity
-type PlayerSpotEntityId = Id 'PlayerSpotEntity
-type PlayerHandEntityId = Id 'PlayerHandEntity
+type EOfferingId = Id 'EOffering
+type ETableId = Id 'ETable
+type ETableShoeId = Id 'ETableShoe
+type EDealerId = Id 'EDealer
+type EDealerRoundId = Id 'EDealerRound
+type EDealerHandId = Id 'EDealerHand
+type EPlayerId = Id 'EPlayer
+type EPlayerSpotId = Id 'EPlayerSpot
+type EPlayerHandId = Id 'EPlayerHand
 
-mkOfferingId :: Uid -> Id 'OfferingEntity
+mkOfferingId :: Uid -> Id 'EOffering
 mkOfferingId = OfferingId'
 
-mkTableId :: Uid -> Id 'TableEntity
+mkTableId :: Uid -> Id 'ETable
 mkTableId = TableId'
 
-mkTableShoeId :: Uid -> Id 'TableShoeEntity
+mkTableShoeId :: Uid -> Id 'ETableShoe
 mkTableShoeId = TableShoeId'
 
-mkDealerId :: Uid -> Id 'DealerEntity
+mkDealerId :: Uid -> Id 'EDealer
 mkDealerId = DealerId'
 
-mkDealerRoundId :: Uid -> Id 'DealerRoundEntity
+mkDealerRoundId :: Uid -> Id 'EDealerRound
 mkDealerRoundId = DealerRoundId'
 
-mkDealerHandId :: Uid -> Id 'DealerHandEntity
+mkDealerHandId :: Uid -> Id 'EDealerHand
 mkDealerHandId = DealerHandId'
 
-mkPlayerId :: Uid -> Id 'PlayerEntity
+mkPlayerId :: Uid -> Id 'EPlayer
 mkPlayerId = PlayerId'
 
-mkPlayerSpotId :: Uid -> Id 'PlayerSpotEntity
+mkPlayerSpotId :: Uid -> Id 'EPlayerSpot
 mkPlayerSpotId = PlayerSpotId'
 
-mkPlayerHandId :: Uid -> Id 'PlayerHandEntity
+mkPlayerHandId :: Uid -> Id 'EPlayerHand
 mkPlayerHandId = PlayerHandId'
 
 newtype TimelessRef id = TimelessRef id

@@ -40,15 +40,15 @@ data SomeKind where
     deriving (Generic)
 
 data EntityKind
-    = DealerEntity
-    | DealerHandEntity
-    | DealerRoundEntity
-    | OfferingEntity
-    | PlayerEntity
-    | PlayerHandEntity
-    | PlayerSpotEntity
-    | TableEntity
-    | TableShoeEntity
+    = Dealer
+    | DealerHand
+    | DealerRound
+    | Offering
+    | Player
+    | PlayerHand
+    | PlayerSpot
+    | Table
+    | TableShoe
     deriving (Eq, Show, Generic)
 
 data SomeId where
@@ -70,32 +70,32 @@ deriving instance Eq (Id k)
 deriving instance Ord (Id k)
 deriving instance Generic (Id k)
 
-instance ToJSON (Id 'OfferingEntity)
-instance FromJSON (Id 'OfferingEntity)
+instance ToJSON (Id 'Offering)
+instance FromJSON (Id 'Offering)
 
-instance ToJSON (Id 'TableEntity)
-instance FromJSON (Id 'TableEntity)
+instance ToJSON (Id 'Table)
+instance FromJSON (Id 'Table)
 
-instance ToJSON (Id 'TableShoeEntity)
-instance FromJSON (Id 'TableShoeEntity)
+instance ToJSON (Id 'TableShoe)
+instance FromJSON (Id 'TableShoe)
 
-instance ToJSON (Id 'DealerEntity)
-instance FromJSON (Id 'DealerEntity)
+instance ToJSON (Id 'Dealer)
+instance FromJSON (Id 'Dealer)
 
-instance ToJSON (Id 'DealerRoundEntity)
-instance FromJSON (Id 'DealerRoundEntity)
+instance ToJSON (Id 'DealerRound)
+instance FromJSON (Id 'DealerRound)
 
-instance ToJSON (Id 'DealerHandEntity)
-instance FromJSON (Id 'DealerHandEntity)
+instance ToJSON (Id 'DealerHand)
+instance FromJSON (Id 'DealerHand)
 
-instance ToJSON (Id 'PlayerEntity)
-instance FromJSON (Id 'PlayerEntity)
+instance ToJSON (Id 'Player)
+instance FromJSON (Id 'Player)
 
-instance ToJSON (Id 'PlayerSpotEntity)
-instance FromJSON (Id 'PlayerSpotEntity)
+instance ToJSON (Id 'PlayerSpot)
+instance FromJSON (Id 'PlayerSpot)
 
-instance ToJSON (Id 'PlayerHandEntity)
-instance FromJSON (Id 'PlayerHandEntity)
+instance ToJSON (Id 'PlayerHand)
+instance FromJSON (Id 'PlayerHand)
 
 instance ToJSON SomeId where
     toJSON (SomeId id') = case id' of

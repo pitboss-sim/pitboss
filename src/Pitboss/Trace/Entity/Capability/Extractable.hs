@@ -7,14 +7,6 @@ import Pitboss.Trace.Entity.Dealer.Entity
 import Pitboss.Trace.Entity.DealerHand.Entity
 import Pitboss.Trace.Entity.DealerRound.Entity
 import Pitboss.Trace.Entity.Entity
-import Pitboss.Trace.Entity.Offering.Entity
-import Pitboss.Trace.Entity.Player.Entity
-import Pitboss.Trace.Entity.PlayerHand.Entity
-import Pitboss.Trace.Entity.PlayerSpot.Entity
-import Pitboss.Trace.Entity.Table.Entity
-import Pitboss.Trace.Entity.TableShoe.Entity
-import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.EntityId
 
 class Extractable (k :: EntityKind) where
     type Attrs k
@@ -27,101 +19,101 @@ class Extractable (k :: EntityKind) where
     getModes :: Entity k -> Modes k
     getRels :: Entity k -> Rels k
 
-instance Extractable 'DealerEntity where
-    type Attrs 'DealerEntity = DealerEntityAttrs
-    type Modes 'DealerEntity = DealerEntityModes
-    type Rels 'DealerEntity = DealerEntityRels
-    type IdOf 'DealerEntity = DealerEntityId
+instance Extractable 'Dealer where
+    type Attrs Dealer = EDealerAttrs
+    type Modes Dealer = EDealerModes
+    type Rels Dealer = EDealerRels
+    type IdOf Dealer = EDealerId
 
-    getMeta (DealerEntity' m _ _ _) = m
-    getAttrs (DealerEntity' _ a _ _) = a
-    getModes (DealerEntity' _ _ m _) = m
-    getRels (DealerEntity' _ _ _ r) = r
+    getMeta (EDealer m _ _ _) = m
+    getAttrs (EDealer _ a _ _) = a
+    getModes (EDealer _ _ m _) = m
+    getRels (EDealer _ _ _ r) = r
 
-instance Extractable 'DealerHandEntity where
-    type Attrs 'DealerHandEntity = DealerHandEntityAttrs
-    type Modes 'DealerHandEntity = DealerHandEntityModes
-    type Rels 'DealerHandEntity = DealerHandEntityRels
-    type IdOf 'DealerHandEntity = DealerHandEntityId
+instance Extractable DealerHand where
+    type Attrs DealerHand = EDealerHandAttrs
+    type Modes DealerHand = EDealerHandModes
+    type Rels DealerHand = EDealerHandRels
+    type IdOf DealerHand = EDealerHandId
 
-    getMeta (DealerHandEntity' m _ _ _) = m
-    getAttrs (DealerHandEntity' _ a _ _) = a
-    getModes (DealerHandEntity' _ _ m _) = m
-    getRels (DealerHandEntity' _ _ _ r) = r
+    getMeta (EDealerHand m _ _ _) = m
+    getAttrs (EDealerHand _ a _ _) = a
+    getModes (EDealerHand _ _ m _) = m
+    getRels (EDealerHand _ _ _ r) = r
 
-instance Extractable 'DealerRoundEntity where
-    type Attrs 'DealerRoundEntity = DealerRoundEntityAttrs
-    type Modes 'DealerRoundEntity = DealerRoundEntityModes
-    type Rels 'DealerRoundEntity = DealerRoundEntityRels
-    type IdOf 'DealerRoundEntity = DealerRoundEntityId
+instance Extractable DealerRound where
+    type Attrs DealerRound = EDealerRoundAttrs
+    type Modes DealerRound = EDealerRoundModes
+    type Rels DealerRound = EDealerRoundRels
+    type IdOf DealerRound = EDealerRoundId
 
-    getMeta (DealerRoundEntity' m _ _ _) = m
-    getAttrs (DealerRoundEntity' _ a _ _) = a
-    getModes (DealerRoundEntity' _ _ m _) = m
-    getRels (DealerRoundEntity' _ _ _ r) = r
+    getMeta (EDealerRound m _ _ _) = m
+    getAttrs (EDealerRound _ a _ _) = a
+    getModes (EDealerRound _ _ m _) = m
+    getRels (EDealerRound _ _ _ r) = r
 
-instance Extractable 'OfferingEntity where
-    type Attrs 'OfferingEntity = OfferingEntityAttrs
-    type Modes 'OfferingEntity = OfferingEntityModes
-    type Rels 'OfferingEntity = OfferingEntityRels
-    type IdOf 'OfferingEntity = OfferingEntityId
+instance Extractable Offering where
+    type Attrs Offering = EOfferingAttrs
+    type Modes Offering = EOfferingModes
+    type Rels Offering = EOfferingRels
+    type IdOf Offering = EOfferingId
 
-    getMeta (OfferingEntity' m _ _ _) = m
-    getAttrs (OfferingEntity' _ a _ _) = a
-    getModes (OfferingEntity' _ _ m _) = m
-    getRels (OfferingEntity' _ _ _ r) = r
+    getMeta (EOffering m _ _ _) = m
+    getAttrs (EOffering _ a _ _) = a
+    getModes (EOffering _ _ m _) = m
+    getRels (EOffering _ _ _ r) = r
 
-instance Extractable 'PlayerEntity where
-    type Attrs 'PlayerEntity = PlayerEntityAttrs
-    type Modes 'PlayerEntity = PlayerEntityModes
-    type Rels 'PlayerEntity = PlayerEntityRels
-    type IdOf 'PlayerEntity = PlayerEntityId
+instance Extractable Player where
+    type Attrs Player = EPlayerAttrs
+    type Modes Player = EPlayerModes
+    type Rels Player = EPlayerRels
+    type IdOf Player = EPlayerId
 
-    getMeta (PlayerEntity' m _ _ _) = m
-    getAttrs (PlayerEntity' _ a _ _) = a
-    getModes (PlayerEntity' _ _ m _) = m
-    getRels (PlayerEntity' _ _ _ r) = r
+    getMeta (EPlayer m _ _ _) = m
+    getAttrs (EPlayer _ a _ _) = a
+    getModes (EPlayer _ _ m _) = m
+    getRels (EPlayer _ _ _ r) = r
 
-instance Extractable 'PlayerHandEntity where
-    type Attrs 'PlayerHandEntity = PlayerHandEntityAttrs
-    type Modes 'PlayerHandEntity = PlayerHandEntityModes
-    type Rels 'PlayerHandEntity = PlayerHandEntityRels
-    type IdOf 'PlayerHandEntity = PlayerHandEntityId
+instance Extractable PlayerHand where
+    type Attrs PlayerHand = EPlayerHandAttrs
+    type Modes PlayerHand = EPlayerHandModes
+    type Rels PlayerHand = EPlayerHandRels
+    type IdOf PlayerHand = EPlayerHandId
 
-    getMeta (PlayerHandEntity' m _ _ _) = m
-    getAttrs (PlayerHandEntity' _ a _ _) = a
-    getModes (PlayerHandEntity' _ _ m _) = m
-    getRels (PlayerHandEntity' _ _ _ r) = r
+    getMeta (EPlayerHand m _ _ _) = m
+    getAttrs (EPlayerHand _ a _ _) = a
+    getModes (EPlayerHand _ _ m _) = m
+    getRels (EPlayerHand _ _ _ r) = r
 
-instance Extractable 'PlayerSpotEntity where
-    type Attrs 'PlayerSpotEntity = PlayerSpotEntityAttrs
-    type Modes 'PlayerSpotEntity = PlayerSpotEntityModes
-    type Rels 'PlayerSpotEntity = PlayerSpotEntityRels
-    type IdOf 'PlayerSpotEntity = PlayerSpotEntityId
+instance Extractable PlayerSpot where
+    type Attrs PlayerSpot = EPlayerSpotAttrs
+    type Modes PlayerSpot = EPlayerSpotModes
+    type Rels PlayerSpot = EPlayerSpotRels
+    type IdOf PlayerSpot = EPlayerSpotId
 
-    getMeta (PlayerSpotEntity' m _ _ _) = m
-    getAttrs (PlayerSpotEntity' _ a _ _) = a
-    getModes (PlayerSpotEntity' _ _ m _) = m
-    getRels (PlayerSpotEntity' _ _ _ r) = r
+    getMeta (EPlayerSpot m _ _ _) = m
+    getAttrs (EPlayerSpot _ a _ _) = a
+    getModes (EPlayerSpot _ _ m _) = m
+    getRels (EPlayerSpot _ _ _ r) = r
 
-instance Extractable 'TableEntity where
-    type Attrs 'TableEntity = TableEntityAttrs
-    type Modes 'TableEntity = TableEntityModes
-    type Rels 'TableEntity = TableEntityRels
-    type IdOf 'TableEntity = TableEntityId
+instance Extractable Table where
+    type Attrs Table = ETableAttrs
+    type Modes Table = ETableModes
+    type Rels Table = ETableRels
+    type IdOf Table = ETableId
 
-    getMeta (TableEntity' m _ _ _) = m
-    getAttrs (TableEntity' _ a _ _) = a
-    getModes (TableEntity' _ _ m _) = m
-    getRels (TableEntity' _ _ _ r) = r
+    getMeta (ETable m _ _ _) = m
+    getAttrs (ETable _ a _ _) = a
+    getModes (ETable _ _ m _) = m
+    getRels (ETable _ _ _ r) = r
 
-instance Extractable 'TableShoeEntity where
-    type Attrs 'TableShoeEntity = TableShoeEntityAttrs
-    type Modes 'TableShoeEntity = TableShoeEntityModes
-    type Rels 'TableShoeEntity = TableShoeEntityRels
-    type IdOf 'TableShoeEntity = TableShoeEntityId
+instance Extractable TableShoe where
+    type Attrs TableShoe = ETableShoeAttrs
+    type Modes TableShoe = ETableShoeModes
+    type Rels TableShoe = ETableShoeRels
+    type IdOf TableShoe = ETableShoeId
 
-    getMeta (TableShoeEntity' m _ _ _) = m
-    getAttrs (TableShoeEntity' _ a _ _) = a
-    getModes (TableShoeEntity' _ _ m _) = m
-    getRels (TableShoeEntity' _ _ _ r) = r
+    getMeta (ETableShoe m _ _ _) = m
+    getAttrs (ETableShoe _ a _ _) = a
+    getModes (ETableShoe _ _ m _) = m
+    getRels (ETableShoe _ _ _ r) = r

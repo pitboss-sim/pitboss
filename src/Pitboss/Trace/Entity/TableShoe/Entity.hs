@@ -11,13 +11,13 @@ import Pitboss.Blackjack.Card
 import Pitboss.Trace.Entity.Types.EntityId
 
 mkETableShoeAttrs :: [Card] -> Map CardIx CardState -> ETableShoeAttrs
-mkETableShoeAttrs = ETableShoeAttrs'
+mkETableShoeAttrs = ETableShoeAttrs
 
 mkETableShoeModes :: ETableShoeModes
-mkETableShoeModes = ETableShoeModes' undefined
+mkETableShoeModes = ETableShoeModes undefined
 
 mkETableShoeRels :: ClockedRef ETableId -> ETableShoeRels
-mkETableShoeRels = ETableShoeRels'
+mkETableShoeRels = ETableShoeRels
 
 type CardIx = Int
 
@@ -30,16 +30,16 @@ data CardState
 instance ToJSON CardState
 instance FromJSON CardState
 
-data ETableShoeAttrs = ETableShoeAttrs'
+data ETableShoeAttrs = ETableShoeAttrs
     { _tsAttrsCards :: [Card]
     , _tsAttrsCardStates :: Map CardIx CardState
     }
     deriving (Eq, Show, Generic)
 
-data ETableShoeModes = ETableShoeModes' Void
+data ETableShoeModes = ETableShoeModes Void
     deriving (Eq, Show, Generic)
 
-data ETableShoeRels = ETableShoeRels'
+data ETableShoeRels = ETableShoeRels
     { _tsRelsTable :: ClockedRef ETableId
     }
     deriving (Eq, Show, Generic)

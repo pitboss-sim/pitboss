@@ -11,27 +11,27 @@ import Pitboss.Trace.Entity.PlayerSpot.Entity
 import Pitboss.Trace.Entity.Types.EntityId
 import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 
-data PlayerSpotEntityAttrsDelta
-    = ReplaceWager Chips Chips
+data DPlayerSpotAttrs
+    = DPlayerSpotSetWager Chips Chips
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotEntityAttrsDelta
-instance FromJSON PlayerSpotEntityAttrsDelta
+instance ToJSON DPlayerSpotAttrs
+instance FromJSON DPlayerSpotAttrs
 
-data PlayerSpotEntityModesDelta
-    = ReplaceFSM SomePlayerSpotFSM SomePlayerSpotFSM
+data DPlayerSpotModes
+    = DPlayerSpotSetFSM SomePlayerSpotFSM SomePlayerSpotFSM
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotEntityModesDelta
-instance FromJSON PlayerSpotEntityModesDelta
+instance ToJSON DPlayerSpotModes
+instance FromJSON DPlayerSpotModes
 
-data PlayerSpotEntityRelsDelta
-    = UpdatePlayer (ClockedRef PlayerEntityId) (ClockedRef PlayerEntityId)
-    | UpdateRound (ClockedRef DealerRoundEntityId) (ClockedRef DealerRoundEntityId)
-    | UpdateHandOccupancy
-        (PlayerSpotHandIx, Occupancy (ClockedRef PlayerHandEntityId))
-        (PlayerSpotHandIx, Occupancy (ClockedRef PlayerHandEntityId))
+data DPlayerSpotRels
+    = DPlayerSpotSetPlayer (ClockedRef EPlayerId) (ClockedRef EPlayerId)
+    | DPlayerSpotSetRound (ClockedRef EDealerRoundId) (ClockedRef EDealerRoundId)
+    | DPlayerSpotSetHandOccupancy
+        (PlayerSpotHandIx, Occupancy (ClockedRef EPlayerHandId))
+        (PlayerSpotHandIx, Occupancy (ClockedRef EPlayerHandId))
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerSpotEntityRelsDelta
-instance FromJSON PlayerSpotEntityRelsDelta
+instance ToJSON DPlayerSpotRels
+instance FromJSON DPlayerSpotRels

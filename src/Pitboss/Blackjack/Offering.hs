@@ -12,7 +12,6 @@ data Offering = Offering
     deriving (Eq, Show, Generic)
 
 instance ToJSON Offering
-
 instance FromJSON Offering
 
 mkOffering :: Matter -> RuleSet -> Offering

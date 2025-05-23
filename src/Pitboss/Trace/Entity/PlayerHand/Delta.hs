@@ -6,29 +6,27 @@ import Pitboss.Blackjack.Card
 import Pitboss.FSM.PlayerHand
 import Pitboss.Trace.Entity.Types.EntityId
 
-data PlayerHandEntityAttrsDelta
-    = AddCard Card
-    | RemoveCard Card
-    | ReplaceCards [Card] [Card]
-    | ReplacePlayerHandIndex Int Int
-    | ReplaceSplitDepth Int Int
+data DPlayerHandAttrs
+    = DPlayerHandSetPlayerHandIx Int Int
+    | DPlayerHandSetSplitDepth Int Int
+    | DPlayerHandPushCard Card [Card]
+    | DPlayerHandPopCard Card [Card]
+    | DPlayerHandSetCards [Card] [Card]
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandEntityAttrsDelta
-instance FromJSON PlayerHandEntityAttrsDelta
+instance ToJSON DPlayerHandAttrs
+instance FromJSON DPlayerHandAttrs
 
-data PlayerHandEntityModesDelta
-    = ReplaceFSM SomePlayerHandFSM SomePlayerHandFSM
+data DPlayerHandModes
+    = DPlayerHandSetPlayerHandFSM SomePlayerHandFSM SomePlayerHandFSM
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandEntityModesDelta
-instance FromJSON PlayerHandEntityModesDelta
+instance ToJSON DPlayerHandModes
+instance FromJSON DPlayerHandModes
 
-data PlayerHandEntityRelsDelta
-    = UpdatePlayerSpot (ClockedRef PlayerSpotEntityId) (ClockedRef PlayerSpotEntityId)
-    | UpdateDealerRound (ClockedRef DealerRoundEntityId) (ClockedRef DealerRoundEntityId)
-    | UpdatePlayer (ClockedRef PlayerEntityId) (ClockedRef PlayerEntityId)
+data DPlayerHandRels
+    = DPlayerHandSetPlayerSpot (ClockedRef EPlayerSpotId) (ClockedRef EPlayerSpotId)
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerHandEntityRelsDelta
-instance FromJSON PlayerHandEntityRelsDelta
+instance ToJSON DPlayerHandRels
+instance FromJSON DPlayerHandRels

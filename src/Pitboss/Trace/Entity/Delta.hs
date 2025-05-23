@@ -1,7 +1,18 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.Trace.Entity.Delta where
+module Pitboss.Trace.Entity.Delta (
+    module Pitboss.Trace.Entity.Dealer.Delta,
+    module Pitboss.Trace.Entity.DealerHand.Delta,
+    module Pitboss.Trace.Entity.DealerRound.Delta,
+    module Pitboss.Trace.Entity.Offering.Delta,
+    module Pitboss.Trace.Entity.Player.Delta,
+    module Pitboss.Trace.Entity.PlayerHand.Delta,
+    module Pitboss.Trace.Entity.PlayerSpot.Delta,
+    module Pitboss.Trace.Entity.Table.Delta,
+    module Pitboss.Trace.Entity.TableShoe.Delta,
+    Delta (..),
+) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
@@ -13,85 +24,88 @@ import Pitboss.Trace.Entity.Player.Delta
 import Pitboss.Trace.Entity.PlayerHand.Delta
 import Pitboss.Trace.Entity.PlayerSpot.Delta
 import Pitboss.Trace.Entity.Table.Delta
+import Pitboss.Trace.Entity.TableShoe.Delta
 import Pitboss.Trace.Entity.Types
 
 data family Delta (k :: EntityKind)
 
-data instance Delta 'DealerEntity
-    = DealerEntityAttrsDelta DealerEntityAttrsDelta
-    | DealerEntityModesDelta DealerEntityModesDelta
-    | DealerEntityRelsDelta DealerEntityRelsDelta
+data instance Delta 'Dealer
+    = DDealerAttrs' DDealerAttrs
+    | DDealerModes' DDealerModes
+    | DDealerRels' DDealerRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'DealerEntity)
-instance FromJSON (Delta 'DealerEntity)
+instance ToJSON (Delta 'Dealer)
+instance FromJSON (Delta 'Dealer)
 
-data instance Delta 'DealerHandEntity
-    = DealerHandEntityAttrsDelta DealerHandEntityAttrsDelta
-    | DealerHandEntityModesDelta DealerHandEntityModesDelta
-    | DealerHandEntityRelsDelta DealerHandEntityRelsDelta
+data instance Delta 'DealerHand
+    = DDealerHandAttrs' DDealerHandAttrs
+    | DDealerHandModes' DDealerHandModes
+    | DDealerHandRels' DDealerHandRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'DealerHandEntity)
-instance FromJSON (Delta 'DealerHandEntity)
+instance ToJSON (Delta 'DealerHand)
+instance FromJSON (Delta 'DealerHand)
 
-data instance Delta 'DealerRoundEntity
-    = DealerRoundEntityAttrsDelta DealerRoundEntityAttrsDelta
-    | DealerRoundEntityModesDelta DealerRoundEntityModesDelta
-    | DealerRoundEntityRelsDelta DealerRoundEntityRelsDelta
+data instance Delta 'DealerRound
+    = DDealerRoundAttrs' DDealerRoundAttrs
+    | DDealerRoundModes' DDealerRoundModes
+    | DDealerRoundRels' DDealerRoundRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'DealerRoundEntity)
-instance FromJSON (Delta 'DealerRoundEntity)
+instance ToJSON (Delta 'DealerRound)
+instance FromJSON (Delta 'DealerRound)
 
-data instance Delta 'OfferingEntity
-    = OfferingEntityAttrsDelta OfferingEntityAttrsDelta
-    | OfferingEntityModesDelta OfferingEntityModesDelta
-    | OfferingEntityRelsDelta OfferingEntityRelsDelta
+data instance Delta 'Offering
+    = DOfferingAttrs' DOfferingAttrs
+    | DOfferingModes' DOfferingModes
+    | DOfferingRels' DOfferingRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'OfferingEntity)
-instance FromJSON (Delta 'OfferingEntity)
+instance ToJSON (Delta 'Offering)
+instance FromJSON (Delta 'Offering)
 
-data instance Delta 'PlayerEntity
-    = PlayerEntityAttrsDelta PlayerEntityAttrsDelta
-    | PlayerEntityModesDelta PlayerEntityModesDelta
-    | PlayerEntityRelsDelta PlayerEntityRelsDelta
+data instance Delta 'Player
+    = DPlayerAttrs' DPlayerAttrs
+    | DPlayerModes' DPlayerModes
+    | DPlayerRels' DPlayerRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'PlayerEntity)
-instance FromJSON (Delta 'PlayerEntity)
+instance ToJSON (Delta 'Player)
+instance FromJSON (Delta 'Player)
 
-data instance Delta 'PlayerHandEntity
-    = PlayerHandEntityAttrsDelta PlayerHandEntityAttrsDelta
-    | PlayerHandEntityModesDelta PlayerHandEntityModesDelta
-    | PlayerHandEntityRelsDelta PlayerHandEntityRelsDelta
+data instance Delta 'PlayerHand
+    = DPlayerHandAttrs' DPlayerHandAttrs
+    | DPlayerHandModes' DPlayerHandModes
+    | DPlayerHandRels' DPlayerHandRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'PlayerHandEntity)
-instance FromJSON (Delta 'PlayerHandEntity)
+instance ToJSON (Delta 'PlayerHand)
+instance FromJSON (Delta 'PlayerHand)
 
-data instance Delta 'PlayerSpotEntity
-    = PlayerSpotEntityAttrsDelta PlayerSpotEntityAttrsDelta
-    | PlayerSpotEntityModesDelta PlayerSpotEntityModesDelta
-    | PlayerSpotEntityRelsDelta PlayerSpotEntityRelsDelta
+data instance Delta 'PlayerSpot
+    = DPlayerSpotAttrs' DPlayerSpotAttrs
+    | DPlayerSpotModes' DPlayerSpotModes
+    | DPlayerSpotRels' DPlayerSpotRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'PlayerSpotEntity)
-instance FromJSON (Delta 'PlayerSpotEntity)
+instance ToJSON (Delta 'PlayerSpot)
+instance FromJSON (Delta 'PlayerSpot)
 
-data instance Delta 'TableEntity
-    = TableEntityAttrsDelta TableEntityAttrsDelta
-    | TableEntityModesDelta TableEntityModesDelta
-    | TableEntityRelsDelta TableEntityRelsDelta
+data instance Delta 'Table
+    = DTableAttrs' DTableAttrs
+    | DTableModes' DTableModes
+    | DTableRels' DTableRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'TableEntity)
-instance FromJSON (Delta 'TableEntity)
+instance ToJSON (Delta 'Table)
+instance FromJSON (Delta 'Table)
 
-data instance Delta 'TableShoeEntity
-    = Noop
+data instance Delta 'TableShoe
+    = DTableShoeAttrs' DTableShoeAttrs
+    | DTableShoeModes' DTableShoeModes
+    | DTableShoeRels' DTableShoeRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (Delta 'TableShoeEntity)
-instance FromJSON (Delta 'TableShoeEntity)
+instance ToJSON (Delta 'TableShoe)
+instance FromJSON (Delta 'TableShoe)

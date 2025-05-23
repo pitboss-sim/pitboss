@@ -13,23 +13,23 @@ import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 import Pitboss.Trace.Registry
 
-type Offerings = Registry DealerHandEntityId (Delta 'OfferingEntity)
+type Offerings = Registry EDealerHandId (Delta 'Offering)
 
-type Tables = Registry DealerHandEntityId (Delta 'DealerHandEntity)
+type Tables = Registry EDealerHandId (Delta 'DealerHand)
 
-type TableShoes = Registry DealerHandEntityId (Delta 'DealerHandEntity)
+type TableShoes = Registry EDealerHandId (Delta 'DealerHand)
 
-type Dealers = Registry DealerHandEntityId (Delta 'DealerEntity)
+type Dealers = Registry EDealerHandId (Delta 'Dealer)
 
-type DealerRounds = Registry DealerHandEntityId (Delta 'DealerRoundEntity)
+type DealerRounds = Registry EDealerHandId (Delta 'DealerRound)
 
-type DealerHands = Registry DealerHandEntityId (Delta 'DealerHandEntity)
+type DealerHands = Registry EDealerHandId (Delta 'DealerHand)
 
-type Players = Registry DealerHandEntityId (Delta 'PlayerEntity)
+type Players = Registry EDealerHandId (Delta 'Player)
 
-type PlayerSpots = Registry DealerHandEntityId (Delta 'PlayerSpotEntity)
+type PlayerSpots = Registry EDealerHandId (Delta 'PlayerSpot)
 
-type PlayerHands = Registry DealerHandEntityId (Delta 'PlayerHandEntity)
+type PlayerHands = Registry EDealerHandId (Delta 'PlayerHand)
 
 data Trace = Trace
     { _offerings :: Offerings

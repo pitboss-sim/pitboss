@@ -7,23 +7,22 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Trace.Entity.Types.EntityId
 
-data DealerRoundEntityAttrsDelta
-    = SetDealerRoundEntityNumber Int
-    | SetActive Bool
+data DDealerRoundAttrs
+    = DDealerRoundSetNumber Int Int
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRoundEntityAttrsDelta
-instance FromJSON DealerRoundEntityAttrsDelta
+instance ToJSON DDealerRoundAttrs
+instance FromJSON DDealerRoundAttrs
 
-data DealerRoundEntityModesDelta = NoopModes
+data DDealerRoundModes = DDealerRoundModes
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRoundEntityModesDelta
-instance FromJSON DealerRoundEntityModesDelta
+instance ToJSON DDealerRoundModes
+instance FromJSON DDealerRoundModes
 
-data DealerRoundEntityRelsDelta
-    = SetTableShoeUsed (ClockedRef TableShoeEntityId)
+data DDealerRoundRels
+    = DDealerRoundSetTableShoe (ClockedRef ETableShoeId) (ClockedRef ETableShoeId)
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerRoundEntityRelsDelta
-instance FromJSON DealerRoundEntityRelsDelta
+instance ToJSON DDealerRoundRels
+instance FromJSON DDealerRoundRels

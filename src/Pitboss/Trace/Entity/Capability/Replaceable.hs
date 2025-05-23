@@ -1,60 +1,92 @@
 {-# HLINT ignore "Eta reduce" #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 module Pitboss.Trace.Entity.Capability.Replaceable where
 
-import Pitboss.Trace.Entity.Capability.Extractable
 import Pitboss.Trace.Entity.Entity
-import Pitboss.Trace.Entity.Types
 
-class Replaceable (k :: EntityKind) where
-    replaceAttrs :: Entity k -> Attrs k -> Entity k
-    replaceModes :: Entity k -> Modes k -> Entity k
-    replaceRels :: Entity k -> Rels k -> Entity k
+class ReplaceableAttrs (k :: EntityKind) where
+    replaceAttrs :: EntityState k 'Whole -> EntityState k ('Part 'Attrs) -> EntityState k 'Whole
 
-instance Replaceable 'DealerEntity where
-    replaceAttrs (DealerEntity' m _ mo r) a = DealerEntity' m a mo r
-    replaceModes (DealerEntity' m a _ r) mo = DealerEntity' m a mo r
-    replaceRels (DealerEntity' m a mo _) r = DealerEntity' m a mo r
+class ReplaceableModes (k :: EntityKind) where
+    replaceModes :: EntityState k 'Whole -> EntityState k ('Part 'Modes) -> EntityState k 'Whole
 
-instance Replaceable 'DealerHandEntity where
-    replaceAttrs (DealerHandEntity' m _ mo r) a = DealerHandEntity' m a mo r
-    replaceModes (DealerHandEntity' m a _ r) mo = DealerHandEntity' m a mo r
-    replaceRels (DealerHandEntity' m a mo _) r = DealerHandEntity' m a mo r
+class ReplaceableRels (k :: EntityKind) where
+    replaceRels :: EntityState k 'Whole -> EntityState k ('Part 'Rels) -> EntityState k 'Whole
 
-instance Replaceable 'DealerRoundEntity where
-    replaceAttrs (DealerRoundEntity' m _ mo r) a = DealerRoundEntity' m a mo r
-    replaceModes (DealerRoundEntity' m a _ r) mo = DealerRoundEntity' m a mo r
-    replaceRels (DealerRoundEntity' m a mo _) r = DealerRoundEntity' m a mo r
+-- Dealer
+instance ReplaceableAttrs 'Dealer where
+    replaceAttrs (EDealer m _ mo r) a = EDealer m a mo r
+instance ReplaceableModes 'Dealer where
+    replaceModes (EDealer m a _ r) mo = EDealer m a mo r
+instance ReplaceableRels 'Dealer where
+    replaceRels (EDealer m a mo _) r = EDealer m a mo r
 
-instance Replaceable 'OfferingEntity where
-    replaceAttrs (OfferingEntity' m _ mo r) a = OfferingEntity' m a mo r
-    replaceModes (OfferingEntity' m a _ r) mo = OfferingEntity' m a mo r
-    replaceRels (OfferingEntity' m a mo _) r = OfferingEntity' m a mo r
+-- DealerHand
 
-instance Replaceable 'PlayerEntity where
-    replaceAttrs (PlayerEntity' m _ mo r) a = PlayerEntity' m a mo r
-    replaceModes (PlayerEntity' m a _ r) mo = PlayerEntity' m a mo r
-    replaceRels (PlayerEntity' m a mo _) r = PlayerEntity' m a mo r
+instance ReplaceableAttrs 'DealerHand where
+    replaceAttrs (EDealerHand m _ mo r) a = EDealerHand m a mo r
+instance ReplaceableModes 'DealerHand where
+    replaceModes (EDealerHand m a _ r) mo = EDealerHand m a mo r
+instance ReplaceableRels 'DealerHand where
+    replaceRels (EDealerHand m a mo _) r = EDealerHand m a mo r
 
-instance Replaceable 'PlayerHandEntity where
-    replaceAttrs (PlayerHandEntity' m _ mo r) a = PlayerHandEntity' m a mo r
-    replaceModes (PlayerHandEntity' m a _ r) mo = PlayerHandEntity' m a mo r
-    replaceRels (PlayerHandEntity' m a mo _) r = PlayerHandEntity' m a mo r
+-- DealerRound
 
-instance Replaceable 'PlayerSpotEntity where
-    replaceAttrs (PlayerSpotEntity' m _ mo r) a = PlayerSpotEntity' m a mo r
-    replaceModes (PlayerSpotEntity' m a _ r) mo = PlayerSpotEntity' m a mo r
-    replaceRels (PlayerSpotEntity' m a mo _) r = PlayerSpotEntity' m a mo r
+instance ReplaceableAttrs 'DealerRound where
+    replaceAttrs (EDealerRound m _ mo r) a = EDealerRound m a mo r
+instance ReplaceableModes 'DealerRound where
+    replaceModes (EDealerRound m a _ r) mo = EDealerRound m a mo r
+instance ReplaceableRels 'DealerRound where
+    replaceRels (EDealerRound m a mo _) r = EDealerRound m a mo r
 
-instance Replaceable 'TableEntity where
-    replaceAttrs (TableEntity' m _ mo r) a = TableEntity' m a mo r
-    replaceModes (TableEntity' m a _ r) mo = TableEntity' m a mo r
-    replaceRels (TableEntity' m a mo _) r = TableEntity' m a mo r
+-- Offering
+instance ReplaceableAttrs 'Offering where
+    replaceAttrs (EOffering m _ mo r) a = EOffering m a mo r
+instance ReplaceableModes 'Offering where
+    replaceModes (EOffering m a _ r) mo = EOffering m a mo r
+instance ReplaceableRels 'Offering where
+    replaceRels (EOffering m a mo _) r = EOffering m a mo r
 
-instance Replaceable 'TableShoeEntity where
-    replaceAttrs (TableShoeEntity' m _ mo r) a = TableShoeEntity' m a mo r
-    replaceModes (TableShoeEntity' m a _ r) mo = TableShoeEntity' m a mo r
-    replaceRels (TableShoeEntity' m a mo _) r = TableShoeEntity' m a mo r
+-- Player
+instance ReplaceableAttrs 'Player where
+    replaceAttrs (EPlayer m _ mo r) a = EPlayer m a mo r
+instance ReplaceableModes 'Player where
+    replaceModes (EPlayer m a _ r) mo = EPlayer m a mo r
+instance ReplaceableRels 'Player where
+    replaceRels (EPlayer m a mo _) r = EPlayer m a mo r
+
+-- PlayerHand
+instance ReplaceableAttrs 'PlayerHand where
+    replaceAttrs (EPlayerHand m _ mo r) a = EPlayerHand m a mo r
+instance ReplaceableModes 'PlayerHand where
+    replaceModes (EPlayerHand m a _ r) mo = EPlayerHand m a mo r
+instance ReplaceableRels 'PlayerHand where
+    replaceRels (EPlayerHand m a mo _) r = EPlayerHand m a mo r
+
+-- PlayerSpot
+instance ReplaceableAttrs 'PlayerSpot where
+    replaceAttrs (EPlayerSpot m _ mo r) a = EPlayerSpot m a mo r
+instance ReplaceableModes 'PlayerSpot where
+    replaceModes (EPlayerSpot m a _ r) mo = EPlayerSpot m a mo r
+instance ReplaceableRels 'PlayerSpot where
+    replaceRels (EPlayerSpot m a mo _) r = EPlayerSpot m a mo r
+
+-- Table
+instance ReplaceableAttrs 'Table where
+    replaceAttrs (ETable m _ mo r) a = ETable m a mo r
+instance ReplaceableModes 'Table where
+    replaceModes (ETable m a _ r) mo = ETable m a mo r
+instance ReplaceableRels 'Table where
+    replaceRels (ETable m a mo _) r = ETable m a mo r
+
+-- TableShoe
+instance ReplaceableAttrs 'TableShoe where
+    replaceAttrs (ETableShoe m _ mo r) a = ETableShoe m a mo r
+instance ReplaceableModes 'TableShoe where
+    replaceModes (ETableShoe m a _ r) mo = ETableShoe m a mo r
+instance ReplaceableRels 'TableShoe where
+    replaceRels (ETableShoe m a mo _) r = ETableShoe m a mo r

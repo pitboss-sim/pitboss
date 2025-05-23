@@ -32,41 +32,41 @@ import GHC.Generics (Generic)
 import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId.Uid
 
-type EOfferingId = Id 'EOffering
-type ETableId = Id 'ETable
-type ETableShoeId = Id 'ETableShoe
-type EDealerId = Id 'EDealer
-type EDealerRoundId = Id 'EDealerRound
-type EDealerHandId = Id 'EDealerHand
-type EPlayerId = Id 'EPlayer
-type EPlayerSpotId = Id 'EPlayerSpot
-type EPlayerHandId = Id 'EPlayerHand
+type EOfferingId = Id 'Offering
+type ETableId = Id 'Table
+type ETableShoeId = Id 'TableShoe
+type EDealerId = Id 'Dealer
+type EDealerRoundId = Id 'DealerRound
+type EDealerHandId = Id 'DealerHand
+type EPlayerId = Id 'Player
+type EPlayerSpotId = Id 'PlayerSpot
+type EPlayerHandId = Id 'PlayerHand
 
-mkOfferingId :: Uid -> Id 'EOffering
+mkOfferingId :: Uid -> Id 'Offering
 mkOfferingId = OfferingId'
 
-mkTableId :: Uid -> Id 'ETable
+mkTableId :: Uid -> Id 'Table
 mkTableId = TableId'
 
-mkTableShoeId :: Uid -> Id 'ETableShoe
+mkTableShoeId :: Uid -> Id 'TableShoe
 mkTableShoeId = TableShoeId'
 
-mkDealerId :: Uid -> Id 'EDealer
+mkDealerId :: Uid -> Id 'Dealer
 mkDealerId = DealerId'
 
-mkDealerRoundId :: Uid -> Id 'EDealerRound
+mkDealerRoundId :: Uid -> Id 'DealerRound
 mkDealerRoundId = DealerRoundId'
 
-mkDealerHandId :: Uid -> Id 'EDealerHand
+mkDealerHandId :: Uid -> Id 'DealerHand
 mkDealerHandId = DealerHandId'
 
-mkPlayerId :: Uid -> Id 'EPlayer
+mkPlayerId :: Uid -> Id 'Player
 mkPlayerId = PlayerId'
 
-mkPlayerSpotId :: Uid -> Id 'EPlayerSpot
+mkPlayerSpotId :: Uid -> Id 'PlayerSpot
 mkPlayerSpotId = PlayerSpotId'
 
-mkPlayerHandId :: Uid -> Id 'EPlayerHand
+mkPlayerHandId :: Uid -> Id 'PlayerHand
 mkPlayerHandId = PlayerHandId'
 
 newtype TimelessRef id = TimelessRef id

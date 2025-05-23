@@ -5,24 +5,25 @@ import GHC.Generics (Generic)
 import Pitboss.Blackjack.Chips
 import Pitboss.Trace.Entity.Types.EntityId
 
-data PlayerEntityAttrsDelta
-    = RenamePlayer String String
-    | SetBankroll Chips Chips
+data DPlayerAttrs
+    = DPlayerSetName String String
+    | DPlayerSetBankroll Chips Chips
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerEntityAttrsDelta
-instance FromJSON PlayerEntityAttrsDelta
+instance ToJSON DPlayerAttrs
+instance FromJSON DPlayerAttrs
 
-data PlayerEntityModesDelta = NoopModes
+data DPlayerModes = DPlayerModes
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerEntityModesDelta
-instance FromJSON PlayerEntityModesDelta
+instance ToJSON DPlayerModes
+instance FromJSON DPlayerModes
 
-data PlayerEntityRelsDelta
-    = UpdateCloneOf (Maybe (ClockedRef PlayerEntityId)) (Maybe (ClockedRef PlayerEntityId))
-    | UpdateSeatedAt (Maybe (ClockedRef TableEntityId)) (Maybe (ClockedRef TableEntityId))
+data DPlayerRels
+    = DPlayerSetTable (Maybe (ClockedRef ETableId)) (Maybe (ClockedRef ETableId))
+    | DPlayerSetSpot (Maybe (ClockedRef EPlayerSpotId)) (Maybe (ClockedRef EPlayerSpotId))
+    | DPlayerSetHand (Maybe (ClockedRef EPlayerHandId)) (Maybe (ClockedRef EPlayerHandId))
     deriving (Eq, Show, Generic)
 
-instance ToJSON PlayerEntityRelsDelta
-instance FromJSON PlayerEntityRelsDelta
+instance ToJSON DPlayerRels
+instance FromJSON DPlayerRels

@@ -12,24 +12,24 @@ import Pitboss.FSM.PlayerSpot
 import Pitboss.FSM.PlayerTable
 
 mkEPlayerAttrs :: String -> Chips -> EPlayerAttrs
-mkEPlayerAttrs = EPlayerAttrs'
+mkEPlayerAttrs = EPlayerAttrs
 
 mkEPlayerModes :: Void -> EPlayerModes
-mkEPlayerModes = EPlayerModes'
+mkEPlayerModes = EPlayerModes
 
 mkEPlayerRels :: SomePlayerTableFSM -> SomePlayerSpotFSM -> SomePlayerHandFSM -> EPlayerRels
-mkEPlayerRels = EPlayerRels'
+mkEPlayerRels = EPlayerRels
 
-data EPlayerAttrs = EPlayerAttrs'
+data EPlayerAttrs = EPlayerAttrs
     { _pAttrsName :: String
     , _pAttrsBankroll :: Chips
     }
     deriving (Eq, Show, Generic)
 
-data EPlayerModes = EPlayerModes' Void
+data EPlayerModes = EPlayerModes Void
     deriving (Eq, Show, Generic)
 
-data EPlayerRels = EPlayerRels'
+data EPlayerRels = EPlayerRels
     { _pRelsPlayerTable :: SomePlayerTableFSM
     , _pRelsPlayerSpot :: SomePlayerSpotFSM
     , _pRelsPlayerHand :: SomePlayerHandFSM

@@ -4,9 +4,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Trace.Entity.Capability.Replaceable where
+module Pitboss.State.Entity.Capability.Replaceable where
 
-import Pitboss.Trace.Entity.Entity
+import Pitboss.State.Entity.Entity
 
 class ReplaceableAttrs (k :: EntityKind) where
     replaceAttrs :: EntityState k ('Part 'Attrs) -> EntityState k 'Whole -> EntityState k 'Whole

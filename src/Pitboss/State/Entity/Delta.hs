@@ -4,7 +4,7 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.Trace.Entity.Delta where
+module Pitboss.State.Entity.Delta where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict (Map)
@@ -18,8 +18,8 @@ import Pitboss.FSM.DealerTable
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
 import Pitboss.FSM.PlayerTable
-import Pitboss.Trace.Entity.Entity
-import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
+import Pitboss.State.Entity.Entity
+import Pitboss.State.Entity.Types.FiniteMap.Occupancy
 
 data family Delta (k :: EntityKind) (s :: EntityStateSelector)
 

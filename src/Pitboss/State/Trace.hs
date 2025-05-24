@@ -2,16 +2,16 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Pitboss.Trace where
+module Pitboss.State.Trace where
 
 import Control.Lens (Lens', lens)
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics
-import Pitboss.Trace.Entity.Delta
-import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.Id
-import Pitboss.Trace.Registry
+import Pitboss.State.Entity.Delta
+import Pitboss.State.Entity.Types
+import Pitboss.State.Entity.Types.Id
+import Pitboss.State.Registry
 
 type Dealers = Registry (Id 'Dealer) (Delta 'Dealer 'Whole)
 

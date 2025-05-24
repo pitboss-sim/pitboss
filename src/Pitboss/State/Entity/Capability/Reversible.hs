@@ -3,10 +3,10 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pitboss.Trace.Entity.Capability.Reversible where
+module Pitboss.State.Entity.Capability.Reversible where
 
-import Pitboss.Trace.Entity.Delta
-import Pitboss.Trace.Entity.Entity
+import Pitboss.State.Entity.Delta
+import Pitboss.State.Entity.Entity
 
 data InversionError
     = NotInvertible

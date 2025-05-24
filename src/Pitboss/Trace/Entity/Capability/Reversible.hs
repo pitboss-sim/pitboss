@@ -18,8 +18,6 @@ import Pitboss.Trace.Entity.PlayerSpot.Delta
 import Pitboss.Trace.Entity.PlayerSpot.Delta qualified as PS
 import Pitboss.Trace.Entity.Table.Delta
 import Pitboss.Trace.Entity.Table.Delta qualified as T
-import Pitboss.Trace.Entity.TableShoeCursor.Delta
-import Pitboss.Trace.Entity.TableShoeCursor.Delta qualified as TSC
 import Pitboss.Trace.Entity.Types
 
 class Reversible d where
@@ -73,25 +71,6 @@ instance Reversible TableEntityRelsDelta where
 
 instance Reversible (Delta 'TableShoeEntity) where
     invert Noop = Right Noop
-
-instance Reversible (Delta 'TableShoeCursorEntity) where
-    invert = \case
-        TableShoeCursorEntityAttrsDelta d -> TableShoeCursorEntityAttrsDelta <$> invert d
-        TableShoeCursorEntityModesDelta d -> TableShoeCursorEntityModesDelta <$> invert d
-        TableShoeCursorEntityRelsDelta d -> TableShoeCursorEntityRelsDelta <$> invert d
-
-instance Reversible TableShoeCursorEntityAttrsDelta where
-    invert = \case
-        Advance n -> Right (Rewind n)
-        Rewind n -> Right (Advance n)
-        ReplaceOffset old new -> Right (ReplaceOffset new old)
-
-instance Reversible TableShoeCursorEntityModesDelta where
-    invert TSC.NoopModes = Right TSC.NoopModes
-
-instance Reversible TableShoeCursorEntityRelsDelta where
-    invert = \case
-        UpdateTableShoe old new -> Right (UpdateTableShoe new old)
 
 instance Reversible (Delta 'DealerEntity) where
     invert = \case

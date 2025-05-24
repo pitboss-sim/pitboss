@@ -4,10 +4,10 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Trace.Entity.Types.Id (
+module Pitboss.State.Entity.Types.Id (
     EntityRef (..),
     Id,
-    module Pitboss.Trace.Entity.Types.Id.Uid,
+    module Pitboss.State.Entity.Types.Id.Uid,
 ) where
 
 import Control.Monad (when)
@@ -16,8 +16,8 @@ import Data.Aeson.Types (Parser)
 import Data.Data (Proxy (..))
 import Data.Text qualified as T
 import GHC.Generics (Generic)
-import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.Id.Uid
+import Pitboss.State.Entity.Types
+import Pitboss.State.Entity.Types.Id.Uid
 
 type family Id (k :: EntityKind)
 type instance Id k = Uid

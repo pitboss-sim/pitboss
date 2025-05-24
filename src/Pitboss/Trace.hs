@@ -19,8 +19,6 @@ type Tables = Registry DealerHandEntityId (Delta 'DealerHandEntity)
 
 type TableShoes = Registry DealerHandEntityId (Delta 'DealerHandEntity)
 
-type TableShoeCursors = Registry DealerHandEntityId (Delta 'TableShoeCursorEntity)
-
 type Dealers = Registry DealerHandEntityId (Delta 'DealerEntity)
 
 type DealerRounds = Registry DealerHandEntityId (Delta 'DealerRoundEntity)

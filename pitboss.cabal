@@ -72,6 +72,9 @@ library
                       Pitboss.State.Entity.Instances.Decomposable
                       Pitboss.State.Entity.Instances.Replaceable
                       Pitboss.State.Entity.Types
+                      Pitboss.State.Registry
+                      Pitboss.State.Timeline
+                      Pitboss.State.Trace
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
                       Pitboss.State.Types.FiniteMap.Occupancy

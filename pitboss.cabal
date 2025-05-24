@@ -51,6 +51,14 @@ library
                       Pitboss.Causality.Entity.Instances.Witnessable
                       Pitboss.Causality.Entity.Lenses
                       Pitboss.Causality.Entity.Types
+                      Pitboss.Causality.Registry
+                      Pitboss.Causality.TickCache
+                      Pitboss.Causality.Timeline
+                      Pitboss.Causality.Timeline.Query
+                      Pitboss.Causality.Timeline.Reconstruction
+                      Pitboss.Causality.Trace
+                      Pitboss.Causality.Trace.Ops
+                      Pitboss.Causality.Trace.Types
                       Pitboss.Causality.Types.Core
                       Pitboss.Causality.Types.FiniteMap
                       Pitboss.Causality.Types.FiniteMap.BoundedEnum
@@ -87,6 +95,7 @@ library
                       hashable,
                       insert-ordered-containers,
                       lens,
+                      mtl,
                       random,
                       text,
     hs-source-dirs:   src

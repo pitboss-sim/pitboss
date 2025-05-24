@@ -14,7 +14,7 @@ import Data.Bits (shiftL, (.|.))
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Data.Word (Word64)
 import GHC.Generics
-import Pitboss.Trace.Entity.Types.EntityId.Uid
+import Pitboss.Trace.Entity.Entity
 import Pitboss.Trace.Timeline
 
 -- delta timeline per type
@@ -45,8 +45,8 @@ instance (Monoid (Timeline delta)) => Monoid (Registry id delta) where
 class ToWord64 a where
     toWord64 :: a -> Word64
 
-instance ToWord64 Uid where
-    toWord64 (Uid s) =
+instance ToWord64 String where
+    toWord64 s =
         case decodeBase32Word64 (takeWhile (/= '-') s) of
             Just w -> w
             Nothing -> error $ "Invalid Uid format: " ++ s

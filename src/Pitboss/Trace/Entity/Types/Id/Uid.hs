@@ -1,6 +1,6 @@
 {-# LANGUAGE DerivingStrategies #-}
 
-module Pitboss.Trace.Entity.Types.EntityId.Uid where
+module Pitboss.Trace.Entity.Types.Id.Uid where
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Bits (shiftL, (.|.))

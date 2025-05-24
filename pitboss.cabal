@@ -67,6 +67,10 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
                       Pitboss.State.Entity.Capability.Decomposable
+                      Pitboss.State.Entity.Capability.Incremental
+                      Pitboss.State.Entity.Capability.Replaceable
+                      Pitboss.State.Entity.Capability.Reversible
+                      Pitboss.State.Entity.Delta
                       Pitboss.State.Entity.Entity
                       Pitboss.State.Entity.Meta
                       Pitboss.State.Entity.Types
@@ -75,6 +79,10 @@ library
                       Pitboss.State.Entity.Types.FiniteMap
                       Pitboss.State.Entity.Types.FiniteMap.BoundedEnum
                       Pitboss.State.Entity.Types.FiniteMap.Occupancy
+                      Pitboss.State.Trace
+                      Pitboss.State.Registry
+                      Pitboss.State.Timeline
+                      Pitboss.State.Types
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay

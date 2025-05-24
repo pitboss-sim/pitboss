@@ -7,5 +7,4 @@ newtype Chips = Chips Int
     deriving (Eq, Ord, Show, Num, Generic)
 
 instance ToJSON Chips
-
 instance FromJSON Chips

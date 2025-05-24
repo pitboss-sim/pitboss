@@ -69,6 +69,12 @@ library
                       Pitboss.State.Entity.Instances.Replaceable
                       Pitboss.State.Entity.Lenses
                       Pitboss.State.Entity.Types
+                      Pitboss.State.Registry
+                      Pitboss.State.TickCache
+                      Pitboss.State.Timeline
+                      Pitboss.State.Timeline.Query
+                      Pitboss.State.Timeline.Reconstruction
+                      Pitboss.State.Trace
                       Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
@@ -83,6 +89,7 @@ library
                       hashable,
                       insert-ordered-containers,
                       lens,
+                      mtl,
                       random,
                       text,
     hs-source-dirs:   src

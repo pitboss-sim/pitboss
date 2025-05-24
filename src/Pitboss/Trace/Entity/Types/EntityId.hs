@@ -9,7 +9,6 @@ module Pitboss.Trace.Entity.Types.EntityId (
     mkOfferingId,
     mkTableId,
     mkTableShoeId,
-    mkTableShoeCursorId,
     mkDealerId,
     mkDealerRoundId,
     mkDealerHandId,
@@ -20,7 +19,6 @@ module Pitboss.Trace.Entity.Types.EntityId (
     OfferingEntityId,
     TableEntityId,
     TableShoeEntityId,
-    TableShoeCursorEntityId,
     DealerEntityId,
     DealerRoundEntityId,
     DealerHandEntityId,
@@ -37,7 +35,6 @@ import Pitboss.Trace.Entity.Types.EntityId.Uid
 type OfferingEntityId = Id 'OfferingEntity
 type TableEntityId = Id 'TableEntity
 type TableShoeEntityId = Id 'TableShoeEntity
-type TableShoeCursorEntityId = Id 'TableShoeCursorEntity
 type DealerEntityId = Id 'DealerEntity
 type DealerRoundEntityId = Id 'DealerRoundEntity
 type DealerHandEntityId = Id 'DealerHandEntity
@@ -53,9 +50,6 @@ mkTableId = TableId'
 
 mkTableShoeId :: Uid -> Id 'TableShoeEntity
 mkTableShoeId = TableShoeId'
-
-mkTableShoeCursorId :: Uid -> Id 'TableShoeEntity
-mkTableShoeCursorId = TableShoeId'
 
 mkDealerId :: Uid -> Id 'DealerEntity
 mkDealerId = DealerId'

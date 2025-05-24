@@ -54,7 +54,6 @@ import Pitboss.Trace.Entity.Types.Id
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Map.Strict
-import Data.Void (Void)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips
@@ -334,10 +333,14 @@ mkEPlayer = EPlayer
 mkEPlayerAttrs :: String -> Chips -> EntityState 'Player (Part 'Attrs)
 mkEPlayerAttrs = EPlayerAttrs
 
-mkEPlayerModes :: Void -> EntityState 'Player (Part 'Modes)
+mkEPlayerModes ::
+    SomePlayerTableFSM ->
+    SomePlayerSpotFSM ->
+    SomePlayerHandFSM ->
+    EntityState Player (Part Modes)
 mkEPlayerModes = EPlayerModes
 
-mkEPlayerRels :: SomePlayerTableFSM -> SomePlayerSpotFSM -> SomePlayerHandFSM -> EntityState 'Player (Part 'Rels)
+mkEPlayerRels :: EntityState Player (Part Rels)
 mkEPlayerRels = EPlayerRels
 
 data instance EntityState 'Player 'Whole = EPlayer
@@ -358,14 +361,14 @@ data instance EntityState 'Player (Part 'Attrs) = EPlayerAttrs
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Player (Part 'Modes) = EPlayerModes Void
+data instance EntityState 'Player (Part 'Modes) = EPlayerModes
+    { _pModesPlayerTable :: SomePlayerTableFSM
+    , _pModesPlayerSpot :: SomePlayerSpotFSM
+    , _pModesPlayerHand :: SomePlayerHandFSM
+    }
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'Player (Part 'Rels) = EPlayerRels
-    { _pRelsPlayerTable :: SomePlayerTableFSM
-    , _pRelsPlayerSpot :: SomePlayerSpotFSM
-    , _pRelsPlayerHand :: SomePlayerHandFSM
-    }
     deriving (Eq, Show, Generic)
 
 instance ToJSON (EntityState 'Player 'Whole)

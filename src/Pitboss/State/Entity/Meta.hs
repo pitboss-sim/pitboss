@@ -1,11 +1,11 @@
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.Trace.Entity.Meta where
+module Pitboss.State.Entity.Meta where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.Id
+import Pitboss.State.Entity.Types
+import Pitboss.State.Entity.Types.Id
 
 data family Meta (k :: EntityKind)
 

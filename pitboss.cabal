@@ -73,23 +73,15 @@ library
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
-                      Pitboss.Trace
-                      Pitboss.Trace.Entity.Capability.Decomposable
-                      Pitboss.Trace.Entity.Capability.Incremental
-                      Pitboss.Trace.Entity.Capability.Replaceable
-                      Pitboss.Trace.Entity.Capability.Reversible
-                      Pitboss.Trace.Entity.Delta
-                      Pitboss.Trace.Entity.Entity
-                      Pitboss.Trace.Entity.Meta
-                      Pitboss.Trace.Entity.Types
-                      Pitboss.Trace.Entity.Types.Id
-                      Pitboss.Trace.Entity.Types.Id.Uid
-                      Pitboss.Trace.Entity.Types.FiniteMap
-                      Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
-                      Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
-                      Pitboss.Trace.Registry
-                      Pitboss.Trace.Timeline
-                      Pitboss.Trace.Types
+                      Pitboss.State.Entity.Capability.Decomposable
+                      Pitboss.State.Entity.Entity
+                      Pitboss.State.Entity.Meta
+                      Pitboss.State.Entity.Types
+                      Pitboss.State.Entity.Types.Id
+                      Pitboss.State.Entity.Types.Id.Uid
+                      Pitboss.State.Entity.Types.FiniteMap
+                      Pitboss.State.Entity.Types.FiniteMap.BoundedEnum
+                      Pitboss.State.Entity.Types.FiniteMap.Occupancy
 
     -- other-modules:
     -- other-extensions:

@@ -3,9 +3,9 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Trace.Entity.Entity (
-    module Pitboss.Trace.Entity.Types,
-    module Pitboss.Trace.Entity.Types.Id,
+module Pitboss.State.Entity.Entity (
+    module Pitboss.State.Entity.Types,
+    module Pitboss.State.Entity.Types.Id,
     EntityState (..),
     EntityStateSelector (..),
     CardIx,
@@ -49,8 +49,8 @@ module Pitboss.Trace.Entity.Entity (
     mkETableShoeRels,
 ) where
 
-import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.Id
+import Pitboss.State.Entity.Types
+import Pitboss.State.Entity.Types.Id
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Map.Strict
@@ -65,10 +65,10 @@ import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot
 import Pitboss.FSM.PlayerTable
 import Pitboss.FSM.Table
-import Pitboss.Trace.Entity.Meta qualified as M
-import Pitboss.Trace.Entity.Types.FiniteMap
-import Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
-import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
+import Pitboss.State.Entity.Meta qualified as M
+import Pitboss.State.Entity.Types.FiniteMap
+import Pitboss.State.Entity.Types.FiniteMap.BoundedEnum
+import Pitboss.State.Entity.Types.FiniteMap.Occupancy
 
 data family EntityState (k :: EntityKind) (s :: EntityStateSelector)
 

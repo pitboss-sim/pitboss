@@ -9,7 +9,7 @@ data PeekPhase
     | PeekInsuranceDecision
     | PeekInsuranceSettled
     | PeekPlayers
-    | PeekDealer
+    | PeekDealing
     | PeekSettle
     | PeekComplete
     | PeekInterrupted

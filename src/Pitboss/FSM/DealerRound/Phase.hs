@@ -23,7 +23,7 @@ data DealerRoundPhase
     | Peek
     | LateSurrender
     | Players
-    | Dealer
+    | Dealing
     | Settle
     | Complete
     | Interrupted InterruptReason

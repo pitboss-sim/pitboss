@@ -31,11 +31,11 @@ insuranceDecidedENHC = resolveEarlySurrenderENHC -- shim, for uniformity
 resolveEarlySurrenderENHC :: ENHCFSM 'ENHCEarlySurrender -> ENHCFSM 'ENHCPlayers
 resolveEarlySurrenderENHC ENHCEarlySurrenderFSM = ENHCPlayersFSM
 
-finishPlayersENHC :: ENHCFSM 'ENHCPlayers -> ENHCFSM 'ENHCDealer
-finishPlayersENHC ENHCPlayersFSM = ENHCDealerFSM
+finishPlayersENHC :: ENHCFSM 'ENHCPlayers -> ENHCFSM 'ENHCDealing
+finishPlayersENHC ENHCPlayersFSM = ENHCDealingFSM
 
-finishDealerENHC :: ENHCFSM 'ENHCDealer -> ENHCFSM 'ENHCSettle
-finishDealerENHC ENHCDealerFSM = ENHCSettleFSM
+finishDealerENHC :: ENHCFSM 'ENHCDealing -> ENHCFSM 'ENHCSettle
+finishDealerENHC ENHCDealingFSM = ENHCSettleFSM
 
 resolvePayoutsENHC :: ENHCFSM 'ENHCSettle -> ENHCFSM 'ENHCComplete
 resolvePayoutsENHC ENHCSettleFSM = ENHCCompleteFSM

@@ -19,7 +19,7 @@ data PeekFSM (p :: PeekPhase) where
     PeekInsuranceDecisionFSM :: PeekFSM 'PeekInsuranceDecision
     PeekInsuranceSettledFSM :: PeekFSM 'PeekInsuranceSettled
     PeekPlayersFSM :: PeekFSM 'PeekPlayers
-    PeekDealerFSM :: PeekFSM 'PeekDealer
+    PeekDealingFSM :: PeekFSM 'PeekDealing
     PeekSettleFSM :: PeekFSM 'PeekSettle
     PeekCompleteFSM :: PeekFSM 'PeekComplete
     PeekInterruptedFSM :: InterruptReason -> PeekFSM 'PeekInterrupted
@@ -43,7 +43,7 @@ instance PhaseTag PeekFSM DealerRoundPhase where
         PeekInsuranceDecisionFSM -> InsuranceDecision
         PeekInsuranceSettledFSM -> InsuranceSettled
         PeekPlayersFSM -> Players
-        PeekDealerFSM -> Dealer
+        PeekDealingFSM -> Dealing
         PeekSettleFSM -> Settle
         PeekCompleteFSM -> Complete
         PeekInterruptedFSM r -> Interrupted r
@@ -58,7 +58,7 @@ instance Transitionable (PeekFSM p) where
         PeekInsuranceDecisionFSM -> AwaitInput
         PeekInsuranceSettledFSM -> AutoAdvance
         PeekPlayersFSM -> AwaitInput
-        PeekDealerFSM -> AutoAdvance
+        PeekDealingFSM -> AutoAdvance
         PeekSettleFSM -> AutoAdvance
         PeekCompleteFSM -> TerminalPhase
         PeekInterruptedFSM _ -> AwaitInput

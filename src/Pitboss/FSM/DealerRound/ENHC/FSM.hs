@@ -16,7 +16,7 @@ data ENHCFSM (p :: ENHCPhase) where
     ENHCDealFSM :: ENHCFSM 'ENHCDeal
     ENHCEarlySurrenderFSM :: ENHCFSM 'ENHCEarlySurrender
     ENHCPlayersFSM :: ENHCFSM 'ENHCPlayers
-    ENHCDealerFSM :: ENHCFSM 'ENHCDealer
+    ENHCDealingFSM :: ENHCFSM 'ENHCDealing
     ENHCSettleFSM :: ENHCFSM 'ENHCSettle
     ENHCCompleteFSM :: ENHCFSM 'ENHCComplete
     ENHCInterruptedFSM :: InterruptReason -> ENHCFSM 'ENHCInterrupted
@@ -37,7 +37,7 @@ instance PhaseTag ENHCFSM DealerRoundPhase where
         ENHCDealFSM -> Deal
         ENHCEarlySurrenderFSM -> EarlySurrender
         ENHCPlayersFSM -> Players
-        ENHCDealerFSM -> Dealer
+        ENHCDealingFSM -> Dealing
         ENHCSettleFSM -> Settle
         ENHCCompleteFSM -> Complete
         ENHCInterruptedFSM r -> Interrupted r
@@ -49,7 +49,7 @@ instance Transitionable (ENHCFSM p) where
         ENHCDealFSM -> AutoAdvance
         ENHCEarlySurrenderFSM -> AwaitInput
         ENHCPlayersFSM -> AwaitInput
-        ENHCDealerFSM -> AutoAdvance
+        ENHCDealingFSM -> AutoAdvance
         ENHCSettleFSM -> AutoAdvance
         ENHCCompleteFSM -> TerminalPhase
         ENHCInterruptedFSM _ -> AwaitInput

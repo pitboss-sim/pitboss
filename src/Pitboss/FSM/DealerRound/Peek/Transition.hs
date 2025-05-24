@@ -43,11 +43,11 @@ insuranceDecidedPeek PeekInsuranceDecisionFSM = PeekInsuranceSettledFSM
 proceedToPlayersPeek :: PeekFSM 'PeekInsuranceSettled -> PeekFSM 'PeekPlayers
 proceedToPlayersPeek PeekInsuranceSettledFSM = PeekPlayersFSM
 
-finishPlayersPeek :: PeekFSM 'PeekPlayers -> PeekFSM 'PeekDealer
-finishPlayersPeek PeekPlayersFSM = PeekDealerFSM
+finishPlayersPeek :: PeekFSM 'PeekPlayers -> PeekFSM 'PeekDealing
+finishPlayersPeek PeekPlayersFSM = PeekDealingFSM
 
-finishDealerPeek :: PeekFSM 'PeekDealer -> PeekFSM 'PeekSettle
-finishDealerPeek PeekDealerFSM = PeekSettleFSM
+finishDealerPeek :: PeekFSM 'PeekDealing -> PeekFSM 'PeekSettle
+finishDealerPeek PeekDealingFSM = PeekSettleFSM
 
 resolvePayoutsPeek :: PeekFSM 'PeekSettle -> PeekFSM 'PeekComplete
 resolvePayoutsPeek PeekSettleFSM = PeekCompleteFSM

@@ -14,7 +14,7 @@ module Pitboss.FSM.DealerRound.Peek (
     mkSomePeekInsuranceDecision,
     mkSomePeekInsuranceSettled,
     mkSomePeekPlayers,
-    mkSomePeekDealer,
+    mkSomePeekDealing,
     mkSomePeekSettle,
     mkSomePeekComplete,
     mkSomePeekInterrupted,
@@ -54,8 +54,8 @@ mkSomePeekInsuranceSettled = SomePeekFSM PeekInsuranceSettledFSM
 mkSomePeekPlayers :: SomePeekFSM
 mkSomePeekPlayers = SomePeekFSM PeekPlayersFSM
 
-mkSomePeekDealer :: SomePeekFSM
-mkSomePeekDealer = SomePeekFSM PeekDealerFSM
+mkSomePeekDealing :: SomePeekFSM
+mkSomePeekDealing = SomePeekFSM PeekDealingFSM
 
 mkSomePeekSettle :: SomePeekFSM
 mkSomePeekSettle = SomePeekFSM PeekSettleFSM
@@ -76,7 +76,7 @@ instance Eq SomePeekFSM where
         (PeekInsuranceDecisionFSM, PeekInsuranceDecisionFSM) -> True
         (PeekInsuranceSettledFSM, PeekInsuranceSettledFSM) -> True
         (PeekPlayersFSM, PeekPlayersFSM) -> True
-        (PeekDealerFSM, PeekDealerFSM) -> True
+        (PeekDealingFSM, PeekDealingFSM) -> True
         (PeekSettleFSM, PeekSettleFSM) -> True
         (PeekCompleteFSM, PeekCompleteFSM) -> True
         _ -> False
@@ -97,7 +97,7 @@ instance ToJSON SomePeekFSM where
         PeekInsuranceDecisionFSM -> object ["tag" .= String "PeekInsuranceDecision"]
         PeekInsuranceSettledFSM -> object ["tag" .= String "PeekInsuranceSettled"]
         PeekPlayersFSM -> object ["tag" .= String "PeekPlayers"]
-        PeekDealerFSM -> object ["tag" .= String "PeekDealer"]
+        PeekDealingFSM -> object ["tag" .= String "PeekDealing"]
         PeekSettleFSM -> object ["tag" .= String "PeekSettle"]
         PeekCompleteFSM -> object ["tag" .= String "PeekComplete"]
         PeekInterruptedFSM _ -> object ["tag" .= String "PeekComplete"]
@@ -114,7 +114,7 @@ instance FromJSON SomePeekFSM where
             "PeekInsuranceDecision" -> pure $ SomePeekFSM PeekInsuranceDecisionFSM
             "PeekInsuranceSettled" -> pure $ SomePeekFSM PeekInsuranceSettledFSM
             "PeekPlayers" -> pure $ SomePeekFSM PeekPlayersFSM
-            "PeekDealer" -> pure $ SomePeekFSM PeekDealerFSM
+            "PeekDealing" -> pure $ SomePeekFSM PeekDealingFSM
             "PeekSettle" -> pure $ SomePeekFSM PeekSettleFSM
             "PeekComplete" -> pure $ SomePeekFSM PeekCompleteFSM
             _ -> fail $ "Unknown PeekFSM tag: " ++ tag

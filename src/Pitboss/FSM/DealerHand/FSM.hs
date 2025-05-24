@@ -5,7 +5,7 @@
 module Pitboss.FSM.DealerHand.FSM where
 
 import Pitboss.FSM.DealerHand.Phase
-import Pitboss.FSM.DealerRound.Phase hiding (Interrupted)
+import Pitboss.FSM.DealerRound.Phase (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data DealerHandFSM (p :: DealerHandPhase) where

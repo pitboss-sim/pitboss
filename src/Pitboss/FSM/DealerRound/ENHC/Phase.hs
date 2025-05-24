@@ -6,7 +6,7 @@ data ENHCPhase
     | ENHCDeal
     | ENHCEarlySurrender
     | ENHCPlayers
-    | ENHCDealer
+    | ENHCDealing
     | ENHCSettle
     | ENHCComplete
     | ENHCInterrupted

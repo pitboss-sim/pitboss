@@ -5,7 +5,7 @@ module Pitboss.FSM.DealerHand.Transition where
 
 import Pitboss.FSM.DealerHand.FSM
 import Pitboss.FSM.DealerHand.Phase
-import Pitboss.FSM.DealerRound hiding (Interrupted)
+import Pitboss.FSM.DealerRound hiding (Dealing, Interrupted)
 
 beginEvaluation :: DealerHandFSM 'Dealing -> DealerHandFSM 'Evaluating
 beginEvaluation DealingFSM = EvaluatingFSM

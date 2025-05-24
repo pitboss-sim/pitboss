@@ -11,7 +11,7 @@ module Pitboss.FSM.DealerRound.ENHC (
     mkSomeENHCBets,
     mkSomeENHCDeal,
     mkSomeENHCPlayers,
-    mkSomeENHCDealer,
+    mkSomeENHCDealing,
     mkSomeENHCSettle,
     mkSomeENHCComplete,
 )
@@ -41,8 +41,8 @@ mkSomeENHCEarlySurrender = SomeENHCFSM ENHCEarlySurrenderFSM
 mkSomeENHCPlayers :: SomeENHCFSM
 mkSomeENHCPlayers = SomeENHCFSM ENHCPlayersFSM
 
-mkSomeENHCDealer :: SomeENHCFSM
-mkSomeENHCDealer = SomeENHCFSM ENHCDealerFSM
+mkSomeENHCDealing :: SomeENHCFSM
+mkSomeENHCDealing = SomeENHCFSM ENHCDealingFSM
 
 mkSomeENHCSettle :: SomeENHCFSM
 mkSomeENHCSettle = SomeENHCFSM ENHCSettleFSM
@@ -66,7 +66,7 @@ instance Eq SomeENHCFSM where
         (ENHCDealFSM, ENHCDealFSM) -> True
         (ENHCEarlySurrenderFSM, ENHCEarlySurrenderFSM) -> True
         (ENHCPlayersFSM, ENHCPlayersFSM) -> True
-        (ENHCDealerFSM, ENHCDealerFSM) -> True
+        (ENHCDealingFSM, ENHCDealingFSM) -> True
         (ENHCSettleFSM, ENHCSettleFSM) -> True
         (ENHCCompleteFSM, ENHCCompleteFSM) -> True
         _ -> False
@@ -78,7 +78,7 @@ instance ToJSON SomeENHCFSM where
         ENHCDealFSM -> object ["tag" .= String "ENHCDeal"]
         ENHCEarlySurrenderFSM -> object ["tag" .= String "ENHCEarlySurrender"]
         ENHCPlayersFSM -> object ["tag" .= String "ENHCPlayers"]
-        ENHCDealerFSM -> object ["tag" .= String "ENHCDealer"]
+        ENHCDealingFSM -> object ["tag" .= String "ENHCDealing"]
         ENHCSettleFSM -> object ["tag" .= String "ENHCSettle"]
         ENHCCompleteFSM -> object ["tag" .= String "ENHCComplete"]
         ENHCInterruptedFSM _ -> object ["tag" .= String "ENHCInterrupted"]
@@ -92,7 +92,7 @@ instance FromJSON SomeENHCFSM where
             "ENHCDeal" -> pure $ SomeENHCFSM ENHCDealFSM
             "ENHCEarlySurrender" -> pure mkSomeENHCEarlySurrender
             "ENHCPlayers" -> pure $ SomeENHCFSM ENHCPlayersFSM
-            "ENHCDealer" -> pure $ SomeENHCFSM ENHCDealerFSM
+            "ENHCDealing" -> pure $ SomeENHCFSM ENHCDealingFSM
             "ENHCSettle" -> pure $ SomeENHCFSM ENHCSettleFSM
             "ENHCComplete" -> pure $ SomeENHCFSM ENHCCompleteFSM
             _ -> fail $ "Unknown ENHCFSM tag: " ++ tag

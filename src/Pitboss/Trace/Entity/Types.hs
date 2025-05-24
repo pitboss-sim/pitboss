@@ -23,7 +23,6 @@ instance HasUid (Id k) where
     getUid (OfferingId' u) = u
     getUid (TableId' u) = u
     getUid (TableShoeId' u) = u
-    getUid (TableShoeCursorId' u) = u
     getUid (DealerId' u) = u
     getUid (DealerRoundId' u) = u
     getUid (DealerHandId' u) = u
@@ -50,7 +49,6 @@ data EntityKind
     | PlayerSpotEntity
     | TableEntity
     | TableShoeEntity
-    | TableShoeCursorEntity
     deriving (Eq, Show, Generic)
 
 data SomeId where
@@ -60,7 +58,6 @@ data Id (k :: EntityKind)
     = OfferingId' Uid
     | TableId' Uid
     | TableShoeId' Uid
-    | TableShoeCursorId' Uid
     | DealerId' Uid
     | DealerRoundId' Uid
     | DealerHandId' Uid
@@ -81,9 +78,6 @@ instance FromJSON (Id 'TableEntity)
 
 instance ToJSON (Id 'TableShoeEntity)
 instance FromJSON (Id 'TableShoeEntity)
-
-instance ToJSON (Id 'TableShoeCursorEntity)
-instance FromJSON (Id 'TableShoeCursorEntity)
 
 instance ToJSON (Id 'DealerEntity)
 instance FromJSON (Id 'DealerEntity)
@@ -108,7 +102,6 @@ instance ToJSON SomeId where
         OfferingId' u -> tagged "Offering" u
         TableId' u -> tagged "Table" u
         TableShoeId' u -> tagged "TableShoe" u
-        TableShoeCursorId' u -> tagged "TableShoeCursor" u
         DealerId' u -> tagged "Dealer" u
         DealerRoundId' u -> tagged "DealerRound" u
         DealerHandId' u -> tagged "DealerHand" u
@@ -127,7 +120,6 @@ instance FromJSON SomeId where
             "Offering" -> pure $ SomeId (OfferingId' uid)
             "Table" -> pure $ SomeId (TableId' uid)
             "TableShoe" -> pure $ SomeId (TableShoeId' uid)
-            "TableShoeCursor" -> pure $ SomeId (TableShoeCursorId' uid)
             "Dealer" -> pure $ SomeId (DealerId' uid)
             "DealerRound" -> pure $ SomeId (DealerRoundId' uid)
             "DealerHand" -> pure $ SomeId (DealerHandId' uid)

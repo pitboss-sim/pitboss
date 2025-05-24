@@ -9,7 +9,6 @@ module Pitboss.Trace.Entity.Entity (
     OfferingEntity,
     TableEntity,
     TableShoeEntity,
-    TableShoeCursorEntity,
     DealerEntity,
     DealerRoundEntity,
     DealerHandEntity,
@@ -19,7 +18,6 @@ module Pitboss.Trace.Entity.Entity (
     mkOfferingEntity,
     mkTableEntity,
     mkTableShoeEntity,
-    mkTableShoeCursorEntity,
     mkDealerEntity,
     mkDealerRoundEntity,
     mkDealerHandEntity,
@@ -41,14 +39,12 @@ import Pitboss.Trace.Entity.PlayerHand.Entity
 import Pitboss.Trace.Entity.PlayerSpot.Entity
 import Pitboss.Trace.Entity.Table.Entity
 import Pitboss.Trace.Entity.TableShoe.Entity
-import Pitboss.Trace.Entity.TableShoeCursor.Entity
 import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
 type OfferingEntity = Entity 'OfferingEntity
 type TableEntity = Entity 'TableEntity
 type TableShoeEntity = Entity 'TableShoeEntity
-type TableShoeCursorEntity = Entity 'TableShoeCursorEntity
 type DealerEntity = Entity 'DealerEntity
 type DealerRoundEntity = Entity 'DealerRoundEntity
 type DealerHandEntity = Entity 'DealerHandEntity
@@ -79,14 +75,6 @@ mkTableShoeEntity ::
     TableShoeEntityRels ->
     TableShoeEntity
 mkTableShoeEntity = TableShoeEntity'
-
-mkTableShoeCursorEntity ::
-    Meta (ClockedRef TableShoeCursorEntityId) ->
-    TableShoeCursorEntityAttrs ->
-    TableShoeCursorEntityModes ->
-    TableShoeCursorEntityRels ->
-    TableShoeCursorEntity
-mkTableShoeCursorEntity = TableShoeCursorEntity'
 
 mkDealerEntity ::
     Meta (ClockedRef DealerEntityId) ->
@@ -155,12 +143,6 @@ data Entity k where
         TableShoeEntityModes ->
         TableShoeEntityRels ->
         Entity 'TableShoeEntity
-    TableShoeCursorEntity' ::
-        Meta (ClockedRef TableShoeCursorEntityId) ->
-        TableShoeCursorEntityAttrs ->
-        TableShoeCursorEntityModes ->
-        TableShoeCursorEntityRels ->
-        Entity 'TableShoeCursorEntity
     PlayerEntity' ::
         Meta (ClockedRef PlayerEntityId) ->
         PlayerEntityAttrs ->
@@ -215,7 +197,6 @@ instance ToJSON SomeEntity where
         PlayerSpotEntity' m a mo r -> tagged "PlayerSpot" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
         TableEntity' m a mo r -> tagged "Table" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
         TableShoeEntity' m a mo r -> tagged "TableShoe" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
-        TableShoeCursorEntity' m a mo r -> tagged "TableShoeCursor" ["meta" .= m, "attrs" .= a, "modes" .= mo, "rels" .= r]
       where
         tagged :: Text -> [Pair] -> Value
         tagged tag fields = object ["tag" .= tag, "contents" .= object fields]
@@ -233,7 +214,6 @@ instance FromJSON SomeEntity where
             "PlayerSpot" -> SomeEntity <$> (PlayerSpotEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
             "Table" -> SomeEntity <$> (TableEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
             "TableShoe" -> SomeEntity <$> (TableShoeEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
-            "TableShoeCursor" -> SomeEntity <$> (TableShoeCursorEntity' <$> o .: "meta" <*> o .: "attrs" <*> o .: "modes" <*> o .: "rels")
             other -> fail $ "Unknown tag in SomeEntity: " ++ other
 
 entityKind :: Entity k -> EntityKind
@@ -247,4 +227,3 @@ entityKind = \case
     PlayerSpotEntity'{} -> PlayerSpotEntity
     TableEntity'{} -> TableEntity
     TableShoeEntity'{} -> TableShoeEntity
-    TableShoeCursorEntity'{} -> TableShoeCursorEntity

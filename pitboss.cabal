@@ -74,8 +74,22 @@ library
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
                       Pitboss.Trace.Entity.Capability.Decomposable
+                      Pitboss.Trace.Entity.Capability.Incremental
+                      Pitboss.Trace.Entity.Capability.Replaceable
+                      Pitboss.Trace.Entity.Capability.Reversible
+                      Pitboss.Trace.Entity.Dealer.Delta
+                      Pitboss.Trace.Entity.DealerHand.Delta
+                      Pitboss.Trace.Entity.DealerRound.Delta
+                      Pitboss.Trace.Entity.Delta
                       Pitboss.Trace.Entity.Entity
                       Pitboss.Trace.Entity.Meta
+                      Pitboss.Trace.Entity.Offering.Delta
+                      Pitboss.Trace.Entity.Player.Delta
+                      Pitboss.Trace.Entity.PlayerHand.Delta
+                      Pitboss.Trace.Entity.PlayerSpot.Delta
+                      Pitboss.Trace.Entity.Table.Delta
+                      Pitboss.Trace.Entity.TableShoe.Delta
+                      Pitboss.Trace.Entity.TableShoeCursor.Delta
                       Pitboss.Trace.Entity.Types
                       Pitboss.Trace.Entity.Types.Id
                       Pitboss.Trace.Entity.Types.Id.Uid

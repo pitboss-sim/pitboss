@@ -13,7 +13,6 @@ import Pitboss.Trace.Entity.Player.Delta
 import Pitboss.Trace.Entity.PlayerHand.Delta
 import Pitboss.Trace.Entity.PlayerSpot.Delta
 import Pitboss.Trace.Entity.Table.Delta
-import Pitboss.Trace.Entity.TableShoeCursor.Delta
 import Pitboss.Trace.Entity.Types
 
 data family Delta (k :: EntityKind)
@@ -96,12 +95,3 @@ data instance Delta 'TableShoeEntity
 
 instance ToJSON (Delta 'TableShoeEntity)
 instance FromJSON (Delta 'TableShoeEntity)
-
-data instance Delta 'TableShoeCursorEntity
-    = TableShoeCursorEntityAttrsDelta TableShoeCursorEntityAttrsDelta
-    | TableShoeCursorEntityModesDelta TableShoeCursorEntityModesDelta
-    | TableShoeCursorEntityRelsDelta TableShoeCursorEntityRelsDelta
-    deriving (Eq, Show, Generic)
-
-instance ToJSON (Delta 'TableShoeCursorEntity)
-instance FromJSON (Delta 'TableShoeCursorEntity)

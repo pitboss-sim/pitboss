@@ -10,26 +10,26 @@ import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics
 import Pitboss.Trace.Entity.Delta
 import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.EntityId
+import Pitboss.Trace.Entity.Types.Id
 import Pitboss.Trace.Registry
 
-type Offerings = Registry EDealerHandId (Delta 'Offering)
+type Dealers = Registry (Id 'Dealer) (Delta 'Dealer 'Whole)
 
-type Tables = Registry EDealerHandId (Delta 'DealerHand)
+type DealerHands = Registry (Id 'DealerHand) (Delta 'DealerHand 'Whole)
 
-type TableShoes = Registry EDealerHandId (Delta 'DealerHand)
+type DealerRounds = Registry (Id 'DealerRound) (Delta 'DealerRound 'Whole)
 
-type Dealers = Registry EDealerHandId (Delta 'Dealer)
+type Offerings = Registry (Id 'Offering) (Delta 'Offering 'Whole)
 
-type DealerRounds = Registry EDealerHandId (Delta 'DealerRound)
+type Players = Registry (Id 'Player) (Delta 'Player 'Whole)
 
-type DealerHands = Registry EDealerHandId (Delta 'DealerHand)
+type PlayerHands = Registry (Id 'PlayerHand) (Delta 'PlayerHand 'Whole)
 
-type Players = Registry EDealerHandId (Delta 'Player)
+type PlayerSpots = Registry (Id 'PlayerSpot) (Delta 'PlayerSpot 'Whole)
 
-type PlayerSpots = Registry EDealerHandId (Delta 'PlayerSpot)
+type Tables = Registry (Id 'Table) (Delta 'DealerHand 'Whole)
 
-type PlayerHands = Registry EDealerHandId (Delta 'PlayerHand)
+type TableShoes = Registry (Id 'TableShoe) (Delta 'DealerHand 'Whole)
 
 data Trace = Trace
     { _offerings :: Offerings

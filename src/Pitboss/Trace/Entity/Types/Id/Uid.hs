@@ -1,12 +1,12 @@
 {-# LANGUAGE DerivingStrategies #-}
 
-module Pitboss.Trace.Entity.Types.EntityId.Uid where
+module Pitboss.Trace.Entity.Types.Id.Uid where
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Bits (shiftL, (.|.))
 import Data.Char (toUpper)
 import Data.Hashable
-import Data.Map (Map)
+import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Data.Maybe (mapMaybe)
 import Data.Word (Word64)

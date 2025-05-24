@@ -28,4 +28,3 @@ instance FromJSON Dealt
 
 instance ToJSON Matter
 instance FromJSON Matter
-

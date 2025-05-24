@@ -9,7 +9,6 @@ data HoleCardRule
     | ENHC
     deriving (Eq, Show, Generic)
 
-
 data InsuranceOutcome = Lost | Paid | PaidEvenMoney
     deriving (Eq, Show, Generic)
 
@@ -29,10 +28,8 @@ data DoubleRule
 data SplitAcesAllowed = NoSplitAces | SplitAces
     deriving (Show, Eq, Generic)
 
-
 data ResplitAcesAllowed = NoResplitAces | ResplitAces
     deriving (Show, Eq, Generic)
-
 
 data SplitAcesFrozen = OneCardOnly | FullPlay
     deriving (Show, Eq, Generic)
@@ -49,7 +46,6 @@ data SplitHands
 
 data Surrender = Early | Late | NoSurrender
     deriving (Show, Eq, Generic)
-
 
 data Payout = P3_2 | P6_5
     deriving (Show, Eq, Generic)

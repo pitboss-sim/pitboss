@@ -73,19 +73,12 @@ library
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
-                      Pitboss.Trace.Entity.Dealer.Entity
+                      Pitboss.Trace.Entity.Capability.Decomposable
                       Pitboss.Trace.Entity.Entity
-                      Pitboss.Trace.Entity.DealerHand.Entity
-                      Pitboss.Trace.Entity.DealerRound.Entity
-                      Pitboss.Trace.Entity.Offering.Entity
-                      Pitboss.Trace.Entity.Player.Entity
-                      Pitboss.Trace.Entity.PlayerHand.Entity
-                      Pitboss.Trace.Entity.PlayerSpot.Entity
-                      Pitboss.Trace.Entity.Table.Entity
-                      Pitboss.Trace.Entity.TableShoe.Entity
+                      Pitboss.Trace.Entity.Meta
                       Pitboss.Trace.Entity.Types
-                      Pitboss.Trace.Entity.Types.EntityId
-                      Pitboss.Trace.Entity.Types.EntityId.Uid
+                      Pitboss.Trace.Entity.Types.Id
+                      Pitboss.Trace.Entity.Types.Id.Uid
                       Pitboss.Trace.Entity.Types.FiniteMap
                       Pitboss.Trace.Entity.Types.FiniteMap.BoundedEnum
                       Pitboss.Trace.Entity.Types.FiniteMap.Occupancy

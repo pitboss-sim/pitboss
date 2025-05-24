@@ -5,20 +5,20 @@
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Trace.Entity.Capability.Incremental where
+module Pitboss.State.Entity.Capability.Incremental where
 
 -- import Control.Lens (Lens', lens, (%~), (&))
 -- import Data.Map.Strict qualified as Map
 
 import Control.Lens ((&))
 import Data.Map.Strict qualified as Map
-import Pitboss.Trace.Entity.Capability.Decomposable
-import Pitboss.Trace.Entity.Capability.Replaceable
-import Pitboss.Trace.Entity.Delta
-import Pitboss.Trace.Entity.Entity
-import Pitboss.Trace.Entity.Types.FiniteMap
+import Pitboss.State.Entity.Capability.Decomposable
+import Pitboss.State.Entity.Capability.Replaceable
+import Pitboss.State.Entity.Delta
+import Pitboss.State.Entity.Entity
+import Pitboss.State.Entity.Types.FiniteMap
 
--- import Pitboss.Trace.Entity.Types.FiniteMap
+-- import Pitboss.State.Entity.Types.FiniteMap
 
 -- type family AttrsDelta (k :: EntityKind)
 -- type family ModesDelta (k :: EntityKind)

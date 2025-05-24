@@ -74,7 +74,10 @@ library
                       Pitboss.Strategy.Chart.Validate
                       Pitboss.Strategy.Types
                       Pitboss.Trace.Entity.Capability.Decomposable
+                      Pitboss.Trace.Entity.Capability.Incremental
                       Pitboss.Trace.Entity.Capability.Replaceable
+                      Pitboss.Trace.Entity.Capability.Reversible
+                      Pitboss.Trace.Entity.Delta
                       Pitboss.Trace.Entity.Entity
                       Pitboss.Trace.Entity.Meta
                       Pitboss.Trace.Entity.Types

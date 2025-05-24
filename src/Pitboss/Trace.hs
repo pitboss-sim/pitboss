@@ -27,9 +27,9 @@ type PlayerHands = Registry (Id 'PlayerHand) (Delta 'PlayerHand 'Whole)
 
 type PlayerSpots = Registry (Id 'PlayerSpot) (Delta 'PlayerSpot 'Whole)
 
-type Tables = Registry (Id 'Table) (Delta 'DealerHand 'Whole)
+type Tables = Registry (Id 'Table) (Delta 'Table 'Whole)
 
-type TableShoes = Registry (Id 'TableShoe) (Delta 'DealerHand 'Whole)
+type TableShoes = Registry (Id 'TableShoe) (Delta 'TableShoe 'Whole)
 
 data Trace = Trace
     { _offerings :: Offerings
@@ -45,32 +45,45 @@ data Trace = Trace
     deriving (Eq, Generic)
 
 instance ToJSON Trace where
-    toJSON (Trace o t s d dr dh p ps ph) =
+    toJSON (Trace o t s d dh dr p ps ph) =
         object
             [ "offerings" .= o
             , "tables" .= t
             , "shoes" .= s
             , "dealers" .= d
-            , "dealerRounds" .= dr
             , "dealerHands" .= dh
+            , "dealerRounds" .= dr
             , "players" .= p
             , "playerSpots" .= ps
             , "playerHands" .= ph
             ]
 
+instance FromJSON Trace where
+    parseJSON = withObject "Trace" $ \o ->
+        Trace
+            <$> o .: "offerings"
+            <*> o .: "tables"
+            <*> o .: "shoes"
+            <*> o .: "dealers"
+            <*> o .: "dealerHands"
+            <*> o .: "dealerRounds"
+            <*> o .: "players"
+            <*> o .: "playerSpots"
+            <*> o .: "playerHands"
+
 instance Show Trace where
-    show (Trace o d dh p ph s r sp t) =
+    show (Trace o t s d dh dr p ps ph) =
         unlines
             [ "Trace:"
             , "  Offerings: " ++ showKeys o
+            , "  Tables: " ++ showKeys t
+            , "  TableShoes: " ++ showKeys s
             , "  Dealers: " ++ showKeys d
             , "  DealerHands: " ++ showKeys dh
+            , "  DealerRounds: " ++ showKeys dr
             , "  Players: " ++ showKeys p
+            , "  PlayerSpots: " ++ showKeys ps
             , "  PlayerHands: " ++ showKeys ph
-            , "  TableShoes: " ++ showKeys s
-            , "  Rounds: " ++ showKeys r
-            , "  Spots: " ++ showKeys sp
-            , "  Tables: " ++ showKeys t
             ]
       where
         showKeys = show . IHM.keys . unRegistry
@@ -88,8 +101,6 @@ emptyTrace =
         , _playerSpots = mempty
         , _playerHands = mempty
         }
-
--- lenses
 
 lensOfferings :: Lens' Trace Offerings
 lensOfferings = lens _offerings (\s x -> s{_offerings = x})

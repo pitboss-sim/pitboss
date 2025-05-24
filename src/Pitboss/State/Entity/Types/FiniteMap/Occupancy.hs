@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Pitboss.Trace.Entity.Types.FiniteMap.Occupancy where
+module Pitboss.State.Entity.Types.FiniteMap.Occupancy where
 
 import Data.Aeson
 import GHC.Generics

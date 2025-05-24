@@ -1,13 +1,15 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE GADTs #-}
+
 
 module Pitboss.Trace.Entity.Capability.Reversible where
 
 import Pitboss.Trace.Entity.Delta
-import Pitboss.Trace.Entity.Types
+import Pitboss.Trace.Entity.Entity
 
-class Reversible d where
-    invert :: d -> Either InversionError d
+-- DDeale-- D| Error type for when a delta cannot be reversed
 
 data InversionError
     = NotInvertible
@@ -15,189 +17,141 @@ data InversionError
     | CustomReason String
     deriving (Eq, Show)
 
+class Reversible d where
+    invert :: d -> Either InversionError d
+
 -- DDealer
+instance Reversible (Delta 'Dealer 'Whole) where
+  invert (DDealer a b c) = DDealer <$> invert a <*> invert b <*> invert c
 
-instance Reversible (Delta 'Dealer) where
-    invert = \case
-        DDealerAttrs' d -> DDealerAttrs' <$> invert d
-        DDealerModes' d -> DDealerModes' <$> invert d
-        DDealerRels' d -> DDealerRels' <$> invert d
+instance Reversible (Delta 'Dealer (Part 'Attrs)) where
+  invert (DDealerSetName old new) = Right (DDealerSetName new old)
 
-instance Reversible DDealerAttrs where
-    invert = \case
-        DDealerSetName old new -> Right (DDealerSetName new old)
+instance Reversible (Delta 'Dealer (Part 'Modes)) where
+  invert (DDealerSetTableFSM old new) = Right (DDealerSetTableFSM new old)
+  invert (DDealerSetRoundFSM old new) = Right (DDealerSetRoundFSM new old)
+  invert (DDealerSetHandFSM old new) = Right (DDealerSetHandFSM new old)
 
-instance Reversible DDealerModes where
-    invert = \case
-        DDealerSetTableFSM old new -> Right (DDealerSetTableFSM new old)
-        DDealerSetRoundFSM old new -> Right (DDealerSetRoundFSM new old)
-        DDealerSetHandFSM old new -> Right (DDealerSetHandFSM new old)
-
-instance Reversible DDealerRels where
-    invert = \case
-        DDealerSetActiveRound old new -> Right (DDealerSetActiveRound new old)
-        DDealerSetActiveTable old new -> Right (DDealerSetActiveTable new old)
-        DDealerSetActiveHand old new -> Right (DDealerSetActiveHand new old)
+instance Reversible (Delta 'Dealer (Part 'Rels)) where
+  invert (DDealerSetActiveTable a b) = Right (DDealerSetActiveTable b a)
+  invert (DDealerSetActiveRound a b) = Right (DDealerSetActiveRound b a)
+  invert (DDealerSetActiveHand a b) = Right (DDealerSetActiveHand b a)
 
 -- DDealerHand
+instance Reversible (Delta 'DealerHand 'Whole) where
+  invert (DDealerHand a b c) = DDealerHand <$> invert a <*> invert b <*> invert c
 
-instance Reversible (Delta 'DealerHand) where
-    invert = \case
-        DDealerHandAttrs' d -> DDealerHandAttrs' <$> invert d
-        DDealerHandModes' d -> DDealerHandModes' <$> invert d
-        DDealerHandRels' d -> DDealerHandRels' <$> invert d
+instance Reversible (Delta 'DealerHand (Part 'Attrs)) where
+  invert (DDealerHandPushCard c cs) = Right (DDealerHandPopCard c cs)
+  invert (DDealerHandPopCard c cs) = Right (DDealerHandPushCard c cs)
+  invert (DDealerHandSetCards old new) = Right (DDealerHandSetCards new old)
 
-instance Reversible DDealerHandAttrs where
-    invert = \case
-        DDealerHandPushCard c _ -> Right (DDealerHandPopCard c [])
-        DDealerHandPopCard c _ -> Right (DDealerHandPushCard c [])
-        DDealerHandSetCards old new -> Right (DDealerHandSetCards new old)
+instance Reversible (Delta 'DealerHand (Part 'Modes)) where
+  invert (DDealerHandSetFSM old new) = Right (DDealerHandSetFSM new old)
 
-instance Reversible DDealerHandModes where
-    invert (DDealerHandSetFSM old new) = Right (DDealerHandSetFSM new old)
-
-instance Reversible DDealerHandRels where
-    invert = \case
-        DDealerHandSetRound old new -> Right (DDealerHandSetRound new old)
-        DDealerHandSetDealer old new -> Right (DDealerHandSetDealer new old)
+instance Reversible (Delta 'DealerHand (Part 'Rels)) where
+  invert (DDealerHandSetRound a b) = Right (DDealerHandSetRound b a)
+  invert (DDealerHandSetDealer a b) = Right (DDealerHandSetDealer b a)
 
 -- DDealerRound
+instance Reversible (Delta 'DealerRound 'Whole) where
+  invert (DDealerRound a b c) = DDealerRound <$> invert a <*> invert b <*> invert c
 
-instance Reversible (Delta 'DealerRound) where
-    invert = \case
-        DDealerRoundAttrs' d -> DDealerRoundAttrs' <$> invert d
-        DDealerRoundModes' d -> DDealerRoundModes' <$> invert d
-        DDealerRoundRels' d -> DDealerRoundRels' <$> invert d
+instance Reversible (Delta 'DealerRound (Part 'Attrs)) where
+  invert (DDealerRoundSetNumber old new) = Right (DDealerRoundSetNumber new old)
 
-instance Reversible DDealerRoundAttrs where
-    invert (DDealerRoundSetNumber new old) =
-        Right (DDealerRoundSetNumber old new)
+instance Reversible (Delta 'DealerRound (Part 'Modes)) where
+  invert = Right  -- DEmpty
 
-instance Reversible DDealerRoundModes where
-    invert DDealerRoundModes = Right DDealerRoundModes
+instance Reversible (Delta 'DealerRound (Part 'Rels)) where
+  invert (DDealerRoundSetTableShoe a b) = Right (DDealerRoundSetTableShoe b a)
 
-instance Reversible DDealerRoundRels where
-    invert (DDealerRoundSetTableShoe new old) =
-        Right (DDealerRoundSetTableShoe old new)
+-- DOffering
+instance Reversible (Delta 'Offering 'Whole) where
+  invert (DOffering a b c) = DOffering <$> invert a <*> invert b <*> invert c
 
--- Offering
+instance Reversible (Delta 'Offering (Part 'Attrs)) where
+  invert (DOfferingSetOffering old new) = Right (DOfferingSetOffering new old)
 
-instance Reversible (Delta 'Offering) where
-    invert = \case
-        DOfferingAttrs' d -> DOfferingAttrs' <$> invert d
-        DOfferingModes' d -> DOfferingModes' <$> invert d
-        DOfferingRels' d -> DOfferingRels' <$> invert d
+instance Reversible (Delta 'Offering (Part 'Modes)) where
+  invert = Right
 
-instance Reversible DOfferingAttrs where
-    invert (DOfferingSetOffering new old) =
-        Right (DOfferingSetOffering old new)
+instance Reversible (Delta 'Offering (Part 'Rels)) where
+  invert = Right
 
-instance Reversible DOfferingModes where
-    invert (DOfferingModes _) = Right (DOfferingModes undefined)
+-- DPlayer
+instance Reversible (Delta 'Player 'Whole) where
+  invert (DPlayer a b c) = DPlayer <$> invert a <*> invert b <*> invert c
 
-instance Reversible DOfferingRels where
-    invert (DOfferingRels _) = Right (DOfferingRels undefined)
+instance Reversible (Delta 'Player (Part 'Attrs)) where
+  invert (DPlayerSetName old new) = Right (DPlayerSetName new old)
+  invert (DPlayerSetBankroll old new) = Right (DPlayerSetBankroll new old)
 
--- Player
+instance Reversible (Delta 'Player (Part 'Modes)) where
+  invert = Right
 
-instance Reversible (Delta 'Player) where
-    invert = \case
-        DPlayerAttrs' d -> DPlayerAttrs' <$> invert d
-        DPlayerModes' d -> DPlayerModes' <$> invert d
-        DPlayerRels' d -> DPlayerRels' <$> invert d
+instance Reversible (Delta 'Player (Part 'Rels)) where
+  invert (DPlayerSetTable a b) = Right (DPlayerSetTable b a)
+  invert (DPlayerSetSpot a b) = Right (DPlayerSetSpot b a)
+  invert (DPlayerSetHand a b) = Right (DPlayerSetHand b a)
 
-instance Reversible DPlayerAttrs where
-    invert = \case
-        DPlayerSetName new old -> Right (DPlayerSetName old new)
-        DPlayerSetBankroll new old -> Right (DPlayerSetBankroll old new)
+-- DPlayerHand
+instance Reversible (Delta 'PlayerHand 'Whole) where
+  invert (DPlayerHand a b c) = DPlayerHand <$> invert a <*> invert b <*> invert c
 
-instance Reversible DPlayerModes where
-    invert DPlayerModes = Right DPlayerModes
+instance Reversible (Delta 'PlayerHand (Part 'Attrs)) where
+  invert (DPlayerHandSetPlayerHandIx old new) = Right (DPlayerHandSetPlayerHandIx new old)
+  invert (DPlayerHandSetSplitDepth old new) = Right (DPlayerHandSetSplitDepth new old)
+  invert (DPlayerHandPushCard c cs) = Right (DPlayerHandPopCard c cs)
+  invert (DPlayerHandPopCard c cs) = Right (DPlayerHandPushCard c cs)
+  invert (DPlayerHandSetCards old new) = Right (DPlayerHandSetCards new old)
 
-instance Reversible DPlayerRels where
-    invert = Right
+instance Reversible (Delta 'PlayerHand (Part 'Modes)) where
+  invert (DPlayerHandSetPlayerHandFSM old new) = Right (DPlayerHandSetPlayerHandFSM new old)
 
--- PlayerHand
+instance Reversible (Delta 'PlayerHand (Part 'Rels)) where
+  invert (DPlayerHandSetPlayerSpot a b) = Right (DPlayerHandSetPlayerSpot b a)
 
-instance Reversible (Delta 'PlayerHand) where
-    invert = \case
-        DPlayerHandAttrs' d -> DPlayerHandAttrs' <$> invert d
-        DPlayerHandModes' d -> DPlayerHandModes' <$> invert d
-        DPlayerHandRels' d -> DPlayerHandRels' <$> invert d
+-- DPlayerSpot
+instance Reversible (Delta 'PlayerSpot 'Whole) where
+  invert (DPlayerSpotAttrs a b c) = DPlayerSpotAttrs <$> invert a <*> invert b <*> invert c
 
-instance Reversible DPlayerHandAttrs where
-    invert = \case
-        DPlayerHandSetPlayerHandIx new old -> Right (DPlayerHandSetPlayerHandIx old new)
-        DPlayerHandSetSplitDepth new old -> Right (DPlayerHandSetSplitDepth old new)
-        DPlayerHandPushCard c _ -> Right (DPlayerHandPopCard c [])
-        DPlayerHandPopCard c _ -> Right (DPlayerHandPushCard c [])
-        DPlayerHandSetCards new old -> Right (DPlayerHandSetCards old new)
+instance Reversible (Delta 'PlayerSpot (Part 'Attrs)) where
+  invert (DPlayerSpotSetWager old new) = Right (DPlayerSpotSetWager new old)
 
-instance Reversible DPlayerHandModes where
-    invert (DPlayerHandSetPlayerHandFSM new old) = Right (DPlayerHandSetPlayerHandFSM old new)
+instance Reversible (Delta 'PlayerSpot (Part 'Modes)) where
+  invert (DPlayerSpotSetFSM old new) = Right (DPlayerSpotSetFSM new old)
 
-instance Reversible DPlayerHandRels where
-    invert (DPlayerHandSetPlayerSpot new old) = Right (DPlayerHandSetPlayerSpot old new)
+instance Reversible (Delta 'PlayerSpot (Part 'Rels)) where
+  invert (DPlayerSpotSetPlayer a b) = Right (DPlayerSpotSetPlayer b a)
+  invert (DPlayerSpotSetRound a b) = Right (DPlayerSpotSetRound b a)
+  invert (DPlayerSpotSetHandOccupancy a b) = Right (DPlayerSpotSetHandOccupancy b a)
 
--- PlayerSpot
+-- DTable
+instance Reversible (Delta 'Table 'Whole) where
+  invert (DTableAttrs a b c) = DTableAttrs <$> invert a <*> invert b <*> invert c
 
-instance Reversible (Delta 'PlayerSpot) where
-    invert = \case
-        DPlayerSpotAttrs' d -> DPlayerSpotAttrs' <$> invert d
-        DPlayerSpotModes' d -> DPlayerSpotModes' <$> invert d
-        DPlayerSpotRels' d -> DPlayerSpotRels' <$> invert d
+instance Reversible (Delta 'Table (Part 'Attrs)) where
+  invert (DTableSetName old new) = Right (DTableSetName new old)
+  invert (DTableSetMinBet old new) = Right (DTableSetMinBet new old)
+  invert (DTableSetOffering old new) = Right (DTableSetOffering new old)
 
-instance Reversible DPlayerSpotAttrs where
-    invert (DPlayerSpotSetWager new old) = Right (DPlayerSpotSetWager old new)
+instance Reversible (Delta 'Table (Part 'Modes)) where
+  invert = Right
 
-instance Reversible DPlayerSpotModes where
-    invert (DPlayerSpotSetFSM new old) = Right (DPlayerSpotSetFSM old new)
+instance Reversible (Delta 'Table (Part 'Rels)) where
+  invert (DTableSetDealer a b) = Right (DTableSetDealer b a)
 
-instance Reversible DPlayerSpotRels where
-    invert = \case
-        DPlayerSpotSetPlayer new old -> Right (DPlayerSpotSetPlayer old new)
-        DPlayerSpotSetRound new old -> Right (DPlayerSpotSetRound old new)
-        DPlayerSpotSetHandOccupancy new old -> Right (DPlayerSpotSetHandOccupancy old new)
+-- DTableShoe
+instance Reversible (Delta 'TableShoe 'Whole) where
+  invert (DTableShoe a b c) = DTableShoe <$> invert a <*> invert b <*> invert c
 
--- Table
+instance Reversible (Delta 'TableShoe (Part 'Attrs)) where
+  invert (DTableShoeSetCardStateMap old new) = Right (DTableShoeSetCardStateMap new old)
+  invert (DTableShoeSetCardFate ix s) = Right (DTableShoeSetCardFate ix s)  -- Dnon-invertible, just id
 
-instance Reversible (Delta 'Table) where
-    invert = \case
-        DTableAttrs' d -> DTableAttrs' <$> invert d
-        DTableModes' d -> DTableModes' <$> invert d
-        DTableRels' d -> DTableRels' <$> invert d
+instance Reversible (Delta 'TableShoe (Part 'Modes)) where
+  invert = Right
 
-instance Reversible DTableAttrs where
-    invert = \case
-        DTableSetName new old -> Right (DTableSetName old new)
-        DTableSetMinBet new old -> Right (DTableSetMinBet old new)
-        DTableSetOffering new old -> Right (DTableSetOffering old new)
-
-instance Reversible DTableModes where
-    invert (DTableModes x) = Right (DTableModes x)
-
-instance Reversible DTableRels where
-    invert = \case
-        DTableSetDealer new old -> Right (DTableSetDealer old new)
-
--- TableShoe
-
-instance Reversible (Delta 'TableShoe) where
-    invert = \case
-        DTableShoeAttrs' d -> DTableShoeAttrs' <$> invert d
-        DTableShoeModes' d -> DTableShoeModes' <$> invert d
-        DTableShoeRels' d -> DTableShoeRels' <$> invert d
-
-instance Reversible DTableShoeAttrs where
-    invert = \case
-        DTableShoeSetCardStateMap _ _ ->
-            Left $ MissingPriorContext "Cannot invert DTableShoeSetCardStateMap' without previous state."
-        DTableShoeSetCardFate ix _ ->
-            Left $ MissingPriorContext $ "Cannot invert DTableShoeSetCardFate' at index " ++ show ix
-
-instance Reversible DTableShoeModes where
-    invert (DTableShoeModes x) = Right (DTableShoeModes x)
-
-instance Reversible DTableShoeRels where
-    invert = \case
-        DTableShoeSetTable new old -> Right (DTableShoeSetTable old new)
+instance Reversible (Delta 'TableShoe (Part 'Rels)) where
+  invert (DTableShoeSetTable a b) = Right (DTableShoeSetTable b a)

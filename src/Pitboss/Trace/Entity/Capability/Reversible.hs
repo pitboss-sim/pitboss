@@ -5,7 +5,6 @@
 
 module Pitboss.Trace.Entity.Capability.Reversible where
 
-import Data.Void (absurd)
 import Pitboss.Trace.Entity.Delta
 import Pitboss.Trace.Entity.Entity
 
@@ -59,7 +58,7 @@ instance Reversible (Delta 'DealerRound (Part 'Attrs)) where
     invert (DDealerRoundSetNumber old new) = Right (DDealerRoundSetNumber new old)
 
 instance Reversible (Delta 'DealerRound (Part 'Modes)) where
-    invert = absurd
+    invert _ = Left (CustomReason "DealerRound modes have no reversible operations")
 
 instance Reversible (Delta 'DealerRound (Part 'Rels)) where
     invert (DDealerRoundSetTableShoe a b) = Right (DDealerRoundSetTableShoe b a)
@@ -72,10 +71,10 @@ instance Reversible (Delta 'Offering (Part 'Attrs)) where
     invert (DOfferingSetOffering old new) = Right (DOfferingSetOffering new old)
 
 instance Reversible (Delta 'Offering (Part 'Modes)) where
-    invert = absurd
+    invert DOfferingModes = Right DOfferingModes
 
 instance Reversible (Delta 'Offering (Part 'Rels)) where
-    invert = absurd
+    invert DOfferingRels = Right DOfferingRels
 
 -- DPlayer
 instance Reversible (Delta 'Player 'Whole) where
@@ -91,7 +90,7 @@ instance Reversible (Delta 'Player (Part 'Modes)) where
     invert (DPlayerSetHand a b) = Right (DPlayerSetHand b a)
 
 instance Reversible (Delta 'Player (Part 'Rels)) where
-    invert = absurd
+    invert _ = Left (CustomReason "Player relations have no reversible operations")
 
 -- DPlayerHand
 instance Reversible (Delta 'PlayerHand 'Whole) where
@@ -135,7 +134,7 @@ instance Reversible (Delta 'Table (Part 'Attrs)) where
     invert (DTableSetOffering old new) = Right (DTableSetOffering new old)
 
 instance Reversible (Delta 'Table (Part 'Modes)) where
-    invert = absurd
+    invert _ = Left (CustomReason "Table modes have no reversible operations")
 
 instance Reversible (Delta 'Table (Part 'Rels)) where
     invert (DTableSetDealer a b) = Right (DTableSetDealer b a)
@@ -149,7 +148,7 @@ instance Reversible (Delta 'TableShoe (Part 'Attrs)) where
     invert (DTableShoeSetCardFate ix old new) = Right (DTableShoeSetCardFate ix new old)
 
 instance Reversible (Delta 'TableShoe (Part 'Modes)) where
-    invert = absurd
+    invert _ = Left (CustomReason "TableShoe modes have no reversible operations")
 
 instance Reversible (Delta 'TableShoe (Part 'Rels)) where
     invert (DTableShoeSetTable a b) = Right (DTableShoeSetTable b a)

@@ -58,8 +58,3 @@ instance Replaceable 'TableShoeEntity where
     replaceAttrs (TableShoeEntity' m _ mo r) a = TableShoeEntity' m a mo r
     replaceModes (TableShoeEntity' m a _ r) mo = TableShoeEntity' m a mo r
     replaceRels (TableShoeEntity' m a mo _) r = TableShoeEntity' m a mo r
-
-instance Replaceable 'TableShoeCursorEntity where
-    replaceAttrs (TableShoeCursorEntity' m _ mo r) a = TableShoeCursorEntity' m a mo r
-    replaceModes (TableShoeCursorEntity' m a _ r) mo = TableShoeCursorEntity' m a mo r
-    replaceRels (TableShoeCursorEntity' m a mo _) r = TableShoeCursorEntity' m a mo r

@@ -2,12 +2,12 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Trace.Timeline where
+module Pitboss.State.Timeline where
 
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import GHC.Generics (Generic)
-import Pitboss.Trace.Entity.Types
+import Pitboss.State.Entity.Types
 
 newtype Timeline a where
     Timeline :: {unTimeline :: InsOrdHashMap Tick [a]} -> Timeline a

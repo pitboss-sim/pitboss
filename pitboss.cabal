@@ -67,6 +67,9 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
                       Pitboss.State.Entity.Instances.Decomposable
+                      Pitboss.State.Entity.Instances.Incremental
+                      Pitboss.State.Entity.Instances.Replaceable
+                      Pitboss.State.Entity.Instances.Reversible
                       Pitboss.State.Entity.Types
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum

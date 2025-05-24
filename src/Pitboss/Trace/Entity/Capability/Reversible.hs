@@ -5,10 +5,9 @@
 
 module Pitboss.Trace.Entity.Capability.Reversible where
 
+import Data.Void (absurd)
 import Pitboss.Trace.Entity.Delta
 import Pitboss.Trace.Entity.Entity
-
--- DDeale-- D| Error type for when a delta cannot be reversed
 
 data InversionError
     = NotInvertible
@@ -60,7 +59,7 @@ instance Reversible (Delta 'DealerRound (Part 'Attrs)) where
     invert (DDealerRoundSetNumber old new) = Right (DDealerRoundSetNumber new old)
 
 instance Reversible (Delta 'DealerRound (Part 'Modes)) where
-    invert = Right -- DEmpty
+    invert = absurd
 
 instance Reversible (Delta 'DealerRound (Part 'Rels)) where
     invert (DDealerRoundSetTableShoe a b) = Right (DDealerRoundSetTableShoe b a)
@@ -73,10 +72,10 @@ instance Reversible (Delta 'Offering (Part 'Attrs)) where
     invert (DOfferingSetOffering old new) = Right (DOfferingSetOffering new old)
 
 instance Reversible (Delta 'Offering (Part 'Modes)) where
-    invert = Right
+    invert = absurd
 
 instance Reversible (Delta 'Offering (Part 'Rels)) where
-    invert = Right
+    invert = absurd
 
 -- DPlayer
 instance Reversible (Delta 'Player 'Whole) where
@@ -87,12 +86,12 @@ instance Reversible (Delta 'Player (Part 'Attrs)) where
     invert (DPlayerSetBankroll old new) = Right (DPlayerSetBankroll new old)
 
 instance Reversible (Delta 'Player (Part 'Modes)) where
-    invert = Right
-
-instance Reversible (Delta 'Player (Part 'Rels)) where
     invert (DPlayerSetTable a b) = Right (DPlayerSetTable b a)
     invert (DPlayerSetSpot a b) = Right (DPlayerSetSpot b a)
     invert (DPlayerSetHand a b) = Right (DPlayerSetHand b a)
+
+instance Reversible (Delta 'Player (Part 'Rels)) where
+    invert = absurd
 
 -- DPlayerHand
 instance Reversible (Delta 'PlayerHand 'Whole) where
@@ -113,7 +112,7 @@ instance Reversible (Delta 'PlayerHand (Part 'Rels)) where
 
 -- DPlayerSpot
 instance Reversible (Delta 'PlayerSpot 'Whole) where
-    invert (DPlayerSpotAttrs a b c) = DPlayerSpotAttrs <$> invert a <*> invert b <*> invert c
+    invert (DPlayerSpot a b c) = DPlayerSpot <$> invert a <*> invert b <*> invert c
 
 instance Reversible (Delta 'PlayerSpot (Part 'Attrs)) where
     invert (DPlayerSpotSetWager old new) = Right (DPlayerSpotSetWager new old)
@@ -128,7 +127,7 @@ instance Reversible (Delta 'PlayerSpot (Part 'Rels)) where
 
 -- DTable
 instance Reversible (Delta 'Table 'Whole) where
-    invert (DTableAttrs a b c) = DTableAttrs <$> invert a <*> invert b <*> invert c
+    invert (DTable a b c) = DTable <$> invert a <*> invert b <*> invert c
 
 instance Reversible (Delta 'Table (Part 'Attrs)) where
     invert (DTableSetName old new) = Right (DTableSetName new old)
@@ -136,7 +135,7 @@ instance Reversible (Delta 'Table (Part 'Attrs)) where
     invert (DTableSetOffering old new) = Right (DTableSetOffering new old)
 
 instance Reversible (Delta 'Table (Part 'Modes)) where
-    invert = Right
+    invert = absurd
 
 instance Reversible (Delta 'Table (Part 'Rels)) where
     invert (DTableSetDealer a b) = Right (DTableSetDealer b a)
@@ -147,10 +146,10 @@ instance Reversible (Delta 'TableShoe 'Whole) where
 
 instance Reversible (Delta 'TableShoe (Part 'Attrs)) where
     invert (DTableShoeSetCardStateMap old new) = Right (DTableShoeSetCardStateMap new old)
-    invert (DTableShoeSetCardFate ix s) = Right (DTableShoeSetCardFate ix s) -- Dnon-invertible, just id
+    invert (DTableShoeSetCardFate ix old new) = Right (DTableShoeSetCardFate ix new old)
 
 instance Reversible (Delta 'TableShoe (Part 'Modes)) where
-    invert = Right
+    invert = absurd
 
 instance Reversible (Delta 'TableShoe (Part 'Rels)) where
     invert (DTableShoeSetTable a b) = Right (DTableShoeSetTable b a)

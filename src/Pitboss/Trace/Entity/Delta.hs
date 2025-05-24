@@ -8,7 +8,6 @@ module Pitboss.Trace.Entity.Delta where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict (Map)
-import Data.Void (Void)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips (Chips)
@@ -18,6 +17,7 @@ import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
+import Pitboss.FSM.PlayerTable
 import Pitboss.Trace.Entity.Entity
 import Pitboss.Trace.Entity.Types.FiniteMap.Occupancy
 
@@ -142,11 +142,11 @@ data instance Delta 'Offering (Part 'Attrs)
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Offering (Part 'Modes)
-    = DOfferingModes Void
+    = DOfferingModes {}
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Offering (Part 'Rels)
-    = DOfferingRels Void
+    = DOfferingRels {}
     deriving (Eq, Show, Generic)
 
 instance ToJSON (Delta 'Offering 'Whole)
@@ -176,12 +176,12 @@ data instance Delta 'Player (Part 'Attrs)
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Player (Part 'Modes)
+    = DPlayerSetTable (Maybe SomePlayerTableFSM) (Maybe SomePlayerTableFSM)
+    | DPlayerSetSpot (Maybe SomePlayerSpotFSM) (Maybe SomePlayerSpotFSM)
+    | DPlayerSetHand (Maybe SomePlayerHandFSM) (Maybe SomePlayerHandFSM)
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Player (Part 'Rels)
-    = DPlayerSetTable (Maybe (EntityRef 'Table)) (Maybe (EntityRef 'Table))
-    | DPlayerSetSpot (Maybe (EntityRef 'PlayerSpot)) (Maybe (EntityRef 'PlayerSpot))
-    | DPlayerSetHand (Maybe (EntityRef 'PlayerHand)) (Maybe (EntityRef 'PlayerHand))
     deriving (Eq, Show, Generic)
 
 instance ToJSON (Delta 'Player 'Whole)
@@ -235,7 +235,7 @@ instance FromJSON (Delta 'PlayerHand (Part 'Rels))
 
 -- DPlayerSpot
 
-data instance Delta 'PlayerSpot 'Whole = DPlayerSpotAttrs
+data instance Delta 'PlayerSpot 'Whole = DPlayerSpot
     { _psAttrs :: Delta 'PlayerSpot (Part 'Attrs)
     , _psModes :: Delta 'PlayerSpot (Part 'Modes)
     , _psRels :: Delta 'PlayerSpot (Part 'Rels)
@@ -270,9 +270,9 @@ instance FromJSON (Delta 'PlayerSpot (Part 'Modes))
 instance ToJSON (Delta 'PlayerSpot (Part 'Rels))
 instance FromJSON (Delta 'PlayerSpot (Part 'Rels))
 
--- Table
+-- DTable
 
-data instance Delta 'Table 'Whole = DTableAttrs
+data instance Delta 'Table 'Whole = DTable
     { _tAttrs :: Delta 'Table (Part 'Attrs)
     , _tModes :: Delta 'Table (Part 'Modes)
     , _tRels :: Delta 'Table (Part 'Rels)
@@ -304,7 +304,7 @@ instance FromJSON (Delta 'Table (Part 'Modes))
 instance ToJSON (Delta 'Table (Part 'Rels))
 instance FromJSON (Delta 'Table (Part 'Rels))
 
--- TableShow
+-- DTableShoe
 
 data instance Delta 'TableShoe 'Whole = DTableShoe
     { _tsAttrs :: Delta 'TableShoe (Part 'Attrs)
@@ -315,7 +315,7 @@ data instance Delta 'TableShoe 'Whole = DTableShoe
 
 data instance Delta 'TableShoe (Part 'Attrs)
     = DTableShoeSetCardStateMap (Map CardIx CardState) (Map CardIx CardState)
-    | DTableShoeSetCardFate CardIx CardState
+    | DTableShoeSetCardFate CardIx CardState CardState
     deriving (Eq, Show, Generic)
 
 data instance Delta 'TableShoe (Part 'Modes)

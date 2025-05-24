@@ -9,8 +9,14 @@ module Pitboss.Trace.Entity.Capability.Incremental where
 
 -- import Control.Lens (Lens', lens, (%~), (&))
 -- import Data.Map.Strict qualified as Map
-import Pitboss.Trace.Entity.Types
-import Pitboss.Trace.Entity.Types.Id
+
+import Control.Lens ((&))
+import Data.Map.Strict qualified as Map
+import Pitboss.Trace.Entity.Capability.Decomposable
+import Pitboss.Trace.Entity.Capability.Replaceable
+import Pitboss.Trace.Entity.Delta
+import Pitboss.Trace.Entity.Entity
+import Pitboss.Trace.Entity.Types.FiniteMap
 
 -- import Pitboss.Trace.Entity.Types.FiniteMap
 
@@ -20,7 +26,10 @@ import Pitboss.Trace.Entity.Types.Id
 --
 -- data family Delta (k :: EntityKind) (f :: DeltaTarget)
 
-data family EntityState (k :: EntityKind) (s :: EntityStateSelector)
+data DeltaWrapper k where
+    DeltaAttrs :: Delta k (Part 'Attrs) -> DeltaWrapper k
+    DeltaModes :: Delta k (Part 'Modes) -> DeltaWrapper k
+    DeltaRels :: Delta k (Part 'Rels) -> DeltaWrapper k
 
 class Describable delta where
     type Target delta = target | target -> delta
@@ -42,626 +51,459 @@ class Incremental target where
 
     describe :: Applicable target -> target -> String
 
--- instance (Decomposable k, Replaceable k) => Incremental (EntityState k) where
---     type Applicable (EntityState k) = DeltaWrapper k
---
---     apply :: DeltaWrapper k -> EntityState k -> EntityState k
---     apply (DeltaAttrs d) e = replaceAttrs e (apply d (getAttrs e))
---     apply (DeltaModes d) e = replaceModes e (apply d (getModes e))
---     apply (DeltaRels d) e = replaceRels e (apply d (getRels e))
---
---     describe :: DeltaWrapper k -> EntityState k -> String
---     describe (DeltaAttrs d) e = describe d (getAttrs e)
---     describe (DeltaModes d) e = describe d (getModes e)
---     describe (DeltaRels d) e = describe d (getRels e)
---
+class IncrementalPart (k :: EntityKind) (part :: EntityStatePart) where
+    applyPartDelta :: Delta k ('Part part) -> EntityState k ('Part part) -> EntityState k ('Part part)
+    describePartDelta :: Delta k ('Part part) -> EntityState k ('Part part) -> String
 
 -- Dealer
+instance Incremental (EntityState 'Dealer (Part 'Attrs)) where
+    type Applicable (EntityState 'Dealer (Part 'Attrs)) = Delta 'Dealer (Part 'Attrs)
 
--- | Delta wrapper
-data family Delta (k :: EntityKind) (s :: EntityStateSelector)
+    apply (DDealerSetName new _) attrs = attrs{_dAttrsName = new}
 
-data DeltaWrapper k where
-    DeltaAttrs :: Delta k (Part 'Attrs) -> DeltaWrapper k
-    DeltaModes :: Delta k (Part 'Modes) -> DeltaWrapper k
-    DeltaRels :: Delta k (Part 'Rels) -> DeltaWrapper k
+    describe (DDealerSetName new old) _ = "Set dealer name: " ++ show old ++ " → " ++ show new
 
-{- | Incremental instance for full entities
+instance Incremental (EntityState 'Dealer (Part 'Modes)) where
+    type Applicable (EntityState 'Dealer (Part 'Modes)) = Delta 'Dealer (Part 'Modes)
+
+    apply (DDealerSetTableFSM new _) modes = modes{_dModesDealerTable = new}
+    apply (DDealerSetRoundFSM new _) modes = modes{_dModesDealerRound = new}
+    apply (DDealerSetHandFSM new _) modes = modes{_dModesDealerHand = new}
+
+    describe (DDealerSetTableFSM new old) _ = "Set dealer table FSM: " ++ show old ++ " → " ++ show new
+    describe (DDealerSetRoundFSM new old) _ = "Set dealer round FSM: " ++ show old ++ " → " ++ show new
+    describe (DDealerSetHandFSM new old) _ = "Set dealer hand FSM: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'Dealer (Part 'Rels)) where
+    type Applicable (EntityState 'Dealer (Part 'Rels)) = Delta 'Dealer (Part 'Rels)
+
+    apply (DDealerSetActiveTable new _) rels = rels{_dRelsActiveTable = new}
+    apply (DDealerSetActiveRound new _) rels = rels{_dRelsActiveRound = new}
+    apply (DDealerSetActiveHand new _) rels = rels{_dRelsActiveHand = new}
+
+    describe (DDealerSetActiveTable new old) _ = "Set dealer active table: " ++ show old ++ " → " ++ show new
+    describe (DDealerSetActiveRound new old) _ = "Set dealer active round: " ++ show old ++ " → " ++ show new
+    describe (DDealerSetActiveHand new old) _ = "Set dealer active hand: " ++ show old ++ " → " ++ show new
+
 instance
-    ( Decomposable k
-    , Replaceable k
-    , HasAttrs k
-    , HasModes k
-    , HasRels k
-    , Incremental (Attrs k)
-    , Incremental (Modes k)
-    , Incremental (Rels k)
+    ( Decomposable 'Dealer 'Whole
+    , ReplaceableAttrs 'Dealer
+    , ReplaceableModes 'Dealer
+    , ReplaceableRels 'Dealer
+    , Incremental (EntityState 'Dealer (Part 'Attrs))
+    , Incremental (EntityState 'Dealer (Part 'Modes))
+    , Incremental (EntityState 'Dealer (Part 'Rels))
     ) =>
-    Incremental (EntityState k)
+    Incremental (EntityState 'Dealer 'Whole)
     where
-    type Applicable (EntityState k) = DeltaWrapper k
+    type Applicable (EntityState 'Dealer 'Whole) = Delta 'Dealer 'Whole
 
-    apply (DeltaAttrs d) e = e & attrsL %~ apply d
-    apply (DeltaModes d) e = e & modesL %~ apply d
-    apply (DeltaRels d) e = e & relsL %~ apply d
+    apply (DDealer attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
 
-    describe (DeltaAttrs d) e = describe d (getAttrs e)
-    describe (DeltaModes d) e = describe d (getModes e)
-    describe (DeltaRels d) e = describe d (getRels e)
--}
+    describe (DDealer attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
 
--- Table ATTRS
+-- DealerHand
+instance Incremental (EntityState 'DealerHand (Part 'Attrs)) where
+    type Applicable (EntityState 'DealerHand (Part 'Attrs)) = Delta 'DealerHand (Part 'Attrs)
 
--- instance Incremental ETableAttrs where
---     type Applicable ETableAttrs = Delta 'Table (Part 'Attrs)
---
---     apply (DTableSetName new _) attrs =
---         attrs{_tAttrsName = new}
---     apply (DTableSetMinBet new _) attrs =
---         attrs{_tAttrsMinBet = new}
---     apply (DTableSetOffering new _) attrs =
---         attrs{_tAttrsOfferingUsed = new}
---
---     describe (DTableSetName new old) _ =
---         "Set table name: " ++ show old ++ " → " ++ show new
---     describe (DTableSetMinBet new old) _ =
---         "Set min bet: " ++ show old ++ " → " ++ show new
---     describe (DTableSetOffering new old) _ =
---         "Set offering used: " ++ show old ++ " → " ++ show new
---
--- Table MODES
+    apply (DDealerHandPushCard c _) attrs = attrs{_dhAttrsHandCards = c : _dhAttrsHandCards attrs}
+    apply (DDealerHandPopCard c _) attrs =
+        case _dhAttrsHandCards attrs of
+            [] -> attrs
+            (x : xs)
+                | x == c -> attrs{_dhAttrsHandCards = xs}
+                | otherwise ->
+                    let (before, after) = break (== c) (_dhAttrsHandCards attrs)
+                     in attrs{_dhAttrsHandCards = before ++ drop 1 after}
+    apply (DDealerHandSetCards new _) attrs = attrs{_dhAttrsHandCards = new}
 
--- instance Incremental ETableModes where
---     type Applicable ETableModes = Delta 'Table (Part 'Modes)
---
---     apply _ modes = modes
---
---     describe _ _ = "No change to table modes"
---
--- Table RELS
+    describe (DDealerHandPushCard c _) _ = "Pushed card: " ++ show c
+    describe (DDealerHandPopCard c _) _ = "Popped card: " ++ show c
+    describe (DDealerHandSetCards new old) _ = "Set dealer hand cards: " ++ show old ++ " → " ++ show new
 
--- instance Incremental ETableRels where
---     type Applicable ETableRels = Delta 'Table (Part 'Rels)
---
---     apply (DTableSetDealer new _) rels =
---         rels{_tRelsManagedByDealer = new}
---
---     describe (DTableSetDealer new old) _ =
---         "Set dealer: " ++ show old ++ " → " ++ show new
+instance Incremental (EntityState 'DealerHand (Part 'Modes)) where
+    type Applicable (EntityState 'DealerHand (Part 'Modes)) = Delta 'DealerHand (Part 'Modes)
 
--- Table ENTITY (wrapper-based dispatch)
+    apply (DDealerHandSetFSM new _) modes = modes{_dhModesDealerHand = new}
 
--- instance Incremental (EntityState 'Table) where
---     type Applicable (EntityState 'Table) = DeltaWrapper 'Table
---
---     apply (DeltaAttrs d) e = e & attrsL %~ apply d
---     apply (DeltaModes d) e = e & modesL %~ apply d
---     apply (DeltaRels d) e = e & relsL %~ apply d
---
---     describe (DeltaAttrs d) e = describe d (e ^. attrsL)
---     describe (DeltaModes d) e = describe d (e ^. modesL)
---     describe (DeltaRels d) e = describe d (e ^. relsL)
+    describe (DDealerHandSetFSM new old) _ = "Set dealer hand FSM: " ++ show old ++ " → " ++ show new
 
--- instance Incremental (EntityState k)
---
--- DDealer
+instance Incremental (EntityState 'DealerHand (Part 'Rels)) where
+    type Applicable (EntityState 'DealerHand (Part 'Rels)) = Delta 'DealerHand (Part 'Rels)
 
--- type instance AttrsDelta 'Dealer = DDealerAttrs
--- type instance ModesDelta 'Dealer = DDealerModes
--- type instance RelsDelta 'Dealer = DDealerRels
---
--- instance Describable (Delta 'Dealer) where
---     type Target (Delta 'Dealer) = EntityState 'Dealer
---
---     applyDelta :: Delta 'Dealer -> EntityState 'Dealer -> EntityState 'Dealer
---     applyDelta delta entity = case delta of
---         DDealerAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DDealerModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DDealerRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'Dealer -> EntityState 'Dealer -> String
---     describeDelta delta entity = case delta of
---         DDealerAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DDealerModes' delta' -> describeDelta delta' (getModes entity)
---         DDealerRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DDealerAttrs where
---     type Target DDealerAttrs = EDealerAttrs
---
---     applyDelta delta target = case delta of
---         DDealerSetName new _ -> target{_dAttrsName = new}
---
---     describeDelta (DDealerSetName new old) _ = "Set dealer name: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DDealerModes where
---     type Target DDealerModes = EDealerModes
---
---     applyDelta delta target = case delta of
---         DDealerSetTableFSM new _ -> target{_dModesDealerTable = new}
---         DDealerSetRoundFSM new _ -> target{_dModesDealerRound = new}
---         DDealerSetHandFSM new _ -> target{_dModesDealerHand = new}
---
---     describeDelta delta _ = case delta of
---         DDealerSetTableFSM new old -> "Set table FSM: " ++ show old ++ " -> " ++ show new
---         DDealerSetRoundFSM new old -> "Set round FSM: " ++ show old ++ " -> " ++ show new
---         DDealerSetHandFSM new old -> "Set hand FSM: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DDealerRels where
---     type Target DDealerRels = EDealerRels
---
---     applyDelta delta target = case delta of
---         DDealerSetActiveRound new _ -> target{_dRelsActiveRound = new}
---         DDealerSetActiveTable new _ -> target{_dRelsActiveTable = new}
---         DDealerSetActiveHand new _ -> target{_dRelsActiveHand = new}
---
---     describeDelta delta _ = case delta of
---         DDealerSetActiveRound new old -> "Set active round: " ++ show old ++ " -> " ++ show new
---         DDealerSetActiveTable new old -> "Set active table: " ++ show old ++ " -> " ++ show new
---         DDealerSetActiveHand new old -> "Set active hand: " ++ show old ++ " -> " ++ show new
---
--- -- DDealerHand
---
--- type instance AttrsDelta 'DealerHand = DDealerHandAttrs
--- type instance ModesDelta 'DealerHand = DDealerHandModes
--- type instance RelsDelta 'DealerHand = DDealerHandRels
---
--- instance Describable (Delta 'DealerHand) where
---     type Target (Delta 'DealerHand) = EntityState 'DealerHand
---
---     applyDelta :: Delta 'DealerHand -> EntityState 'DealerHand -> EntityState 'DealerHand
---     applyDelta delta entity = case delta of
---         DDealerHandAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DDealerHandModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DDealerHandRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta delta entity = case delta of
---         DDealerHandAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DDealerHandModes' delta' -> describeDelta delta' (getModes entity)
---         DDealerHandRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DDealerHandAttrs where
---     type Target DDealerHandAttrs = EDealerHandAttrs
---
---     applyDelta = \case
---         DDealerHandPushCard c _ -> \s ->
---             s{_dhAttrsHandCards = c : _dhAttrsHandCards s}
---         DDealerHandPopCard c _ -> \s ->
---             case _dhAttrsHandCards s of
---                 [] -> s
---                 (x : xs)
---                     | x == c -> s{_dhAttrsHandCards = xs}
---                     | otherwise ->
---                         let (before, after) = break (== c) (_dhAttrsHandCards s)
---                          in s{_dhAttrsHandCards = before ++ drop 1 after}
---         DDealerHandSetCards new _ -> \s -> s{_dhAttrsHandCards = new}
---
---     describeDelta :: DDealerHandAttrs -> EDealerHandAttrs -> String
---     describeDelta delta _ = case delta of
---         DDealerHandPushCard c _ -> "Pushed card: " ++ show c
---         DDealerHandPopCard c _ -> "Popped card: " ++ show c
---         DDealerHandSetCards new old -> "Set cards: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DDealerHandModes where
---     type Target DDealerHandModes = EDealerHandModes
---
---     applyDelta :: DDealerHandModes -> EDealerHandModes -> EDealerHandModes
---     applyDelta (DDealerHandSetFSM new _) entity =
---         entity{_dhModesDealerHand = new}
---
---     describeDelta :: DDealerHandModes -> EDealerHandModes -> String
---     describeDelta (DDealerHandSetFSM new old) _ =
---         "Set dealer hand FSM: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DDealerHandRels where
---     type Target DDealerHandRels = EDealerHandRels
---
---     applyDelta :: DDealerHandRels -> EDealerHandRels -> EDealerHandRels
---     applyDelta delta rels = case delta of
---         DDealerHandSetRound new _ -> rels{_dhRelsDealerRound = new}
---         DDealerHandSetDealer new _ -> rels{_dhRelsDealer = new}
---
---     describeDelta :: DDealerHandRels -> EDealerHandRels -> String
---     describeDelta delta _ = case delta of
---         DDealerHandSetRound new old -> "Set dealer hand round: " ++ show old ++ " -> " ++ show new
---         DDealerHandSetDealer new old -> "Set dealer hand dealer: " ++ show old ++ " -> " ++ show new
---
--- -- DDealerRound
---
--- type instance AttrsDelta 'DealerRound = DDealerRoundAttrs
--- type instance ModesDelta 'DealerRound = DDealerRoundModes
--- type instance RelsDelta 'DealerRound = DDealerRoundRels
---
--- instance Describable (Delta 'DealerRound) where
---     type Target (Delta 'DealerRound) = EntityState 'DealerRound
---
---     applyDelta :: Delta 'DealerRound -> EntityState 'DealerRound -> EntityState 'DealerRound
---     applyDelta delta entity = case delta of
---         DDealerRoundAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DDealerRoundModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DDealerRoundRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'DealerRound -> EntityState 'DealerRound -> String
---     describeDelta delta entity = case delta of
---         DDealerRoundAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DDealerRoundModes' delta' -> describeDelta delta' (getModes entity)
---         DDealerRoundRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DDealerRoundAttrs where
---     type Target DDealerRoundAttrs = EDealerRoundAttrs
---
---     applyDelta :: DDealerRoundAttrs -> EDealerRoundAttrs -> EDealerRoundAttrs
---     applyDelta delta target = case delta of
---         DDealerRoundSetNumber new _ -> target{_drAttrsNumber = new}
---
---     describeDelta :: DDealerRoundAttrs -> EDealerRoundAttrs -> String
---     describeDelta (DDealerRoundSetNumber new old) _ =
---         "Set round number: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DDealerRoundModes where
---     type Target DDealerRoundModes = EDealerRoundModes
---
---     applyDelta :: DDealerRoundModes -> EDealerRoundModes -> EDealerRoundModes
---     applyDelta DDealerRoundModes e = e
---
---     describeDelta :: DDealerRoundModes -> EDealerRoundModes -> String
---     describeDelta DDealerRoundModes _ = "No change to dealer round modes"
---
--- instance Describable DDealerRoundRels where
---     type Target DDealerRoundRels = EDealerRoundRels
---
---     applyDelta :: DDealerRoundRels -> EDealerRoundRels -> EDealerRoundRels
---     applyDelta (DDealerRoundSetTableShoe new _) rels = rels{_drRelsTableShoeUsed = new}
---
---     describeDelta :: DDealerRoundRels -> EDealerRoundRels -> String
---     describeDelta (DDealerRoundSetTableShoe new old) _ =
---         "Set round table shoe: " ++ show old ++ " -> " ++ show new
---
--- -- DOffering
---
--- type instance AttrsDelta 'Offering = DOfferingAttrs
--- type instance ModesDelta 'Offering = DOfferingModes
--- type instance RelsDelta 'Offering = DOfferingRels
---
--- instance Describable (Delta 'Offering) where
---     type Target (Delta 'Offering) = EntityState 'Offering
---
---     applyDelta :: Delta 'Offering -> EntityState 'Offering -> EntityState 'Offering
---     applyDelta delta entity = case delta of
---         DOfferingAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DOfferingModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DOfferingRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'Offering -> EntityState 'Offering -> String
---     describeDelta delta entity = case delta of
---         DOfferingAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DOfferingModes' _ -> "No change to offering modes"
---         DOfferingRels' _ -> "No change to offering relations"
---
--- instance Describable DOfferingAttrs where
---     type Target DOfferingAttrs = EOfferingAttrs
---
---     applyDelta :: DOfferingAttrs -> EOfferingAttrs -> EOfferingAttrs
---     applyDelta (DOfferingSetOffering new _) _ = EOfferingAttrs new
---
---     describeDelta :: DOfferingAttrs -> EOfferingAttrs -> String
---     describeDelta (DOfferingSetOffering new old) _ =
---         "Set offering: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DOfferingModes where
---     type Target DOfferingModes = EOfferingModes
---
---     applyDelta :: DOfferingModes -> EOfferingModes -> EOfferingModes
---     applyDelta (DOfferingModes _) = id
---
---     describeDelta :: DOfferingModes -> EOfferingModes -> String
---     describeDelta _ _ = "No change to offering modes"
---
--- instance Describable DOfferingRels where
---     type Target DOfferingRels = EOfferingRels
---
---     applyDelta :: DOfferingRels -> EOfferingRels -> EOfferingRels
---     applyDelta _ rels = rels
---
---     describeDelta :: DOfferingRels -> EOfferingRels -> String
---     describeDelta _ _ = "No change to offering relations"
---
--- -- DPlayer
---
--- type instance AttrsDelta 'Player = DPlayerAttrs
--- type instance ModesDelta 'Player = DPlayerModes
--- type instance RelsDelta 'Player = DPlayerRels
---
--- instance Describable (Delta 'Player) where
---     type Target (Delta 'Player) = EntityState 'Player
---
---     applyDelta :: Delta 'Player -> EntityState 'Player -> EntityState 'Player
---     applyDelta delta entity = case delta of
---         DPlayerAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DPlayerModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DPlayerRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'Player -> EntityState 'Player -> String
---     describeDelta delta entity = case delta of
---         DPlayerAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DPlayerModes' delta' -> describeDelta delta' (getModes entity)
---         DPlayerRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DPlayerAttrs where
---     type Target DPlayerAttrs = EPlayerAttrs
---
---     applyDelta :: DPlayerAttrs -> EPlayerAttrs -> EPlayerAttrs
---     applyDelta delta target = case delta of
---         DPlayerSetName new _ -> target{_pAttrsName = new}
---         DPlayerSetBankroll new _ -> target{_pAttrsBankroll = new}
---
---     describeDelta :: DPlayerAttrs -> EPlayerAttrs -> String
---     describeDelta (DPlayerSetName new old) _ =
---         "Set player name: " ++ show old ++ " -> " ++ show new
---     describeDelta (DPlayerSetBankroll new old) _ =
---         "Set player bankroll: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DPlayerModes where
---     type Target DPlayerModes = EPlayerModes
---
---     applyDelta :: DPlayerModes -> EPlayerModes -> EPlayerModes
---     applyDelta DPlayerModes = id
---
---     describeDelta :: DPlayerModes -> EPlayerModes -> String
---     describeDelta _ _ = "No change to player modes"
---
--- instance Describable DPlayerRels where
---     type Target DPlayerRels = EPlayerRels
---
---     applyDelta :: DPlayerRels -> EPlayerRels -> EPlayerRels
---     applyDelta _ r = r
---
---     describeDelta :: DPlayerRels -> EPlayerRels -> String
---     describeDelta _ _ = "No change to player relations"
---
--- -- DPlayerHand
---
--- type instance AttrsDelta 'PlayerHand = DPlayerHandAttrs
--- type instance ModesDelta 'PlayerHand = DPlayerHandModes
--- type instance RelsDelta 'PlayerHand = DPlayerHandRels
---
--- instance Describable (Delta 'PlayerHand) where
---     type Target (Delta 'PlayerHand) = EntityState 'PlayerHand
---
---     applyDelta :: Delta 'PlayerHand -> EntityState 'PlayerHand -> EntityState 'PlayerHand
---     applyDelta delta entity = case delta of
---         DPlayerHandAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DPlayerHandModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DPlayerHandRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'PlayerHand -> EntityState 'PlayerHand -> String
---     describeDelta delta entity = case delta of
---         DPlayerHandAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DPlayerHandModes' delta' -> describeDelta delta' (getModes entity)
---         DPlayerHandRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DPlayerHandAttrs where
---     type Target DPlayerHandAttrs = EPlayerHandAttrs
---
---     applyDelta :: DPlayerHandAttrs -> EPlayerHandAttrs -> EPlayerHandAttrs
---     applyDelta delta target = case delta of
---         DPlayerHandSetPlayerHandIx new _ ->
---             target{_phAttrsHandIx = new}
---         DPlayerHandSetSplitDepth new _ ->
---             target{_phAttrsSplitDepth = new}
---         DPlayerHandPushCard c _ ->
---             target{_phAttrsHandCards = c : _phAttrsHandCards target}
---         DPlayerHandPopCard c _ ->
---             case _phAttrsHandCards target of
---                 [] -> target
---                 (x : xs)
---                     | x == c -> target{_phAttrsHandCards = xs}
---                     | otherwise ->
---                         let (before, after) = break (== c) (_phAttrsHandCards target)
---                          in target{_phAttrsHandCards = before ++ drop 1 after}
---         DPlayerHandSetCards new _ ->
---             target{_phAttrsHandCards = new}
---
---     describeDelta :: DPlayerHandAttrs -> EPlayerHandAttrs -> String
---     describeDelta delta _ = case delta of
---         DPlayerHandSetPlayerHandIx new old -> "Set hand index: " ++ show old ++ " -> " ++ show new
---         DPlayerHandSetSplitDepth new old -> "Set split depth: " ++ show old ++ " -> " ++ show new
---         DPlayerHandPushCard c _ -> "Pushed card: " ++ show c
---         DPlayerHandPopCard c _ -> "Popped card: " ++ show c
---         DPlayerHandSetCards new old -> "Set hand cards: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DPlayerHandModes where
---     type Target DPlayerHandModes = EPlayerHandModes
---
---     applyDelta :: DPlayerHandModes -> EPlayerHandModes -> EPlayerHandModes
---     applyDelta (DPlayerHandSetPlayerHandFSM new _) target = target{_phFsm = new}
---
---     describeDelta :: DPlayerHandModes -> EPlayerHandModes -> String
---     describeDelta (DPlayerHandSetPlayerHandFSM new old) _ =
---         "Set player hand FSM: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DPlayerHandRels where
---     type Target DPlayerHandRels = EPlayerHandRels
---
---     applyDelta :: DPlayerHandRels -> EPlayerHandRels -> EPlayerHandRels
---     applyDelta delta rels = case delta of
---         DPlayerHandSetPlayerSpot new _ -> rels{_phRelsBelongsToPlayerSpot = new}
---
---     describeDelta :: DPlayerHandRels -> EPlayerHandRels -> String
---     describeDelta delta _ = case delta of
---         DPlayerHandSetPlayerSpot new old ->
---             "Set player spot: " ++ show old ++ " -> " ++ show new
---
--- -- DPlayerSpot
---
--- type instance AttrsDelta 'PlayerSpot = DPlayerSpotAttrs
--- type instance ModesDelta 'PlayerSpot = DPlayerSpotModes
--- type instance RelsDelta 'PlayerSpot = DPlayerSpotRels
---
--- instance Describable (Delta 'PlayerSpot) where
---     type Target (Delta 'PlayerSpot) = EntityState 'PlayerSpot
---
---     applyDelta :: Delta 'PlayerSpot -> EntityState 'PlayerSpot -> EntityState 'PlayerSpot
---     applyDelta delta entity = case delta of
---         DPlayerSpotAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DPlayerSpotModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DPlayerSpotRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'PlayerSpot -> EntityState 'PlayerSpot -> String
---     describeDelta delta entity = case delta of
---         DPlayerSpotAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DPlayerSpotModes' delta' -> describeDelta delta' (getModes entity)
---         DPlayerSpotRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DPlayerSpotAttrs where
---     type Target DPlayerSpotAttrs = EPlayerSpotAttrs
---
---     applyDelta :: DPlayerSpotAttrs -> EPlayerSpotAttrs -> EPlayerSpotAttrs
---     applyDelta delta target = case delta of
---         DPlayerSpotSetWager new _ -> target{_psAttrsWager = new}
---
---     describeDelta :: DPlayerSpotAttrs -> EPlayerSpotAttrs -> String
---     describeDelta (DPlayerSpotSetWager new old) _ =
---         "Set spot wager: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DPlayerSpotModes where
---     type Target DPlayerSpotModes = EPlayerSpotModes
---
---     applyDelta :: DPlayerSpotModes -> EPlayerSpotModes -> EPlayerSpotModes
---     applyDelta (DPlayerSpotSetFSM new _) target = target{_psModesPlayerSpot = new}
---
---     describeDelta (DPlayerSpotSetFSM new old) _ =
---         "Set player spot FSM: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DPlayerSpotRels where
---     type Target DPlayerSpotRels = EPlayerSpotRels
---
---     applyDelta :: DPlayerSpotRels -> EPlayerSpotRels -> EPlayerSpotRels
---     applyDelta delta rels = case delta of
---         DPlayerSpotSetPlayer new _ -> rels{_psEntityRelsPlayerId = new}
---         DPlayerSpotSetRound new _ -> rels{_psEntityRelsRoundId = new}
---         DPlayerSpotSetHandOccupancy (_, _) (k, v) ->
---             rels{_psRelsHandOccupancy = insertFiniteMap k v (_psRelsHandOccupancy rels)}
---
---     describeDelta :: DPlayerSpotRels -> EPlayerSpotRels -> String
---     describeDelta (DPlayerSpotSetPlayer new old) _ =
---         "Set player on spot: " ++ show old ++ " -> " ++ show new
---     describeDelta (DPlayerSpotSetRound new old) _ =
---         "Set round on spot: " ++ show old ++ " -> " ++ show new
---     describeDelta (DPlayerSpotSetHandOccupancy (_, _) (ix, _)) _ =
---         "Updated hand occupancy at index: " ++ show ix
---
--- -- DTable
---
--- type instance AttrsDelta 'Table = DTableAttrs
--- type instance ModesDelta 'Table = DTableModes
--- type instance RelsDelta 'Table = DTableRels
---
--- instance Describable (Delta 'Table) where
---     type Target (Delta 'Table) = EntityState 'Table
---
---     applyDelta :: Delta 'Table -> EntityState 'Table -> EntityState 'Table
---     applyDelta delta entity = case delta of
---         DTableAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DTableModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DTableRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'Table -> EntityState 'Table -> String
---     describeDelta delta entity = case delta of
---         DTableAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DTableModes' delta' -> describeDelta delta' (getModes entity)
---         DTableRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DTableAttrs where
---     type Target DTableAttrs = ETableAttrs
---
---     applyDelta :: DTableAttrs -> ETableAttrs -> ETableAttrs
---     applyDelta delta s = case delta of
---         DTableSetName new _ -> s{_tAttrsName = new}
---         DTableSetMinBet new _ -> s{_tAttrsMinBet = new}
---         DTableSetOffering new _ -> s{_tAttrsOfferingUsed = new}
---
---     describeDelta :: DTableAttrs -> ETableAttrs -> String
---     describeDelta (DTableSetName new old) _ =
---         "Set table name: " ++ show old ++ " -> " ++ show new
---     describeDelta (DTableSetMinBet new old) _ =
---         "Set table min bet: " ++ show old ++ " -> " ++ show new
---     describeDelta (DTableSetOffering new old) _ =
---         "Set table offering: " ++ show old ++ " -> " ++ show new
---
--- instance Describable DTableModes where
---     type Target DTableModes = ETableModes
---
---     applyDelta :: DTableModes -> ETableModes -> ETableModes
---     applyDelta (DTableModes _) = id
---
---     describeDelta :: DTableModes -> ETableModes -> String
---     describeDelta _ _ = "No change to table modes"
---
--- instance Describable DTableRels where
---     type Target DTableRels = ETableRels
---
---     applyDelta :: DTableRels -> ETableRels -> ETableRels
---     applyDelta (DTableSetDealer new _) rels = rels{_tRelsManagedByDealer = new}
---
---     describeDelta :: DTableRels -> ETableRels -> String
---     describeDelta (DTableSetDealer new old) _ = "Set dealer: " ++ show old ++ " -> " ++ show new
---
--- -- DTableShoe
---
--- type instance AttrsDelta 'TableShoe = DTableShoeAttrs
--- type instance ModesDelta 'TableShoe = DTableShoeModes
--- type instance RelsDelta 'TableShoe = DTableShoeRels
---
--- instance Describable (Delta 'TableShoe) where
---     type Target (Delta 'TableShoe) = EntityState 'TableShoe
---
---     applyDelta :: Delta 'TableShoe -> EntityState 'TableShoe -> EntityState 'TableShoe
---     applyDelta delta entity = case delta of
---         DTableShoeAttrs' delta' -> replaceAttrs entity (applyDelta delta' (getAttrs entity))
---         DTableShoeModes' delta' -> replaceModes entity (applyDelta delta' (getModes entity))
---         DTableShoeRels' delta' -> replaceRels entity (applyDelta delta' (getRels entity))
---
---     describeDelta :: Delta 'TableShoe -> EntityState 'TableShoe -> String
---     describeDelta delta entity = case delta of
---         DTableShoeAttrs' delta' -> describeDelta delta' (getAttrs entity)
---         DTableShoeModes' delta' -> describeDelta delta' (getModes entity)
---         DTableShoeRels' delta' -> describeDelta delta' (getRels entity)
---
--- instance Describable DTableShoeAttrs where
---     type Target DTableShoeAttrs = ETableShoeAttrs
---
---     applyDelta :: DTableShoeAttrs -> ETableShoeAttrs -> ETableShoeAttrs
---     applyDelta delta attrs = case delta of
---         DTableShoeSetCardStateMap new _ -> attrs{_tsAttrsCardStates = new}
---         DTableShoeSetCardFate ix fate ->
---             attrs{_tsAttrsCardStates = Map.insert ix fate (_tsAttrsCardStates attrs)}
---
---     describeDelta :: DTableShoeAttrs -> ETableShoeAttrs -> String
---     describeDelta (DTableShoeSetCardStateMap _ _) _ =
---         "Set card state map"
---     describeDelta (DTableShoeSetCardFate ix fate) _ =
---         "Set card fate at index " ++ show ix ++ ": " ++ show fate
---
--- instance Describable DTableShoeModes where
---     type Target DTableShoeModes = ETableShoeModes
---
---     applyDelta :: DTableShoeModes -> ETableShoeModes -> ETableShoeModes
---     applyDelta (DTableShoeModes _) = id
---
---     describeDelta :: DTableShoeModes -> ETableShoeModes -> String
---     describeDelta _ _ = "No change to table shoe modes"
---
--- instance Describable DTableShoeRels where
---     type Target DTableShoeRels = ETableShoeRels
---
---     applyDelta :: DTableShoeRels -> ETableShoeRels -> ETableShoeRels
---     applyDelta (DTableShoeSetTable new _) rels =
---         rels{_tsRelsTable = new}
---
---     describeDelta (DTableShoeSetTable new old) _ = "Set table: " ++ show old ++ " -> " ++ show new
---
--- -- helpers
---
--- -- TODO
--- describeSet :: (Show a, Show b) => String -> a -> b -> String
--- describeSet label old new = "Set " ++ label ++ ": " ++ show old ++ " -> " ++ show new
+    apply (DDealerHandSetRound new _) rels = rels{_dhRelsDealerRound = new}
+    apply (DDealerHandSetDealer new _) rels = rels{_dhRelsDealer = new}
+
+    describe (DDealerHandSetRound new old) _ = "Set dealer hand round: " ++ show old ++ " → " ++ show new
+    describe (DDealerHandSetDealer new old) _ = "Set dealer hand dealer: " ++ show old ++ " → " ++ show new
+
+instance
+    ( Decomposable 'DealerHand 'Whole
+    , ReplaceableAttrs 'DealerHand
+    , ReplaceableModes 'DealerHand
+    , ReplaceableRels 'DealerHand
+    , Incremental (EntityState 'DealerHand (Part 'Attrs))
+    , Incremental (EntityState 'DealerHand (Part 'Modes))
+    , Incremental (EntityState 'DealerHand (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'DealerHand 'Whole)
+    where
+    type Applicable (EntityState 'DealerHand 'Whole) = Delta 'DealerHand 'Whole
+
+    apply (DDealerHand attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DDealerHand attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- DealerRound
+instance Incremental (EntityState 'DealerRound (Part 'Attrs)) where
+    type Applicable (EntityState 'DealerRound (Part 'Attrs)) = Delta 'DealerRound (Part 'Attrs)
+
+    apply (DDealerRoundSetNumber new _) attrs = attrs{_drAttrsNumber = new}
+
+    describe (DDealerRoundSetNumber new old) _ = "Set dealer round number: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'DealerRound (Part 'Modes)) where
+    type Applicable (EntityState 'DealerRound (Part 'Modes)) = Delta 'DealerRound (Part 'Modes)
+
+    apply _ modes = modes
+
+    describe _ _ = "No change to dealer round modes"
+
+instance Incremental (EntityState 'DealerRound (Part 'Rels)) where
+    type Applicable (EntityState 'DealerRound (Part 'Rels)) = Delta 'DealerRound (Part 'Rels)
+
+    apply (DDealerRoundSetTableShoe new _) rels = rels{_drRelsTableShoeUsed = new}
+
+    describe (DDealerRoundSetTableShoe new old) _ = "Set dealer round table shoe: " ++ show old ++ " → " ++ show new
+
+instance
+    ( Decomposable 'DealerRound 'Whole
+    , ReplaceableAttrs 'DealerRound
+    , ReplaceableModes 'DealerRound
+    , ReplaceableRels 'DealerRound
+    , Incremental (EntityState 'DealerRound (Part 'Attrs))
+    , Incremental (EntityState 'DealerRound (Part 'Modes))
+    , Incremental (EntityState 'DealerRound (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'DealerRound 'Whole)
+    where
+    type Applicable (EntityState 'DealerRound 'Whole) = Delta 'DealerRound 'Whole
+
+    apply (DDealerRound attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DDealerRound attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- Offering
+instance Incremental (EntityState 'Offering (Part 'Attrs)) where
+    type Applicable (EntityState 'Offering (Part 'Attrs)) = Delta 'Offering (Part 'Attrs)
+
+    apply (DOfferingSetOffering new _) _ = EOfferingAttrs new
+
+    describe (DOfferingSetOffering new old) _ = "Set offering: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'Offering (Part 'Modes)) where
+    type Applicable (EntityState 'Offering (Part 'Modes)) = Delta 'Offering (Part 'Modes)
+
+    apply DOfferingModes modes = modes
+
+    describe DOfferingModes _ = "No change to offering modes"
+
+instance Incremental (EntityState 'Offering (Part 'Rels)) where
+    type Applicable (EntityState 'Offering (Part 'Rels)) = Delta 'Offering (Part 'Rels)
+
+    apply DOfferingRels rels = rels
+
+    describe DOfferingRels _ = "No change to offering relations"
+
+instance
+    ( Decomposable 'Offering 'Whole
+    , ReplaceableAttrs 'Offering
+    , ReplaceableModes 'Offering
+    , ReplaceableRels 'Offering
+    , Incremental (EntityState 'Offering (Part 'Attrs))
+    , Incremental (EntityState 'Offering (Part 'Modes))
+    , Incremental (EntityState 'Offering (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'Offering 'Whole)
+    where
+    type Applicable (EntityState 'Offering 'Whole) = Delta 'Offering 'Whole
+
+    apply (DOffering attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DOffering attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- Player
+instance Incremental (EntityState 'Player (Part 'Attrs)) where
+    type Applicable (EntityState 'Player (Part 'Attrs)) = Delta 'Player (Part 'Attrs)
+
+    apply (DPlayerSetName new _) attrs = attrs{_pAttrsName = new}
+    apply (DPlayerSetBankroll new _) attrs = attrs{_pAttrsBankroll = new}
+
+    describe (DPlayerSetName new old) _ = "Set player name: " ++ show old ++ " → " ++ show new
+    describe (DPlayerSetBankroll new old) _ = "Set player bankroll: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'Player (Part 'Modes)) where
+    type Applicable (EntityState 'Player (Part 'Modes)) = Delta 'Player (Part 'Modes)
+
+    apply (DPlayerSetTable (Just new) _) modes = modes{_pModesPlayerTable = new}
+    apply (DPlayerSetTable Nothing _) modes = modes
+    apply (DPlayerSetSpot (Just new) _) modes = modes{_pModesPlayerSpot = new}
+    apply (DPlayerSetSpot Nothing _) modes = modes
+    apply (DPlayerSetHand (Just new) _) modes = modes{_pModesPlayerHand = new}
+    apply (DPlayerSetHand Nothing _) modes = modes
+
+    describe (DPlayerSetTable new old) _ = "Set player table FSM: " ++ show old ++ " → " ++ show new
+    describe (DPlayerSetSpot new old) _ = "Set player spot FSM: " ++ show old ++ " → " ++ show new
+    describe (DPlayerSetHand new old) _ = "Set player hand FSM: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'Player (Part 'Rels)) where
+    type Applicable (EntityState 'Player (Part 'Rels)) = Delta 'Player (Part 'Rels)
+
+    apply _ rels = rels
+
+    describe _ _ = "No change to player relations"
+
+instance
+    ( Decomposable 'Player 'Whole
+    , ReplaceableAttrs 'Player
+    , ReplaceableModes 'Player
+    , ReplaceableRels 'Player
+    , Incremental (EntityState 'Player (Part 'Attrs))
+    , Incremental (EntityState 'Player (Part 'Modes))
+    , Incremental (EntityState 'Player (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'Player 'Whole)
+    where
+    type Applicable (EntityState 'Player 'Whole) = Delta 'Player 'Whole
+
+    apply (DPlayer attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DPlayer attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- PlayerHand
+instance Incremental (EntityState 'PlayerHand (Part 'Attrs)) where
+    type Applicable (EntityState 'PlayerHand (Part 'Attrs)) = Delta 'PlayerHand (Part 'Attrs)
+
+    apply (DPlayerHandSetPlayerHandIx new _) attrs = attrs{_phAttrsHandIx = new}
+    apply (DPlayerHandSetSplitDepth new _) attrs = attrs{_phAttrsSplitDepth = new}
+    apply (DPlayerHandPushCard c _) attrs = attrs{_phAttrsHandCards = c : _phAttrsHandCards attrs}
+    apply (DPlayerHandPopCard c _) attrs =
+        case _phAttrsHandCards attrs of
+            [] -> attrs
+            (x : xs)
+                | x == c -> attrs{_phAttrsHandCards = xs}
+                | otherwise ->
+                    let (before, after) = break (== c) (_phAttrsHandCards attrs)
+                     in attrs{_phAttrsHandCards = before ++ drop 1 after}
+    apply (DPlayerHandSetCards new _) attrs = attrs{_phAttrsHandCards = new}
+
+    describe (DPlayerHandSetPlayerHandIx new old) _ = "Set player hand index: " ++ show old ++ " → " ++ show new
+    describe (DPlayerHandSetSplitDepth new old) _ = "Set player hand split depth: " ++ show old ++ " → " ++ show new
+    describe (DPlayerHandPushCard c _) _ = "Pushed card: " ++ show c
+    describe (DPlayerHandPopCard c _) _ = "Popped card: " ++ show c
+    describe (DPlayerHandSetCards new old) _ = "Set player hand cards: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'PlayerHand (Part 'Modes)) where
+    type Applicable (EntityState 'PlayerHand (Part 'Modes)) = Delta 'PlayerHand (Part 'Modes)
+
+    apply (DPlayerHandSetPlayerHandFSM new _) modes = modes{_phFsm = new}
+
+    describe (DPlayerHandSetPlayerHandFSM new old) _ = "Set player hand FSM: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'PlayerHand (Part 'Rels)) where
+    type Applicable (EntityState 'PlayerHand (Part 'Rels)) = Delta 'PlayerHand (Part 'Rels)
+
+    apply (DPlayerHandSetPlayerSpot new _) rels = rels{_phRelsBelongsToPlayerSpot = new}
+
+    describe (DPlayerHandSetPlayerSpot new old) _ = "Set player hand spot: " ++ show old ++ " → " ++ show new
+
+instance
+    ( Decomposable 'PlayerHand 'Whole
+    , ReplaceableAttrs 'PlayerHand
+    , ReplaceableModes 'PlayerHand
+    , ReplaceableRels 'PlayerHand
+    , Incremental (EntityState 'PlayerHand (Part 'Attrs))
+    , Incremental (EntityState 'PlayerHand (Part 'Modes))
+    , Incremental (EntityState 'PlayerHand (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'PlayerHand 'Whole)
+    where
+    type Applicable (EntityState 'PlayerHand 'Whole) = Delta 'PlayerHand 'Whole
+
+    apply (DPlayerHand attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DPlayerHand attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- PlayerSpot
+instance Incremental (EntityState 'PlayerSpot (Part 'Attrs)) where
+    type Applicable (EntityState 'PlayerSpot (Part 'Attrs)) = Delta 'PlayerSpot (Part 'Attrs)
+
+    apply (DPlayerSpotSetWager new _) attrs = attrs{_psAttrsWager = new}
+
+    describe (DPlayerSpotSetWager new old) _ = "Set player spot wager: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'PlayerSpot (Part 'Modes)) where
+    type Applicable (EntityState 'PlayerSpot (Part 'Modes)) = Delta 'PlayerSpot (Part 'Modes)
+
+    apply (DPlayerSpotSetFSM new _) modes = modes{_psModesPlayerSpot = new}
+
+    describe (DPlayerSpotSetFSM new old) _ = "Set player spot FSM: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'PlayerSpot (Part 'Rels)) where
+    type Applicable (EntityState 'PlayerSpot (Part 'Rels)) = Delta 'PlayerSpot (Part 'Rels)
+
+    apply (DPlayerSpotSetPlayer new _) rels = rels{_psEntityRelsPlayerId = new}
+    apply (DPlayerSpotSetRound new _) rels = rels{_psEntityRelsRoundId = new}
+    apply (DPlayerSpotSetHandOccupancy (_, _) (k, v)) rels =
+        rels{_psRelsHandOccupancy = insertFiniteMap k v (_psRelsHandOccupancy rels)}
+
+    describe (DPlayerSpotSetPlayer new old) _ = "Set player spot player: " ++ show old ++ " → " ++ show new
+    describe (DPlayerSpotSetRound new old) _ = "Set player spot round: " ++ show old ++ " → " ++ show new
+    describe (DPlayerSpotSetHandOccupancy (_, _) (ix, _)) _ = "Updated hand occupancy at index: " ++ show ix
+
+instance
+    ( Decomposable 'PlayerSpot 'Whole
+    , ReplaceableAttrs 'PlayerSpot
+    , ReplaceableModes 'PlayerSpot
+    , ReplaceableRels 'PlayerSpot
+    , Incremental (EntityState 'PlayerSpot (Part 'Attrs))
+    , Incremental (EntityState 'PlayerSpot (Part 'Modes))
+    , Incremental (EntityState 'PlayerSpot (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'PlayerSpot 'Whole)
+    where
+    type Applicable (EntityState 'PlayerSpot 'Whole) = Delta 'PlayerSpot 'Whole
+
+    apply (DPlayerSpot attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DPlayerSpot attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- Table
+instance Incremental (EntityState 'Table (Part 'Attrs)) where
+    type Applicable (EntityState 'Table (Part 'Attrs)) = Delta 'Table (Part 'Attrs)
+
+    apply (DTableSetName new _) attrs = attrs{_tAttrsName = new}
+    apply (DTableSetMinBet new _) attrs = attrs{_tAttrsMinBet = new}
+    apply (DTableSetOffering new _) attrs = attrs{_tAttrsOfferingUsed = new}
+
+    describe (DTableSetName new old) _ = "Set table name: " ++ show old ++ " → " ++ show new
+    describe (DTableSetMinBet new old) _ = "Set table min bet: " ++ show old ++ " → " ++ show new
+    describe (DTableSetOffering new old) _ = "Set table offering: " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'Table (Part 'Modes)) where
+    type Applicable (EntityState 'Table (Part 'Modes)) = Delta 'Table (Part 'Modes)
+
+    apply _ modes = modes
+
+    describe _ _ = "No change to table modes"
+
+instance Incremental (EntityState 'Table (Part 'Rels)) where
+    type Applicable (EntityState 'Table (Part 'Rels)) = Delta 'Table (Part 'Rels)
+
+    apply (DTableSetDealer new _) rels = rels{_tRelsManagedByDealer = new}
+
+    describe (DTableSetDealer new old) _ = "Set table dealer: " ++ show old ++ " → " ++ show new
+
+instance
+    ( Decomposable 'Table 'Whole
+    , ReplaceableAttrs 'Table
+    , ReplaceableModes 'Table
+    , ReplaceableRels 'Table
+    , Incremental (EntityState 'Table (Part 'Attrs))
+    , Incremental (EntityState 'Table (Part 'Modes))
+    , Incremental (EntityState 'Table (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'Table 'Whole)
+    where
+    type Applicable (EntityState 'Table 'Whole) = Delta 'Table 'Whole
+
+    apply (DTable attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DTable attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)
+
+-- TableShoe
+instance Incremental (EntityState 'TableShoe (Part 'Attrs)) where
+    type Applicable (EntityState 'TableShoe (Part 'Attrs)) = Delta 'TableShoe (Part 'Attrs)
+
+    apply (DTableShoeSetCardStateMap new _) attrs = attrs{_tsAttrsCardStates = new}
+    apply (DTableShoeSetCardFate ix new _) attrs =
+        attrs{_tsAttrsCardStates = Map.insert ix new (_tsAttrsCardStates attrs)}
+
+    describe (DTableShoeSetCardStateMap _ _) _ = "Set card state map"
+    describe (DTableShoeSetCardFate ix new old) _ = "Set card fate at index " ++ show ix ++ ": " ++ show old ++ " → " ++ show new
+
+instance Incremental (EntityState 'TableShoe (Part 'Modes)) where
+    type Applicable (EntityState 'TableShoe (Part 'Modes)) = Delta 'TableShoe (Part 'Modes)
+
+    apply _ modes = modes
+
+    describe _ _ = "No change to table shoe modes"
+
+instance Incremental (EntityState 'TableShoe (Part 'Rels)) where
+    type Applicable (EntityState 'TableShoe (Part 'Rels)) = Delta 'TableShoe (Part 'Rels)
+
+    apply (DTableShoeSetTable new _) rels = rels{_tsRelsTable = new}
+
+    describe (DTableShoeSetTable new old) _ = "Set table shoe table: " ++ show old ++ " → " ++ show new
+
+instance
+    ( Decomposable 'TableShoe 'Whole
+    , ReplaceableAttrs 'TableShoe
+    , ReplaceableModes 'TableShoe
+    , ReplaceableRels 'TableShoe
+    , Incremental (EntityState 'TableShoe (Part 'Attrs))
+    , Incremental (EntityState 'TableShoe (Part 'Modes))
+    , Incremental (EntityState 'TableShoe (Part 'Rels))
+    ) =>
+    Incremental (EntityState 'TableShoe 'Whole)
+    where
+    type Applicable (EntityState 'TableShoe 'Whole) = Delta 'TableShoe 'Whole
+
+    apply (DTableShoe attrsDelta modesDelta relsDelta) entity =
+        entity
+            & replaceAttrs (apply attrsDelta (getAttrs entity))
+            & replaceModes (apply modesDelta (getModes entity))
+            & replaceRels (apply relsDelta (getRels entity))
+
+    describe (DTableShoe attrsDelta _ _) entity =
+        describe attrsDelta (getAttrs entity)

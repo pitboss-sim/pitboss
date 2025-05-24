@@ -6,22 +6,19 @@ import GHC.Generics (Generic)
 data Suit = Hearts | Diamonds | Clubs | Spades
     deriving (Show, Eq, Enum, Generic)
 
-instance ToJSON Suit
-
-instance FromJSON Suit
-
 data Rank = Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Jack | Queen | King | Ace
     deriving (Show, Eq, Enum, Ord, Generic)
-
-instance ToJSON Rank
-
-instance FromJSON Rank
 
 data Card = Card {rank :: Rank, suit :: Suit}
     deriving (Show, Eq, Generic)
 
-instance ToJSON Card
+instance ToJSON Suit
+instance FromJSON Suit
 
+instance ToJSON Rank
+instance FromJSON Rank
+
+instance ToJSON Card
 instance FromJSON Card
 
 value :: Card -> Int

@@ -13,7 +13,6 @@ import Pitboss.Trace.Entity.PlayerHand.Entity
 import Pitboss.Trace.Entity.PlayerSpot.Entity
 import Pitboss.Trace.Entity.Table.Entity
 import Pitboss.Trace.Entity.TableShoe.Entity
-import Pitboss.Trace.Entity.TableShoeCursor.Entity
 import Pitboss.Trace.Entity.Types
 import Pitboss.Trace.Entity.Types.EntityId
 
@@ -126,14 +125,3 @@ instance Extractable 'TableShoeEntity where
     getAttrs (TableShoeEntity' _ a _ _) = a
     getModes (TableShoeEntity' _ _ m _) = m
     getRels (TableShoeEntity' _ _ _ r) = r
-
-instance Extractable 'TableShoeCursorEntity where
-    type Attrs 'TableShoeCursorEntity = TableShoeCursorEntityAttrs
-    type Modes 'TableShoeCursorEntity = TableShoeCursorEntityModes
-    type Rels 'TableShoeCursorEntity = TableShoeCursorEntityRels
-    type IdOf 'TableShoeCursorEntity = TableShoeCursorEntityId
-
-    getMeta (TableShoeCursorEntity' m _ _ _) = m
-    getAttrs (TableShoeCursorEntity' _ a _ _) = a
-    getModes (TableShoeCursorEntity' _ _ m _) = m
-    getRels (TableShoeCursorEntity' _ _ _ r) = r

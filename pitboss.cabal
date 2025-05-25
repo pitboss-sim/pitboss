@@ -66,7 +66,9 @@ library
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
-                      Pitboss.State.Entity.Capability.Decomposable
+                      Pitboss.State.Entity.Capability.Incremental
+                      Pitboss.State.Entity.Capability.Reversible
+                      Pitboss.State.Entity.Delta
                       Pitboss.State.Entity.Entity
                       Pitboss.State.Entity.Meta
                       Pitboss.State.Entity.Types

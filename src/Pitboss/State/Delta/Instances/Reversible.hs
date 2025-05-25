@@ -3,10 +3,12 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pitboss.State.Entity.Capability.Reversible where
+module Pitboss.State.Delta.Instances.Reversible (
 
-import Pitboss.State.Entity.Delta
-import Pitboss.State.Entity.Entity
+) where
+
+import Pitboss.State.Delta.Types
+import Pitboss.State.Entity.Types
 
 data InversionError
     = NotInvertible

@@ -1,10 +1,11 @@
+{-# HLINT ignore "Use newtype instead of data" #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-{-# HLINT ignore "Use newtype instead of data" #-}
-
-module Pitboss.State.Entity.Delta where
+module Pitboss.State.Delta.Types (
+    Delta (..),
+) where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict (Map)
@@ -18,8 +19,8 @@ import Pitboss.FSM.DealerTable
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
 import Pitboss.FSM.PlayerTable
-import Pitboss.State.Entity.Entity
-import Pitboss.State.Entity.Types.FiniteMap.Occupancy
+import Pitboss.State.Entity.Types
+import Pitboss.State.Types.FiniteMap.Occupancy
 
 data family Delta (k :: EntityKind) (s :: EntityStateSelector)
 

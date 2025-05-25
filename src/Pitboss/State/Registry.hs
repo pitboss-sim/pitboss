@@ -5,7 +5,10 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.State.Registry where
+module Pitboss.State.Registry (
+    Registry (..),
+    ToWord64 (..),
+) where
 
 -- timeline utilities
 
@@ -14,8 +17,8 @@ import Data.Bits (shiftL, (.|.))
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Data.Word (Word64)
 import GHC.Generics
-import Pitboss.State.Entity.Entity
 import Pitboss.State.Timeline
+import Pitboss.State.Types.Uid
 
 -- delta timeline per type
 

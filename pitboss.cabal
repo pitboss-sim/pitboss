@@ -66,6 +66,9 @@ library
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.State.Registry
+                      Pitboss.State.Timeline
+                      Pitboss.State.Trace
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
                       Pitboss.State.Delta.Types

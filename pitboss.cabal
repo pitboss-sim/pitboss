@@ -75,11 +75,10 @@ library
                       Pitboss.State.Registry
                       Pitboss.State.Timeline
                       Pitboss.State.Trace
+                      Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
                       Pitboss.State.Types.FiniteMap.Occupancy
-                      Pitboss.State.Types.Tick
-                      Pitboss.State.Types.Uid
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay

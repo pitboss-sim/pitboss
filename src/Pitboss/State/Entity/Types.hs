@@ -1,6 +1,6 @@
 {-# HLINT ignore "Use newtype instead of data" #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
@@ -11,7 +11,7 @@ module Pitboss.State.Entity.Types (
     EntityState (..),
     EntityStateSelector (..),
     EntityStatePart (..),
-    Id,
+    Uid (..),
     CardIx,
     CardState,
     PlayerSpotHandIx,
@@ -53,21 +53,13 @@ module Pitboss.State.Entity.Types (
     mkETableShoeRels,
 ) where
 
-import Control.Monad (when)
 import Data.Aeson (
     FromJSON (..),
     FromJSONKey,
-    KeyValue ((.=)),
     ToJSON (..),
     ToJSONKey,
-    object,
-    withObject,
-    (.:),
  )
-import Data.Aeson.Types (Parser)
 import Data.Map.Strict
-import Data.Proxy (Proxy (..))
-import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips
@@ -79,107 +71,16 @@ import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot
 import Pitboss.FSM.PlayerTable
 import Pitboss.FSM.Table
+import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.BoundedEnum
 import Pitboss.State.Types.FiniteMap.Occupancy
-import Pitboss.State.Types.Tick
-import Pitboss.State.Types.Uid
 
 data family EntityState (k :: EntityKind) (s :: EntityStateSelector)
-
-data EntityKind
-    = Dealer
-    | DealerHand
-    | DealerRound
-    | Offering
-    | Player
-    | PlayerHand
-    | PlayerSpot
-    | Table
-    | TableShoe
-    deriving (Eq, Show, Generic)
-
-data EntityStatePart = Meta | Attrs | Modes | Rels
-    deriving (Eq, Show, Generic)
-
-data EntityStateSelector
-    = Whole
-    | Part EntityStatePart
-    deriving (Eq, Show, Generic)
-
-data family Metadata (k :: EntityKind)
-
-data instance Metadata k = Metadata
-    { _id :: EntityRef k
-    , _bornAt :: Maybe Tick
-    }
-    deriving (Eq, Show, Generic)
-
-instance FromJSON (Metadata k)
-instance ToJSON (Metadata k)
-
-type family Id (k :: EntityKind)
-type instance Id k = Uid
-
-class KnownEntityKind (k :: EntityKind) where
-    entityTag :: Proxy k -> String
-
-instance KnownEntityKind 'Dealer where
-    entityTag _ = "Dealer"
-instance KnownEntityKind 'DealerHand where
-    entityTag _ = "DealerHand"
-instance KnownEntityKind 'DealerRound where
-    entityTag _ = "DealerRound"
-instance KnownEntityKind 'Offering where
-    entityTag _ = "Offering"
-instance KnownEntityKind 'Player where
-    entityTag _ = "Player"
-instance KnownEntityKind 'PlayerHand where
-    entityTag _ = "PlayerHand"
-instance KnownEntityKind 'PlayerSpot where
-    entityTag _ = "PlayerSpot"
-instance KnownEntityKind 'Table where
-    entityTag _ = "Table"
-instance KnownEntityKind 'TableShoe where
-    entityTag _ = "TableShoe"
-
-newtype TaggedId (k :: EntityKind) = TaggedId Uid
-
-instance (KnownEntityKind k) => ToJSON (TaggedId k) where
-    toJSON (TaggedId uid) =
-        object
-            [ "tag" .= entityTag (Proxy @k)
-            , "uid" .= uid
-            ]
-
-instance (KnownEntityKind k) => FromJSON (TaggedId k) where
-    parseJSON = withObject "TaggedId" $ \o -> do
-        tag <- o .: "tag" :: Parser T.Text
-        uid <- o .: "uid"
-        let expected = T.pack $ entityTag (Proxy @k)
-        when (tag /= expected) $
-            fail $
-                "Expected tag " ++ T.unpack expected ++ ", but got " ++ T.unpack tag
-        pure $ TaggedId uid
-
-newtype EntityRef (k :: EntityKind)
-    = Clocked (Id k)
-    deriving (Eq, Ord, Show, Generic)
-
-instance (ToJSON (EntityRef k)) => ToJSON (EntityRef k) where
-    toJSON (Clocked x) = object ["variant" .= ("Clocked" :: String), "value" .= x]
-
-instance (FromJSON (EntityRef k)) => FromJSON (EntityRef k) where
-    parseJSON = withObject "EntityRef" $ \o -> do
-        variant <- o .: "variant"
-        case variant :: String of
-            "Clocked" -> Clocked <$> o .: "value"
-            _ -> fail ("Unknown EntityRef variant: " ++ variant)
 
 -- EDealer
 
 mkEDealer ::
-    EntityState 'Dealer (Part 'Meta) ->
     EntityState 'Dealer (Part 'Attrs) ->
     EntityState 'Dealer (Part 'Modes) ->
     EntityState 'Dealer (Part 'Rels) ->
@@ -200,15 +101,10 @@ mkEDealerRels ::
 mkEDealerRels = EDealerRels
 
 data instance EntityState 'Dealer 'Whole = EDealer
-    { _dMeta :: EntityState 'Dealer (Part 'Meta)
-    , _dAttrs :: EntityState 'Dealer (Part 'Attrs)
+    { _dAttrs :: EntityState 'Dealer (Part 'Attrs)
     , _dModes :: EntityState 'Dealer (Part 'Modes)
     , _dRels :: EntityState 'Dealer (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'Dealer (Part 'Meta)
-    = EDealerMeta (Metadata 'Dealer)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'Dealer (Part 'Attrs) = EDealerAttrs
@@ -233,9 +129,6 @@ data instance EntityState 'Dealer (Part 'Rels) = EDealerRels
 instance ToJSON (EntityState 'Dealer 'Whole)
 instance FromJSON (EntityState 'Dealer 'Whole)
 
-instance ToJSON (EntityState 'Dealer (Part 'Meta))
-instance FromJSON (EntityState 'Dealer (Part 'Meta))
-
 instance ToJSON (EntityState 'Dealer (Part 'Attrs))
 instance FromJSON (EntityState 'Dealer (Part 'Attrs))
 
@@ -248,7 +141,6 @@ instance FromJSON (EntityState 'Dealer (Part 'Rels))
 -- EDealerHand
 
 mkEDealerHand ::
-    EntityState DealerHand (Part Meta) ->
     EntityState DealerHand (Part Attrs) ->
     EntityState DealerHand (Part Modes) ->
     EntityState DealerHand (Part Rels) ->
@@ -265,15 +157,10 @@ mkEDealerHandRels :: EntityRef 'DealerRound -> EntityRef 'Dealer -> EntityState 
 mkEDealerHandRels = EDealerHandRels
 
 data instance EntityState 'DealerHand 'Whole = EDealerHand
-    { _dhMeta :: EntityState 'DealerHand (Part 'Meta)
-    , _dhAttrs :: EntityState 'DealerHand (Part 'Attrs)
+    { _dhAttrs :: EntityState 'DealerHand (Part 'Attrs)
     , _dhModes :: EntityState 'DealerHand (Part 'Modes)
     , _dhRels :: EntityState 'DealerHand (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'DealerHand (Part 'Meta)
-    = EDealerHandMeta (Metadata 'DealerHand)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'DealerHand (Part 'Attrs) = EDealerHandAttrs
@@ -295,9 +182,6 @@ data instance EntityState 'DealerHand (Part 'Rels) = EDealerHandRels
 instance ToJSON (EntityState 'DealerHand 'Whole)
 instance FromJSON (EntityState 'DealerHand 'Whole)
 
-instance ToJSON (EntityState 'DealerHand (Part 'Meta))
-instance FromJSON (EntityState 'DealerHand (Part 'Meta))
-
 instance ToJSON (EntityState 'DealerHand (Part 'Attrs))
 instance FromJSON (EntityState 'DealerHand (Part 'Attrs))
 
@@ -310,7 +194,6 @@ instance FromJSON (EntityState 'DealerHand (Part 'Rels))
 -- EDealerRound
 
 mkEDealerRound ::
-    EntityState DealerRound (Part Meta) ->
     EntityState DealerRound (Part Attrs) ->
     EntityState DealerRound (Part Modes) ->
     EntityState DealerRound (Part Rels) ->
@@ -327,15 +210,10 @@ mkEDealerRoundRels :: EntityRef 'TableShoe -> EntityState 'DealerRound (Part 'Re
 mkEDealerRoundRels = EDealerRoundRels
 
 data instance EntityState 'DealerRound 'Whole = EDealerRound
-    { _drMeta :: EntityState 'DealerRound (Part 'Meta)
-    , _drAttrs :: EntityState 'DealerRound (Part 'Attrs)
+    { _drAttrs :: EntityState 'DealerRound (Part 'Attrs)
     , _drModes :: EntityState 'DealerRound (Part 'Modes)
     , _drRels :: EntityState 'DealerRound (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'DealerRound (Part 'Meta)
-    = EDealerRoundMeta (Metadata 'DealerRound)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'DealerRound (Part 'Attrs) = EDealerRoundAttrs
@@ -355,9 +233,6 @@ data instance EntityState 'DealerRound (Part 'Rels) = EDealerRoundRels
 instance ToJSON (EntityState 'DealerRound 'Whole)
 instance FromJSON (EntityState 'DealerRound 'Whole)
 
-instance ToJSON (EntityState 'DealerRound (Part 'Meta))
-instance FromJSON (EntityState 'DealerRound (Part 'Meta))
-
 instance ToJSON (EntityState 'DealerRound (Part 'Attrs))
 instance FromJSON (EntityState 'DealerRound (Part 'Attrs))
 
@@ -370,7 +245,6 @@ instance FromJSON (EntityState 'DealerRound (Part 'Rels))
 -- EOffering
 
 mkEOffering ::
-    EntityState Offering (Part Meta) ->
     EntityState Offering (Part Attrs) ->
     EntityState Offering (Part Modes) ->
     EntityState Offering (Part Rels) ->
@@ -387,15 +261,10 @@ mkEOfferingRels :: EntityState 'Offering (Part 'Rels)
 mkEOfferingRels = EOfferingRels
 
 data instance EntityState 'Offering 'Whole = EOffering
-    { _oMeta :: EntityState 'Offering (Part 'Meta)
-    , _oAttrs :: EntityState 'Offering (Part 'Attrs)
+    { _oAttrs :: EntityState 'Offering (Part 'Attrs)
     , _oModes :: EntityState 'Offering (Part 'Modes)
     , _oRels :: EntityState 'Offering (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'Offering (Part 'Meta)
-    = EOfferingMeta (Metadata 'Offering)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'Offering (Part 'Attrs) = EOfferingAttrs
@@ -412,9 +281,6 @@ data instance EntityState 'Offering (Part 'Rels) = EOfferingRels
 instance ToJSON (EntityState 'Offering 'Whole)
 instance FromJSON (EntityState 'Offering 'Whole)
 
-instance ToJSON (EntityState 'Offering (Part 'Meta))
-instance FromJSON (EntityState 'Offering (Part 'Meta))
-
 instance ToJSON (EntityState 'Offering (Part 'Attrs))
 instance FromJSON (EntityState 'Offering (Part 'Attrs))
 
@@ -427,7 +293,6 @@ instance FromJSON (EntityState 'Offering (Part 'Rels))
 -- EPlayer
 
 mkEPlayer ::
-    EntityState 'Player (Part 'Meta) ->
     EntityState 'Player (Part 'Attrs) ->
     EntityState 'Player (Part 'Modes) ->
     EntityState 'Player (Part 'Rels) ->
@@ -448,15 +313,10 @@ mkEPlayerRels :: EntityState Player (Part Rels)
 mkEPlayerRels = EPlayerRels
 
 data instance EntityState 'Player 'Whole = EPlayer
-    { _pMeta :: EntityState 'Player (Part 'Meta)
-    , _pAttrs :: EntityState 'Player (Part 'Attrs)
+    { _pAttrs :: EntityState 'Player (Part 'Attrs)
     , _pModes :: EntityState 'Player (Part 'Modes)
     , _pRels :: EntityState 'Player (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'Player (Part 'Meta)
-    = EPlayerMeta (Metadata 'Player)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'Player (Part 'Attrs) = EPlayerAttrs
@@ -478,9 +338,6 @@ data instance EntityState 'Player (Part 'Rels) = EPlayerRels
 instance ToJSON (EntityState 'Player 'Whole)
 instance FromJSON (EntityState 'Player 'Whole)
 
-instance ToJSON (EntityState 'Player (Part 'Meta))
-instance FromJSON (EntityState 'Player (Part 'Meta))
-
 instance ToJSON (EntityState 'Player (Part 'Attrs))
 instance FromJSON (EntityState 'Player (Part 'Attrs))
 
@@ -493,7 +350,6 @@ instance FromJSON (EntityState 'Player (Part 'Rels))
 -- EPlayerHand
 
 mkEPlayerHand ::
-    EntityState PlayerHand (Part Meta) ->
     EntityState PlayerHand (Part Attrs) ->
     EntityState PlayerHand (Part Modes) ->
     EntityState PlayerHand (Part Rels) ->
@@ -514,15 +370,10 @@ mkEPlayerHandRels ::
 mkEPlayerHandRels = EPlayerHandRels
 
 data instance EntityState 'PlayerHand 'Whole = EPlayerHand
-    { _phMeta :: EntityState 'PlayerHand (Part 'Meta)
-    , _phAttrs :: EntityState 'PlayerHand (Part 'Attrs)
+    { _phAttrs :: EntityState 'PlayerHand (Part 'Attrs)
     , _phModes :: EntityState 'PlayerHand (Part 'Modes)
     , _phRels :: EntityState 'PlayerHand (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'PlayerHand (Part 'Meta)
-    = EPlayerHandMeta (Metadata 'PlayerHand)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'PlayerHand (Part 'Attrs) = EPlayerHandAttrs
@@ -548,9 +399,6 @@ data instance EntityState 'PlayerHand (Part 'Rels) = EPlayerHandRels
 instance ToJSON (EntityState 'PlayerHand 'Whole)
 instance FromJSON (EntityState 'PlayerHand 'Whole)
 
-instance ToJSON (EntityState 'PlayerHand (Part 'Meta))
-instance FromJSON (EntityState 'PlayerHand (Part 'Meta))
-
 instance ToJSON (EntityState 'PlayerHand (Part 'Attrs))
 instance FromJSON (EntityState 'PlayerHand (Part 'Attrs))
 
@@ -561,7 +409,6 @@ instance ToJSON (EntityState 'PlayerHand (Part 'Rels))
 instance FromJSON (EntityState 'PlayerHand (Part 'Rels))
 
 mkEPlayerSpot ::
-    EntityState PlayerSpot (Part Meta) ->
     EntityState PlayerSpot (Part Attrs) ->
     EntityState PlayerSpot (Part Modes) ->
     EntityState PlayerSpot (Part Rels) ->
@@ -582,15 +429,10 @@ mkEPlayerSpotRels ::
 mkEPlayerSpotRels = EPlayerSpotRels
 
 data instance EntityState 'PlayerSpot 'Whole = EPlayerSpot
-    { _psMeta :: EntityState 'PlayerSpot (Part 'Meta)
-    , _psAttrs :: EntityState 'PlayerSpot (Part 'Attrs)
+    { _psAttrs :: EntityState 'PlayerSpot (Part 'Attrs)
     , _psModes :: EntityState 'PlayerSpot (Part 'Modes)
     , _psRels :: EntityState 'PlayerSpot (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'PlayerSpot (Part 'Meta)
-    = EPlayerSpotMeta (Metadata 'PlayerSpot)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'PlayerSpot (Part 'Attrs) = EPlayerSpotAttrs
@@ -613,9 +455,6 @@ data instance EntityState 'PlayerSpot (Part 'Rels) = EPlayerSpotRels
 
 instance ToJSON (EntityState 'PlayerSpot 'Whole)
 instance FromJSON (EntityState 'PlayerSpot 'Whole)
-
-instance ToJSON (EntityState 'PlayerSpot (Part 'Meta))
-instance FromJSON (EntityState 'PlayerSpot (Part 'Meta))
 
 instance ToJSON (EntityState 'PlayerSpot (Part 'Attrs))
 instance FromJSON (EntityState 'PlayerSpot (Part 'Attrs))
@@ -655,7 +494,6 @@ instance BoundedEnum PlayerSpotHandIx
 -- ETable
 
 mkETable ::
-    EntityState Table (Part Meta) ->
     EntityState Table (Part Attrs) ->
     EntityState Table (Part Modes) ->
     EntityState Table (Part Rels) ->
@@ -672,15 +510,10 @@ mkETableRels :: Maybe (EntityRef 'Dealer) -> EntityState 'Table (Part 'Rels)
 mkETableRels = ETableRels
 
 data instance EntityState 'Table 'Whole = ETable
-    { _tMeta :: EntityState 'Table (Part 'Meta)
-    , _tAttrs :: EntityState 'Table (Part 'Attrs)
+    { _tAttrs :: EntityState 'Table (Part 'Attrs)
     , _tModes :: EntityState 'Table (Part 'Modes)
     , _tRels :: EntityState 'Table (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'Table (Part 'Meta)
-    = ETableMeta (Metadata 'Table)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'Table (Part 'Attrs) = ETableAttrs
@@ -704,9 +537,6 @@ data instance EntityState 'Table (Part 'Rels) = ETableRels
 instance ToJSON (EntityState 'Table 'Whole)
 instance FromJSON (EntityState 'Table 'Whole)
 
-instance ToJSON (EntityState 'Table (Part 'Meta))
-instance FromJSON (EntityState 'Table (Part 'Meta))
-
 instance ToJSON (EntityState 'Table (Part 'Attrs))
 instance FromJSON (EntityState 'Table (Part 'Attrs))
 
@@ -719,7 +549,6 @@ instance FromJSON (EntityState 'Table (Part 'Rels))
 -- ETableShoe
 
 mkETableShoe ::
-    EntityState TableShoe (Part 'Meta) ->
     EntityState TableShoe (Part 'Attrs) ->
     EntityState TableShoe (Part 'Modes) ->
     EntityState TableShoe (Part 'Rels) ->
@@ -736,15 +565,10 @@ mkETableShoeRels :: EntityRef 'Table -> EntityState 'TableShoe (Part 'Rels)
 mkETableShoeRels = ETableShoeRels
 
 data instance EntityState 'TableShoe 'Whole = ETableShoe
-    { _tsMeta :: EntityState 'TableShoe (Part 'Meta)
-    , _tsAttrs :: EntityState 'TableShoe (Part 'Attrs)
+    { _tsAttrs :: EntityState 'TableShoe (Part 'Attrs)
     , _tsModes :: EntityState 'TableShoe (Part 'Modes)
     , _tsRels :: EntityState 'TableShoe (Part 'Rels)
     }
-    deriving (Eq, Show, Generic)
-
-newtype instance EntityState 'TableShoe (Part 'Meta)
-    = ETableShoeMeta (Metadata 'TableShoe)
     deriving (Eq, Show, Generic)
 
 data instance EntityState 'TableShoe (Part 'Attrs) = ETableShoeAttrs
@@ -763,9 +587,6 @@ data instance EntityState 'TableShoe (Part 'Rels) = ETableShoeRels
 
 instance ToJSON (EntityState 'TableShoe 'Whole)
 instance FromJSON (EntityState 'TableShoe 'Whole)
-
-instance ToJSON (EntityState 'TableShoe (Part 'Meta))
-instance FromJSON (EntityState 'TableShoe (Part 'Meta))
 
 instance ToJSON (EntityState 'TableShoe (Part 'Attrs))
 instance FromJSON (EntityState 'TableShoe (Part 'Attrs))

@@ -18,39 +18,20 @@ module Pitboss.State.Trace (
 import Control.Lens (Lens', lens)
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
-import GHC.Generics
-import Pitboss.State.Delta.Types
+import GHC.Generics (Generic)
 import Pitboss.State.Entity.Types
 import Pitboss.State.Registry
 
-type Dealers = Registry (Id 'Dealer) (Delta 'Dealer 'Whole)
-
-type DealerHands = Registry (Id 'DealerHand) (Delta 'DealerHand 'Whole)
-
-type DealerRounds = Registry (Id 'DealerRound) (Delta 'DealerRound 'Whole)
-
-type Offerings = Registry (Id 'Offering) (Delta 'Offering 'Whole)
-
-type Players = Registry (Id 'Player) (Delta 'Player 'Whole)
-
-type PlayerHands = Registry (Id 'PlayerHand) (Delta 'PlayerHand 'Whole)
-
-type PlayerSpots = Registry (Id 'PlayerSpot) (Delta 'PlayerSpot 'Whole)
-
-type Tables = Registry (Id 'Table) (Delta 'Table 'Whole)
-
-type TableShoes = Registry (Id 'TableShoe) (Delta 'TableShoe 'Whole)
-
 data Trace = Trace
-    { _offerings :: Offerings
-    , _tables :: Tables
-    , _tableShoes :: TableShoes
-    , _dealers :: Dealers
-    , _dealerHands :: DealerHands
-    , _dealerRounds :: DealerRounds
-    , _players :: Players
-    , _playerSpots :: PlayerSpots
-    , _playerHands :: PlayerHands
+    { _offerings :: Registry 'Offering (EntityState 'Offering 'Whole)
+    , _tables :: Registry 'Table (EntityState 'Table 'Whole)
+    , _tableShoes :: Registry 'TableShoe (EntityState 'TableShoe 'Whole)
+    , _dealers :: Registry 'Dealer (EntityState 'Dealer 'Whole)
+    , _dealerHands :: Registry 'DealerHand (EntityState 'DealerHand 'Whole)
+    , _dealerRounds :: Registry 'DealerRound (EntityState 'DealerRound 'Whole)
+    , _players :: Registry 'Player (EntityState 'Player 'Whole)
+    , _playerSpots :: Registry 'PlayerSpot (EntityState 'PlayerSpot 'Whole)
+    , _playerHands :: Registry 'PlayerHand (EntityState 'PlayerHand 'Whole)
     }
     deriving (Eq, Generic)
 
@@ -112,29 +93,29 @@ emptyTrace =
         , _playerHands = mempty
         }
 
-lensOfferings :: Lens' Trace Offerings
-lensOfferings = lens _offerings (\s x -> s{_offerings = x})
-
-lensTables :: Lens' Trace Tables
-lensTables = lens _tables (\s x -> s{_tables = x})
-
-lensTableShoes :: Lens' Trace TableShoes
-lensTableShoes = lens _tableShoes (\s x -> s{_tableShoes = x})
-
-lensDealers :: Lens' Trace Dealers
+lensDealers :: Lens' Trace (Registry 'Dealer (EntityState 'Dealer 'Whole))
 lensDealers = lens _dealers (\s x -> s{_dealers = x})
 
-lensDealerRounds :: Lens' Trace DealerRounds
-lensDealerRounds = lens _dealerRounds (\s x -> s{_dealerRounds = x})
-
-lensDealerHands :: Lens' Trace DealerHands
+lensDealerHands :: Lens' Trace (Registry 'DealerHand (EntityState 'DealerHand 'Whole))
 lensDealerHands = lens _dealerHands (\s x -> s{_dealerHands = x})
 
-lensPlayers :: Lens' Trace Players
+lensDealerRounds :: Lens' Trace (Registry 'DealerRound (EntityState 'DealerRound 'Whole))
+lensDealerRounds = lens _dealerRounds (\s x -> s{_dealerRounds = x})
+
+lensOfferings :: Lens' Trace (Registry 'Offering (EntityState 'Offering 'Whole))
+lensOfferings = lens _offerings (\s x -> s{_offerings = x})
+
+lensPlayers :: Lens' Trace (Registry 'Player (EntityState 'Player 'Whole))
 lensPlayers = lens _players (\s x -> s{_players = x})
 
-lensPlayerSpots :: Lens' Trace PlayerSpots
+lensPlayerHands :: Lens' Trace (Registry 'PlayerHand (EntityState 'PlayerHand 'Whole))
+lensPlayerHands = lens _playerHands (\s x -> s{_playerHands = x})
+
+lensPlayerSpots :: Lens' Trace (Registry 'PlayerSpot (EntityState 'PlayerSpot 'Whole))
 lensPlayerSpots = lens _playerSpots (\s x -> s{_playerSpots = x})
 
-lensPlayerHands :: Lens' Trace PlayerHands
-lensPlayerHands = lens _playerHands (\s x -> s{_playerHands = x})
+lensTables :: Lens' Trace (Registry 'Table (EntityState 'Table 'Whole))
+lensTables = lens _tables (\s x -> s{_tables = x})
+
+lensTableShoes :: Lens' Trace (Registry 'TableShoe (EntityState 'TableShoe 'Whole))
+lensTableShoes = lens _tableShoes (\s x -> s{_tableShoes = x})

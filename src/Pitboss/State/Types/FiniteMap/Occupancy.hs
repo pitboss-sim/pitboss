@@ -1,6 +1,10 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Pitboss.State.Entity.Types.FiniteMap.Occupancy where
+module Pitboss.State.Types.FiniteMap.Occupancy (
+    Occupancy (..),
+    isPresent,
+    isAbsent,
+) where
 
 import Data.Aeson
 import GHC.Generics

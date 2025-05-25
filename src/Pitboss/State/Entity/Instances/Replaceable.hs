@@ -4,9 +4,13 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.State.Entity.Capability.Replaceable where
+module Pitboss.State.Entity.Instances.Replaceable (
+    ReplaceableAttrs (..),
+    ReplaceableModes (..),
+    ReplaceableRels (..),
+) where
 
-import Pitboss.State.Entity.Entity
+import Pitboss.State.Entity.Types
 
 class ReplaceableAttrs (k :: EntityKind) where
     replaceAttrs :: EntityState k ('Part 'Attrs) -> EntityState k 'Whole -> EntityState k 'Whole

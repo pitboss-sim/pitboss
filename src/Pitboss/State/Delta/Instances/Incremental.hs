@@ -5,44 +5,22 @@
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.State.Entity.Capability.Incremental where
-
--- import Control.Lens (Lens', lens, (%~), (&))
--- import Data.Map.Strict qualified as Map
+module Pitboss.State.Delta.Instances.Incremental (
+    DeltaWrapper (..),
+) where
 
 import Control.Lens ((&))
 import Data.Map.Strict qualified as Map
-import Pitboss.State.Entity.Capability.Decomposable
-import Pitboss.State.Entity.Capability.Replaceable
-import Pitboss.State.Entity.Delta
-import Pitboss.State.Entity.Entity
-import Pitboss.State.Entity.Types.FiniteMap
-
--- import Pitboss.State.Entity.Types.FiniteMap
-
--- type family AttrsDelta (k :: EntityKind)
--- type family ModesDelta (k :: EntityKind)
--- type family RelsDelta (k :: EntityKind)
---
--- data family Delta (k :: EntityKind) (f :: DeltaTarget)
+import Pitboss.State.Delta.Types
+import Pitboss.State.Entity.Instances.Decomposable
+import Pitboss.State.Entity.Instances.Replaceable
+import Pitboss.State.Entity.Types
+import Pitboss.State.Types.FiniteMap
 
 data DeltaWrapper k where
     DeltaAttrs :: Delta k (Part 'Attrs) -> DeltaWrapper k
     DeltaModes :: Delta k (Part 'Modes) -> DeltaWrapper k
     DeltaRels :: Delta k (Part 'Rels) -> DeltaWrapper k
-
-class Describable delta where
-    type Target delta = target | target -> delta
-
-    previewDelta :: delta -> Target delta -> Target delta
-    previewDelta = applyDelta
-
-    applyDelta :: delta -> Target delta -> Target delta
-
-    describeDelta :: delta -> Target delta -> String
-
-class (Incremental delta) => Identifiable delta where
-    entityToId :: delta -> Target delta -> Uid
 
 class Incremental target where
     type Applicable target = applicable | applicable -> target
@@ -50,10 +28,6 @@ class Incremental target where
     apply :: Applicable target -> target -> target
 
     describe :: Applicable target -> target -> String
-
-class IncrementalPart (k :: EntityKind) (part :: EntityStatePart) where
-    applyPartDelta :: Delta k ('Part part) -> EntityState k ('Part part) -> EntityState k ('Part part)
-    describePartDelta :: Delta k ('Part part) -> EntityState k ('Part part) -> String
 
 -- Dealer
 instance Incremental (EntityState 'Dealer (Part 'Attrs)) where

@@ -66,23 +66,14 @@ library
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
-                      Pitboss.State.Entity.Capability.Decomposable
-                      Pitboss.State.Entity.Capability.Incremental
-                      Pitboss.State.Entity.Capability.Replaceable
-                      Pitboss.State.Entity.Capability.Reversible
-                      Pitboss.State.Entity.Delta
-                      Pitboss.State.Entity.Entity
-                      Pitboss.State.Entity.Meta
+                      Pitboss.State.Entity.Instances.Decomposable
+                      Pitboss.State.Entity.Instances.Replaceable
                       Pitboss.State.Entity.Types
-                      Pitboss.State.Entity.Types.Id
-                      Pitboss.State.Entity.Types.Id.Uid
-                      Pitboss.State.Entity.Types.FiniteMap
-                      Pitboss.State.Entity.Types.FiniteMap.BoundedEnum
-                      Pitboss.State.Entity.Types.FiniteMap.Occupancy
-                      Pitboss.State.Registry
-                      Pitboss.State.Timeline
-                      Pitboss.State.Trace
-                      Pitboss.State.Types
+                      Pitboss.State.Types.FiniteMap
+                      Pitboss.State.Types.FiniteMap.BoundedEnum
+                      Pitboss.State.Types.FiniteMap.Occupancy
+                      Pitboss.State.Types.Tick
+                      Pitboss.State.Types.Uid
                       Pitboss.Strategy.Chart.Error
                       Pitboss.Strategy.Chart.Interpret
                       Pitboss.Strategy.Chart.Overlay

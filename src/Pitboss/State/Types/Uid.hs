@@ -1,8 +1,23 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.State.Entity.Types.Id.Uid where
+module Pitboss.State.Types.Uid (
+    Uid (..),
+    parseUid,
+    generateUid,
+    decodeBase32Char,
+) where
 
-import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
+import Data.Aeson (
+    FromJSON (..),
+    FromJSONKey,
+    ToJSON (..),
+    ToJSONKey,
+ )
 import Data.Bits (shiftL, (.|.))
 import Data.Char (toUpper)
 import Data.Hashable
@@ -64,7 +79,7 @@ mkUid s =
             _ -> False
 
     isBase32Char :: Char -> Bool
-    isBase32Char c = toUpper c `elem` "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+    isBase32Char c = toUpper c `elem` ("0123456789ABCDEFGHJKMNPQRSTVWXYZ" :: String)
 
 uidToWord64 :: Uid -> Word64
 uidToWord64 (Uid s) =
@@ -72,7 +87,7 @@ uidToWord64 (Uid s) =
      in case Prelude.break (== '-') s of
             (prefix, '-' : suffix) ->
                 let digits = mapMaybe decodeBase32Char (prefix ++ suffix)
-                 in foldl (\acc d -> (acc `shiftL` 5) .|. fromIntegral d) 0 digits
+                 in foldl (\acc d -> acc `shiftL` 5 .|. fromIntegral d) 0 digits
             _ -> error $ "Invalid Uid: " ++ s
 
 base32Map :: Map Char Int

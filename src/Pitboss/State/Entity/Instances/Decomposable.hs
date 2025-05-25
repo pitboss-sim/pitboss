@@ -1,11 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.State.Entity.Capability.Decomposable (
+module Pitboss.State.Entity.Instances.Decomposable (
     Decomposable (..),
 ) where
 
-import Pitboss.State.Entity.Entity
+import Pitboss.State.Entity.Types
 
 class Decomposable (k :: EntityKind) (s :: EntityStateSelector) where
     type Meta k s

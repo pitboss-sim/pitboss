@@ -66,14 +66,19 @@ library
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.State.Cache
+                      Pitboss.State.Cache.Example
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
                       Pitboss.State.Delta.Types
                       Pitboss.State.Entity.Instances.Decomposable
                       Pitboss.State.Entity.Instances.Replaceable
+                      Pitboss.State.Entity.Lenses
                       Pitboss.State.Entity.Types
                       Pitboss.State.Registry
                       Pitboss.State.Timeline
+                      Pitboss.State.Timeline.Query
+                      Pitboss.State.Timeline.Reconstruction
                       Pitboss.State.Trace
                       Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
@@ -97,8 +102,10 @@ library
                       hashable,
                       insert-ordered-containers,
                       lens,
+                      mtl,
                       random,
                       text,
+                      unordered-containers,
     hs-source-dirs:   src
     default-language: GHC2021
 

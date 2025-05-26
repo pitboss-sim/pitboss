@@ -13,13 +13,13 @@ module Pitboss.State.Entity.Instances.Replaceable (
 import Pitboss.State.Entity.Types
 
 class ReplaceableAttrs (k :: EntityKind) where
-    replaceAttrs :: EntityState k ('Part 'Attrs) -> EntityState k 'Whole -> EntityState k 'Whole
+    replaceAttrs :: EntityState k (PartialUpdate 'Attrs) -> EntityState k 'TransactionBoundary -> EntityState k 'TransactionBoundary
 
 class ReplaceableModes (k :: EntityKind) where
-    replaceModes :: EntityState k ('Part 'Modes) -> EntityState k 'Whole -> EntityState k 'Whole
+    replaceModes :: EntityState k (PartialUpdate 'Modes) -> EntityState k 'TransactionBoundary -> EntityState k 'TransactionBoundary
 
 class ReplaceableRels (k :: EntityKind) where
-    replaceRels :: EntityState k ('Part 'Rels) -> EntityState k 'Whole -> EntityState k 'Whole
+    replaceRels :: EntityState k (PartialUpdate 'Rels) -> EntityState k 'TransactionBoundary -> EntityState k 'TransactionBoundary
 
 -- Dealer
 instance ReplaceableAttrs 'Dealer where

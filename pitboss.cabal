@@ -74,6 +74,8 @@ library
                       Pitboss.State.Entity.Types
                       Pitboss.State.Registry
                       Pitboss.State.Timeline
+                      Pitboss.State.Timeline.Query
+                      Pitboss.State.Timeline.Reconstruction
                       Pitboss.State.Trace
                       Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
@@ -97,6 +99,7 @@ library
                       hashable,
                       insert-ordered-containers,
                       lens,
+                      mtl,
                       random,
                       text,
     hs-source-dirs:   src

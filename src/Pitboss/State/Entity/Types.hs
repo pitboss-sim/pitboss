@@ -12,9 +12,37 @@ module Pitboss.State.Entity.Types (
     DeltaSemantics (..),
     EntityStatePart (..),
     Uid (..),
+    DealerAttrs (..),
+    DealerModes (..),
+    DealerRels (..),
+    DealerHandAttrs (..),
+    DealerHandModes (..),
+    DealerHandRels (..),
+    DealerRoundAttrs (..),
+    DealerRoundModes (..),
+    DealerRoundRels (..),
+    OfferingAttrs (..),
+    OfferingModes (..),
+    OfferingRels (..),
+    PlayerAttrs (..),
+    PlayerModes (..),
+    PlayerRels (..),
+    PlayerHandAttrs (..),
+    PlayerHandModes (..),
+    PlayerHandRels (..),
+    PlayerSpotAttrs (..),
+    PlayerSpotModes (..),
+    PlayerSpotRels (..),
+    PlayerSpotIx (..),
+    PlayerSpotHandIx (..),
+    TableAttrs (..),
+    TableModes (..),
+    TableRels (..),
+    TableShoeAttrs (..),
+    TableShoeModes (..),
+    TableShoeRels (..),
     CardIx,
     CardState,
-    PlayerSpotHandIx,
 ) where
 
 import Data.Aeson (
@@ -40,199 +68,127 @@ import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.BoundedEnum
 import Pitboss.State.Types.FiniteMap.Occupancy
 
-data family EntityState (k :: EntityKind) (s :: DeltaSemantics)
+-- EntityState is now just complete entity state
+data family EntityState (k :: EntityKind)
 
--- EDealer
-
-data instance EntityState 'Dealer 'TransactionBoundary = EDealer
-    { _dAttrs :: EntityState 'Dealer (PartialUpdate 'Attrs)
-    , _dModes :: EntityState 'Dealer (PartialUpdate 'Modes)
-    , _dRels :: EntityState 'Dealer (PartialUpdate 'Rels)
-    }
-    deriving (Eq, Show, Generic)
-
-data instance EntityState 'Dealer (PartialUpdate 'Attrs) = EDealerAttrs
+-- Supporting attribute/mode/relation types
+data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Dealer (PartialUpdate 'Modes) = EDealerModes
+data DealerModes = DealerModes
     { _dModesDealerTable :: SomeDealerTableFSM
     , _dModesDealerRound :: DealerRoundFSM
     , _dModesDealerHand :: SomeDealerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Dealer (PartialUpdate 'Rels) = EDealerRels
+data DealerRels = DealerRels
     { _dRelsActiveTable :: Maybe (EntityId 'Table)
     , _dRelsActiveRound :: Maybe (EntityId 'DealerRound)
     , _dRelsActiveHand :: Maybe (EntityId 'DealerHand)
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'Dealer 'TransactionBoundary)
-instance FromJSON (EntityState 'Dealer 'TransactionBoundary)
-
-instance ToJSON (EntityState 'Dealer (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'Dealer (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'Dealer (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'Dealer (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'Dealer (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'Dealer (PartialUpdate 'Rels))
-
--- EDealerHand
-
-data instance EntityState 'DealerHand 'TransactionBoundary = EDealerHand
-    { _dhAttrs :: EntityState 'DealerHand (PartialUpdate 'Attrs)
-    , _dhModes :: EntityState 'DealerHand (PartialUpdate 'Modes)
-    , _dhRels :: EntityState 'DealerHand (PartialUpdate 'Rels)
+-- EDealer
+data instance EntityState 'Dealer = EDealer
+    { _dAttrs :: DealerAttrs
+    , _dModes :: DealerModes
+    , _dRels :: DealerRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'DealerHand (PartialUpdate 'Attrs) = EDealerHandAttrs
+data DealerHandAttrs = DealerHandAttrs
     { _dhAttrsHandCards :: [Card]
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'DealerHand (PartialUpdate 'Modes) = EDealerHandModes
+data DealerHandModes = DealerHandModes
     { _dhModesDealerHand :: SomeDealerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'DealerHand (PartialUpdate 'Rels) = EDealerHandRels
+data DealerHandRels = DealerHandRels
     { _dhRelsDealerRound :: EntityId 'DealerRound
     , _dhRelsDealer :: EntityId 'Dealer
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'DealerHand 'TransactionBoundary)
-instance FromJSON (EntityState 'DealerHand 'TransactionBoundary)
-
-instance ToJSON (EntityState 'DealerHand (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'DealerHand (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'DealerHand (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'DealerHand (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'DealerHand (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'DealerHand (PartialUpdate 'Rels))
-
--- EDealerRound
-
-data instance EntityState 'DealerRound 'TransactionBoundary = EDealerRound
-    { _drAttrs :: EntityState 'DealerRound (PartialUpdate 'Attrs)
-    , _drModes :: EntityState 'DealerRound (PartialUpdate 'Modes)
-    , _drRels :: EntityState 'DealerRound (PartialUpdate 'Rels)
+-- EDealerHand
+data instance EntityState 'DealerHand = EDealerHand
+    { _dhAttrs :: DealerHandAttrs
+    , _dhModes :: DealerHandModes
+    , _dhRels :: DealerHandRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'DealerRound (PartialUpdate 'Attrs) = EDealerRoundAttrs
+data DealerRoundAttrs = DealerRoundAttrs
     { _drAttrsNumber :: Int
     , _drAttrsIsActive :: Bool
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'DealerRound (PartialUpdate 'Modes) = EDealerRoundModes
+data DealerRoundModes = DealerRoundModes
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'DealerRound (PartialUpdate 'Rels) = EDealerRoundRels
+data DealerRoundRels = DealerRoundRels
     { _drRelsTableShoeUsed :: EntityId 'TableShoe
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'DealerRound 'TransactionBoundary)
-instance FromJSON (EntityState 'DealerRound 'TransactionBoundary)
-
-instance ToJSON (EntityState 'DealerRound (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'DealerRound (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'DealerRound (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'DealerRound (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'DealerRound (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'DealerRound (PartialUpdate 'Rels))
-
--- EOffering
-
-data instance EntityState 'Offering 'TransactionBoundary = EOffering
-    { _oAttrs :: EntityState 'Offering (PartialUpdate 'Attrs)
-    , _oModes :: EntityState 'Offering (PartialUpdate 'Modes)
-    , _oRels :: EntityState 'Offering (PartialUpdate 'Rels)
+-- EDealerRound
+data instance EntityState 'DealerRound = EDealerRound
+    { _drAttrs :: DealerRoundAttrs
+    , _drModes :: DealerRoundModes
+    , _drRels :: DealerRoundRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Offering (PartialUpdate 'Attrs) = EOfferingAttrs
+data OfferingAttrs = OfferingAttrs
     { _oAttrsOffering :: O.Offering
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Offering (PartialUpdate 'Modes) = EOfferingModes
+data OfferingModes = OfferingModes
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Offering (PartialUpdate 'Rels) = EOfferingRels
+data OfferingRels = OfferingRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'Offering 'TransactionBoundary)
-instance FromJSON (EntityState 'Offering 'TransactionBoundary)
-
-instance ToJSON (EntityState 'Offering (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'Offering (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'Offering (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'Offering (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'Offering (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'Offering (PartialUpdate 'Rels))
-
--- EPlayer
-
-data instance EntityState 'Player 'TransactionBoundary = EPlayer
-    { _pAttrs :: EntityState 'Player (PartialUpdate 'Attrs)
-    , _pModes :: EntityState 'Player (PartialUpdate 'Modes)
-    , _pRels :: EntityState 'Player (PartialUpdate 'Rels)
+-- EOffering
+data instance EntityState 'Offering = EOffering
+    { _oAttrs :: OfferingAttrs
+    , _oModes :: OfferingModes
+    , _oRels :: OfferingRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Player (PartialUpdate 'Attrs) = EPlayerAttrs
+data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
     , _pAttrsBankroll :: Chips
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Player (PartialUpdate 'Modes) = EPlayerModes
+data PlayerModes = PlayerModes
     { _pModesPlayerTable :: SomePlayerTableFSM
     , _pModesPlayerSpot :: SomePlayerSpotFSM
     , _pModesPlayerHand :: SomePlayerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Player (PartialUpdate 'Rels) = EPlayerRels
+data PlayerRels = PlayerRels
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'Player 'TransactionBoundary)
-instance FromJSON (EntityState 'Player 'TransactionBoundary)
-
-instance ToJSON (EntityState 'Player (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'Player (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'Player (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'Player (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'Player (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'Player (PartialUpdate 'Rels))
-
--- EPlayerHand
-
-data instance EntityState 'PlayerHand 'TransactionBoundary = EPlayerHand
-    { _phAttrs :: EntityState 'PlayerHand (PartialUpdate 'Attrs)
-    , _phModes :: EntityState 'PlayerHand (PartialUpdate 'Modes)
-    , _phRels :: EntityState 'PlayerHand (PartialUpdate 'Rels)
+-- EPlayer
+data instance EntityState 'Player = EPlayer
+    { _pAttrs :: PlayerAttrs
+    , _pModes :: PlayerModes
+    , _pRels :: PlayerRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'PlayerHand (PartialUpdate 'Attrs) = EPlayerHandAttrs
+data PlayerHandAttrs = PlayerHandAttrs
     { _phAttrsHandCards :: [Card]
     , _phAttrsOriginalBet :: Chips
     , _phAttrsSplitDepth :: Int
@@ -240,66 +196,50 @@ data instance EntityState 'PlayerHand (PartialUpdate 'Attrs) = EPlayerHandAttrs
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'PlayerHand (PartialUpdate 'Modes) = EPlayerHandModes
+data PlayerHandModes = PlayerHandModes
     { _phFsm :: SomePlayerHandFSM
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'PlayerHand (PartialUpdate 'Rels) = EPlayerHandRels
+data PlayerHandRels = PlayerHandRels
     { _phRelsBelongsToPlayerSpot :: EntityId 'PlayerSpot
     , _phRelsBelongsToDealerRound :: EntityId 'DealerRound
     , _phRelsOwnedByPlayer :: EntityId 'Player
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'PlayerHand 'TransactionBoundary)
-instance FromJSON (EntityState 'PlayerHand 'TransactionBoundary)
-
-instance ToJSON (EntityState 'PlayerHand (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'PlayerHand (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'PlayerHand (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'PlayerHand (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'PlayerHand (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'PlayerHand (PartialUpdate 'Rels))
-
-data instance EntityState 'PlayerSpot 'TransactionBoundary = EPlayerSpot
-    { _psAttrs :: EntityState 'PlayerSpot (PartialUpdate 'Attrs)
-    , _psModes :: EntityState 'PlayerSpot (PartialUpdate 'Modes)
-    , _psRels :: EntityState 'PlayerSpot (PartialUpdate 'Rels)
+-- EPlayerHand
+data instance EntityState 'PlayerHand = EPlayerHand
+    { _phAttrs :: PlayerHandAttrs
+    , _phModes :: PlayerHandModes
+    , _phRels :: PlayerHandRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'PlayerSpot (PartialUpdate 'Attrs) = EPlayerSpotAttrs
+data PlayerSpotAttrs = PlayerSpotAttrs
     { _psAttrsSpotIndex :: PlayerSpotIx
     , _psAttrsWager :: Chips
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'PlayerSpot (PartialUpdate 'Modes) = EPlayerSpotModes
+data PlayerSpotModes = PlayerSpotModes
     { _psModesPlayerSpot :: SomePlayerSpotFSM
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'PlayerSpot (PartialUpdate 'Rels) = EPlayerSpotRels
+data PlayerSpotRels = PlayerSpotRels
     { _psEntityRelsPlayerId :: EntityId 'Player
     , _psEntityRelsRoundId :: EntityId 'DealerRound
     , _psRelsHandOccupancy :: FiniteMap PlayerSpotHandIx (Occupancy (EntityId 'PlayerHand))
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'PlayerSpot 'TransactionBoundary)
-instance FromJSON (EntityState 'PlayerSpot 'TransactionBoundary)
-
-instance ToJSON (EntityState 'PlayerSpot (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'PlayerSpot (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'PlayerSpot (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'PlayerSpot (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'PlayerSpot (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'PlayerSpot (PartialUpdate 'Rels))
+data instance EntityState 'PlayerSpot = EPlayerSpot
+    { _psAttrs :: PlayerSpotAttrs
+    , _psModes :: PlayerSpotModes
+    , _psRels :: PlayerSpotRels
+    }
+    deriving (Eq, Show, Generic)
 
 data PlayerSpotIx
     = EPlayerSpot1
@@ -327,16 +267,7 @@ instance ToJSON PlayerSpotHandIx
 instance FromJSON PlayerSpotHandIx
 instance BoundedEnum PlayerSpotHandIx
 
--- ETable
-
-data instance EntityState 'Table 'TransactionBoundary = ETable
-    { _tAttrs :: EntityState 'Table (PartialUpdate 'Attrs)
-    , _tModes :: EntityState 'Table (PartialUpdate 'Modes)
-    , _tRels :: EntityState 'Table (PartialUpdate 'Rels)
-    }
-    deriving (Eq, Show, Generic)
-
-data instance EntityState 'Table (PartialUpdate 'Attrs) = ETableAttrs
+data TableAttrs = TableAttrs
     { _tAttrsName :: String
     , _tAttrsCurrentRound :: Maybe (EntityId 'DealerRound)
     , _tAttrsOfferingUsed :: EntityId 'Offering
@@ -344,62 +275,45 @@ data instance EntityState 'Table (PartialUpdate 'Attrs) = ETableAttrs
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Table (PartialUpdate 'Modes) = ETableModes
+data TableModes = TableModes
     { _tModesFSM :: SomeTableFSM
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'Table (PartialUpdate 'Rels) = ETableRels
+data TableRels = TableRels
     { _tRelsManagedByDealer :: Maybe (EntityId 'Dealer)
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'Table 'TransactionBoundary)
-instance FromJSON (EntityState 'Table 'TransactionBoundary)
-
-instance ToJSON (EntityState 'Table (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'Table (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'Table (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'Table (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'Table (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'Table (PartialUpdate 'Rels))
-
--- ETableShoe
-
-data instance EntityState 'TableShoe 'TransactionBoundary = ETableShoe
-    { _tsAttrs :: EntityState 'TableShoe (PartialUpdate 'Attrs)
-    , _tsModes :: EntityState 'TableShoe (PartialUpdate 'Modes)
-    , _tsRels :: EntityState 'TableShoe (PartialUpdate 'Rels)
+-- ETable
+data instance EntityState 'Table = ETable
+    { _tAttrs :: TableAttrs
+    , _tModes :: TableModes
+    , _tRels :: TableRels
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'TableShoe (PartialUpdate 'Attrs) = ETableShoeAttrs
+data TableShoeAttrs = TableShoeAttrs
     { _tsAttrsCards :: [Card]
     , _tsAttrsCardStates :: Map CardIx CardState
     }
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'TableShoe (PartialUpdate 'Modes) = ETableShoeModes
+data TableShoeModes = TableShoeModes
     deriving (Eq, Show, Generic)
 
-data instance EntityState 'TableShoe (PartialUpdate 'Rels) = ETableShoeRels
+data TableShoeRels = TableShoeRels
     { _tsRelsTable :: EntityId 'Table
     }
     deriving (Eq, Show, Generic)
 
-instance ToJSON (EntityState 'TableShoe 'TransactionBoundary)
-instance FromJSON (EntityState 'TableShoe 'TransactionBoundary)
-
-instance ToJSON (EntityState 'TableShoe (PartialUpdate 'Attrs))
-instance FromJSON (EntityState 'TableShoe (PartialUpdate 'Attrs))
-
-instance ToJSON (EntityState 'TableShoe (PartialUpdate 'Modes))
-instance FromJSON (EntityState 'TableShoe (PartialUpdate 'Modes))
-
-instance ToJSON (EntityState 'TableShoe (PartialUpdate 'Rels))
-instance FromJSON (EntityState 'TableShoe (PartialUpdate 'Rels))
+-- ETableShoe
+data instance EntityState 'TableShoe = ETableShoe
+    { _tsAttrs :: TableShoeAttrs
+    , _tsModes :: TableShoeModes
+    , _tsRels :: TableShoeRels
+    }
+    deriving (Eq, Show, Generic)
 
 type CardIx = Int
 
@@ -411,3 +325,85 @@ data CardState
 
 instance ToJSON CardState
 instance FromJSON CardState
+
+-- JSON instances for all the new types
+instance ToJSON DealerAttrs
+instance FromJSON DealerAttrs
+instance ToJSON DealerModes
+instance FromJSON DealerModes
+instance ToJSON DealerRels
+instance FromJSON DealerRels
+instance ToJSON (EntityState 'Dealer)
+instance FromJSON (EntityState 'Dealer)
+
+instance ToJSON DealerHandAttrs
+instance FromJSON DealerHandAttrs
+instance ToJSON DealerHandModes
+instance FromJSON DealerHandModes
+instance ToJSON DealerHandRels
+instance FromJSON DealerHandRels
+instance ToJSON (EntityState 'DealerHand)
+instance FromJSON (EntityState 'DealerHand)
+
+instance ToJSON DealerRoundAttrs
+instance FromJSON DealerRoundAttrs
+instance ToJSON DealerRoundModes
+instance FromJSON DealerRoundModes
+instance ToJSON DealerRoundRels
+instance FromJSON DealerRoundRels
+instance ToJSON (EntityState 'DealerRound)
+instance FromJSON (EntityState 'DealerRound)
+
+instance ToJSON OfferingAttrs
+instance FromJSON OfferingAttrs
+instance ToJSON OfferingModes
+instance FromJSON OfferingModes
+instance ToJSON OfferingRels
+instance FromJSON OfferingRels
+instance ToJSON (EntityState 'Offering)
+instance FromJSON (EntityState 'Offering)
+
+instance ToJSON PlayerAttrs
+instance FromJSON PlayerAttrs
+instance ToJSON PlayerModes
+instance FromJSON PlayerModes
+instance ToJSON PlayerRels
+instance FromJSON PlayerRels
+instance ToJSON (EntityState 'Player)
+instance FromJSON (EntityState 'Player)
+
+instance ToJSON PlayerHandAttrs
+instance FromJSON PlayerHandAttrs
+instance ToJSON PlayerHandModes
+instance FromJSON PlayerHandModes
+instance ToJSON PlayerHandRels
+instance FromJSON PlayerHandRels
+instance ToJSON (EntityState 'PlayerHand)
+instance FromJSON (EntityState 'PlayerHand)
+
+instance ToJSON PlayerSpotAttrs
+instance FromJSON PlayerSpotAttrs
+instance ToJSON PlayerSpotModes
+instance FromJSON PlayerSpotModes
+instance ToJSON PlayerSpotRels
+instance FromJSON PlayerSpotRels
+instance ToJSON (EntityState 'PlayerSpot)
+instance FromJSON (EntityState 'PlayerSpot)
+
+instance ToJSON TableAttrs
+instance FromJSON TableAttrs
+instance ToJSON TableModes
+instance FromJSON TableModes
+instance ToJSON TableRels
+instance FromJSON TableRels
+instance ToJSON (EntityState 'Table)
+instance FromJSON (EntityState 'Table)
+
+instance ToJSON TableShoeAttrs
+instance FromJSON TableShoeAttrs
+instance ToJSON TableShoeModes
+instance FromJSON TableShoeModes
+instance ToJSON TableShoeRels
+instance FromJSON TableShoeRels
+instance ToJSON (EntityState 'TableShoe)
+instance FromJSON (EntityState 'TableShoe)

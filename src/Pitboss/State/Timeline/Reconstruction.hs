@@ -4,8 +4,6 @@
 
 module Pitboss.State.Timeline.Reconstruction where
 
-import Control.Monad.Except (MonadError (..))
-import Control.Monad.State.Strict
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.List (sort)
 import Data.Maybe (fromMaybe)
@@ -14,31 +12,7 @@ import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Timeline
 import Pitboss.State.Types.Core
-
-data ReconstructionPhase = Building | Complete | Failed
-
-newtype ReconstructionM (k :: EntityKind) (phase :: ReconstructionPhase) a
-    = ReconstructionM (StateT (PartialEntity k) (Either ReconstructionError) a)
-    deriving (Functor, Applicative, Monad)
-
-data PartialEntity k = PartialEntity
-    { _partialAttrs :: Maybe (EntityState k (PartialUpdate 'Attrs))
-    , _partialModes :: Maybe (EntityState k (PartialUpdate 'Modes))
-    , _partialRels :: Maybe (EntityState k (PartialUpdate 'Rels))
-    , _appliedDeltas :: [SomeDelta k]
-    }
-
-data ReconstructionError
-    = MissingRequiredPart EntityStatePart
-    | DeltaApplicationFailed String
-    | InconsistentState String
-    deriving (Eq, Show)
-
-emptyPartial :: PartialEntity k
-emptyPartial = PartialEntity Nothing Nothing Nothing []
-
-runReconstruction :: ReconstructionM k phase a -> PartialEntity k -> Either ReconstructionError a
-runReconstruction (ReconstructionM action) = evalStateT action
+import Control.Monad (foldM)
 
 collectDeltasUpTo :: Timeline k (SomeDelta k) -> Tick -> [SomeDelta k]
 collectDeltasUpTo timeline targetTick =
@@ -46,38 +20,41 @@ collectDeltasUpTo timeline targetTick =
         allDeltas = concatMap (\t -> fromMaybe [] (IHM.lookup t (timelineDeltas timeline))) relevantTicks
      in allDeltas
 
-applyDelta :: (IncrementalWithWitness k) => SomeDelta k -> ReconstructionM k 'Building ()
-applyDelta delta = ReconstructionM $ do
-    partial <- get
-    case delta of
-        AttrsUpdate d -> case _partialAttrs partial of
-            Nothing -> throwError (MissingRequiredPart Attrs)
-            Just current -> do
-                let newAttrs = applyWithWitness AttrsWitness d current
-                put partial{_partialAttrs = Just newAttrs, _appliedDeltas = delta : _appliedDeltas partial}
-        ModesUpdate d -> case _partialModes partial of
-            Nothing -> throwError (MissingRequiredPart Modes)
-            Just current -> do
-                let newModes = applyWithWitness ModesWitness d current
-                put partial{_partialModes = Just newModes, _appliedDeltas = delta : _appliedDeltas partial}
-        RelsUpdate d -> case _partialRels partial of
-            Nothing -> throwError (MissingRequiredPart Rels)
-            Just current -> do
-                let newRels = applyWithWitness RelsWitness d current
-                put partial{_partialRels = Just newRels, _appliedDeltas = delta : _appliedDeltas partial}
-        Boundary _ -> pure ()
-
+-- Simple approach: find the last complete entity state from transaction boundaries
+-- and apply subsequent deltas from there
 reconstructAt ::
-    (ComposeEntity k, IncrementalWithWitness k) =>
+    (IncrementalWithWitness k) =>
     Timeline k (SomeDelta k) ->
     Tick ->
-    Maybe (EntityState k 'TransactionBoundary)
+    Maybe (EntityState k)
 reconstructAt timeline tick =
-    case runReconstruction reconstructionProcess emptyPartial of
-        Left _err -> Nothing
-        Right entity -> Just entity
+    let allDeltas = collectDeltasUpTo timeline tick
+        (completeDeltas, incompleteDeltas) = findLastCompleteTransaction allDeltas
+    in case completeDeltas of
+        [] -> Nothing -- No complete entity state available
+        _ -> do
+            baseEntity <- reconstructFromBoundaries completeDeltas
+            foldM applyDeltaToEntity baseEntity incompleteDeltas
   where
-    reconstructionProcess = do
-        let relevantDeltas = collectDeltasUpTo timeline tick
-        mapM_ applyDelta relevantDeltas
-        completeEntity
+    applyDeltaToEntity :: (IncrementalWithWitness k) => EntityState k -> SomeDelta k -> Maybe (EntityState k)
+    applyDeltaToEntity entity delta = case delta of
+        AttrsUpdate d -> Just $ applyWithWitness AttrsWitness d entity
+        ModesUpdate d -> Just $ applyWithWitness ModesWitness d entity
+        RelsUpdate d -> Just $ applyWithWitness RelsWitness d entity
+        Boundary _ -> Just entity
+
+findLastCompleteTransaction :: [SomeDelta k] -> ([SomeDelta k], [SomeDelta k])
+findLastCompleteTransaction deltas =
+    case break isBoundary (reverse deltas) of
+        (_, []) -> ([], deltas) -- No boundary found
+        (incomplete, boundary : complete) ->
+            (reverse (boundary : complete), reverse incomplete)
+  where
+    isBoundary (Boundary _) = True
+    isBoundary _ = False
+
+-- This needs to be implemented based on how we want to handle
+-- initial entity creation from transaction boundaries
+reconstructFromBoundaries :: [SomeDelta k] -> Maybe (EntityState k)
+reconstructFromBoundaries _ = Nothing -- Placeholder - needs implementation
+

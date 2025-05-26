@@ -9,6 +9,7 @@ module Pitboss.State.Delta.Instances.Incremental (
     DeltaWrapper (..),
     Incremental (..),
     IncrementalWithWitness (..),
+    PartWitness (..),
     mkEntityRef,
 ) where
 
@@ -39,22 +40,22 @@ class IncrementalWithWitness k where
     applyWithWitness ::
         PartWitness s ->
         Delta k (PartialUpdate s) ->
-        EntityState k (PartialUpdate s) ->
-        EntityState k (PartialUpdate s)
+        EntityState k ->
+        EntityState k
 
 mkEntityRef :: Tick -> EntityId k -> EntityRef k
 mkEntityRef tick entityId = EntityRef (Uid (tick, entityId))
 
 -- Dealer
-instance Incremental (EntityState 'Dealer (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'Dealer (PartialUpdate 'Attrs)) = Delta 'Dealer (PartialUpdate 'Attrs)
+instance Incremental DealerAttrs where
+    type Applicable DealerAttrs = Delta 'Dealer (PartialUpdate 'Attrs)
 
     apply (DDealerSetName new _) attrs = attrs{_dAttrsName = new}
 
     describe (DDealerSetName new old) _ = "Set dealer name: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'Dealer (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'Dealer (PartialUpdate 'Modes)) = Delta 'Dealer (PartialUpdate 'Modes)
+instance Incremental DealerModes where
+    type Applicable DealerModes = Delta 'Dealer (PartialUpdate 'Modes)
 
     apply (DDealerSetTableFSM new _) modes = modes{_dModesDealerTable = new}
     apply (DDealerSetRoundFSM new _) modes = modes{_dModesDealerRound = new}
@@ -64,8 +65,8 @@ instance Incremental (EntityState 'Dealer (PartialUpdate 'Modes)) where
     describe (DDealerSetRoundFSM new old) _ = "Set dealer round FSM: " ++ show old ++ " → " ++ show new
     describe (DDealerSetHandFSM new old) _ = "Set dealer hand FSM: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'Dealer (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'Dealer (PartialUpdate 'Rels)) = Delta 'Dealer (PartialUpdate 'Rels)
+instance Incremental DealerRels where
+    type Applicable DealerRels = Delta 'Dealer (PartialUpdate 'Rels)
 
     apply (DDealerSetActiveTable new _) rels = rels{_dRelsActiveTable = new}
     apply (DDealerSetActiveRound new _) rels = rels{_dRelsActiveRound = new}
@@ -76,8 +77,8 @@ instance Incremental (EntityState 'Dealer (PartialUpdate 'Rels)) where
     describe (DDealerSetActiveHand new old) _ = "Set dealer active hand: " ++ show old ++ " → " ++ show new
 
 -- DealerHand
-instance Incremental (EntityState 'DealerHand (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'DealerHand (PartialUpdate 'Attrs)) = Delta 'DealerHand (PartialUpdate 'Attrs)
+instance Incremental DealerHandAttrs where
+    type Applicable DealerHandAttrs = Delta 'DealerHand (PartialUpdate 'Attrs)
 
     apply (DDealerHandPushCard c _) attrs = attrs{_dhAttrsHandCards = c : _dhAttrsHandCards attrs}
     apply (DDealerHandPopCard c _) attrs =
@@ -94,15 +95,15 @@ instance Incremental (EntityState 'DealerHand (PartialUpdate 'Attrs)) where
     describe (DDealerHandPopCard c _) _ = "Popped card: " ++ show c
     describe (DDealerHandSetCards new old) _ = "Set dealer hand cards: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'DealerHand (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'DealerHand (PartialUpdate 'Modes)) = Delta 'DealerHand (PartialUpdate 'Modes)
+instance Incremental DealerHandModes where
+    type Applicable DealerHandModes = Delta 'DealerHand (PartialUpdate 'Modes)
 
     apply (DDealerHandSetFSM new _) modes = modes{_dhModesDealerHand = new}
 
     describe (DDealerHandSetFSM new old) _ = "Set dealer hand FSM: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'DealerHand (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'DealerHand (PartialUpdate 'Rels)) = Delta 'DealerHand (PartialUpdate 'Rels)
+instance Incremental DealerHandRels where
+    type Applicable DealerHandRels = Delta 'DealerHand (PartialUpdate 'Rels)
 
     apply (DDealerHandSetRound new _) rels = rels{_dhRelsDealerRound = new}
     apply (DDealerHandSetDealer new _) rels = rels{_dhRelsDealer = new}
@@ -111,52 +112,52 @@ instance Incremental (EntityState 'DealerHand (PartialUpdate 'Rels)) where
     describe (DDealerHandSetDealer new old) _ = "Set dealer hand dealer: " ++ show old ++ " → " ++ show new
 
 -- DealerRound
-instance Incremental (EntityState 'DealerRound (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'DealerRound (PartialUpdate 'Attrs)) = Delta 'DealerRound (PartialUpdate 'Attrs)
+instance Incremental DealerRoundAttrs where
+    type Applicable DealerRoundAttrs = Delta 'DealerRound (PartialUpdate 'Attrs)
 
     apply (DDealerRoundSetNumber new _) attrs = attrs{_drAttrsNumber = new}
 
     describe (DDealerRoundSetNumber new old) _ = "Set dealer round number: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'DealerRound (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'DealerRound (PartialUpdate 'Modes)) = Delta 'DealerRound (PartialUpdate 'Modes)
+instance Incremental DealerRoundModes where
+    type Applicable DealerRoundModes = Delta 'DealerRound (PartialUpdate 'Modes)
 
     apply _ modes = modes
 
     describe _ _ = "No change to dealer round modes"
 
-instance Incremental (EntityState 'DealerRound (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'DealerRound (PartialUpdate 'Rels)) = Delta 'DealerRound (PartialUpdate 'Rels)
+instance Incremental DealerRoundRels where
+    type Applicable DealerRoundRels = Delta 'DealerRound (PartialUpdate 'Rels)
 
     apply (DDealerRoundSetTableShoe new _) rels = rels{_drRelsTableShoeUsed = new}
 
     describe (DDealerRoundSetTableShoe new old) _ = "Set dealer round table shoe: " ++ show old ++ " → " ++ show new
 
 -- Offering
-instance Incremental (EntityState 'Offering (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'Offering (PartialUpdate 'Attrs)) = Delta 'Offering (PartialUpdate 'Attrs)
+instance Incremental OfferingAttrs where
+    type Applicable OfferingAttrs = Delta 'Offering (PartialUpdate 'Attrs)
 
-    apply (DOfferingSetOffering new _) _ = EOfferingAttrs new
+    apply (DOfferingSetOffering new _) _ = OfferingAttrs new
 
     describe (DOfferingSetOffering new old) _ = "Set offering: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'Offering (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'Offering (PartialUpdate 'Modes)) = Delta 'Offering (PartialUpdate 'Modes)
+instance Incremental OfferingModes where
+    type Applicable OfferingModes = Delta 'Offering (PartialUpdate 'Modes)
 
     apply DOfferingModes modes = modes
 
     describe DOfferingModes _ = "No change to offering modes"
 
-instance Incremental (EntityState 'Offering (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'Offering (PartialUpdate 'Rels)) = Delta 'Offering (PartialUpdate 'Rels)
+instance Incremental OfferingRels where
+    type Applicable OfferingRels = Delta 'Offering (PartialUpdate 'Rels)
 
     apply DOfferingRels rels = rels
 
     describe DOfferingRels _ = "No change to offering relations"
 
 -- Player
-instance Incremental (EntityState 'Player (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'Player (PartialUpdate 'Attrs)) = Delta 'Player (PartialUpdate 'Attrs)
+instance Incremental PlayerAttrs where
+    type Applicable PlayerAttrs = Delta 'Player (PartialUpdate 'Attrs)
 
     apply (DPlayerSetName new _) attrs = attrs{_pAttrsName = new}
     apply (DPlayerSetBankroll new _) attrs = attrs{_pAttrsBankroll = new}
@@ -164,8 +165,8 @@ instance Incremental (EntityState 'Player (PartialUpdate 'Attrs)) where
     describe (DPlayerSetName new old) _ = "Set player name: " ++ show old ++ " → " ++ show new
     describe (DPlayerSetBankroll new old) _ = "Set player bankroll: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'Player (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'Player (PartialUpdate 'Modes)) = Delta 'Player (PartialUpdate 'Modes)
+instance Incremental PlayerModes where
+    type Applicable PlayerModes = Delta 'Player (PartialUpdate 'Modes)
 
     apply (DPlayerSetTable (Just new) _) modes = modes{_pModesPlayerTable = new}
     apply (DPlayerSetTable Nothing _) modes = modes
@@ -178,16 +179,16 @@ instance Incremental (EntityState 'Player (PartialUpdate 'Modes)) where
     describe (DPlayerSetSpot new old) _ = "Set player spot FSM: " ++ show old ++ " → " ++ show new
     describe (DPlayerSetHand new old) _ = "Set player hand FSM: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'Player (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'Player (PartialUpdate 'Rels)) = Delta 'Player (PartialUpdate 'Rels)
+instance Incremental PlayerRels where
+    type Applicable PlayerRels = Delta 'Player (PartialUpdate 'Rels)
 
     apply _ rels = rels
 
     describe _ _ = "No change to player relations"
 
 -- PlayerHand
-instance Incremental (EntityState 'PlayerHand (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'PlayerHand (PartialUpdate 'Attrs)) = Delta 'PlayerHand (PartialUpdate 'Attrs)
+instance Incremental PlayerHandAttrs where
+    type Applicable PlayerHandAttrs = Delta 'PlayerHand (PartialUpdate 'Attrs)
 
     apply (DPlayerHandSetPlayerHandIx new _) attrs = attrs{_phAttrsHandIx = new}
     apply (DPlayerHandSetSplitDepth new _) attrs = attrs{_phAttrsSplitDepth = new}
@@ -208,37 +209,37 @@ instance Incremental (EntityState 'PlayerHand (PartialUpdate 'Attrs)) where
     describe (DPlayerHandPopCard c _) _ = "Popped card: " ++ show c
     describe (DPlayerHandSetCards new old) _ = "Set player hand cards: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'PlayerHand (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'PlayerHand (PartialUpdate 'Modes)) = Delta 'PlayerHand (PartialUpdate 'Modes)
+instance Incremental PlayerHandModes where
+    type Applicable PlayerHandModes = Delta 'PlayerHand (PartialUpdate 'Modes)
 
     apply (DPlayerHandSetPlayerHandFSM new _) modes = modes{_phFsm = new}
 
     describe (DPlayerHandSetPlayerHandFSM new old) _ = "Set player hand FSM: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'PlayerHand (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'PlayerHand (PartialUpdate 'Rels)) = Delta 'PlayerHand (PartialUpdate 'Rels)
+instance Incremental PlayerHandRels where
+    type Applicable PlayerHandRels = Delta 'PlayerHand (PartialUpdate 'Rels)
 
     apply (DPlayerHandSetPlayerSpot new _) rels = rels{_phRelsBelongsToPlayerSpot = new}
 
     describe (DPlayerHandSetPlayerSpot new old) _ = "Set player hand spot: " ++ show old ++ " → " ++ show new
 
 -- PlayerSpot
-instance Incremental (EntityState 'PlayerSpot (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'PlayerSpot (PartialUpdate 'Attrs)) = Delta 'PlayerSpot (PartialUpdate 'Attrs)
+instance Incremental PlayerSpotAttrs where
+    type Applicable PlayerSpotAttrs = Delta 'PlayerSpot (PartialUpdate 'Attrs)
 
     apply (DPlayerSpotSetWager new _) attrs = attrs{_psAttrsWager = new}
 
     describe (DPlayerSpotSetWager new old) _ = "Set player spot wager: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'PlayerSpot (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'PlayerSpot (PartialUpdate 'Modes)) = Delta 'PlayerSpot (PartialUpdate 'Modes)
+instance Incremental PlayerSpotModes where
+    type Applicable PlayerSpotModes = Delta 'PlayerSpot (PartialUpdate 'Modes)
 
     apply (DPlayerSpotSetFSM new _) modes = modes{_psModesPlayerSpot = new}
 
     describe (DPlayerSpotSetFSM new old) _ = "Set player spot FSM: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'PlayerSpot (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'PlayerSpot (PartialUpdate 'Rels)) = Delta 'PlayerSpot (PartialUpdate 'Rels)
+instance Incremental PlayerSpotRels where
+    type Applicable PlayerSpotRels = Delta 'PlayerSpot (PartialUpdate 'Rels)
 
     apply (DPlayerSpotSetPlayer new _) rels = rels{_psEntityRelsPlayerId = new}
     apply (DPlayerSpotSetRound new _) rels = rels{_psEntityRelsRoundId = new}
@@ -250,8 +251,8 @@ instance Incremental (EntityState 'PlayerSpot (PartialUpdate 'Rels)) where
     describe (DPlayerSpotSetHandOccupancy (_, _) (ix, _)) _ = "Updated hand occupancy at index: " ++ show ix
 
 -- Table
-instance Incremental (EntityState 'Table (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'Table (PartialUpdate 'Attrs)) = Delta 'Table (PartialUpdate 'Attrs)
+instance Incremental TableAttrs where
+    type Applicable TableAttrs = Delta 'Table (PartialUpdate 'Attrs)
 
     apply (DTableSetName new _) attrs = attrs{_tAttrsName = new}
     apply (DTableSetMinBet new _) attrs = attrs{_tAttrsMinBet = new}
@@ -261,23 +262,23 @@ instance Incremental (EntityState 'Table (PartialUpdate 'Attrs)) where
     describe (DTableSetMinBet new old) _ = "Set table min bet: " ++ show old ++ " → " ++ show new
     describe (DTableSetOffering new old) _ = "Set table offering: " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'Table (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'Table (PartialUpdate 'Modes)) = Delta 'Table (PartialUpdate 'Modes)
+instance Incremental TableModes where
+    type Applicable TableModes = Delta 'Table (PartialUpdate 'Modes)
 
     apply _ modes = modes
 
     describe _ _ = "No change to table modes"
 
-instance Incremental (EntityState 'Table (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'Table (PartialUpdate 'Rels)) = Delta 'Table (PartialUpdate 'Rels)
+instance Incremental TableRels where
+    type Applicable TableRels = Delta 'Table (PartialUpdate 'Rels)
 
     apply (DTableSetDealer new _) rels = rels{_tRelsManagedByDealer = new}
 
     describe (DTableSetDealer new old) _ = "Set table dealer: " ++ show old ++ " → " ++ show new
 
 -- TableShoe
-instance Incremental (EntityState 'TableShoe (PartialUpdate 'Attrs)) where
-    type Applicable (EntityState 'TableShoe (PartialUpdate 'Attrs)) = Delta 'TableShoe (PartialUpdate 'Attrs)
+instance Incremental TableShoeAttrs where
+    type Applicable TableShoeAttrs = Delta 'TableShoe (PartialUpdate 'Attrs)
 
     apply (DTableShoeSetCardStateMap new _) attrs = attrs{_tsAttrsCardStates = new}
     apply (DTableShoeSetCardFate ix new _) attrs =
@@ -286,61 +287,88 @@ instance Incremental (EntityState 'TableShoe (PartialUpdate 'Attrs)) where
     describe (DTableShoeSetCardStateMap _ _) _ = "Set card state map"
     describe (DTableShoeSetCardFate ix new old) _ = "Set card fate at index " ++ show ix ++ ": " ++ show old ++ " → " ++ show new
 
-instance Incremental (EntityState 'TableShoe (PartialUpdate 'Modes)) where
-    type Applicable (EntityState 'TableShoe (PartialUpdate 'Modes)) = Delta 'TableShoe (PartialUpdate 'Modes)
+instance Incremental TableShoeModes where
+    type Applicable TableShoeModes = Delta 'TableShoe (PartialUpdate 'Modes)
 
     apply _ modes = modes
 
     describe _ _ = "No change to table shoe modes"
 
-instance Incremental (EntityState 'TableShoe (PartialUpdate 'Rels)) where
-    type Applicable (EntityState 'TableShoe (PartialUpdate 'Rels)) = Delta 'TableShoe (PartialUpdate 'Rels)
+instance Incremental TableShoeRels where
+    type Applicable TableShoeRels = Delta 'TableShoe (PartialUpdate 'Rels)
 
     apply (DTableShoeSetTable new _) rels = rels{_tsRelsTable = new}
 
     describe (DTableShoeSetTable new old) _ = "Set table shoe table: " ++ show old ++ " → " ++ show new
 
 instance IncrementalWithWitness 'Dealer where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EDealer attrs modes rels) =
+        EDealer (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EDealer attrs modes rels) =
+        EDealer attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EDealer attrs modes rels) =
+        EDealer attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'Player where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EPlayer attrs modes rels) =
+        EPlayer (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EPlayer attrs modes rels) =
+        EPlayer attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EPlayer attrs modes rels) =
+        EPlayer attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'DealerHand where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EDealerHand attrs modes rels) =
+        EDealerHand (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EDealerHand attrs modes rels) =
+        EDealerHand attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EDealerHand attrs modes rels) =
+        EDealerHand attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'DealerRound where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EDealerRound attrs modes rels) =
+        EDealerRound (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EDealerRound attrs modes rels) =
+        EDealerRound attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EDealerRound attrs modes rels) =
+        EDealerRound attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'Offering where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EOffering attrs modes rels) =
+        EOffering (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EOffering attrs modes rels) =
+        EOffering attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EOffering attrs modes rels) =
+        EOffering attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'PlayerHand where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EPlayerHand attrs modes rels) =
+        EPlayerHand (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EPlayerHand attrs modes rels) =
+        EPlayerHand attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EPlayerHand attrs modes rels) =
+        EPlayerHand attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'PlayerSpot where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (EPlayerSpot attrs modes rels) =
+        EPlayerSpot (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EPlayerSpot attrs modes rels) =
+        EPlayerSpot attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EPlayerSpot attrs modes rels) =
+        EPlayerSpot attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'Table where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (ETable attrs modes rels) =
+        ETable (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (ETable attrs modes rels) =
+        ETable attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (ETable attrs modes rels) =
+        ETable attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'TableShoe where
-    applyWithWitness AttrsWitness = apply
-    applyWithWitness ModesWitness = apply
-    applyWithWitness RelsWitness = apply
+    applyWithWitness AttrsWitness delta (ETableShoe attrs modes rels) =
+        ETableShoe (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (ETableShoe attrs modes rels) =
+        ETableShoe attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (ETableShoe attrs modes rels) =
+        ETableShoe attrs modes (apply delta rels)

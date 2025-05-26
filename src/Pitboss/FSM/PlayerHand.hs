@@ -7,12 +7,6 @@ module Pitboss.FSM.PlayerHand (
     module Pitboss.FSM.PlayerHand.Phase,
     module Pitboss.FSM.PlayerHand.Transition,
     SomePlayerHandFSM (..),
-    mkPlayerHandFSMAbandoned,
-    mkPlayerHandFSMBlackjack,
-    mkPlayerHandFSMDecision,
-    mkPlayerHandFSMHitting,
-    mkPlayerHandFSMOneCardDraw,
-    mkPlayerHandFSMResolved,
     isHandTerminal,
     resolutionImpact,
 )
@@ -25,24 +19,6 @@ import Pitboss.FSM.PlayerHand.FSM
 import Pitboss.FSM.PlayerHand.Phase
 import Pitboss.FSM.PlayerHand.Transition
 import Pitboss.FSM.Types.Transitionable
-
-mkPlayerHandFSMAbandoned :: AbandonedReason -> SomePlayerHandFSM
-mkPlayerHandFSMAbandoned reason = SomePlayerHandFSM (AbandonedFSM reason)
-
-mkPlayerHandFSMBlackjack :: SomePlayerHandFSM
-mkPlayerHandFSMBlackjack = SomePlayerHandFSM BlackjackFSM
-
-mkPlayerHandFSMDecision :: SomePlayerHandFSM
-mkPlayerHandFSMDecision = SomePlayerHandFSM DecisionFSM
-
-mkPlayerHandFSMHitting :: SomePlayerHandFSM
-mkPlayerHandFSMHitting = SomePlayerHandFSM HittingFSM
-
-mkPlayerHandFSMOneCardDraw :: OneCardDrawReason -> SomePlayerHandFSM
-mkPlayerHandFSMOneCardDraw reason = SomePlayerHandFSM (OneCardDrawFSM reason)
-
-mkPlayerHandFSMResolved :: PlayerHandResolution -> SomePlayerHandFSM
-mkPlayerHandFSMResolved res = SomePlayerHandFSM (ResolvedFSM res)
 
 data SomePlayerHandFSM = forall p h d s. SomePlayerHandFSM (PlayerHandFSM p h d s)
 
@@ -86,8 +62,6 @@ instance FromJSON SomePlayerHandFSM where
             "Resolved" -> SomePlayerHandFSM . ResolvedFSM <$> obj .: "resolution"
             _ -> fail $ "Unknown tag for SomePlayerHandFSM: " ++ T.unpack tag
 
--- helpers
-
 isHandTerminal :: SomePlayerHandFSM -> Bool
 isHandTerminal (SomePlayerHandFSM fsm) =
     case transitionType fsm of
@@ -101,4 +75,4 @@ resolutionImpact = \case
     Bust -> Just Loss
     DealerBlackjack -> Just Loss
     Void i -> Just i
-    _ -> Nothing -- needs dealer comparison
+    _ -> Nothing

@@ -6,12 +6,6 @@ module Pitboss.FSM.Table (
     module Pitboss.FSM.Table.Phase,
     module Pitboss.FSM.Table.Transition,
     SomeTableFSM (..),
-    mkTableFSMClosed,
-    mkTableFSMOpening,
-    mkTableFSMRound,
-    mkTableFSMIntermission,
-    mkTableFSMInterrupted,
-    mkTableFSMClosing,
 ) where
 
 import Data.Aeson
@@ -22,24 +16,6 @@ import Pitboss.FSM.Table.Transition
 import Pitboss.FSM.Types.Transitionable
 
 data SomeTableFSM = forall p. SomeTableFSM (TableFSM p)
-
-mkTableFSMClosed :: SomeTableFSM
-mkTableFSMClosed = SomeTableFSM ClosedFSM
-
-mkTableFSMOpening :: SomeTableFSM
-mkTableFSMOpening = SomeTableFSM OpeningFSM
-
-mkTableFSMRound :: SomeTableFSM
-mkTableFSMRound = SomeTableFSM RoundInProgressFSM
-
-mkTableFSMIntermission :: SomeTableFSM
-mkTableFSMIntermission = SomeTableFSM IntermissionFSM
-
-mkTableFSMInterrupted :: InterruptReason -> SomeTableFSM
-mkTableFSMInterrupted r = SomeTableFSM (InterruptedFSM r)
-
-mkTableFSMClosing :: SomeTableFSM
-mkTableFSMClosing = SomeTableFSM ClosingFSM
 
 instance Show SomeTableFSM where
     show (SomeTableFSM fsm) = show fsm
@@ -67,12 +43,12 @@ instance FromJSON SomeTableFSM where
     parseJSON = withObject "SomeTableFSM" $ \obj -> do
         tag <- obj .: "tag"
         case tag :: T.Text of
-            "Closed" -> pure mkTableFSMClosed
-            "Opening" -> pure mkTableFSMOpening
-            "RoundInProgress" -> pure mkTableFSMRound
-            "Intermission" -> pure mkTableFSMIntermission
-            "Closing" -> pure mkTableFSMClosing
-            "Interrupted" -> mkTableFSMInterrupted <$> obj .: "reason"
+            "Closed" -> pure $ SomeTableFSM ClosedFSM
+            "Opening" -> pure $ SomeTableFSM OpeningFSM
+            "RoundInProgress" -> pure $ SomeTableFSM RoundInProgressFSM
+            "Intermission" -> pure $ SomeTableFSM IntermissionFSM
+            "Closing" -> pure $ SomeTableFSM ClosingFSM
+            "Interrupted" -> SomeTableFSM . InterruptedFSM <$> obj .: "reason"
             other -> fail $ "Unknown tag for SomeTableFSM: " ++ T.unpack other
 
 instance Transitionable SomeTableFSM where

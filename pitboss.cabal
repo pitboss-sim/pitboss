@@ -19,16 +19,15 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Pitboss.Blackjack.Action
-                      Pitboss.Blackjack.Card
-                      Pitboss.Blackjack.Chips
-                      Pitboss.Blackjack.Deck
-                      Pitboss.Blackjack.Hand
-                      Pitboss.Blackjack.Hand.Category
-                      Pitboss.Blackjack.Hand.Score
+                      Pitboss.Blackjack.Materia.Card
+                      Pitboss.Blackjack.Materia.Chips
+                      Pitboss.Blackjack.Materia.Deck
+                      Pitboss.Blackjack.Materia.Hand
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
+                      Pitboss.Blackjack.Play
                       Pitboss.FSM.DealerHand
                       Pitboss.FSM.DealerHand.FSM
                       Pitboss.FSM.DealerHand.Phase
@@ -65,15 +64,21 @@ library
                       Pitboss.FSM.Table.FSM
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
+                      Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.State.Cache
+                      Pitboss.State.Cache.Example
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
                       Pitboss.State.Delta.Types
                       Pitboss.State.Entity.Instances.Decomposable
                       Pitboss.State.Entity.Instances.Replaceable
+                      Pitboss.State.Entity.Lenses
                       Pitboss.State.Entity.Types
                       Pitboss.State.Registry
                       Pitboss.State.Timeline
+                      Pitboss.State.Timeline.Query
+                      Pitboss.State.Timeline.Reconstruction
                       Pitboss.State.Trace
                       Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
@@ -97,8 +102,10 @@ library
                       hashable,
                       insert-ordered-containers,
                       lens,
+                      mtl,
                       random,
                       text,
+                      unordered-containers,
     hs-source-dirs:   src
     default-language: GHC2021
 

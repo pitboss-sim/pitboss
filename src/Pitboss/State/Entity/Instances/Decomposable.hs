@@ -7,100 +7,100 @@ module Pitboss.State.Entity.Instances.Decomposable (
 
 import Pitboss.State.Entity.Types
 
-class Decomposable (k :: EntityKind) (s :: EntityStateSelector) where
-    type Attrs k s
-    type Modes k s
-    type Rels k s
+class Decomposable (k :: EntityKind) where
+    type Attrs k
+    type Modes k
+    type Rels k
 
-    getAttrs :: EntityState k s -> Attrs k s
-    getModes :: EntityState k s -> Modes k s
-    getRels :: EntityState k s -> Rels k s
+    getAttrs :: EntityState k -> Attrs k
+    getModes :: EntityState k -> Modes k
+    getRels :: EntityState k -> Rels k
 
 -- Dealer
-instance Decomposable 'Dealer 'Whole where
-    type Attrs 'Dealer 'Whole = EntityState 'Dealer (Part 'Attrs)
-    type Modes 'Dealer 'Whole = EntityState 'Dealer (Part 'Modes)
-    type Rels 'Dealer 'Whole = EntityState 'Dealer (Part 'Rels)
+instance Decomposable 'Dealer where
+    type Attrs 'Dealer = DealerAttrs
+    type Modes 'Dealer = DealerModes
+    type Rels 'Dealer = DealerRels
 
     getAttrs (EDealer a _ _) = a
     getModes (EDealer _ m _) = m
     getRels (EDealer _ _ r) = r
 
 -- DealerHand
-instance Decomposable 'DealerHand 'Whole where
-    type Attrs 'DealerHand 'Whole = EntityState 'DealerHand (Part 'Attrs)
-    type Modes 'DealerHand 'Whole = EntityState 'DealerHand (Part 'Modes)
-    type Rels 'DealerHand 'Whole = EntityState 'DealerHand (Part 'Rels)
+instance Decomposable 'DealerHand where
+    type Attrs 'DealerHand = DealerHandAttrs
+    type Modes 'DealerHand = DealerHandModes
+    type Rels 'DealerHand = DealerHandRels
 
     getAttrs (EDealerHand a _ _) = a
     getModes (EDealerHand _ m _) = m
     getRels (EDealerHand _ _ r) = r
 
 -- DealerRound
-instance Decomposable 'DealerRound 'Whole where
-    type Attrs 'DealerRound 'Whole = EntityState 'DealerRound (Part 'Attrs)
-    type Modes 'DealerRound 'Whole = EntityState 'DealerRound (Part 'Modes)
-    type Rels 'DealerRound 'Whole = EntityState 'DealerRound (Part 'Rels)
+instance Decomposable 'DealerRound where
+    type Attrs 'DealerRound = DealerRoundAttrs
+    type Modes 'DealerRound = DealerRoundModes
+    type Rels 'DealerRound = DealerRoundRels
 
     getAttrs (EDealerRound a _ _) = a
     getModes (EDealerRound _ m _) = m
     getRels (EDealerRound _ _ r) = r
 
 -- Offering
-instance Decomposable 'Offering 'Whole where
-    type Attrs 'Offering 'Whole = EntityState 'Offering (Part 'Attrs)
-    type Modes 'Offering 'Whole = EntityState 'Offering (Part 'Modes)
-    type Rels 'Offering 'Whole = EntityState 'Offering (Part 'Rels)
+instance Decomposable 'Offering where
+    type Attrs 'Offering = OfferingAttrs
+    type Modes 'Offering = OfferingModes
+    type Rels 'Offering = OfferingRels
 
     getAttrs (EOffering a _ _) = a
     getModes (EOffering _ m _) = m
     getRels (EOffering _ _ r) = r
 
 -- Player
-instance Decomposable 'Player 'Whole where
-    type Attrs 'Player 'Whole = EntityState 'Player (Part 'Attrs)
-    type Modes 'Player 'Whole = EntityState 'Player (Part 'Modes)
-    type Rels 'Player 'Whole = EntityState 'Player (Part 'Rels)
+instance Decomposable 'Player where
+    type Attrs 'Player = PlayerAttrs
+    type Modes 'Player = PlayerModes
+    type Rels 'Player = PlayerRels
 
     getAttrs (EPlayer a _ _) = a
     getModes (EPlayer _ mo _) = mo
     getRels (EPlayer _ _ r) = r
 
 -- PlayerHand
-instance Decomposable 'PlayerHand 'Whole where
-    type Attrs 'PlayerHand 'Whole = EntityState 'PlayerHand (Part 'Attrs)
-    type Modes 'PlayerHand 'Whole = EntityState 'PlayerHand (Part 'Modes)
-    type Rels 'PlayerHand 'Whole = EntityState 'PlayerHand (Part 'Rels)
+instance Decomposable 'PlayerHand where
+    type Attrs 'PlayerHand = PlayerHandAttrs
+    type Modes 'PlayerHand = PlayerHandModes
+    type Rels 'PlayerHand = PlayerHandRels
 
     getAttrs (EPlayerHand a _ _) = a
     getModes (EPlayerHand _ m _) = m
     getRels (EPlayerHand _ _ r) = r
 
 -- PlayerSpot
-instance Decomposable 'PlayerSpot 'Whole where
-    type Attrs 'PlayerSpot 'Whole = EntityState 'PlayerSpot (Part 'Attrs)
-    type Modes 'PlayerSpot 'Whole = EntityState 'PlayerSpot (Part 'Modes)
-    type Rels 'PlayerSpot 'Whole = EntityState 'PlayerSpot (Part 'Rels)
+instance Decomposable 'PlayerSpot where
+    type Attrs 'PlayerSpot = PlayerSpotAttrs
+    type Modes 'PlayerSpot = PlayerSpotModes
+    type Rels 'PlayerSpot = PlayerSpotRels
 
     getAttrs (EPlayerSpot a _ _) = a
     getModes (EPlayerSpot _ m _) = m
     getRels (EPlayerSpot _ _ r) = r
 
 -- Table
-instance Decomposable 'Table 'Whole where
-    type Attrs 'Table 'Whole = EntityState 'Table (Part 'Attrs)
-    type Modes 'Table 'Whole = EntityState 'Table (Part 'Modes)
-    type Rels 'Table 'Whole = EntityState 'Table (Part 'Rels)
+instance Decomposable 'Table where
+    type Attrs 'Table = TableAttrs
+    type Modes 'Table = TableModes
+    type Rels 'Table = TableRels
 
     getAttrs (ETable a _ _) = a
     getModes (ETable _ m _) = m
     getRels (ETable _ _ r) = r
 
 -- TableShoe
-instance Decomposable 'TableShoe 'Whole where
-    type Attrs 'TableShoe 'Whole = EntityState 'TableShoe (Part 'Attrs)
-    type Modes 'TableShoe 'Whole = EntityState 'TableShoe (Part 'Modes)
-    type Rels 'TableShoe 'Whole = EntityState 'TableShoe (Part 'Rels)
+instance Decomposable 'TableShoe where
+    type Attrs 'TableShoe = TableShoeAttrs
+    type Modes 'TableShoe = TableShoeModes
+    type Rels 'TableShoe = TableShoeRels
 
     getAttrs (ETableShoe a _ _) = a
     getModes (ETableShoe _ m _) = m

@@ -8,6 +8,7 @@ import Pitboss.FSM.DealerRound.Peek.Phase
 import Pitboss.FSM.DealerRound.Phase
 import Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
 import Pitboss.FSM.DealerRound.Typeclass.PhaseTag
+import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data PeekFSM (p :: PeekPhase) where

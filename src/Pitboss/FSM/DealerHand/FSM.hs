@@ -5,7 +5,7 @@
 module Pitboss.FSM.DealerHand.FSM where
 
 import Pitboss.FSM.DealerHand.Phase
-import Pitboss.FSM.DealerRound.Phase (InterruptReason)
+import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data DealerHandFSM (p :: DealerHandPhase) where
@@ -15,7 +15,6 @@ data DealerHandFSM (p :: DealerHandPhase) where
     InterruptedFSM :: InterruptReason -> DealerHandFSM ('Interrupted r)
 
 deriving instance Show (DealerHandFSM p)
-
 deriving instance Eq (DealerHandFSM p)
 
 instance Transitionable (DealerHandFSM p) where

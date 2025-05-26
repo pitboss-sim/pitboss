@@ -25,6 +25,7 @@ import Pitboss.FSM.DealerRound.Phase
 import Pitboss.FSM.PlayerSpot.FSM
 import Pitboss.FSM.PlayerSpot.Phase
 import Pitboss.FSM.PlayerSpot.Transition
+import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 mkPlayerSpotFSMIdle :: SomePlayerSpotFSM

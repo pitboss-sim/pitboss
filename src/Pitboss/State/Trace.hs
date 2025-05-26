@@ -1,37 +1,31 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 module Pitboss.State.Trace (
     emptyTrace,
-    lensOfferings,
-    lensTables,
-    lensTableShoes,
-    lensDealers,
-    lensDealerRounds,
-    lensDealerHands,
-    lensPlayers,
-    lensPlayerSpots,
-    lensPlayerHands,
 ) where
 
-import Control.Lens (Lens', lens)
+import Control.Lens (makeLenses)
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics (Generic)
+import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Registry
 
 data Trace = Trace
-    { _offerings :: Registry 'Offering (EntityState 'Offering 'Whole)
-    , _tables :: Registry 'Table (EntityState 'Table 'Whole)
-    , _tableShoes :: Registry 'TableShoe (EntityState 'TableShoe 'Whole)
-    , _dealers :: Registry 'Dealer (EntityState 'Dealer 'Whole)
-    , _dealerHands :: Registry 'DealerHand (EntityState 'DealerHand 'Whole)
-    , _dealerRounds :: Registry 'DealerRound (EntityState 'DealerRound 'Whole)
-    , _players :: Registry 'Player (EntityState 'Player 'Whole)
-    , _playerSpots :: Registry 'PlayerSpot (EntityState 'PlayerSpot 'Whole)
-    , _playerHands :: Registry 'PlayerHand (EntityState 'PlayerHand 'Whole)
+    { _offerings :: Registry 'Offering (Delta 'Offering 'TransactionBoundary)
+    , _tables :: Registry 'Table (Delta 'Table 'TransactionBoundary)
+    , _tableShoes :: Registry 'TableShoe (Delta 'TableShoe 'TransactionBoundary)
+    , _dealers :: Registry 'Dealer (Delta 'Dealer 'TransactionBoundary)
+    , _dealerHands :: Registry 'DealerHand (Delta 'DealerHand 'TransactionBoundary)
+    , _dealerRounds :: Registry 'DealerRound (Delta 'DealerRound 'TransactionBoundary)
+    , _players :: Registry 'Player (Delta 'Player 'TransactionBoundary)
+    , _playerSpots :: Registry 'PlayerSpot (Delta 'PlayerSpot 'TransactionBoundary)
+    , _playerHands :: Registry 'PlayerHand (Delta 'PlayerHand 'TransactionBoundary)
     }
     deriving (Eq, Generic)
 
@@ -93,29 +87,4 @@ emptyTrace =
         , _playerHands = mempty
         }
 
-lensDealers :: Lens' Trace (Registry 'Dealer (EntityState 'Dealer 'Whole))
-lensDealers = lens _dealers (\s x -> s{_dealers = x})
-
-lensDealerHands :: Lens' Trace (Registry 'DealerHand (EntityState 'DealerHand 'Whole))
-lensDealerHands = lens _dealerHands (\s x -> s{_dealerHands = x})
-
-lensDealerRounds :: Lens' Trace (Registry 'DealerRound (EntityState 'DealerRound 'Whole))
-lensDealerRounds = lens _dealerRounds (\s x -> s{_dealerRounds = x})
-
-lensOfferings :: Lens' Trace (Registry 'Offering (EntityState 'Offering 'Whole))
-lensOfferings = lens _offerings (\s x -> s{_offerings = x})
-
-lensPlayers :: Lens' Trace (Registry 'Player (EntityState 'Player 'Whole))
-lensPlayers = lens _players (\s x -> s{_players = x})
-
-lensPlayerHands :: Lens' Trace (Registry 'PlayerHand (EntityState 'PlayerHand 'Whole))
-lensPlayerHands = lens _playerHands (\s x -> s{_playerHands = x})
-
-lensPlayerSpots :: Lens' Trace (Registry 'PlayerSpot (EntityState 'PlayerSpot 'Whole))
-lensPlayerSpots = lens _playerSpots (\s x -> s{_playerSpots = x})
-
-lensTables :: Lens' Trace (Registry 'Table (EntityState 'Table 'Whole))
-lensTables = lens _tables (\s x -> s{_tables = x})
-
-lensTableShoes :: Lens' Trace (Registry 'TableShoe (EntityState 'TableShoe 'Whole))
-lensTableShoes = lens _tableShoes (\s x -> s{_tableShoes = x})
+makeLenses ''Trace

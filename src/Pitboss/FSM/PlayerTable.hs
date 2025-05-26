@@ -1,19 +1,11 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-dodgy-exports #-}
-{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module Pitboss.FSM.PlayerTable (
     module Pitboss.FSM.PlayerTable.FSM,
     module Pitboss.FSM.PlayerTable.Phase,
     module Pitboss.FSM.PlayerTable.Transition,
     SomePlayerTableFSM (..),
-    mkPlayerTableFSMIdle,
-    mkPlayerTableFSMChoosing,
-    mkPlayerTableFSMBetting,
-    mkPlayerTableFSMPlaying,
-    mkPlayerTableFSMObserving,
-    mkPlayerTableFSMDone,
 )
 where
 
@@ -21,24 +13,6 @@ import Data.Aeson.Types
 import Pitboss.FSM.PlayerTable.FSM
 import Pitboss.FSM.PlayerTable.Phase
 import Pitboss.FSM.PlayerTable.Transition
-
-mkPlayerTableFSMIdle :: SomePlayerTableFSM
-mkPlayerTableFSMIdle = SomePlayerTableFSM IdleFSM
-
-mkPlayerTableFSMChoosing :: SomePlayerTableFSM
-mkPlayerTableFSMChoosing = SomePlayerTableFSM ChoosingTableFSM
-
-mkPlayerTableFSMBetting :: SomePlayerTableFSM
-mkPlayerTableFSMBetting = SomePlayerTableFSM PlacingBetFSM
-
-mkPlayerTableFSMPlaying :: SomePlayerTableFSM
-mkPlayerTableFSMPlaying = SomePlayerTableFSM PlayingHandFSM
-
-mkPlayerTableFSMObserving :: SomePlayerTableFSM
-mkPlayerTableFSMObserving = SomePlayerTableFSM ObservingFSM
-
-mkPlayerTableFSMDone :: SomePlayerTableFSM
-mkPlayerTableFSMDone = SomePlayerTableFSM DoneFSM
 
 data SomePlayerTableFSM = forall p. SomePlayerTableFSM (PlayerTableFSM p)
 

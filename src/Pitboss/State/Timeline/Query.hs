@@ -7,13 +7,13 @@ module Pitboss.State.Timeline.Query where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
+import Pitboss.State.Delta.Instances.Incremental
 import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Registry
 import Pitboss.State.Timeline
 import Pitboss.State.Timeline.Reconstruction
 import Pitboss.State.Types.Core
-import Pitboss.State.Delta.Instances.Incremental
 
 uidToRegistryKey :: Uid k -> Word64
 uidToRegistryKey (Uid (_, EntityId entropy)) = entropy

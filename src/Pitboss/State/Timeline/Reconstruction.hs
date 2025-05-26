@@ -4,6 +4,7 @@
 
 module Pitboss.State.Timeline.Reconstruction where
 
+import Control.Monad (foldM)
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.List (sort)
 import Data.Maybe (fromMaybe)
@@ -12,7 +13,6 @@ import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Timeline
 import Pitboss.State.Types.Core
-import Control.Monad (foldM)
 
 collectDeltasUpTo :: Timeline k (SomeDelta k) -> Tick -> [SomeDelta k]
 collectDeltasUpTo timeline targetTick =
@@ -30,11 +30,11 @@ reconstructAt ::
 reconstructAt timeline tick =
     let allDeltas = collectDeltasUpTo timeline tick
         (completeDeltas, incompleteDeltas) = findLastCompleteTransaction allDeltas
-    in case completeDeltas of
-        [] -> Nothing -- No complete entity state available
-        _ -> do
-            baseEntity <- reconstructFromBoundaries completeDeltas
-            foldM applyDeltaToEntity baseEntity incompleteDeltas
+     in case completeDeltas of
+            [] -> Nothing -- No complete entity state available
+            _ -> do
+                baseEntity <- reconstructFromBoundaries completeDeltas
+                foldM applyDeltaToEntity baseEntity incompleteDeltas
   where
     applyDeltaToEntity :: (IncrementalWithWitness k) => EntityState k -> SomeDelta k -> Maybe (EntityState k)
     applyDeltaToEntity entity delta = case delta of
@@ -57,4 +57,3 @@ findLastCompleteTransaction deltas =
 -- initial entity creation from transaction boundaries
 reconstructFromBoundaries :: [SomeDelta k] -> Maybe (EntityState k)
 reconstructFromBoundaries _ = Nothing -- Placeholder - needs implementation
-

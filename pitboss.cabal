@@ -24,7 +24,7 @@ library
                       Pitboss.Blackjack.Deck
                       Pitboss.Blackjack.Hand
                       Pitboss.Blackjack.Hand.Category
-                      Pitboss.Blackjack.Hand.Score
+                      Pitboss.Blackjack.Hand.Scoring
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
@@ -89,6 +89,7 @@ library
                       Pitboss.Strategy.Chart.Parse
                       Pitboss.Strategy.Chart.Types
                       Pitboss.Strategy.Chart.Validate
+                      Pitboss.Strategy.Integration
                       Pitboss.Strategy.Types
 
     -- other-modules:

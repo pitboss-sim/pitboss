@@ -21,7 +21,7 @@ import Data.Aeson
 import Pitboss.FSM.DealerRound.ENHC.FSM
 import Pitboss.FSM.DealerRound.ENHC.Phase
 import Pitboss.FSM.DealerRound.ENHC.Transition
-import Pitboss.FSM.DealerRound.Phase
+import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data SomeENHCFSM = forall p. SomeENHCFSM (ENHCFSM p)

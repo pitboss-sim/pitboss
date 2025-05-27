@@ -1,23 +1,58 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-unused-matches #-}
 
 module Pitboss.State.Cache.Example where
 
 import Control.Lens
 import Control.Monad (join)
 import Control.Monad.Reader
-import Data.HashMap.Strict.InsOrd qualified as IHM
-import Data.Word (Word64)
 
+import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.State.Cache
-import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Lenses
 import Pitboss.State.Entity.Types
-import Pitboss.State.Registry
-import Pitboss.State.Types.Core
 import Prelude hiding (round)
+
+-- temporary scratch area for cache ideas
+
+makeLenses ''EntityCache
+makeLenses ''CacheContext
+
+playerSpotL :: (MonadReader CacheContext m) => EntityState 'PlayerHand -> m (Maybe (EntityState 'PlayerSpot))
+playerSpotL playerHand = do
+    let spotId = playerHand ^. phRels . phRelsBelongsToPlayerSpot
+    deref spotId
+
+playerL :: (MonadReader CacheContext m) => EntityState 'PlayerSpot -> m (Maybe (EntityState 'Player))
+playerL playerSpot = do
+    let playerId = playerSpot ^. psRels . psEntityRelsPlayerId
+    deref playerId
+
+dealerL :: (MonadReader CacheContext m) => EntityState 'PlayerHand -> m (Maybe (EntityState 'Dealer))
+dealerL playerHand = do
+    maybeSpot <- playerSpotL playerHand
+    case maybeSpot of
+        Nothing -> pure Nothing
+        Just spot -> do
+            let roundId = spot ^. psRels . psEntityRelsRoundId
+            maybeRound <- deref roundId
+            case maybeRound of
+                Nothing -> pure Nothing
+                Just round -> do
+                    cache <- view ctxCache
+                    let dealerMap = cache ^. cacheDealer
+                        dealerIds :: [EntityId 'Dealer] = do
+                            (entropy, dealer) <- IHM.toList dealerMap
+                            case dealer ^. dRels . dRelsActiveRound of
+                                Just activeRound | activeRound == roundId -> [EntityId entropy]
+                                _ -> []
+                    case dealerIds of
+                        (dealerId : _) -> deref dealerId
+                        [] -> pure Nothing
 
 -- | Example of how to retrieve a player name from a hand through entity relationships
 getPlayerNameFromHand :: EntityState 'PlayerHand -> Reader CacheContext (Maybe String)

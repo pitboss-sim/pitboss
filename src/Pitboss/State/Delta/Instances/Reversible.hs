@@ -33,9 +33,7 @@ instance Reversible (Delta 'Dealer (PartialUpdate 'Rels)) where
 
 -- DDealerHand
 instance Reversible (Delta 'DealerHand (PartialUpdate 'Attrs)) where
-    invert (DDealerHandPushCard c cs) = Right (DDealerHandPopCard c cs)
-    invert (DDealerHandPopCard c cs) = Right (DDealerHandPushCard c cs)
-    invert (DDealerHandSetCards old new) = Right (DDealerHandSetCards new old)
+    invert (DDealerHandSetHand old new) = Right (DDealerHandSetHand new old)
 
 instance Reversible (Delta 'DealerHand (PartialUpdate 'Modes)) where
     invert (DDealerHandSetFSM old new) = Right (DDealerHandSetFSM new old)
@@ -81,9 +79,7 @@ instance Reversible (Delta 'Player (PartialUpdate 'Rels)) where
 instance Reversible (Delta 'PlayerHand (PartialUpdate 'Attrs)) where
     invert (DPlayerHandSetPlayerHandIx old new) = Right (DPlayerHandSetPlayerHandIx new old)
     invert (DPlayerHandSetSplitDepth old new) = Right (DPlayerHandSetSplitDepth new old)
-    invert (DPlayerHandPushCard c cs) = Right (DPlayerHandPopCard c cs)
-    invert (DPlayerHandPopCard c cs) = Right (DPlayerHandPushCard c cs)
-    invert (DPlayerHandSetCards old new) = Right (DPlayerHandSetCards new old)
+    invert (DPlayerHandSetHand old new) = Right (DPlayerHandSetHand new old)
 
 instance Reversible (Delta 'PlayerHand (PartialUpdate 'Modes)) where
     invert (DPlayerHandSetPlayerHandFSM old new) = Right (DPlayerHandSetPlayerHandFSM new old)

@@ -80,20 +80,9 @@ instance Incremental DealerRels where
 instance Incremental DealerHandAttrs where
     type Applicable DealerHandAttrs = Delta 'DealerHand (PartialUpdate 'Attrs)
 
-    apply (DDealerHandPushCard c _) attrs = attrs{_dhAttrsHandCards = c : _dhAttrsHandCards attrs}
-    apply (DDealerHandPopCard c _) attrs =
-        case _dhAttrsHandCards attrs of
-            [] -> attrs
-            (x : xs)
-                | x == c -> attrs{_dhAttrsHandCards = xs}
-                | otherwise ->
-                    let (before, after) = break (== c) (_dhAttrsHandCards attrs)
-                     in attrs{_dhAttrsHandCards = before ++ drop 1 after}
-    apply (DDealerHandSetCards new _) attrs = attrs{_dhAttrsHandCards = new}
+    apply (DDealerHandSetHand _ newHand) attrs = attrs{_dhAttrsHand = newHand}
 
-    describe (DDealerHandPushCard c _) _ = "Pushed card: " ++ show c
-    describe (DDealerHandPopCard c _) _ = "Popped card: " ++ show c
-    describe (DDealerHandSetCards new old) _ = "Set dealer hand cards: " ++ show old ++ " → " ++ show new
+    describe (DDealerHandSetHand newHand oldHand) _ = "Set dealer hand: " ++ show oldHand ++ " → " ++ show newHand
 
 instance Incremental DealerHandModes where
     type Applicable DealerHandModes = Delta 'DealerHand (PartialUpdate 'Modes)
@@ -192,22 +181,11 @@ instance Incremental PlayerHandAttrs where
 
     apply (DPlayerHandSetPlayerHandIx new _) attrs = attrs{_phAttrsHandIx = new}
     apply (DPlayerHandSetSplitDepth new _) attrs = attrs{_phAttrsSplitDepth = new}
-    apply (DPlayerHandPushCard c _) attrs = attrs{_phAttrsHandCards = c : _phAttrsHandCards attrs}
-    apply (DPlayerHandPopCard c _) attrs =
-        case _phAttrsHandCards attrs of
-            [] -> attrs
-            (x : xs)
-                | x == c -> attrs{_phAttrsHandCards = xs}
-                | otherwise ->
-                    let (before, after) = break (== c) (_phAttrsHandCards attrs)
-                     in attrs{_phAttrsHandCards = before ++ drop 1 after}
-    apply (DPlayerHandSetCards new _) attrs = attrs{_phAttrsHandCards = new}
+    apply (DPlayerHandSetHand _ newHand) attrs = attrs{_phAttrsHand = newHand}
 
     describe (DPlayerHandSetPlayerHandIx new old) _ = "Set player hand index: " ++ show old ++ " → " ++ show new
     describe (DPlayerHandSetSplitDepth new old) _ = "Set player hand split depth: " ++ show old ++ " → " ++ show new
-    describe (DPlayerHandPushCard c _) _ = "Pushed card: " ++ show c
-    describe (DPlayerHandPopCard c _) _ = "Popped card: " ++ show c
-    describe (DPlayerHandSetCards new old) _ = "Set player hand cards: " ++ show old ++ " → " ++ show new
+    describe (DPlayerHandSetHand newHand oldHand) _ = "Set player hand: " ++ show oldHand ++ " → " ++ show newHand
 
 instance Incremental PlayerHandModes where
     type Applicable PlayerHandModes = Delta 'PlayerHand (PartialUpdate 'Modes)

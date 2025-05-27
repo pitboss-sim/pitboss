@@ -11,8 +11,8 @@ module Pitboss.State.Delta.Types (
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict (Map)
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips (Chips)
+import Pitboss.Blackjack.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
@@ -67,9 +67,7 @@ instance FromJSON (Delta 'Dealer ('PartialUpdate 'Rels))
 -- DDealerHand
 
 data instance Delta 'DealerHand ('PartialUpdate 'Attrs)
-    = DDealerHandPushCard Card [Card]
-    | DDealerHandPopCard Card [Card]
-    | DDealerHandSetCards [Card] [Card]
+    = DDealerHandSetHand SomeHand SomeHand
     deriving (Eq, Show, Generic)
 
 data instance Delta 'DealerHand ('PartialUpdate 'Modes)
@@ -175,9 +173,7 @@ instance FromJSON (Delta 'Player ('PartialUpdate 'Rels))
 data instance Delta 'PlayerHand ('PartialUpdate 'Attrs)
     = DPlayerHandSetPlayerHandIx Int Int
     | DPlayerHandSetSplitDepth Int Int
-    | DPlayerHandPushCard Card [Card]
-    | DPlayerHandPopCard Card [Card]
-    | DPlayerHandSetCards [Card] [Card]
+    | DPlayerHandSetHand SomeHand SomeHand
     deriving (Eq, Show, Generic)
 
 data instance Delta 'PlayerHand ('PartialUpdate 'Modes)

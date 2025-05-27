@@ -3,18 +3,40 @@
 
 module Pitboss.FSM.DealerHand.Transition where
 
+import Pitboss.Blackjack.Hand
+import Pitboss.Blackjack.Offering.RuleSet (RuleSet, isH17)
 import Pitboss.FSM.DealerHand.FSM
-import Pitboss.FSM.DealerHand.Phase
-import Pitboss.FSM.DealerRound hiding (Dealing, Interrupted)
+import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))
+import Pitboss.FSM.Types (InterruptReason)
 
-beginEvaluation :: DealerHandFSM 'Dealing -> DealerHandFSM 'Evaluating
-beginEvaluation DealingFSM = EvaluatingFSM
+beginEvaluationTyped :: SomeHand -> DealerHandFSM 'Dealing -> DealerHandFSM 'Evaluating
+beginEvaluationTyped _hand DealingFSM = EvaluatingFSM
 
-resolveHand :: DealerHandResolution -> DealerHandFSM 'Evaluating -> DealerHandFSM ('Resolved res)
-resolveHand res EvaluatingFSM = ResolvedFSM res
+resolveHandTyped :: SomeHand -> DealerHandFSM 'Evaluating -> DealerHandFSM ('Resolved res)
+resolveHandTyped (SomeHand hand) EvaluatingFSM = case witness hand of
+    BlackjackWitness -> ResolvedFSM DealerBlackjack
+    BustWitness -> ResolvedFSM DealerBust
+    _ -> ResolvedFSM DealerStand
 
-interruptHand :: InterruptReason -> DealerHandFSM p -> DealerHandFSM ('Interrupted r)
-interruptHand reason _ = InterruptedFSM reason
+interruptHandTyped :: InterruptReason -> SomeHand -> DealerHandFSM p -> DealerHandFSM ('Interrupted r)
+interruptHandTyped reason _hand _ = InterruptedFSM reason
 
-resumeFromInterrupt :: DealerHandFSM ('Interrupted r) -> DealerHandFSM 'Dealing
-resumeFromInterrupt (InterruptedFSM _) = DealingFSM
+resumeFromInterruptTyped :: SomeHand -> DealerHandFSM ('Interrupted r) -> DealerHandFSM 'Dealing
+resumeFromInterruptTyped _hand (InterruptedFSM _) = DealingFSM
+
+dealerShouldHit :: RuleSet -> SomeHand -> Bool
+dealerShouldHit ruleset (SomeHand hand) = case witness hand of
+    BlackjackWitness -> False
+    TwentyOneWitness -> False
+    BustWitness -> False
+    HardWitness -> handScore (SomeHand hand) < 17
+    SoftWitness ->
+        let score = handScore (SomeHand hand)
+         in score < 17 || score == 17 && isH17 ruleset
+    PairWitness -> handScore (SomeHand hand) < 17
+
+resolveDealerHand :: SomeHand -> DealerHandResolution
+resolveDealerHand (SomeHand hand) = case witness hand of
+    BlackjackWitness -> DealerBlackjack
+    BustWitness -> DealerBust
+    _ -> DealerStand

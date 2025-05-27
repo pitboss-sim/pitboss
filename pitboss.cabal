@@ -23,8 +23,8 @@ library
                       Pitboss.Blackjack.Chips
                       Pitboss.Blackjack.Deck
                       Pitboss.Blackjack.Hand
-                      Pitboss.Blackjack.Hand.Category
-                      Pitboss.Blackjack.Hand.Score
+                      Pitboss.Blackjack.Hand.Analysis
+                      Pitboss.Blackjack.Hand.Operations
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
@@ -65,6 +65,7 @@ library
                       Pitboss.FSM.Table.FSM
                       Pitboss.FSM.Table.Phase
                       Pitboss.FSM.Table.Transition
+                      Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
                       Pitboss.State.Cache
                       Pitboss.State.Cache.Example

@@ -1,23 +1,23 @@
-{-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE RankNTypes #-}
 
 module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
-import Pitboss.State.Entity.Types
-import Pitboss.FSM.DealerTable
-import Pitboss.FSM.DealerRound
-import Pitboss.FSM.DealerHand
+import Data.Map.Strict
 import Pitboss.Blackjack.Card (Card)
-import qualified Pitboss.Blackjack.Offering as O
 import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.FSM.PlayerTable (SomePlayerTableFSM)
-import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
+import Pitboss.Blackjack.Offering qualified as O
+import Pitboss.FSM.DealerHand
+import Pitboss.FSM.DealerRound
+import Pitboss.FSM.DealerTable
 import Pitboss.FSM.PlayerHand (SomePlayerHandFSM)
+import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
+import Pitboss.FSM.PlayerTable (SomePlayerTableFSM)
+import Pitboss.FSM.Table (SomeTableFSM)
+import Pitboss.State.Entity.Types
 import Pitboss.State.Types.FiniteMap (FiniteMap)
 import Pitboss.State.Types.FiniteMap.Occupancy (Occupancy)
-import Pitboss.FSM.Table (SomeTableFSM)
-import Data.Map.Strict
 import Prelude hiding (round)
 
 -- EntityState lenses (for accessing Attrs/Modes/Rels from complete entities)

@@ -67,6 +67,7 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types.Transitionable
                       Pitboss.State.Cache
+                      Pitboss.State.Cache.Example
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
                       Pitboss.State.Delta.Types

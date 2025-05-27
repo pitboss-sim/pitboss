@@ -7,6 +7,7 @@ import Control.Lens hiding (ix)
 import Data.Map.Strict
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips (Chips)
+import Pitboss.Blackjack.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
@@ -139,8 +140,8 @@ dRelsActiveHand :: Lens' DealerRels (Maybe (EntityId 'DealerHand))
 dRelsActiveHand f (DealerRels table round hand) = fmap (DealerRels table round) (f hand)
 
 -- DealerHandAttrs
-dhAttrsHandCards :: Lens' DealerHandAttrs [Card]
-dhAttrsHandCards f (DealerHandAttrs cards) = fmap DealerHandAttrs (f cards)
+dhAttrsHand :: Lens' DealerHandAttrs SomeHand
+dhAttrsHand f (DealerHandAttrs cards) = fmap DealerHandAttrs (f cards)
 
 -- DealerHandModes
 dhModesDealerHand :: Lens' DealerHandModes SomeDealerHandFSM
@@ -186,8 +187,8 @@ pModesPlayerHand :: Lens' PlayerModes SomePlayerHandFSM
 pModesPlayerHand f (PlayerModes table spot hand) = fmap (PlayerModes table spot) (f hand)
 
 -- PlayerHandAttrs
-phAttrsHandCards :: Lens' PlayerHandAttrs [Card]
-phAttrsHandCards f (PlayerHandAttrs cards bet depth ix) = fmap (\c -> PlayerHandAttrs c bet depth ix) (f cards)
+phAttrsHand :: Lens' PlayerHandAttrs SomeHand
+phAttrsHand f (PlayerHandAttrs cards bet depth ix) = fmap (\c -> PlayerHandAttrs c bet depth ix) (f cards)
 
 phAttrsOriginalBet :: Lens' PlayerHandAttrs Chips
 phAttrsOriginalBet f (PlayerHandAttrs cards bet depth ix) = fmap (\b -> PlayerHandAttrs cards b depth ix) (f bet)

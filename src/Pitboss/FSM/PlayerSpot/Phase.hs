@@ -6,7 +6,7 @@ module Pitboss.FSM.PlayerSpot.Phase where
 import Data.Aeson.Types
 import Data.Text qualified as T
 import GHC.Generics
-import Pitboss.FSM.DealerRound
+import Pitboss.FSM.Types (InterruptReason)
 
 data PlayerSpotPhase
     = SpotIdle

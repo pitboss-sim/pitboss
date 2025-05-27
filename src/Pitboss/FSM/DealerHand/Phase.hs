@@ -6,7 +6,7 @@ module Pitboss.FSM.DealerHand.Phase where
 
 import Data.Aeson.Types
 import GHC.Generics
-import Pitboss.FSM.DealerRound.Phase
+import Pitboss.FSM.Types (InterruptReason)
 
 data DealerHandResolution
     = DealerBlackjack

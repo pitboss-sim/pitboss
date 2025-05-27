@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-dodgy-exports #-}
@@ -12,19 +13,17 @@ module Pitboss.FSM.DealerHand (
     mkDealerHandFSMEvaluating,
     mkDealerHandFSMResolved,
     mkDealerHandFSMInterrupted,
-    dealerShouldHit,
-    resolveDealerHand,
 )
 where
 
-import Data.Aeson.Types
 import Pitboss.Blackjack.Hand
-import Pitboss.Blackjack.Hand.Score qualified as HS
+
+import Data.Aeson.Types
 import Pitboss.Blackjack.Offering.RuleSet
-import Pitboss.FSM.DealerHand.FSM
-import Pitboss.FSM.DealerHand.Phase
+import Pitboss.FSM.DealerHand.FSM (DealerHandFSM (..))
+import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))
 import Pitboss.FSM.DealerHand.Transition
-import Pitboss.FSM.DealerRound.Phase
+import Pitboss.FSM.Types (InterruptReason)
 
 mkDealerHandFSMDealing :: SomeDealerHandFSM
 mkDealerHandFSMDealing = SomeDealerHandFSM DealingFSM
@@ -67,17 +66,3 @@ instance FromJSON SomeDealerHandFSM where
                 r <- obj .: "resolution"
                 pure $ SomeDealerHandFSM (ResolvedFSM r)
             other -> fail $ "Unknown tag for SomeDealerHandFSM: " ++ other
-
--- helpers
-
-dealerShouldHit :: RuleSet -> Hand -> Bool
-dealerShouldHit ruleset hand = case HS.dealerHandTotal hand of
-    Nothing -> False -- busted
-    Just HS.DealerBlackjack -> False
-    Just (HS.Total n soft) -> n < 17 || (n == 17 && soft && isH17 ruleset)
-
-resolveDealerHand :: Hand -> DealerHandResolution
-resolveDealerHand hand = case HS.dealerHandTotal hand of
-    Nothing -> DealerBust
-    Just HS.DealerBlackjack -> DealerBlackjack
-    Just _ -> DealerStand

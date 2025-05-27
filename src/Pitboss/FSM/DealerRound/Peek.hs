@@ -25,7 +25,7 @@ import Data.Aeson
 import Pitboss.FSM.DealerRound.Peek.FSM
 import Pitboss.FSM.DealerRound.Peek.Phase
 import Pitboss.FSM.DealerRound.Peek.Transition
-import Pitboss.FSM.DealerRound.Phase
+import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data SomePeekFSM = forall p. SomePeekFSM (PeekFSM p)

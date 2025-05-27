@@ -55,6 +55,7 @@ import Data.Map.Strict
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Card (Card)
 import Pitboss.Blackjack.Chips
+import Pitboss.Blackjack.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
@@ -68,10 +69,8 @@ import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.BoundedEnum
 import Pitboss.State.Types.FiniteMap.Occupancy
 
--- EntityState is now just complete entity state
 data family EntityState (k :: EntityKind)
 
--- Supporting attribute/mode/relation types
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
     }
@@ -91,7 +90,6 @@ data DealerRels = DealerRels
     }
     deriving (Eq, Show, Generic)
 
--- EDealer
 data instance EntityState 'Dealer = EDealer
     { _dAttrs :: DealerAttrs
     , _dModes :: DealerModes
@@ -100,8 +98,7 @@ data instance EntityState 'Dealer = EDealer
     deriving (Eq, Show, Generic)
 
 data DealerHandAttrs = DealerHandAttrs
-    { _dhAttrsHandCards :: [Card]
-    }
+    {_dhAttrsHand :: SomeHand}
     deriving (Eq, Show, Generic)
 
 data DealerHandModes = DealerHandModes
@@ -115,7 +112,6 @@ data DealerHandRels = DealerHandRels
     }
     deriving (Eq, Show, Generic)
 
--- EDealerHand
 data instance EntityState 'DealerHand = EDealerHand
     { _dhAttrs :: DealerHandAttrs
     , _dhModes :: DealerHandModes
@@ -137,7 +133,6 @@ data DealerRoundRels = DealerRoundRels
     }
     deriving (Eq, Show, Generic)
 
--- EDealerRound
 data instance EntityState 'DealerRound = EDealerRound
     { _drAttrs :: DealerRoundAttrs
     , _drModes :: DealerRoundModes
@@ -156,7 +151,6 @@ data OfferingModes = OfferingModes
 data OfferingRels = OfferingRels
     deriving (Eq, Show, Generic)
 
--- EOffering
 data instance EntityState 'Offering = EOffering
     { _oAttrs :: OfferingAttrs
     , _oModes :: OfferingModes
@@ -180,7 +174,6 @@ data PlayerModes = PlayerModes
 data PlayerRels = PlayerRels
     deriving (Eq, Show, Generic)
 
--- EPlayer
 data instance EntityState 'Player = EPlayer
     { _pAttrs :: PlayerAttrs
     , _pModes :: PlayerModes
@@ -189,7 +182,7 @@ data instance EntityState 'Player = EPlayer
     deriving (Eq, Show, Generic)
 
 data PlayerHandAttrs = PlayerHandAttrs
-    { _phAttrsHandCards :: [Card]
+    { _phAttrsHand :: SomeHand
     , _phAttrsOriginalBet :: Chips
     , _phAttrsSplitDepth :: Int
     , _phAttrsHandIx :: Int
@@ -208,7 +201,6 @@ data PlayerHandRels = PlayerHandRels
     }
     deriving (Eq, Show, Generic)
 
--- EPlayerHand
 data instance EntityState 'PlayerHand = EPlayerHand
     { _phAttrs :: PlayerHandAttrs
     , _phModes :: PlayerHandModes
@@ -285,7 +277,6 @@ data TableRels = TableRels
     }
     deriving (Eq, Show, Generic)
 
--- ETable
 data instance EntityState 'Table = ETable
     { _tAttrs :: TableAttrs
     , _tModes :: TableModes
@@ -307,7 +298,6 @@ data TableShoeRels = TableShoeRels
     }
     deriving (Eq, Show, Generic)
 
--- ETableShoe
 data instance EntityState 'TableShoe = ETableShoe
     { _tsAttrs :: TableShoeAttrs
     , _tsModes :: TableShoeModes
@@ -326,7 +316,6 @@ data CardState
 instance ToJSON CardState
 instance FromJSON CardState
 
--- JSON instances for all the new types
 instance ToJSON DealerAttrs
 instance FromJSON DealerAttrs
 instance ToJSON DealerModes

@@ -3,33 +3,40 @@
 
 module Pitboss.Strategy.Chart.Interpret where
 
+import Data.List (find)
 import Data.Map.Strict qualified as Map
-import Pitboss.Blackjack.Card (Rank (..))
-import Pitboss.Blackjack.Hand
-import Pitboss.Blackjack.Hand.Operations (cannotDouble, cannotSplit, extractPairRank)
+import Pitboss.Blackjack.Materia.Card (Rank (..))
+import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack.Offering
+import Pitboss.Blackjack.Play (canDoubleSomeHand, canSplitSomeHand)
 import Pitboss.Strategy.Chart.Types
 import Pitboss.Strategy.Types
 
-lookupDecisionTyped :: StrategyChart -> SomeHand -> Rank -> Maybe Decision
-lookupDecisionTyped chart hand upcard =
-    let chartMap = Map.fromList [(handPrefix e, e) | e <- chart]
-        prefix = handToPrefix hand
-     in do
-            entry <- Map.lookup prefix chartMap
-            moveCode <- Map.lookup upcard (moves entry)
-            pure (toDecision moveCode)
+lookupDecisionTyped :: StrategyChart -> SomeHand -> Rank -> Offering -> Maybe Decision
+lookupDecisionTyped chart hand upcard _offering = do
+    entry <- findMatchingEntry chart hand
+    moveCode <- Map.lookup upcard (moves entry)
+    pure (toDecision moveCode)
 
-handToPrefix :: SomeHand -> HandPrefix
-handToPrefix (SomeHand hand) = case witness hand of
-    BlackjackWitness -> PT
-    TwentyOneWitness -> H 21
-    BustWitness -> H (handScore (SomeHand hand))
-    PairWitness -> case extractPairRank (SomeHand hand) of
-        Just Ace -> PA
-        Just r -> P (rankValue r)
-        Nothing -> error "handToPrefix: pair hand without pair rank"
-    SoftWitness -> A (handScore (SomeHand hand))
-    HardWitness -> H (handScore (SomeHand hand))
+findMatchingEntry :: StrategyChart -> SomeHand -> Maybe ChartEntry
+findMatchingEntry chart hand@(SomeHand h) =
+    case witness h of
+        BlackjackWitness ->
+            find (\e -> handKind e == BlackjackHand) chart
+        PairWitness -> case extractPairRank hand of
+            Just Ace -> find (\e -> handKind e == PairHand && kindValue e == Just 1) chart
+            Just r -> find (\e -> handKind e == PairHand && kindValue e == Just (rankValue r)) chart
+            Nothing -> Nothing
+        SoftWitness ->
+            let score = handScore hand
+             in find (\e -> handKind e == SoftHand && kindValue e == Just score) chart
+        HardWitness ->
+            let score = handScore hand
+             in find (\e -> handKind e == HardHand && kindValue e == Just score) chart
+        TwentyOneWitness ->
+            find (\e -> handKind e == HardHand && kindValue e == Just 21) chart
+        BustWitness ->
+            find (\e -> handKind e == HardHand && kindValue e == Just 0) chart
 
 toDecision :: MoveCode -> Decision
 toDecision MoveHit = Always Hit
@@ -42,6 +49,7 @@ toDecision MoveSurrenderOrStand = Prefer Surrender (Else Stand)
 toDecision MoveUndefined = Always Hit
 
 rankValue :: Rank -> Int
+rankValue Ace = 1
 rankValue Two = 2
 rankValue Three = 3
 rankValue Four = 4
@@ -54,20 +62,19 @@ rankValue Ten = 10
 rankValue Jack = 10
 rankValue Queen = 10
 rankValue King = 10
-rankValue Ace = 1
 
-validateDecision :: SomeHand -> Decision -> Bool
-validateDecision hand decision = case decision of
-    Always Split -> not (cannotSplit hand)
-    Prefer Split _ -> not (cannotSplit hand)
-    Always Double -> not (cannotDouble hand)
-    Prefer Double _ -> not (cannotDouble hand)
+validateDecision :: SomeHand -> Decision -> Offering -> Bool
+validateDecision hand decision offering = case decision of
+    Always Split -> canSplitSomeHand hand 0 offering
+    Prefer Split _ -> canSplitSomeHand hand 0 offering
+    Always Double -> canDoubleSomeHand hand offering
+    Prefer Double _ -> canDoubleSomeHand hand offering
     _ -> True
 
-safeDecisionLookup :: StrategyChart -> SomeHand -> Rank -> Decision
-safeDecisionLookup chart hand upcard =
-    case lookupDecisionTyped chart hand upcard of
-        Just decision | validateDecision hand decision -> decision
+safeDecisionLookup :: StrategyChart -> SomeHand -> Rank -> Offering -> Decision
+safeDecisionLookup chart hand upcard offering =
+    case lookupDecisionTyped chart hand upcard offering of
+        Just decision | validateDecision hand decision offering -> decision
         Just decision -> fallbackForInvalidDecision decision
         Nothing -> Always Hit
 

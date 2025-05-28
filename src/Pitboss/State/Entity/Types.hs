@@ -53,9 +53,9 @@ import Data.Aeson (
  )
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Card (Card)
-import Pitboss.Blackjack.Chips
-import Pitboss.Blackjack.Hand (SomeHand)
+import Pitboss.Blackjack.Materia.Card (Card)
+import Pitboss.Blackjack.Materia.Chips
+import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound

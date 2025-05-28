@@ -1,8 +1,9 @@
 module Pitboss.Strategy.Chart.Error where
 
-import Pitboss.Blackjack.Card (Rank)
-import Pitboss.Strategy.Chart.Types (HandPrefix)
+import Pitboss.Blackjack.Materia.Card (Rank)
+import Pitboss.Blackjack.Materia.Hand (HandKind)
 import Text.Printf (printf)
+import Pitboss.Strategy.Chart.Types (kindToHandPrefix)
 
 data ChartParseErrorReason
     = InvalidRowPrefix String
@@ -63,6 +64,7 @@ prettyChartParseError (ChartParseError (Pos l c) content reason) =
 prettyChartParseErrors :: [ChartParseError] -> String
 prettyChartParseErrors = unlines . map prettyChartParseError
 
-prettyValidationError :: (HandPrefix, Rank) -> String
-prettyValidationError (hp, up) =
-    "  Undefined move for hand: " ++ show hp ++ ", dealer upcard: " ++ show up
+prettyValidationError :: (HandKind, Maybe Int, Rank) -> String
+prettyValidationError (kind, value, up) =
+    let prefix = kindToHandPrefix kind value
+    in "  Undefined move for hand: " ++ show prefix ++ ", dealer upcard: " ++ show up

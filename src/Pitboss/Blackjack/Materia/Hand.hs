@@ -5,19 +5,27 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Blackjack.Hand where
+module Pitboss.Blackjack.Materia.Hand where
 
 import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import Data.Aeson.Types (Parser)
 import Data.Kind (Type)
 import Data.Text (Text)
-import Pitboss.Blackjack.Card (Card, Rank)
-import Pitboss.Blackjack.Hand.Analysis (HandAnalysis (..), analyzeHand)
+import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), rankValue)
 import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (matterDecks))
 
 data Hand (k :: HandKind) where
     Hand :: [Card] -> Hand k
+
+data HandAnalysis = HandAnalysis
+    { _value :: Int
+    , _isSoft :: Bool
+    , _isBust :: Bool
+    , _isPair :: Bool
+    , _isBlackjack :: Bool
+    }
+    deriving (Show)
 
 deriving instance Show (Hand k)
 deriving instance Eq (Hand k)
@@ -44,7 +52,7 @@ data HandKind
     | HardHand
     | PairHand
     | BustHand
-    deriving (Eq, Show)
+    deriving (Eq, Show, Ord)
 
 type family Score (k :: HandKind) :: Type where
     Score 'BlackjackHand = Int
@@ -53,19 +61,6 @@ type family Score (k :: HandKind) :: Type where
     Score 'HardHand = Int
     Score 'PairHand = Int
     Score 'BustHand = ()
-
-type family CannotSplit (k :: HandKind) :: Bool where
-    CannotSplit 'PairHand = 'False
-    CannotSplit _ = 'True
-
-type family IsNotBlackjack (k :: HandKind) :: Bool where
-    IsNotBlackjack 'BlackjackHand = 'False
-    IsNotBlackjack _ = 'True
-
-type family CannotBust (k :: HandKind) :: Bool where
-    CannotBust 'BustHand = 'True
-    CannotBust 'BlackjackHand = 'True
-    CannotBust _ = 'False
 
 data SomeHand where
     SomeHand :: (HasWitness k) => Hand k -> SomeHand
@@ -195,3 +190,39 @@ handScore (SomeHand hand) = case witness hand of
 
 extractScore :: Hand k -> Int
 extractScore (Hand cards) = _value (analyzeHand cards)
+
+extractPairRank :: SomeHand -> Maybe Rank
+extractPairRank (SomeHand (Hand cards)) = case cards of
+    [Card r1 _, Card r2 _] | r1 == r2 -> Just r1
+    _ -> Nothing
+
+bestAceValue :: Int -> Int -> (Int, Bool)
+bestAceValue nonAceSum aceCount
+    | aceCount == 0 = (nonAceSum, False)
+    | nonAceSum + 11 + (aceCount - 1) <= 21 = (nonAceSum + 11 + (aceCount - 1), True)
+    | otherwise = (nonAceSum + aceCount, False)
+
+analyzeHand :: [Card] -> HandAnalysis
+analyzeHand cards =
+    let ranks = map (\(Card rank _) -> rank) cards
+        aceCount = length (filter (== Ace) ranks)
+        nonAceSum = sum (map rankValue (filter (/= Ace) ranks))
+
+        (finalValue, usingSoftAce) = bestAceValue nonAceSum aceCount
+
+        isPair :: [Rank] -> Bool
+        isPair [r1, r2] = r1 == r2
+        isPair _ = False
+
+        isBusted = finalValue > 21
+        isSoftHand = usingSoftAce && not isBusted
+        isPairHand = isPair ranks
+        isNaturalBlackjack = finalValue == 21 && length cards == 2 && aceCount == 1
+     in HandAnalysis
+            { _value = finalValue
+            , _isSoft = isSoftHand
+            , _isBust = isBusted
+            , _isPair = isPairHand
+            , _isBlackjack = isNaturalBlackjack
+            }
+

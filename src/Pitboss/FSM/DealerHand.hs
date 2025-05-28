@@ -16,7 +16,7 @@ module Pitboss.FSM.DealerHand (
 )
 where
 
-import Pitboss.Blackjack.Hand
+import Pitboss.Blackjack.Materia.Hand
 
 import Data.Aeson.Types
 import Pitboss.Blackjack.Offering.RuleSet

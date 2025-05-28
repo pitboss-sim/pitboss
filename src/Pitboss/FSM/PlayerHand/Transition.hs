@@ -3,11 +3,12 @@
 
 module Pitboss.FSM.PlayerHand.Transition where
 
-import Pitboss.Blackjack.Card (Rank (..))
-import Pitboss.Blackjack.Hand
-import Pitboss.Blackjack.Hand.Operations (cannotSplit, extractPairRank)
+import Pitboss.Blackjack.Materia.Card (Rank (..))
+import Pitboss.Blackjack.Materia.Hand
 import Pitboss.FSM.PlayerHand.FSM
 import Pitboss.FSM.PlayerHand.Phase
+import Pitboss.Blackjack.Play (canSplitHand, SomeLifecycleHand (..), LifecycleHand (..), fromSomeHand)
+import Pitboss.Blackjack.Offering hiding (SplitAces)
 
 initialDecisionTyped :: SomeHand -> PlayerHandFSM 'Decision 'OKHit 'OKDbl 'OKSpl
 initialDecisionTyped _hand = DecisionFSM
@@ -39,16 +40,17 @@ resolveOneCardDrawTyped (SomeHand hand) res (OneCardDrawFSM _) = case (witness h
     (_, Stand) | handScore (SomeHand hand) <= 21 -> ResolvedFSM res
     _ -> error "resolveOneCardDrawTyped: invalid resolution for hand"
 
-resolveSplitTyped :: SomeHand -> PlayerHandFSM 'Decision h d s -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
-resolveSplitTyped hand DecisionFSM =
-    if cannotSplit hand
-        then error "resolveSplitTyped: hand cannot be split"
-        else
-            ( case extractPairRank hand of
+resolveSplitTyped :: SomeHand -> PlayerHandFSM 'Decision h d s -> Offering -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
+resolveSplitTyped someHand DecisionFSM offering =
+    case fromSomeHand someHand of
+        SomeLifecycleHand fullHand@(FullLifecycleHand _) ->
+            if canSplitHand fullHand 0 offering -- you'll need offering here too
+            then case extractPairRank someHand of
                 Just Ace -> ResolvedFSM SplitAces
                 Just _ -> ResolvedFSM SplitNonAces
                 Nothing -> error "resolveSplitTyped: not a pair"
-            )
+            else error "resolveSplitTyped: hand cannot be split"
+        _ -> error "resolveSplitTyped: not a full hand"
 
 resolvePushTyped :: SomeHand -> PlayerHandFSM p h d s -> PlayerHandFSM ('Resolved 'Push) 'NoHit 'NoDbl 'NoSpl
 resolvePushTyped _hand _ = ResolvedFSM Push

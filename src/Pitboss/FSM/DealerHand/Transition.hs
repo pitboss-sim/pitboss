@@ -3,7 +3,7 @@
 
 module Pitboss.FSM.DealerHand.Transition where
 
-import Pitboss.Blackjack.Hand
+import Pitboss.Blackjack.Materia.Hand
 import Pitboss.Blackjack.Offering.RuleSet (RuleSet, isH17)
 import Pitboss.FSM.DealerHand.FSM
 import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))

@@ -7,8 +7,6 @@ module Pitboss.FSM.PlayerSpot (
     module Pitboss.FSM.PlayerSpot.Phase,
     module Pitboss.FSM.PlayerSpot.Transition,
     SomePlayerSpotFSM (..),
-    interruptSpot,
-    resumeFromInterrupt,
 )
 where
 
@@ -17,7 +15,6 @@ import Data.Text qualified as T
 import Pitboss.FSM.PlayerSpot.FSM
 import Pitboss.FSM.PlayerSpot.Phase
 import Pitboss.FSM.PlayerSpot.Transition
-import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data SomePlayerSpotFSM = forall p. SomePlayerSpotFSM (PlayerSpotFSM p)
@@ -61,9 +58,3 @@ instance FromJSON SomePlayerSpotFSM where
 
 instance Transitionable SomePlayerSpotFSM where
     transitionType (SomePlayerSpotFSM fsm) = transitionType fsm
-
-interruptSpot :: InterruptReason -> PlayerSpotFSM p -> SomePlayerSpotFSM
-interruptSpot reason _ = SomePlayerSpotFSM (SpotInterruptedFSM reason)
-
-resumeFromInterrupt :: PlayerSpotFSM ('SpotInterrupted r) -> PlayerSpotFSM 'SpotIdle
-resumeFromInterrupt (SpotInterruptedFSM _) = SpotIdleFSM

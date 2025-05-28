@@ -1,5 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Pitboss.FSM.DealerRound.ENHC.Transition where
 
@@ -7,13 +9,35 @@ import Pitboss.Blackjack.Offering.RuleSet
 import Pitboss.FSM.DealerRound.ENHC.FSM
 import Pitboss.FSM.DealerRound.ENHC.Phase
 
-beginENHC :: ENHCFSM 'ENHCAwaiting -> ENHCFSM 'ENHCBets
+type family ValidENHCTransition (from :: ENHCPhase) (to :: ENHCPhase) :: Bool where
+    ValidENHCTransition 'ENHCAwaiting 'ENHCBets = 'True
+    ValidENHCTransition 'ENHCBets 'ENHCDeal = 'True
+    ValidENHCTransition 'ENHCDeal 'ENHCEarlySurrender = 'True
+    ValidENHCTransition 'ENHCDeal 'ENHCPlayers = 'True
+    ValidENHCTransition 'ENHCEarlySurrender 'ENHCPlayers = 'True
+    ValidENHCTransition 'ENHCPlayers 'ENHCDealing = 'True
+    ValidENHCTransition 'ENHCDealing 'ENHCSettle = 'True
+    ValidENHCTransition 'ENHCSettle 'ENHCComplete = 'True
+    ValidENHCTransition p 'ENHCInterrupted = 'True
+    ValidENHCTransition 'ENHCInterrupted p = 'True
+    ValidENHCTransition _ _ = 'False
+
+beginENHC ::
+    (ValidENHCTransition 'ENHCAwaiting 'ENHCBets ~ 'True) =>
+    ENHCFSM 'ENHCAwaiting ->
+    ENHCFSM 'ENHCBets
 beginENHC ENHCAwaitingFSM = ENHCBetsFSM
 
-betsPlacedENHC :: ENHCFSM 'ENHCBets -> ENHCFSM 'ENHCDeal
+betsPlacedENHC ::
+    (ValidENHCTransition 'ENHCBets 'ENHCDeal ~ 'True) =>
+    ENHCFSM 'ENHCBets ->
+    ENHCFSM 'ENHCDeal
 betsPlacedENHC ENHCBetsFSM = ENHCDealFSM
 
-dealCardsENHC :: ENHCFSM 'ENHCDeal -> ENHCFSM 'ENHCEarlySurrender
+dealCardsENHC ::
+    (ValidENHCTransition 'ENHCDeal 'ENHCEarlySurrender ~ 'True) =>
+    ENHCFSM 'ENHCDeal ->
+    ENHCFSM 'ENHCEarlySurrender
 dealCardsENHC ENHCDealFSM = ENHCEarlySurrenderFSM
 
 maybeEnterEarlySurrenderENHC ::
@@ -25,17 +49,32 @@ maybeEnterEarlySurrenderENHC rules fsm =
         Early -> Right (dealCardsENHC fsm)
         _ -> Left ENHCPlayersFSM
 
-insuranceDecidedENHC :: ENHCFSM 'ENHCEarlySurrender -> ENHCFSM 'ENHCPlayers
-insuranceDecidedENHC = resolveEarlySurrenderENHC -- shim, for uniformity
+insuranceDecidedENHC ::
+    (ValidENHCTransition 'ENHCEarlySurrender 'ENHCPlayers ~ 'True) =>
+    ENHCFSM 'ENHCEarlySurrender ->
+    ENHCFSM 'ENHCPlayers
+insuranceDecidedENHC = resolveEarlySurrenderENHC
 
-resolveEarlySurrenderENHC :: ENHCFSM 'ENHCEarlySurrender -> ENHCFSM 'ENHCPlayers
+resolveEarlySurrenderENHC ::
+    (ValidENHCTransition 'ENHCEarlySurrender 'ENHCPlayers ~ 'True) =>
+    ENHCFSM 'ENHCEarlySurrender ->
+    ENHCFSM 'ENHCPlayers
 resolveEarlySurrenderENHC ENHCEarlySurrenderFSM = ENHCPlayersFSM
 
-finishPlayersENHC :: ENHCFSM 'ENHCPlayers -> ENHCFSM 'ENHCDealing
+finishPlayersENHC ::
+    (ValidENHCTransition 'ENHCPlayers 'ENHCDealing ~ 'True) =>
+    ENHCFSM 'ENHCPlayers ->
+    ENHCFSM 'ENHCDealing
 finishPlayersENHC ENHCPlayersFSM = ENHCDealingFSM
 
-finishDealerENHC :: ENHCFSM 'ENHCDealing -> ENHCFSM 'ENHCSettle
+finishDealerENHC ::
+    (ValidENHCTransition 'ENHCDealing 'ENHCSettle ~ 'True) =>
+    ENHCFSM 'ENHCDealing ->
+    ENHCFSM 'ENHCSettle
 finishDealerENHC ENHCDealingFSM = ENHCSettleFSM
 
-resolvePayoutsENHC :: ENHCFSM 'ENHCSettle -> ENHCFSM 'ENHCComplete
+resolvePayoutsENHC ::
+    (ValidENHCTransition 'ENHCSettle 'ENHCComplete ~ 'True) =>
+    ENHCFSM 'ENHCSettle ->
+    ENHCFSM 'ENHCComplete
 resolvePayoutsENHC ENHCSettleFSM = ENHCCompleteFSM

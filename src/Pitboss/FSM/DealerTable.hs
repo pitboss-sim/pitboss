@@ -6,11 +6,6 @@ module Pitboss.FSM.DealerTable (
     module Pitboss.FSM.DealerTable.Phase,
     module Pitboss.FSM.DealerTable.Transition,
     SomeDealerTableFSM (..),
-    mkDealerTableFSMOffDuty,
-    mkDealerTableFSMOnDuty,
-    mkDealerTableFSMPushing,
-    mkDealerTableFSMTasking,
-    mkDealerTableFSMLeaving,
 )
 where
 
@@ -18,21 +13,6 @@ import Data.Aeson.Types
 import Pitboss.FSM.DealerTable.FSM
 import Pitboss.FSM.DealerTable.Phase
 import Pitboss.FSM.DealerTable.Transition
-
-mkDealerTableFSMOffDuty :: SomeDealerTableFSM
-mkDealerTableFSMOffDuty = SomeDealerTableFSM OffDutyFSM
-
-mkDealerTableFSMOnDuty :: SomeDealerTableFSM
-mkDealerTableFSMOnDuty = SomeDealerTableFSM OnDutyFSM
-
-mkDealerTableFSMPushing :: SomeDealerTableFSM
-mkDealerTableFSMPushing = SomeDealerTableFSM PushingFSM
-
-mkDealerTableFSMTasking :: DealerTask -> SomeDealerTableFSM
-mkDealerTableFSMTasking task = SomeDealerTableFSM (TaskingFSM task)
-
-mkDealerTableFSMLeaving :: SomeDealerTableFSM
-mkDealerTableFSMLeaving = SomeDealerTableFSM LeavingFSM
 
 data SomeDealerTableFSM = forall p. SomeDealerTableFSM (DealerTableFSM p)
 
@@ -50,16 +30,11 @@ instance Show SomeDealerTableFSM where
 
 instance ToJSON SomeDealerTableFSM where
     toJSON (SomeDealerTableFSM fsm) = case fsm of
-        OffDutyFSM ->
-            object ["tag" .= String "OffDuty"]
-        PushingFSM ->
-            object ["tag" .= String "Pushing"]
-        OnDutyFSM ->
-            object ["tag" .= String "OnDuty"]
-        TaskingFSM task ->
-            object ["tag" .= String "Tasking", "task" .= task]
-        LeavingFSM ->
-            object ["tag" .= String "Leaving"]
+        OffDutyFSM -> object ["tag" .= String "OffDuty"]
+        PushingFSM -> object ["tag" .= String "Pushing"]
+        OnDutyFSM -> object ["tag" .= String "OnDuty"]
+        TaskingFSM task -> object ["tag" .= String "Tasking", "task" .= task]
+        LeavingFSM -> object ["tag" .= String "Leaving"]
 
 instance FromJSON SomeDealerTableFSM where
     parseJSON = withObject "SomeDealerTableFSM" $ \obj -> do

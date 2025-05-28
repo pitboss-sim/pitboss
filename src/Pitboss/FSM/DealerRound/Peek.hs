@@ -6,18 +6,6 @@ module Pitboss.FSM.DealerRound.Peek (
     module Pitboss.FSM.DealerRound.Peek.Phase,
     module Pitboss.FSM.DealerRound.Peek.Transition,
     SomePeekFSM (..),
-    mkSomePeekAwaiting,
-    mkSomePeekBets,
-    mkSomePeekDeal,
-    mkSomePeekEarlySurrender,
-    mkSomePeekPeek,
-    mkSomePeekInsuranceDecision,
-    mkSomePeekInsuranceSettled,
-    mkSomePeekPlayers,
-    mkSomePeekDealing,
-    mkSomePeekSettle,
-    mkSomePeekComplete,
-    mkSomePeekInterrupted,
 )
 where
 
@@ -25,46 +13,9 @@ import Data.Aeson
 import Pitboss.FSM.DealerRound.Peek.FSM
 import Pitboss.FSM.DealerRound.Peek.Phase
 import Pitboss.FSM.DealerRound.Peek.Transition
-import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data SomePeekFSM = forall p. SomePeekFSM (PeekFSM p)
-
-mkSomePeekAwaiting :: SomePeekFSM
-mkSomePeekAwaiting = SomePeekFSM PeekAwaitingFSM
-
-mkSomePeekBets :: SomePeekFSM
-mkSomePeekBets = SomePeekFSM PeekBetsFSM
-
-mkSomePeekDeal :: SomePeekFSM
-mkSomePeekDeal = SomePeekFSM PeekDealFSM
-
-mkSomePeekEarlySurrender :: SomePeekFSM
-mkSomePeekEarlySurrender = SomePeekFSM PeekEarlySurrenderFSM
-
-mkSomePeekPeek :: SomePeekFSM
-mkSomePeekPeek = SomePeekFSM PeekPeekFSM
-
-mkSomePeekInsuranceDecision :: SomePeekFSM
-mkSomePeekInsuranceDecision = SomePeekFSM PeekInsuranceDecisionFSM
-
-mkSomePeekInsuranceSettled :: SomePeekFSM
-mkSomePeekInsuranceSettled = SomePeekFSM PeekInsuranceSettledFSM
-
-mkSomePeekPlayers :: SomePeekFSM
-mkSomePeekPlayers = SomePeekFSM PeekPlayersFSM
-
-mkSomePeekDealing :: SomePeekFSM
-mkSomePeekDealing = SomePeekFSM PeekDealingFSM
-
-mkSomePeekSettle :: SomePeekFSM
-mkSomePeekSettle = SomePeekFSM PeekSettleFSM
-
-mkSomePeekComplete :: SomePeekFSM
-mkSomePeekComplete = SomePeekFSM PeekCompleteFSM
-
-mkSomePeekInterrupted :: InterruptReason -> SomePeekFSM
-mkSomePeekInterrupted r = SomePeekFSM (PeekInterruptedFSM r)
 
 instance Eq SomePeekFSM where
     SomePeekFSM a == SomePeekFSM b = case (a, b) of

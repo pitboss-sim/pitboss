@@ -1,19 +1,11 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 module Pitboss.FSM.DealerRound.ENHC (
     module Pitboss.FSM.DealerRound.ENHC.FSM,
     module Pitboss.FSM.DealerRound.ENHC.Phase,
     module Pitboss.FSM.DealerRound.ENHC.Transition,
     SomeENHCFSM (..),
-    mkSomeENHCAwaiting,
-    mkSomeENHCBets,
-    mkSomeENHCDeal,
-    mkSomeENHCPlayers,
-    mkSomeENHCDealing,
-    mkSomeENHCSettle,
-    mkSomeENHCComplete,
 )
 where
 
@@ -21,37 +13,9 @@ import Data.Aeson
 import Pitboss.FSM.DealerRound.ENHC.FSM
 import Pitboss.FSM.DealerRound.ENHC.Phase
 import Pitboss.FSM.DealerRound.ENHC.Transition
-import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
 
 data SomeENHCFSM = forall p. SomeENHCFSM (ENHCFSM p)
-
-mkSomeENHCAwaiting :: SomeENHCFSM
-mkSomeENHCAwaiting = SomeENHCFSM ENHCAwaitingFSM
-
-mkSomeENHCBets :: SomeENHCFSM
-mkSomeENHCBets = SomeENHCFSM ENHCBetsFSM
-
-mkSomeENHCDeal :: SomeENHCFSM
-mkSomeENHCDeal = SomeENHCFSM ENHCDealFSM
-
-mkSomeENHCEarlySurrender :: SomeENHCFSM
-mkSomeENHCEarlySurrender = SomeENHCFSM ENHCEarlySurrenderFSM
-
-mkSomeENHCPlayers :: SomeENHCFSM
-mkSomeENHCPlayers = SomeENHCFSM ENHCPlayersFSM
-
-mkSomeENHCDealing :: SomeENHCFSM
-mkSomeENHCDealing = SomeENHCFSM ENHCDealingFSM
-
-mkSomeENHCSettle :: SomeENHCFSM
-mkSomeENHCSettle = SomeENHCFSM ENHCSettleFSM
-
-mkSomeENHCComplete :: SomeENHCFSM
-mkSomeENHCComplete = SomeENHCFSM ENHCCompleteFSM
-
-mkSomeENHCInterrupted :: InterruptReason -> SomeENHCFSM
-mkSomeENHCInterrupted r = SomeENHCFSM (ENHCInterruptedFSM r)
 
 instance Transitionable SomeENHCFSM where
     transitionType (SomeENHCFSM fsm) = transitionType fsm
@@ -90,7 +54,7 @@ instance FromJSON SomeENHCFSM where
             "ENHCAwaiting" -> pure $ SomeENHCFSM ENHCAwaitingFSM
             "ENHCBets" -> pure $ SomeENHCFSM ENHCBetsFSM
             "ENHCDeal" -> pure $ SomeENHCFSM ENHCDealFSM
-            "ENHCEarlySurrender" -> pure mkSomeENHCEarlySurrender
+            "ENHCEarlySurrender" -> pure $ SomeENHCFSM ENHCEarlySurrenderFSM
             "ENHCPlayers" -> pure $ SomeENHCFSM ENHCPlayersFSM
             "ENHCDealing" -> pure $ SomeENHCFSM ENHCDealingFSM
             "ENHCSettle" -> pure $ SomeENHCFSM ENHCSettleFSM

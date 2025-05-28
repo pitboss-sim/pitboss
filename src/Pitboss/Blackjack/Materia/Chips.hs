@@ -1,4 +1,4 @@
-module Pitboss.Blackjack.Chips where
+module Pitboss.Blackjack.Materia.Chips where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

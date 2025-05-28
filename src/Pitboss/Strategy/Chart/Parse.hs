@@ -4,9 +4,9 @@ import Data.Char (isDigit)
 import Data.Map.Strict qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Pitboss.Blackjack.Card (Rank (..))
+import Pitboss.Blackjack.Materia.Card (Rank (..))
 import Pitboss.Strategy.Chart.Error
-import Pitboss.Strategy.Chart.Types (ChartEntry (..), HandPrefix (..), MoveCode (..), StrategyChart)
+import Pitboss.Strategy.Chart.Types
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =
@@ -32,6 +32,7 @@ parseLine lnum fullLine =
                         (InvalidRowPrefix "")
             (prefixTxt : moveToks) -> do
                 prefix <- parsePrefix lnum prefixTxt fullLine
+                let (kind, value) = handPrefixToKind prefix
                 case compare (length moveToks) 10 of
                     LT ->
                         Left $
@@ -53,7 +54,7 @@ parseLine lnum fullLine =
                                 | (col, tok) <- tokenColumns
                                 ]
                         let moveMap = Map.fromList (zip dealerRanks moves')
-                        pure $ ChartEntry prefix moveMap
+                        pure $ ChartEntry kind value moveMap
 
 parsePrefix :: Int -> Text -> Text -> Either ChartParseError HandPrefix
 parsePrefix lnum txt raw = case T.unpack txt of

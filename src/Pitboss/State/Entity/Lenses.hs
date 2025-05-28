@@ -5,9 +5,9 @@ module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
-import Pitboss.Blackjack.Card (Card)
-import Pitboss.Blackjack.Chips (Chips)
-import Pitboss.Blackjack.Hand (SomeHand)
+import Pitboss.Blackjack.Materia.Card (Card)
+import Pitboss.Blackjack.Materia.Chips (Chips)
+import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound

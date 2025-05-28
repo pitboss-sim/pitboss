@@ -1,41 +1,19 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-dodgy-exports #-}
-{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module Pitboss.FSM.DealerHand (
     module Pitboss.FSM.DealerHand.FSM,
     module Pitboss.FSM.DealerHand.Phase,
     module Pitboss.FSM.DealerHand.Transition,
     SomeDealerHandFSM (..),
-    mkDealerHandFSMDealing,
-    mkDealerHandFSMEvaluating,
-    mkDealerHandFSMResolved,
-    mkDealerHandFSMInterrupted,
 )
 where
 
-import Pitboss.Blackjack.Hand
-
 import Data.Aeson.Types
-import Pitboss.Blackjack.Offering.RuleSet
 import Pitboss.FSM.DealerHand.FSM (DealerHandFSM (..))
 import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))
 import Pitboss.FSM.DealerHand.Transition
-import Pitboss.FSM.Types (InterruptReason)
-
-mkDealerHandFSMDealing :: SomeDealerHandFSM
-mkDealerHandFSMDealing = SomeDealerHandFSM DealingFSM
-
-mkDealerHandFSMEvaluating :: SomeDealerHandFSM
-mkDealerHandFSMEvaluating = SomeDealerHandFSM EvaluatingFSM
-
-mkDealerHandFSMResolved :: DealerHandResolution -> SomeDealerHandFSM
-mkDealerHandFSMResolved res = SomeDealerHandFSM (ResolvedFSM res)
-
-mkDealerHandFSMInterrupted :: InterruptReason -> SomeDealerHandFSM
-mkDealerHandFSMInterrupted reason = SomeDealerHandFSM (InterruptedFSM reason)
 
 data SomeDealerHandFSM = forall p. SomeDealerHandFSM (DealerHandFSM p)
 

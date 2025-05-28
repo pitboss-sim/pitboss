@@ -44,9 +44,9 @@ data BankrollImpact = Loss | Refund
 instance ToJSON HandPhase where
     toJSON = \case
         Abandoned r -> object ["tag" .= String "Abandoned", "reason" .= r]
-        NaturalBlackjack -> String "NaturalBlackjack"
-        Decision -> String "Decision"
-        Hitting -> String "Hitting"
+        NaturalBlackjack -> object ["tag" .= String "NaturalBlackjack"]
+        Decision -> object ["tag" .= String "Decision"]
+        Hitting -> object ["tag" .= String "Hitting"]
         OneCardDraw reason -> object ["tag" .= String "OneCardDraw", "reason" .= reason]
         Resolved res -> object ["tag" .= String "Resolved", "resolution" .= res]
 
@@ -55,25 +55,21 @@ instance FromJSON HandPhase where
         tag <- obj .: "tag"
         case tag :: Text of
             "Abandoned" -> Abandoned <$> obj .: "reason"
-            "OneCardDraw" -> OneCardDraw <$> obj .: "reason"
-            "Resolved" -> Resolved <$> obj .: "resolution"
             "NaturalBlackjack" -> pure NaturalBlackjack
             "Decision" -> pure Decision
             "Hitting" -> pure Hitting
+            "OneCardDraw" -> OneCardDraw <$> obj .: "reason"
+            "Resolved" -> Resolved <$> obj .: "resolution"
             _ -> fail $ "Unknown HandPhase tag: " ++ T.unpack tag
 
 instance ToJSON AbandonedReason
-
 instance FromJSON AbandonedReason
 
 instance ToJSON OneCardDrawReason
-
 instance FromJSON OneCardDrawReason
 
 instance ToJSON BankrollImpact
-
 instance FromJSON BankrollImpact
 
 instance ToJSON PlayerHandResolution
-
 instance FromJSON PlayerHandResolution

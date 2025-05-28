@@ -5,7 +5,7 @@
 
 module Pitboss.State.Timeline (
     Timeline (..),
-    Meta,
+    Meta (..),
     mkTimeline,
 ) where
 

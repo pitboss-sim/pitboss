@@ -23,12 +23,11 @@ library
                       Pitboss.Blackjack.Chips
                       Pitboss.Blackjack.Deck
                       Pitboss.Blackjack.Hand
-                      Pitboss.Blackjack.Hand.Analysis
-                      Pitboss.Blackjack.Hand.Operations
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
+                      Pitboss.Blackjack.Play
                       Pitboss.FSM.DealerHand
                       Pitboss.FSM.DealerHand.FSM
                       Pitboss.FSM.DealerHand.Phase

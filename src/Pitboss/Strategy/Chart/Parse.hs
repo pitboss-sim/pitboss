@@ -10,68 +10,128 @@ import Pitboss.Strategy.Chart.Types
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =
-    sequence
-        [ either (Left . pure) Right (parseLine lnum raw)
-        | (lnum, raw) <- zip [1 ..] (T.lines input)
-        , not (isComment raw)
-        ]
+    let nonEmptyLines = [(lnum, raw) | (lnum, raw) <- zip [1 ..] (T.lines input), not (isComment raw)]
+     in case nonEmptyLines of
+            [] -> Left [ChartParseError (Pos 1 Nothing) "" (InvalidRowPrefix "empty file")]
+            _ -> sequence [either (Left . pure) Right (parseLine lnum raw) | (lnum, raw) <- nonEmptyLines]
 
 isComment :: Text -> Bool
-isComment t = T.pack "#" `T.isPrefixOf` T.strip t || T.strip t == T.empty
+isComment t =
+    let stripped = T.strip t
+     in T.null stripped || T.pack "#" `T.isPrefixOf` stripped
 
 parseLine :: Int -> Text -> Either ChartParseError ChartEntry
 parseLine lnum fullLine =
     let raw = T.takeWhile (/= '#') fullLine
         tokens = T.words raw
      in case tokens of
-            [] ->
-                Left $
-                    ChartParseError
-                        (Pos lnum Nothing)
-                        (T.unpack fullLine)
-                        (InvalidRowPrefix "")
+            [] -> Left $ ChartParseError (Pos lnum Nothing) (T.unpack fullLine) (InvalidRowPrefix "empty line")
             (prefixTxt : moveToks) -> do
                 prefix <- parsePrefix lnum prefixTxt fullLine
                 let (kind, value) = handPrefixToKind prefix
-                case compare (length moveToks) 10 of
-                    LT ->
-                        Left $
-                            ChartParseError
-                                (Pos lnum Nothing)
-                                (T.unpack fullLine)
-                                (WrongTokenCount 10 (length moveToks))
-                    GT ->
-                        Left $
-                            ChartParseError
-                                (Pos lnum Nothing)
-                                (T.unpack fullLine)
-                                (WrongTokenCount 10 (length moveToks))
-                    EQ -> do
-                        let tokenColumns = actualTokenColumns raw moveToks
-                        moves' <-
-                            sequence
-                                [ parseToken lnum fullLine col tok
-                                | (col, tok) <- tokenColumns
-                                ]
-                        let moveMap = Map.fromList (zip dealerRanks moves')
-                        pure $ ChartEntry kind value moveMap
+                validateTokenCount lnum fullLine moveToks >>= \validToks -> do
+                    let tokenColumns = actualTokenColumns raw validToks
+                    moves' <- sequence [parseToken lnum fullLine col tok | (col, tok) <- tokenColumns]
+                    let moveMap = Map.fromList (zip dealerRanks moves')
+                    pure $ ChartEntry kind value moveMap
+
+validateTokenCount :: Int -> Text -> [Text] -> Either ChartParseError [Text]
+validateTokenCount lnum fullLine moveToks =
+    case compare (length moveToks) 10 of
+        EQ -> Right moveToks
+        LT ->
+            Left $
+                ChartParseError
+                    (Pos lnum Nothing)
+                    (T.unpack fullLine)
+                    (WrongTokenCount 10 (length moveToks))
+        GT ->
+            Left $
+                ChartParseError
+                    (Pos lnum Nothing)
+                    (T.unpack fullLine)
+                    (WrongTokenCount 10 (length moveToks))
 
 parsePrefix :: Int -> Text -> Text -> Either ChartParseError HandPrefix
-parsePrefix lnum txt raw = case T.unpack txt of
-    "PA" -> Right PA
-    "PT" -> Right PT
-    'P' : ns | all isDigit ns -> Right $ P (read ns)
-    'A' : ns | all isDigit ns -> Right $ A (read ns)
-    ns | all isDigit ns -> Right $ H (read ns)
-    _ ->
-        Left $
-            ChartParseError
-                (Pos lnum Nothing)
-                (T.unpack raw)
-                (InvalidRowPrefix (T.unpack txt))
+parsePrefix lnum txt fullLine =
+    case T.unpack txt of
+        "PA" -> Right PA
+        "PT" -> Right PT
+        'P' : ns
+            | all isDigit ns
+            , not (null ns) ->
+                let n = read ns
+                 in if n >= 2 && n <= 10
+                        then Right (P n)
+                        else
+                            Left $
+                                ChartParseError
+                                    (Pos lnum Nothing)
+                                    (T.unpack fullLine)
+                                    (OutOfRangeHardTotal n)
+        'A' : ns
+            | all isDigit ns
+            , not (null ns) ->
+                let n = read ns
+                 in if n >= 13 && n <= 21
+                        then Right (A n)
+                        else
+                            Left $
+                                ChartParseError
+                                    (Pos lnum Nothing)
+                                    (T.unpack fullLine)
+                                    (OutOfRangeHardTotal n)
+        'H' : ns
+            | all isDigit ns
+            , not (null ns) ->
+                let n = read ns
+                 in if n >= 5 && n <= 21
+                        then Right (H n)
+                        else
+                            Left $
+                                ChartParseError
+                                    (Pos lnum Nothing)
+                                    (T.unpack fullLine)
+                                    (OutOfRangeHardTotal n)
+        ns
+            | all isDigit ns
+            , not (null ns) ->
+                let n = read ns
+                 in if n >= 5 && n <= 21
+                        then Right (H n)
+                        else
+                            Left $
+                                ChartParseError
+                                    (Pos lnum Nothing)
+                                    (T.unpack fullLine)
+                                    (OutOfRangeHardTotal n)
+        'H' : ns ->
+            Left $
+                ChartParseError
+                    (Pos lnum Nothing)
+                    (T.unpack fullLine)
+                    (UnreadableHardTotal ns)
+        'A' : ns ->
+            Left $
+                ChartParseError
+                    (Pos lnum Nothing)
+                    (T.unpack fullLine)
+                    (UnreadableHardTotal ns)
+        'P' : ns ->
+            Left $
+                ChartParseError
+                    (Pos lnum Nothing)
+                    (T.unpack fullLine)
+                    (UnreadableHardTotal ns)
+        _ ->
+            Left $
+                ChartParseError
+                    (Pos lnum Nothing)
+                    (T.unpack fullLine)
+                    (InvalidRowPrefix (T.unpack txt))
 
 parseToken :: Int -> Text -> Int -> Text -> Either ChartParseError MoveCode
-parseToken lnum raw col t =
+parseToken lnum fullLine col t =
     case T.unpack t of
         "H" -> Right MoveHit
         "S" -> Right MoveStand
@@ -85,7 +145,7 @@ parseToken lnum raw col t =
             Left $
                 ChartParseError
                     (Pos lnum (Just col))
-                    (T.unpack raw)
+                    (T.unpack fullLine)
                     (UnknownStrategyCode other)
 
 actualTokenColumns :: Text -> [Text] -> [(Int, Text)]

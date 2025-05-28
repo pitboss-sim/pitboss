@@ -71,14 +71,16 @@ instance FromJSON DealerRoundFSM where
 
 abandonHandDueToSurrender :: RuleSet -> Bool -> SomePlayerHandFSM
 abandonHandDueToSurrender _ early =
-    if early
-        then mkPlayerHandFSMAbandoned (Surrender Early)
-        else mkPlayerHandFSMAbandoned (Surrender Late)
+    SomePlayerHandFSM $
+        if early
+            then AbandonedFSM (Surrender Early)
+            else AbandonedFSM (Surrender Late)
 
 abandonHandDueToInsurance :: Bool -> SomePlayerHandFSM
 abandonHandDueToInsurance evenMoney =
-    mkPlayerHandFSMAbandoned $
-        if evenMoney then Insurance PaidEvenMoney else Insurance Paid
+    SomePlayerHandFSM $
+        AbandonedFSM $
+            if evenMoney then Insurance PaidEvenMoney else Insurance Paid
 
 atPlayersPhase :: DealerRoundFSM -> Bool
 atPlayersPhase = \case

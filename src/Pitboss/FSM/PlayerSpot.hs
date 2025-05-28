@@ -1,19 +1,12 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# OPTIONS_GHC -Wno-dodgy-exports #-}
-{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 module Pitboss.FSM.PlayerSpot (
     module Pitboss.FSM.PlayerSpot.FSM,
     module Pitboss.FSM.PlayerSpot.Phase,
     module Pitboss.FSM.PlayerSpot.Transition,
     SomePlayerSpotFSM (..),
-    mkPlayerSpotFSMIdle,
-    mkPlayerSpotFSMEngaged,
-    mkPlayerSpotFSMWaiting,
-    mkPlayerSpotFSMResolved,
-    mkPlayerSpotFSMInterrupted,
     interruptSpot,
     resumeFromInterrupt,
 )
@@ -21,26 +14,11 @@ where
 
 import Data.Aeson.Types
 import Data.Text qualified as T
-import Pitboss.FSM.DealerRound.Phase
 import Pitboss.FSM.PlayerSpot.FSM
 import Pitboss.FSM.PlayerSpot.Phase
 import Pitboss.FSM.PlayerSpot.Transition
+import Pitboss.FSM.Types (InterruptReason)
 import Pitboss.FSM.Types.Transitionable
-
-mkPlayerSpotFSMIdle :: SomePlayerSpotFSM
-mkPlayerSpotFSMIdle = SomePlayerSpotFSM SpotIdleFSM
-
-mkPlayerSpotFSMEngaged :: SomePlayerSpotFSM
-mkPlayerSpotFSMEngaged = SomePlayerSpotFSM SpotEngagedFSM
-
-mkPlayerSpotFSMWaiting :: SomePlayerSpotFSM
-mkPlayerSpotFSMWaiting = SomePlayerSpotFSM SpotWaitingForHandsFSM
-
-mkPlayerSpotFSMResolved :: SomePlayerSpotFSM
-mkPlayerSpotFSMResolved = SomePlayerSpotFSM SpotResolvedFSM
-
-mkPlayerSpotFSMInterrupted :: InterruptReason -> SomePlayerSpotFSM
-mkPlayerSpotFSMInterrupted reason = SomePlayerSpotFSM (SpotInterruptedFSM reason)
 
 data SomePlayerSpotFSM = forall p. SomePlayerSpotFSM (PlayerSpotFSM p)
 
@@ -83,8 +61,6 @@ instance FromJSON SomePlayerSpotFSM where
 
 instance Transitionable SomePlayerSpotFSM where
     transitionType (SomePlayerSpotFSM fsm) = transitionType fsm
-
--- helpers
 
 interruptSpot :: InterruptReason -> PlayerSpotFSM p -> SomePlayerSpotFSM
 interruptSpot reason _ = SomePlayerSpotFSM (SpotInterruptedFSM reason)

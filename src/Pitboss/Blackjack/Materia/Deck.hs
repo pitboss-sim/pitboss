@@ -1,8 +1,8 @@
-module Pitboss.Blackjack.Deck where
+module Pitboss.Blackjack.Materia.Deck where
 
 import Control.Monad.ST (ST, runST)
 import Data.Array.ST (STArray, getElems, newListArray, readArray, writeArray)
-import Pitboss.Blackjack.Card (Card (..), Rank (..), Suit (..))
+import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), Suit (..))
 import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (..))
 import System.Random (StdGen, randomR)
 

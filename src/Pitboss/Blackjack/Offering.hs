@@ -1,9 +1,13 @@
-module Pitboss.Blackjack.Offering where
+module Pitboss.Blackjack.Offering (
+    module Pitboss.Blackjack.Offering.Matter,
+    module Pitboss.Blackjack.Offering.RuleSet,
+    Offering (..), mkOffering
+) where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Offering.Matter (Matter)
-import Pitboss.Blackjack.Offering.RuleSet (RuleSet)
+import Pitboss.Blackjack.Offering.Matter
+import Pitboss.Blackjack.Offering.RuleSet
 
 data Offering = Offering
     { matter :: Matter

@@ -19,87 +19,21 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Pitboss.Blackjack.Action
-                      Pitboss.Blackjack.Card
-                      Pitboss.Blackjack.Chips
-                      Pitboss.Blackjack.Deck
-                      Pitboss.Blackjack.Hand
-                      Pitboss.Blackjack.Hand.Category
-                      Pitboss.Blackjack.Hand.Score
+                      Pitboss.Blackjack.Materia.Card
+                      Pitboss.Blackjack.Materia.Chips
+                      Pitboss.Blackjack.Materia.Deck
+                      Pitboss.Blackjack.Materia.Hand
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Matter
                       Pitboss.Blackjack.Offering.RuleSet
                       Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.FSM.DealerHand
-                      Pitboss.FSM.DealerHand.FSM
-                      Pitboss.FSM.DealerHand.Phase
-                      Pitboss.FSM.DealerHand.Transition
-                      Pitboss.FSM.DealerRound
-                      Pitboss.FSM.DealerRound.ENHC
-                      Pitboss.FSM.DealerRound.ENHC.FSM
-                      Pitboss.FSM.DealerRound.ENHC.Phase
-                      Pitboss.FSM.DealerRound.ENHC.Transition
-                      Pitboss.FSM.DealerRound.Peek
-                      Pitboss.FSM.DealerRound.Peek.FSM
-                      Pitboss.FSM.DealerRound.Peek.Phase
-                      Pitboss.FSM.DealerRound.Peek.Transition
-                      Pitboss.FSM.DealerRound.Phase
-                      Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
-                      Pitboss.FSM.DealerRound.Typeclass.PhaseTag
-                      Pitboss.FSM.DealerTable
-                      Pitboss.FSM.DealerTable.FSM
-                      Pitboss.FSM.DealerTable.Phase
-                      Pitboss.FSM.DealerTable.Transition
-                      Pitboss.FSM.PlayerHand
-                      Pitboss.FSM.PlayerHand.FSM
-                      Pitboss.FSM.PlayerHand.Phase
-                      Pitboss.FSM.PlayerHand.Transition
-                      Pitboss.FSM.PlayerSpot
-                      Pitboss.FSM.PlayerSpot.FSM
-                      Pitboss.FSM.PlayerSpot.Phase
-                      Pitboss.FSM.PlayerSpot.Transition
-                      Pitboss.FSM.PlayerTable
-                      Pitboss.FSM.PlayerTable.FSM
-                      Pitboss.FSM.PlayerTable.Phase
-                      Pitboss.FSM.PlayerTable.Transition
-                      Pitboss.FSM.Table
-                      Pitboss.FSM.Table.FSM
-                      Pitboss.FSM.Table.Phase
-                      Pitboss.FSM.Table.Transition
-                      Pitboss.FSM.Types
-                      Pitboss.FSM.Types.Transitionable
-                      Pitboss.State.Delta.Instances.Incremental
-                      Pitboss.State.Delta.Instances.Reversible
-                      Pitboss.State.Delta.Types
-                      Pitboss.State.Entity.Instances.Decomposable
-                      Pitboss.State.Entity.Instances.Replaceable
-                      Pitboss.State.Entity.Types
-                      Pitboss.State.Registry
-                      Pitboss.State.Timeline
-                      Pitboss.State.Trace
-                      Pitboss.State.Types.Core
-                      Pitboss.State.Types.FiniteMap
-                      Pitboss.State.Types.FiniteMap.BoundedEnum
-                      Pitboss.State.Types.FiniteMap.Occupancy
-                      Pitboss.Strategy.Chart.Error
-                      Pitboss.Strategy.Chart.Interpret
-                      Pitboss.Strategy.Chart.Overlay
-                      Pitboss.Strategy.Chart.Parse
-                      Pitboss.Strategy.Chart.Types
-                      Pitboss.Strategy.Chart.Validate
-                      Pitboss.Strategy.Types
-
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.18.2.1,
                       aeson,
                       aeson-pretty,
                       array,
-                      containers,
-                      hashable,
-                      insert-ordered-containers,
-                      lens,
                       random,
-                      text,
     hs-source-dirs:   src
     default-language: GHC2021
 

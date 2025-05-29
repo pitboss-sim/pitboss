@@ -9,7 +9,6 @@ module Pitboss.State.Entity.Types (
     EntityKind (..),
     EntityId (..),
     EntityState (..),
-    DeltaSemantics (..),
     EntityStatePart (..),
     Uid (..),
     DealerAttrs (..),

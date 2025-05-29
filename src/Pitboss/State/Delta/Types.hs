@@ -4,6 +4,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 module Pitboss.State.Delta.Types (
+    DeltaSemantics (..),
     SomeDelta (..),
     Delta (..),
 ) where
@@ -24,6 +25,10 @@ import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
 import Pitboss.FSM.PlayerTable
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.FiniteMap.Occupancy
+
+data DeltaSemantics
+    = TransactionBoundary -- "This delta marks semantic completion"
+    | PartialUpdate EntityStatePart -- "This delta modifies a specific part"
 
 data family Delta (k :: EntityKind) (s :: DeltaSemantics)
 

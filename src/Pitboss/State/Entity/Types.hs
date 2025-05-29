@@ -60,6 +60,8 @@ import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
+import Pitboss.Blackjack.Play (Outcome)
+import Pitboss.FSM.Bout (SomeBoutFSM)
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
@@ -71,30 +73,32 @@ import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.BoundedEnum
 import Pitboss.State.Types.FiniteMap.Occupancy
-import Pitboss.Blackjack.Play (Outcome)
-import Pitboss.FSM.Bout (SomeBoutFSM)
 
 data family EntityState (k :: EntityKind)
 
 data BoutAttrs = BoutAttrs
     { _boutAttrsOutcome :: Maybe Outcome
-    } deriving (Eq, Show, Generic)
+    }
+    deriving (Eq, Show, Generic)
 
 data BoutModes = BoutModes
     { _boutModesFSM :: SomeBoutFSM
-    } deriving (Eq, Show, Generic)
+    }
+    deriving (Eq, Show, Generic)
 
 data BoutRels = BoutRels
     { _boutRelsPlayerHand :: EntityId 'PlayerHand
     , _boutRelsDealerHand :: EntityId 'DealerHand
     , _boutRelsTableShoe :: EntityId 'TableShoe
-    } deriving (Eq, Show, Generic)
+    }
+    deriving (Eq, Show, Generic)
 
 data instance EntityState 'Bout = EBout
     { _boutAttrs :: BoutAttrs
     , _boutModes :: BoutModes
     , _boutRels :: BoutRels
-    } deriving (Eq, Show, Generic)
+    }
+    deriving (Eq, Show, Generic)
 
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String

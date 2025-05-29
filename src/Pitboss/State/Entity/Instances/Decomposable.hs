@@ -5,6 +5,7 @@ module Pitboss.State.Entity.Instances.Decomposable (
     Decomposable (..),
 ) where
 
+import Pitboss.State.Types.Core
 import Pitboss.State.Entity.Types
 
 class Decomposable (k :: EntityKind) where

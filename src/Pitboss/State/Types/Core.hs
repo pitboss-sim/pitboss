@@ -4,13 +4,12 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 module Pitboss.State.Types.Core (
-    EntityKind (..),
-    EntityStatePart (..),
-    EntityId (..),
-    Uid (..),
-    UidPrefix,
-    EntityRef (..),
+    EntityKind (..), EntityStatePart (..), EntityId (..),
+    Uid (..), UidPrefix, EntityRef (..),
     Tick (..),
+    IntentType (..), IntentDetails (..), OriginatingEntity (..),
+    CardIx, CardState (..),
+    PlayerSpotIx (..), PlayerSpotHandIx (..),
     uidTick,
     uidEntityId,
     entityRefTick,
@@ -33,11 +32,13 @@ import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
 import System.Random (Random (..), RandomGen)
+import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
 
--- entity identification
 
 data EntityKind
-    = Bout
+    = Intent
+    | Event
+    | Bout
     | Dealer
     | DealerHand
     | DealerRound
@@ -51,6 +52,73 @@ data EntityKind
 
 data EntityStatePart = Attrs | Modes | Rels
     deriving (Eq, Show, Generic)
+
+-- provenance
+
+data IntentType
+    = PlayerIntent
+    | DealerIntent
+    | TableIntent
+    deriving (Eq, Show, Generic)
+
+data IntentDetails
+    = PlayerHitIntent
+    | PlayerStandIntent
+    | PlayerDoubleIntent
+    | PlayerSplitIntent
+    | PlayerSurrenderIntent
+    | DealerHitIntent
+    | DealerStandIntent
+    | TableDealCardIntent (EntityId 'PlayerHand)
+    | TableSettleBoutIntent (EntityId 'Bout)
+    deriving (Eq, Show, Generic)
+
+data OriginatingEntity
+    = FromPlayer (EntityId 'Player)
+    | FromDealer (EntityId 'Dealer)
+    | FromTable (EntityId 'Table)
+    deriving (Eq, Show, Generic)
+
+-- card state minutiae
+
+type CardIx = Int
+
+data CardState
+    = InHand
+    | InDiscard
+    | Burned
+    deriving (Eq, Show, Generic)
+
+instance ToJSON CardState
+instance FromJSON CardState
+
+-- player spot minutiae
+
+data PlayerSpotIx
+    = EPlayerSpot1
+    | EPlayerSpot2
+    | EPlayerSpot3
+    | EPlayerSpot4
+    deriving (Eq, Show, Ord, Enum, Bounded, Generic)
+
+instance ToJSONKey PlayerSpotIx
+instance FromJSONKey PlayerSpotIx
+instance ToJSON PlayerSpotIx
+instance FromJSON PlayerSpotIx
+instance BoundedEnum PlayerSpotIx
+
+data PlayerSpotHandIx
+    = EPlayerSpotHand1
+    | EPlayerSpotHand2
+    | EPlayerSpotHand3
+    | EPlayerSpotHand4
+    deriving (Eq, Show, Ord, Enum, Bounded, Generic)
+
+instance ToJSONKey PlayerSpotHandIx
+instance FromJSONKey PlayerSpotHandIx
+instance ToJSON PlayerSpotHandIx
+instance FromJSON PlayerSpotHandIx
+instance BoundedEnum PlayerSpotHandIx
 
 -- time
 

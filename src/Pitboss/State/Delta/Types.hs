@@ -14,6 +14,8 @@ import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
+import Pitboss.Blackjack.Play (Outcome)
+import Pitboss.FSM.Bout (SomeBoutFSM)
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
@@ -22,8 +24,6 @@ import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
 import Pitboss.FSM.PlayerTable
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.FiniteMap.Occupancy
-import Pitboss.Blackjack.Play (Outcome)
-import Pitboss.FSM.Bout (SomeBoutFSM)
 
 data family Delta (k :: EntityKind) (s :: DeltaSemantics)
 

@@ -46,7 +46,113 @@ class IncrementalWithWitness k where
 mkEntityRef :: Tick -> EntityId k -> EntityRef k
 mkEntityRef tick entityId = EntityRef (Uid (tick, entityId))
 
--- Dealer
+-- EIntent
+instance Incremental IntentAttrs where
+    type Applicable IntentAttrs = Delta 'Intent (PartialUpdate 'Attrs)
+
+    apply (DIntentSetType new _) attrs = attrs{_intentAttrsType = new}
+    apply (DIntentSetDetails new _) attrs = attrs{_intentAttrsDetails = new}
+    apply (DIntentSetTimestamp new _) attrs = attrs{_intentAttrsTimestamp = new}
+    apply (DIntentSetDescription new _) attrs = attrs{_intentAttrsDescription = new}
+
+    describe (DIntentSetType new old) _ = "Set intent type: " ++ show old ++ " → " ++ show new
+    describe (DIntentSetDetails new old) _ = "Set intent details: " ++ show old ++ " → " ++ show new
+    describe (DIntentSetTimestamp new old) _ = "Set intent timestamp: " ++ show old ++ " → " ++ show new
+    describe (DIntentSetDescription new old) _ = "Set intent description: " ++ show old ++ " → " ++ show new
+
+instance Incremental IntentModes where
+    type Applicable IntentModes = Delta 'Intent (PartialUpdate 'Modes)
+
+    apply _ modes = modes
+    describe _ _ = "No change to intent modes"
+
+instance Incremental IntentRels where
+    type Applicable IntentRels = Delta 'Intent (PartialUpdate 'Rels)
+
+    apply (DIntentSetOriginatingEntity new _) rels = rels{_intentRelsOriginatingEntity = new}
+    apply (DIntentSetTargetBout new _) rels = rels{_intentRelsTargetBout = new}
+
+    describe (DIntentSetOriginatingEntity new old) _ = "Set intent originating entity: " ++ show old ++ " → " ++ show new
+    describe (DIntentSetTargetBout new old) _ = "Set intent target bout: " ++ show old ++ " → " ++ show new
+
+instance IncrementalWithWitness 'Intent where
+    applyWithWitness AttrsWitness delta (EIntent attrs modes rels) =
+        EIntent (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EIntent attrs modes rels) =
+        EIntent attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EIntent attrs modes rels) =
+        EIntent attrs modes (apply delta rels)
+
+-- EEvent
+instance Incremental EventAttrs where
+    type Applicable EventAttrs = Delta 'Event (PartialUpdate 'Attrs)
+
+    apply (DEventSetType new _) attrs = attrs{_eventAttrsType = new}
+    apply (DEventSetDetails new _) attrs = attrs{_eventAttrsDetails = new}
+    apply (DEventSetTimestamp new _) attrs = attrs{_eventAttrsTimestamp = new}
+    apply (DEventSetDescription new _) attrs = attrs{_eventAttrsDescription = new}
+
+    describe (DEventSetType new old) _ = "Set event type: " ++ show old ++ " → " ++ show new
+    describe (DEventSetDetails new old) _ = "Set event details: " ++ show old ++ " → " ++ show new
+    describe (DEventSetTimestamp new old) _ = "Set event timestamp: " ++ show old ++ " → " ++ show new
+    describe (DEventSetDescription new old) _ = "Set event description: " ++ show old ++ " → " ++ show new
+
+instance Incremental EventModes where
+    type Applicable EventModes = Delta 'Event (PartialUpdate 'Modes)
+
+    apply _ modes = modes
+    describe _ _ = "No change to event modes"
+
+instance Incremental EventRels where
+    type Applicable EventRels = Delta 'Event (PartialUpdate 'Rels)
+
+    apply (DEventSetCausingIntent new _) rels = rels{_eventRelsCausingIntent = new}
+
+    describe (DEventSetCausingIntent new old) _ = "Set event causing intent: " ++ show old ++ " → " ++ show new
+
+instance IncrementalWithWitness 'Event where
+    applyWithWitness AttrsWitness delta (EEvent attrs modes rels) =
+        EEvent (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EEvent attrs modes rels) =
+        EEvent attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EEvent attrs modes rels) =
+        EEvent attrs modes (apply delta rels)
+
+-- EBout
+instance Incremental BoutAttrs where
+    type Applicable BoutAttrs = Delta 'Bout (PartialUpdate 'Attrs)
+
+    apply (DBoutSetOutcome new _) attrs = attrs{_boutAttrsOutcome = new}
+
+    describe (DBoutSetOutcome new old) _ = "Set bout outcome: " ++ show old ++ " → " ++ show new
+
+instance Incremental BoutModes where
+    type Applicable BoutModes = Delta 'Bout (PartialUpdate 'Modes)
+
+    apply (DBoutSetFSM new _) modes = modes{_boutModesFSM = new}
+
+    describe (DBoutSetFSM new old) _ = "Set bout FSM: " ++ show old ++ " → " ++ show new
+
+instance Incremental BoutRels where
+    type Applicable BoutRels = Delta 'Bout (PartialUpdate 'Rels)
+
+    apply (DBoutSetPlayerHand new _) rels = rels{_boutRelsPlayerHand = new}
+    apply (DBoutSetDealerHand new _) rels = rels{_boutRelsDealerHand = new}
+    apply (DBoutSetTableShoe new _) rels = rels{_boutRelsTableShoe = new}
+
+    describe (DBoutSetPlayerHand new old) _ = "Set bout player hand: " ++ show old ++ " → " ++ show new
+    describe (DBoutSetDealerHand new old) _ = "Set bout dealer hand: " ++ show old ++ " → " ++ show new
+    describe (DBoutSetTableShoe new old) _ = "Set bout table shoe: " ++ show old ++ " → " ++ show new
+
+instance IncrementalWithWitness 'Bout where
+    applyWithWitness AttrsWitness delta (EBout attrs modes rels) =
+        EBout (apply delta attrs) modes rels
+    applyWithWitness ModesWitness delta (EBout attrs modes rels) =
+        EBout attrs (apply delta modes) rels
+    applyWithWitness RelsWitness delta (EBout attrs modes rels) =
+        EBout attrs modes (apply delta rels)
+
+-- EDealer
 instance Incremental DealerAttrs where
     type Applicable DealerAttrs = Delta 'Dealer (PartialUpdate 'Attrs)
 
@@ -76,7 +182,7 @@ instance Incremental DealerRels where
     describe (DDealerSetActiveRound new old) _ = "Set dealer active round: " ++ show old ++ " → " ++ show new
     describe (DDealerSetActiveHand new old) _ = "Set dealer active hand: " ++ show old ++ " → " ++ show new
 
--- DealerHand
+-- EDealerHand
 instance Incremental DealerHandAttrs where
     type Applicable DealerHandAttrs = Delta 'DealerHand (PartialUpdate 'Attrs)
 
@@ -100,7 +206,7 @@ instance Incremental DealerHandRels where
     describe (DDealerHandSetRound new old) _ = "Set dealer hand round: " ++ show old ++ " → " ++ show new
     describe (DDealerHandSetDealer new old) _ = "Set dealer hand dealer: " ++ show old ++ " → " ++ show new
 
--- DealerRound
+-- EDealerRound
 instance Incremental DealerRoundAttrs where
     type Applicable DealerRoundAttrs = Delta 'DealerRound (PartialUpdate 'Attrs)
 
@@ -122,7 +228,7 @@ instance Incremental DealerRoundRels where
 
     describe (DDealerRoundSetTableShoe new old) _ = "Set dealer round table shoe: " ++ show old ++ " → " ++ show new
 
--- Offering
+-- EOffering
 instance Incremental OfferingAttrs where
     type Applicable OfferingAttrs = Delta 'Offering (PartialUpdate 'Attrs)
 
@@ -144,7 +250,7 @@ instance Incremental OfferingRels where
 
     describe DOfferingRels _ = "No change to offering relations"
 
--- Player
+-- EPlayer
 instance Incremental PlayerAttrs where
     type Applicable PlayerAttrs = Delta 'Player (PartialUpdate 'Attrs)
 
@@ -175,7 +281,7 @@ instance Incremental PlayerRels where
 
     describe _ _ = "No change to player relations"
 
--- PlayerHand
+-- EPlayerHand
 instance Incremental PlayerHandAttrs where
     type Applicable PlayerHandAttrs = Delta 'PlayerHand (PartialUpdate 'Attrs)
 
@@ -201,7 +307,7 @@ instance Incremental PlayerHandRels where
 
     describe (DPlayerHandSetPlayerSpot new old) _ = "Set player hand spot: " ++ show old ++ " → " ++ show new
 
--- PlayerSpot
+-- EPlayerSpot
 instance Incremental PlayerSpotAttrs where
     type Applicable PlayerSpotAttrs = Delta 'PlayerSpot (PartialUpdate 'Attrs)
 
@@ -228,7 +334,7 @@ instance Incremental PlayerSpotRels where
     describe (DPlayerSpotSetRound new old) _ = "Set player spot round: " ++ show old ++ " → " ++ show new
     describe (DPlayerSpotSetHandOccupancy (_, _) (ix, _)) _ = "Updated hand occupancy at index: " ++ show ix
 
--- Table
+-- ETable
 instance Incremental TableAttrs where
     type Applicable TableAttrs = Delta 'Table (PartialUpdate 'Attrs)
 
@@ -254,7 +360,7 @@ instance Incremental TableRels where
 
     describe (DTableSetDealer new old) _ = "Set table dealer: " ++ show old ++ " → " ++ show new
 
--- TableShoe
+-- ETableShoe
 instance Incremental TableShoeAttrs where
     type Applicable TableShoeAttrs = Delta 'TableShoe (PartialUpdate 'Attrs)
 

@@ -1,16 +1,30 @@
 {-# HLINT ignore "Use newtype instead of data" #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Pitboss.State.Delta.Types (
     DeltaSemantics (..),
     SomeDelta (..),
     Delta (..),
+    extractCausalHistory,
+    extractCausalIntent,
+    extractCausalEvent,
 ) where
 
-import Data.Aeson (FromJSON (..), ToJSON (..))
+import Data.Aeson (
+    FromJSON (..),
+    ToJSON (..),
+    object,
+    withObject,
+    (.:),
+    (.=),
+ )
+import Data.Aeson.Types (Parser)
 import Data.Map.Strict (Map)
+import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -26,23 +40,100 @@ import Pitboss.FSM.PlayerTable
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap.Occupancy
 
-data DeltaSemantics
-    = TransactionBoundary -- "This delta marks semantic completion"
-    | PartialUpdate EntityStatePart -- "This delta modifies a specific part"
-
-data family Delta (k :: EntityKind) (s :: DeltaSemantics)
-
 data SomeDelta k where
-    AttrsUpdate :: Delta k ('PartialUpdate 'Attrs) -> SomeDelta k
-    ModesUpdate :: Delta k ('PartialUpdate 'Modes) -> SomeDelta k
-    RelsUpdate :: Delta k ('PartialUpdate 'Rels) -> SomeDelta k
-    Boundary :: Delta k 'TransactionBoundary -> SomeDelta k
+    AttrsDelta :: CausalHistory -> Delta k ('PartialUpdate 'Attrs) -> SomeDelta k
+    ModesDelta :: CausalHistory -> Delta k ('PartialUpdate 'Modes) -> SomeDelta k
+    RelsDelta :: CausalHistory -> Delta k ('PartialUpdate 'Rels) -> SomeDelta k
+    BoundaryDelta :: CausalHistory -> Delta k 'TransactionBoundary -> SomeDelta k
+
+instance ( Eq (Delta k ('PartialUpdate 'Attrs))
+         , Eq (Delta k ('PartialUpdate 'Modes))
+         , Eq (Delta k ('PartialUpdate 'Rels))
+         , Eq (Delta k 'TransactionBoundary)
+         ) => Eq (SomeDelta k) where
+    (AttrsDelta h1 d1) == (AttrsDelta h2 d2) = h1 == h2 && d1 == d2
+    (ModesDelta h1 d1) == (ModesDelta h2 d2) = h1 == h2 && d1 == d2
+    (RelsDelta h1 d1) == (RelsDelta h2 d2) = h1 == h2 && d1 == d2
+    (BoundaryDelta h1 d1) == (BoundaryDelta h2 d2) = h1 == h2 && d1 == d2
+    _ == _ = False
 
 data instance Delta k 'TransactionBoundary = DTransactionBoundary
     deriving (Eq, Show, Generic)
 
--- DDealer
+data DeltaSemantics
+    = TransactionBoundary -- "This delta marks semantic completion"
+    | PartialUpdate EntityStatePart -- "This delta modifies a specific part"
 
+data CausalHistory = CausalHistory
+    { causalIntent :: Maybe (EntityId 'Intent)
+    , causalEvent :: Maybe (EntityId 'Event)
+    }
+    deriving (Eq, Show, Generic)
+
+instance ToJSON CausalHistory
+instance FromJSON CausalHistory
+
+data family Delta (k :: EntityKind) (s :: DeltaSemantics)
+
+extractCausalHistory :: SomeDelta k -> CausalHistory
+extractCausalHistory (AttrsDelta causal _) = causal
+extractCausalHistory (ModesDelta causal _) = causal
+extractCausalHistory (RelsDelta causal _) = causal
+extractCausalHistory (BoundaryDelta causal _) = causal
+
+extractCausalIntent :: SomeDelta k -> Maybe (EntityId 'Intent)
+extractCausalIntent = causalIntent . extractCausalHistory
+
+extractCausalEvent :: SomeDelta k -> Maybe (EntityId 'Event)
+extractCausalEvent = causalEvent . extractCausalHistory
+
+-- DIntent
+data instance Delta 'Intent ('PartialUpdate 'Attrs)
+    = DIntentSetType IntentType IntentType
+    | DIntentSetDetails IntentDetails IntentDetails
+    | DIntentSetTimestamp Tick Tick
+    | DIntentSetDescription String String
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Intent ('PartialUpdate 'Modes)
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Intent ('PartialUpdate 'Rels)
+    = DIntentSetOriginatingEntity OriginatingEntity OriginatingEntity
+    | DIntentSetTargetBout (Maybe (EntityId 'Bout)) (Maybe (EntityId 'Bout))
+    deriving (Eq, Show, Generic)
+
+-- DEvent
+data instance Delta 'Event ('PartialUpdate 'Attrs)
+    = DEventSetType EventType EventType
+    | DEventSetDetails EventDetails EventDetails
+    | DEventSetTimestamp Tick Tick
+    | DEventSetDescription String String
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Event ('PartialUpdate 'Modes)
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Event ('PartialUpdate 'Rels)
+    = DEventSetCausingIntent (EntityId 'Intent) (EntityId 'Intent)
+    deriving (Eq, Show, Generic)
+
+-- DBout
+data instance Delta 'Bout ('PartialUpdate 'Attrs)
+    = DBoutSetOutcome (Maybe Outcome) (Maybe Outcome)
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Bout ('PartialUpdate 'Modes)
+    = DBoutSetFSM SomeBoutFSM SomeBoutFSM
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Bout ('PartialUpdate 'Rels)
+    = DBoutSetPlayerHand (EntityId 'PlayerHand) (EntityId 'PlayerHand)
+    | DBoutSetDealerHand (EntityId 'DealerHand) (EntityId 'DealerHand)
+    | DBoutSetTableShoe (EntityId 'TableShoe) (EntityId 'TableShoe)
+    deriving (Eq, Show, Generic)
+
+-- DDealer
 data instance Delta 'Dealer ('PartialUpdate 'Attrs)
     = DDealerSetName String String
     deriving (Eq, Show, Generic)
@@ -59,24 +150,7 @@ data instance Delta 'Dealer ('PartialUpdate 'Rels)
     | DDealerSetActiveHand (Maybe (EntityId 'DealerHand)) (Maybe (EntityId 'DealerHand))
     deriving (Eq, Show, Generic)
 
--- DBout
-
-data instance Delta 'Bout ('PartialUpdate 'Attrs)
-    = DBoutSetOutcome (Maybe Outcome) (Maybe Outcome)
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Bout ('PartialUpdate 'Modes)
-    = DBoutSetFSM SomeBoutFSM SomeBoutFSM
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Bout ('PartialUpdate 'Rels)
-    = DBoutSetPlayerHand (EntityId 'PlayerHand) (EntityId 'PlayerHand)
-    | DBoutSetDealerHand (EntityId 'DealerHand) (EntityId 'DealerHand)
-    | DBoutSetTableShoe (EntityId 'TableShoe) (EntityId 'TableShoe)
-    deriving (Eq, Show, Generic)
-
 -- DDealerHand
-
 data instance Delta 'DealerHand ('PartialUpdate 'Attrs)
     = DDealerHandSetHand SomeHand SomeHand
     deriving (Eq, Show, Generic)
@@ -91,7 +165,6 @@ data instance Delta 'DealerHand ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- DDealerRound
-
 data instance Delta 'DealerRound ('PartialUpdate 'Attrs)
     = DDealerRoundSetNumber Int Int
     deriving (Eq, Show, Generic)
@@ -104,7 +177,6 @@ data instance Delta 'DealerRound ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- DOffering
-
 data instance Delta 'Offering ('PartialUpdate 'Attrs)
     = DOfferingSetOffering O.Offering O.Offering
     deriving (Eq, Show, Generic)
@@ -116,7 +188,6 @@ data instance Delta 'Offering ('PartialUpdate 'Rels) = DOfferingRels {}
     deriving (Eq, Show, Generic)
 
 -- DPlayer
-
 data instance Delta 'Player ('PartialUpdate 'Attrs)
     = DPlayerSetName String String
     | DPlayerSetBankroll Chips Chips
@@ -132,7 +203,6 @@ data instance Delta 'Player ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- DPlayerHand
-
 data instance Delta 'PlayerHand ('PartialUpdate 'Attrs)
     = DPlayerHandSetPlayerHandIx Int Int
     | DPlayerHandSetSplitDepth Int Int
@@ -148,7 +218,6 @@ data instance Delta 'PlayerHand ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- DPlayerSpot
-
 data instance Delta 'PlayerSpot ('PartialUpdate 'Attrs)
     = DPlayerSpotSetWager Chips Chips
     deriving (Eq, Show, Generic)
@@ -166,7 +235,6 @@ data instance Delta 'PlayerSpot ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- DTable
-
 data instance Delta 'Table ('PartialUpdate 'Attrs)
     = DTableSetName String String
     | DTableSetMinBet Chips Chips
@@ -181,7 +249,6 @@ data instance Delta 'Table ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- DTableShoe
-
 data instance Delta 'TableShoe ('PartialUpdate 'Attrs)
     = DTableShoeSetCardStateMap (Map CardIx CardState) (Map CardIx CardState)
     | DTableShoeSetCardFate CardIx CardState CardState
@@ -195,15 +262,51 @@ data instance Delta 'TableShoe ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- json support
+instance ( ToJSON (Delta k ('PartialUpdate 'Attrs))
+         , ToJSON (Delta k ('PartialUpdate 'Modes))
+         , ToJSON (Delta k ('PartialUpdate 'Rels))
+         , ToJSON (Delta k 'TransactionBoundary)
+         ) => ToJSON (SomeDelta k) where
+    toJSON (AttrsDelta history delta) =
+        object ["type" .= ("AttrsDelta" :: T.Text), "history" .= history, "delta" .= delta]
+    toJSON (ModesDelta history delta) =
+        object ["type" .= ("ModesDelta" :: T.Text), "history" .= history, "delta" .= delta]
+    toJSON (RelsDelta history delta) =
+        object ["type" .= ("RelsDelta" :: T.Text), "history" .= history, "delta" .= delta]
+    toJSON (BoundaryDelta history delta) =
+        object ["type" .= ("BoundaryDelta" :: T.Text), "history" .= history, "delta" .= delta]
 
-instance ToJSON (Delta 'Dealer 'TransactionBoundary)
-instance FromJSON (Delta 'Dealer 'TransactionBoundary)
-instance ToJSON (Delta 'Dealer ('PartialUpdate 'Attrs))
-instance FromJSON (Delta 'Dealer ('PartialUpdate 'Attrs))
-instance ToJSON (Delta 'Dealer ('PartialUpdate 'Modes))
-instance FromJSON (Delta 'Dealer ('PartialUpdate 'Modes))
-instance ToJSON (Delta 'Dealer ('PartialUpdate 'Rels))
-instance FromJSON (Delta 'Dealer ('PartialUpdate 'Rels))
+instance ( FromJSON (Delta k ('PartialUpdate 'Attrs))
+         , FromJSON (Delta k ('PartialUpdate 'Modes))
+         , FromJSON (Delta k ('PartialUpdate 'Rels))
+         , FromJSON (Delta k 'TransactionBoundary)
+         ) => FromJSON (SomeDelta k) where
+    parseJSON = withObject "SomeDelta" $ \v -> do
+        typ <- v .: "type" :: Parser T.Text
+        case typ of
+            "AttrsDelta" -> AttrsDelta <$> v .: "history" <*> v .: "delta"
+            "ModesDelta" -> ModesDelta <$> v .: "history" <*> v .: "delta"
+            "RelsDelta" -> RelsDelta <$> v .: "history" <*> v .: "delta"
+            "BoundaryDelta" -> BoundaryDelta <$> v .: "history" <*> v .: "delta"
+            _ -> fail $ "Unknown type: " ++ T.unpack typ
+
+instance ToJSON (Delta 'Intent 'TransactionBoundary)
+instance FromJSON (Delta 'Intent 'TransactionBoundary)
+instance ToJSON (Delta 'Intent ('PartialUpdate 'Attrs))
+instance FromJSON (Delta 'Intent ('PartialUpdate 'Attrs))
+instance ToJSON (Delta 'Intent ('PartialUpdate 'Modes))
+instance FromJSON (Delta 'Intent ('PartialUpdate 'Modes))
+instance ToJSON (Delta 'Intent ('PartialUpdate 'Rels))
+instance FromJSON (Delta 'Intent ('PartialUpdate 'Rels))
+
+instance ToJSON (Delta 'Event 'TransactionBoundary)
+instance FromJSON (Delta 'Event 'TransactionBoundary)
+instance ToJSON (Delta 'Event ('PartialUpdate 'Attrs))
+instance FromJSON (Delta 'Event ('PartialUpdate 'Attrs))
+instance ToJSON (Delta 'Event ('PartialUpdate 'Modes))
+instance FromJSON (Delta 'Event ('PartialUpdate 'Modes))
+instance ToJSON (Delta 'Event ('PartialUpdate 'Rels))
+instance FromJSON (Delta 'Event ('PartialUpdate 'Rels))
 
 instance ToJSON (Delta 'Bout 'TransactionBoundary)
 instance FromJSON (Delta 'Bout 'TransactionBoundary)
@@ -213,6 +316,15 @@ instance ToJSON (Delta 'Bout ('PartialUpdate 'Modes))
 instance FromJSON (Delta 'Bout ('PartialUpdate 'Modes))
 instance ToJSON (Delta 'Bout ('PartialUpdate 'Rels))
 instance FromJSON (Delta 'Bout ('PartialUpdate 'Rels))
+
+instance ToJSON (Delta 'Dealer 'TransactionBoundary)
+instance FromJSON (Delta 'Dealer 'TransactionBoundary)
+instance ToJSON (Delta 'Dealer ('PartialUpdate 'Attrs))
+instance FromJSON (Delta 'Dealer ('PartialUpdate 'Attrs))
+instance ToJSON (Delta 'Dealer ('PartialUpdate 'Modes))
+instance FromJSON (Delta 'Dealer ('PartialUpdate 'Modes))
+instance ToJSON (Delta 'Dealer ('PartialUpdate 'Rels))
+instance FromJSON (Delta 'Dealer ('PartialUpdate 'Rels))
 
 instance ToJSON (Delta 'DealerHand 'TransactionBoundary)
 instance FromJSON (Delta 'DealerHand 'TransactionBoundary)

@@ -17,6 +17,45 @@ data InversionError
 class Reversible d where
     invert :: d -> Either InversionError d
 
+-- DIntent
+instance Reversible (Delta 'Intent (PartialUpdate 'Attrs)) where
+    invert (DIntentSetType old new) = Right (DIntentSetType new old)
+    invert (DIntentSetDetails old new) = Right (DIntentSetDetails new old)
+    invert (DIntentSetTimestamp old new) = Right (DIntentSetTimestamp new old)
+    invert (DIntentSetDescription old new) = Right (DIntentSetDescription new old)
+
+instance Reversible (Delta 'Intent (PartialUpdate 'Modes)) where
+    invert _ = Left (CustomReason "Intent modes have no reversible operations")
+
+instance Reversible (Delta 'Intent (PartialUpdate 'Rels)) where
+    invert (DIntentSetOriginatingEntity a b) = Right (DIntentSetOriginatingEntity b a)
+    invert (DIntentSetTargetBout a b) = Right (DIntentSetTargetBout b a)
+
+-- DEvent
+instance Reversible (Delta 'Event (PartialUpdate 'Attrs)) where
+    invert (DEventSetType old new) = Right (DEventSetType new old)
+    invert (DEventSetDetails old new) = Right (DEventSetDetails new old)
+    invert (DEventSetTimestamp old new) = Right (DEventSetTimestamp new old)
+    invert (DEventSetDescription old new) = Right (DEventSetDescription new old)
+
+instance Reversible (Delta 'Event (PartialUpdate 'Modes)) where
+    invert _ = Left (CustomReason "Event modes have no reversible operations")
+
+instance Reversible (Delta 'Event (PartialUpdate 'Rels)) where
+    invert (DEventSetCausingIntent a b) = Right (DEventSetCausingIntent b a)
+
+-- DBout
+instance Reversible (Delta 'Bout (PartialUpdate 'Attrs)) where
+    invert (DBoutSetOutcome old new) = Right (DBoutSetOutcome new old)
+
+instance Reversible (Delta 'Bout (PartialUpdate 'Modes)) where
+    invert (DBoutSetFSM old new) = Right (DBoutSetFSM new old)
+
+instance Reversible (Delta 'Bout (PartialUpdate 'Rels)) where
+    invert (DBoutSetPlayerHand a b) = Right (DBoutSetPlayerHand b a)
+    invert (DBoutSetDealerHand a b) = Right (DBoutSetDealerHand b a)
+    invert (DBoutSetTableShoe a b) = Right (DBoutSetTableShoe b a)
+
 -- DDealer
 instance Reversible (Delta 'Dealer (PartialUpdate 'Attrs)) where
     invert (DDealerSetName old new) = Right (DDealerSetName new old)

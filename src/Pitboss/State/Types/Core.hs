@@ -13,6 +13,8 @@ module Pitboss.State.Types.Core (
     Tick (..),
     IntentType (..),
     IntentDetails (..),
+    EventType (..),
+    EventDetails (..),
     OriginatingEntity (..),
     CardIx,
     CardState (..),
@@ -39,6 +41,9 @@ import Data.Word (Word64)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
+import Pitboss.Blackjack.Materia.Card (Card)
+import Pitboss.Blackjack.Materia.Hand (SomeHand)
+import Pitboss.FSM.Bout (SomeBoutFSM)
 import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
 import System.Random (Random (..), RandomGen)
 
@@ -85,6 +90,35 @@ data OriginatingEntity
     | FromDealer (EntityId 'Dealer)
     | FromTable (EntityId 'Table)
     deriving (Eq, Show, Generic)
+
+instance ToJSON IntentType
+instance FromJSON IntentType
+instance ToJSON IntentDetails
+instance FromJSON IntentDetails
+instance ToJSON OriginatingEntity
+instance FromJSON OriginatingEntity
+
+data EventType
+    = CardDealt
+    | HandScored
+    | BoutTransitioned
+    | IntentValidated
+    | IntentRejected
+    deriving (Eq, Show, Generic)
+
+instance ToJSON EventType
+instance FromJSON EventType
+
+data EventDetails
+    = CardDealtDetails Card (EntityId 'PlayerHand)
+    | HandScoredDetails SomeHand Int
+    | BoutTransitionedDetails SomeBoutFSM SomeBoutFSM
+    | IntentValidatedDetails (EntityId 'Intent)
+    | IntentRejectedDetails (EntityId 'Intent) String
+    deriving (Eq, Show, Generic)
+
+instance ToJSON EventDetails
+instance FromJSON EventDetails
 
 -- card state minutiae
 
@@ -203,6 +237,9 @@ decodeBase32Char = (`Map.lookup` base32Map) . toUpper
     base32Map = Map.fromList $ zip "0123456789ABCDEFGHJKMNPQRSTVWXYZ" [0 .. 31]
 
 type family UidPrefix (k :: EntityKind) :: Symbol where
+    UidPrefix 'Intent = "INT"
+    UidPrefix 'Event = "EVT"
+    UidPrefix 'Bout = "BOT"
     UidPrefix 'Player = "PLR"
     UidPrefix 'Dealer = "DLR"
     UidPrefix 'Table = "TBL"

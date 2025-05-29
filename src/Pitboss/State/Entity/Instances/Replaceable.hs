@@ -1,5 +1,6 @@
 {-# HLINT ignore "Eta reduce" #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
@@ -22,7 +23,37 @@ class ReplaceableModes (k :: EntityKind) where
 class ReplaceableRels (k :: EntityKind) where
     replaceRels :: EntityState k -> EntityState k -> EntityState k
 
--- Dealer
+-- EIntent
+instance ReplaceableAttrs 'Intent where
+    replaceAttrs (EIntent newAttrs _ _) (EIntent _ mo r) = EIntent newAttrs mo r
+
+instance ReplaceableModes 'Intent where
+    replaceModes (EIntent _ newModes _) (EIntent a _ r) = EIntent a newModes r
+
+instance ReplaceableRels 'Intent where
+    replaceRels (EIntent _ _ newRels) (EIntent a mo _) = EIntent a mo newRels
+
+-- EEvent
+instance ReplaceableAttrs 'Event where
+    replaceAttrs (EEvent newAttrs _ _) (EEvent _ mo r) = EEvent newAttrs mo r
+
+instance ReplaceableModes 'Event where
+    replaceModes (EEvent _ newModes _) (EEvent a _ r) = EEvent a newModes r
+
+instance ReplaceableRels 'Event where
+    replaceRels (EEvent _ _ newRels) (EEvent a mo _) = EEvent a mo newRels
+
+-- EBout
+instance ReplaceableAttrs 'Bout where
+    replaceAttrs (EBout newAttrs _ _) (EBout _ mo r) = EBout newAttrs mo r
+
+instance ReplaceableModes 'Bout where
+    replaceModes (EBout _ newModes _) (EBout a _ r) = EBout a newModes r
+
+instance ReplaceableRels 'Bout where
+    replaceRels (EBout _ _ newRels) (EBout a mo _) = EBout a mo newRels
+
+-- EDealer
 instance ReplaceableAttrs 'Dealer where
     replaceAttrs (EDealer newAttrs _ _) (EDealer _ mo r) = EDealer newAttrs mo r
 
@@ -32,7 +63,7 @@ instance ReplaceableModes 'Dealer where
 instance ReplaceableRels 'Dealer where
     replaceRels (EDealer _ _ newRels) (EDealer a mo _) = EDealer a mo newRels
 
--- DealerHand
+-- EDealerHand
 instance ReplaceableAttrs 'DealerHand where
     replaceAttrs (EDealerHand newAttrs _ _) (EDealerHand _ mo r) = EDealerHand newAttrs mo r
 
@@ -42,7 +73,7 @@ instance ReplaceableModes 'DealerHand where
 instance ReplaceableRels 'DealerHand where
     replaceRels (EDealerHand _ _ newRels) (EDealerHand a mo _) = EDealerHand a mo newRels
 
--- DealerRound
+-- EDealerRound
 instance ReplaceableAttrs 'DealerRound where
     replaceAttrs (EDealerRound newAttrs _ _) (EDealerRound _ mo r) = EDealerRound newAttrs mo r
 
@@ -52,7 +83,7 @@ instance ReplaceableModes 'DealerRound where
 instance ReplaceableRels 'DealerRound where
     replaceRels (EDealerRound _ _ newRels) (EDealerRound a mo _) = EDealerRound a mo newRels
 
--- Offering
+-- EOffering
 instance ReplaceableAttrs 'Offering where
     replaceAttrs (EOffering newAttrs _ _) (EOffering _ mo r) = EOffering newAttrs mo r
 
@@ -62,7 +93,7 @@ instance ReplaceableModes 'Offering where
 instance ReplaceableRels 'Offering where
     replaceRels (EOffering _ _ newRels) (EOffering a mo _) = EOffering a mo newRels
 
--- Player
+-- EPlayer
 instance ReplaceableAttrs 'Player where
     replaceAttrs (EPlayer newAttrs _ _) (EPlayer _ mo r) = EPlayer newAttrs mo r
 
@@ -72,7 +103,7 @@ instance ReplaceableModes 'Player where
 instance ReplaceableRels 'Player where
     replaceRels (EPlayer _ _ newRels) (EPlayer a mo _) = EPlayer a mo newRels
 
--- PlayerHand
+-- EPlayerHand
 instance ReplaceableAttrs 'PlayerHand where
     replaceAttrs (EPlayerHand newAttrs _ _) (EPlayerHand _ mo r) = EPlayerHand newAttrs mo r
 
@@ -82,7 +113,7 @@ instance ReplaceableModes 'PlayerHand where
 instance ReplaceableRels 'PlayerHand where
     replaceRels (EPlayerHand _ _ newRels) (EPlayerHand a mo _) = EPlayerHand a mo newRels
 
--- PlayerSpot
+-- EPlayerSpot
 instance ReplaceableAttrs 'PlayerSpot where
     replaceAttrs (EPlayerSpot newAttrs _ _) (EPlayerSpot _ mo r) = EPlayerSpot newAttrs mo r
 
@@ -92,7 +123,7 @@ instance ReplaceableModes 'PlayerSpot where
 instance ReplaceableRels 'PlayerSpot where
     replaceRels (EPlayerSpot _ _ newRels) (EPlayerSpot a mo _) = EPlayerSpot a mo newRels
 
--- Table
+-- ETable
 instance ReplaceableAttrs 'Table where
     replaceAttrs (ETable newAttrs _ _) (ETable _ mo r) = ETable newAttrs mo r
 
@@ -102,7 +133,7 @@ instance ReplaceableModes 'Table where
 instance ReplaceableRels 'Table where
     replaceRels (ETable _ _ newRels) (ETable a mo _) = ETable a mo newRels
 
--- TableShoe
+-- ETableShoe
 instance ReplaceableAttrs 'TableShoe where
     replaceAttrs (ETableShoe newAttrs _ _) (ETableShoe _ mo r) = ETableShoe newAttrs mo r
 

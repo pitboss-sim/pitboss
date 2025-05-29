@@ -76,6 +76,7 @@ library
                       Pitboss.State.Delta.Types
                       Pitboss.State.Entity.Instances.Decomposable
                       Pitboss.State.Entity.Instances.Replaceable
+                      Pitboss.State.Entity.Lenses
                       Pitboss.State.Entity.Types
                       Pitboss.State.Registry
                       Pitboss.State.Timeline

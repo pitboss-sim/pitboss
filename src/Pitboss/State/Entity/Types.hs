@@ -7,6 +7,15 @@
 
 module Pitboss.State.Entity.Types (
     EntityState (..),
+    IntentAttrs (..),
+    IntentModes (..),
+    IntentRels (..),
+    EventAttrs (..),
+    EventModes (..),
+    EventRels (..),
+    BoutAttrs (..),
+    BoutModes (..),
+    BoutRels (..),
     DealerAttrs (..),
     DealerModes (..),
     DealerRels (..),
@@ -59,7 +68,6 @@ import Pitboss.State.Types.FiniteMap.Occupancy
 data family EntityState (k :: EntityKind)
 
 -- EIntent
-
 data IntentAttrs = IntentAttrs
     { _intentAttrsType :: IntentType
     , _intentAttrsDetails :: IntentDetails
@@ -84,22 +92,7 @@ data instance EntityState 'Intent = EIntent
     }
     deriving (Eq, Show, Generic)
 
-data EventType
-    = CardDealt
-    | HandScored
-    | BoutTransitioned
-    | IntentValidated
-    | IntentRejected
-    deriving (Eq, Show, Generic)
-
-data EventDetails
-    = CardDealtDetails Card (EntityId 'PlayerHand)
-    | HandScoredDetails SomeHand Int
-    | BoutTransitionedDetails SomeBoutFSM SomeBoutFSM
-    | IntentValidatedDetails (EntityId 'Intent)
-    | IntentRejectedDetails (EntityId 'Intent) String
-    deriving (Eq, Show, Generic)
-
+-- EEvent
 data EventAttrs = EventAttrs
     { _eventAttrsType :: EventType
     , _eventAttrsDetails :: EventDetails
@@ -124,7 +117,6 @@ data instance EntityState 'Event = EEvent
     deriving (Eq, Show, Generic)
 
 -- EBout
-
 data BoutAttrs = BoutAttrs
     { _boutAttrsOutcome :: Maybe Outcome
     }
@@ -150,7 +142,6 @@ data instance EntityState 'Bout = EBout
     deriving (Eq, Show, Generic)
 
 -- EDealer
-
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
     }
@@ -178,7 +169,6 @@ data instance EntityState 'Dealer = EDealer
     deriving (Eq, Show, Generic)
 
 -- EDealerHand
-
 data DealerHandAttrs = DealerHandAttrs
     {_dhAttrsHand :: SomeHand}
     deriving (Eq, Show, Generic)
@@ -202,7 +192,6 @@ data instance EntityState 'DealerHand = EDealerHand
     deriving (Eq, Show, Generic)
 
 -- EDealerRound
-
 data DealerRoundAttrs = DealerRoundAttrs
     { _drAttrsNumber :: Int
     , _drAttrsIsActive :: Bool
@@ -225,7 +214,6 @@ data instance EntityState 'DealerRound = EDealerRound
     deriving (Eq, Show, Generic)
 
 -- EOffering
-
 data OfferingAttrs = OfferingAttrs
     { _oAttrsOffering :: O.Offering
     }
@@ -245,7 +233,6 @@ data instance EntityState 'Offering = EOffering
     deriving (Eq, Show, Generic)
 
 -- EPlayer
-
 data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
     , _pAttrsBankroll :: Chips
@@ -270,7 +257,6 @@ data instance EntityState 'Player = EPlayer
     deriving (Eq, Show, Generic)
 
 -- EPlayerHand
-
 data PlayerHandAttrs = PlayerHandAttrs
     { _phAttrsHand :: SomeHand
     , _phAttrsOriginalBet :: Chips
@@ -299,7 +285,6 @@ data instance EntityState 'PlayerHand = EPlayerHand
     deriving (Eq, Show, Generic)
 
 -- EPlayerSpot
-
 data PlayerSpotAttrs = PlayerSpotAttrs
     { _psAttrsSpotIndex :: PlayerSpotIx
     , _psAttrsWager :: Chips
@@ -326,7 +311,6 @@ data instance EntityState 'PlayerSpot = EPlayerSpot
     deriving (Eq, Show, Generic)
 
 -- ETable
-
 data TableAttrs = TableAttrs
     { _tAttrsName :: String
     , _tAttrsCurrentRound :: Maybe (EntityId 'DealerRound)
@@ -353,7 +337,6 @@ data instance EntityState 'Table = ETable
     deriving (Eq, Show, Generic)
 
 -- ETableShoe
-
 data TableShoeAttrs = TableShoeAttrs
     { _tsAttrsCards :: [Card]
     , _tsAttrsCardStates :: Map CardIx CardState
@@ -374,6 +357,24 @@ data instance EntityState 'TableShoe = ETableShoe
     , _tsRels :: TableShoeRels
     }
     deriving (Eq, Show, Generic)
+
+instance ToJSON IntentAttrs
+instance FromJSON IntentAttrs
+instance ToJSON IntentModes
+instance FromJSON IntentModes
+instance ToJSON IntentRels
+instance FromJSON IntentRels
+instance ToJSON (EntityState 'Intent)
+instance FromJSON (EntityState 'Intent)
+
+instance ToJSON EventAttrs
+instance FromJSON EventAttrs
+instance ToJSON EventModes
+instance FromJSON EventModes
+instance ToJSON EventRels
+instance FromJSON EventRels
+instance ToJSON (EntityState 'Event)
+instance FromJSON (EntityState 'Event)
 
 instance ToJSON BoutAttrs
 instance FromJSON BoutAttrs

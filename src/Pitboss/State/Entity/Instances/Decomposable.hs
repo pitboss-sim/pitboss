@@ -17,7 +17,37 @@ class Decomposable (k :: EntityKind) where
     getModes :: EntityState k -> Modes k
     getRels :: EntityState k -> Rels k
 
--- Dealer
+-- EIntent
+instance Decomposable 'Intent where
+    type Attrs 'Intent = IntentAttrs
+    type Modes 'Intent = IntentModes
+    type Rels 'Intent = IntentRels
+
+    getAttrs (EIntent a _ _) = a
+    getModes (EIntent _ m _) = m
+    getRels (EIntent _ _ r) = r
+
+-- EEvent
+instance Decomposable 'Event where
+    type Attrs 'Event = EventAttrs
+    type Modes 'Event = EventModes
+    type Rels 'Event = EventRels
+
+    getAttrs (EEvent a _ _) = a
+    getModes (EEvent _ m _) = m
+    getRels (EEvent _ _ r) = r
+
+-- EBout
+instance Decomposable 'Bout where
+    type Attrs 'Bout = BoutAttrs
+    type Modes 'Bout = BoutModes
+    type Rels 'Bout = BoutRels
+
+    getAttrs (EBout a _ _) = a
+    getModes (EBout _ m _) = m
+    getRels (EBout _ _ r) = r
+
+-- EDealer
 instance Decomposable 'Dealer where
     type Attrs 'Dealer = DealerAttrs
     type Modes 'Dealer = DealerModes
@@ -27,7 +57,7 @@ instance Decomposable 'Dealer where
     getModes (EDealer _ m _) = m
     getRels (EDealer _ _ r) = r
 
--- DealerHand
+-- EDealerHand
 instance Decomposable 'DealerHand where
     type Attrs 'DealerHand = DealerHandAttrs
     type Modes 'DealerHand = DealerHandModes
@@ -37,7 +67,7 @@ instance Decomposable 'DealerHand where
     getModes (EDealerHand _ m _) = m
     getRels (EDealerHand _ _ r) = r
 
--- DealerRound
+-- EDealerRound
 instance Decomposable 'DealerRound where
     type Attrs 'DealerRound = DealerRoundAttrs
     type Modes 'DealerRound = DealerRoundModes
@@ -47,7 +77,7 @@ instance Decomposable 'DealerRound where
     getModes (EDealerRound _ m _) = m
     getRels (EDealerRound _ _ r) = r
 
--- Offering
+-- EOffering
 instance Decomposable 'Offering where
     type Attrs 'Offering = OfferingAttrs
     type Modes 'Offering = OfferingModes
@@ -57,7 +87,7 @@ instance Decomposable 'Offering where
     getModes (EOffering _ m _) = m
     getRels (EOffering _ _ r) = r
 
--- Player
+-- EPlayer
 instance Decomposable 'Player where
     type Attrs 'Player = PlayerAttrs
     type Modes 'Player = PlayerModes
@@ -67,7 +97,7 @@ instance Decomposable 'Player where
     getModes (EPlayer _ mo _) = mo
     getRels (EPlayer _ _ r) = r
 
--- PlayerHand
+-- EPlayerHand
 instance Decomposable 'PlayerHand where
     type Attrs 'PlayerHand = PlayerHandAttrs
     type Modes 'PlayerHand = PlayerHandModes
@@ -77,7 +107,7 @@ instance Decomposable 'PlayerHand where
     getModes (EPlayerHand _ m _) = m
     getRels (EPlayerHand _ _ r) = r
 
--- PlayerSpot
+-- EPlayerSpot
 instance Decomposable 'PlayerSpot where
     type Attrs 'PlayerSpot = PlayerSpotAttrs
     type Modes 'PlayerSpot = PlayerSpotModes
@@ -87,7 +117,7 @@ instance Decomposable 'PlayerSpot where
     getModes (EPlayerSpot _ m _) = m
     getRels (EPlayerSpot _ _ r) = r
 
--- Table
+-- ETable
 instance Decomposable 'Table where
     type Attrs 'Table = TableAttrs
     type Modes 'Table = TableModes
@@ -97,7 +127,7 @@ instance Decomposable 'Table where
     getModes (ETable _ m _) = m
     getRels (ETable _ _ r) = r
 
--- TableShoe
+-- ETableShoe
 instance Decomposable 'TableShoe where
     type Attrs 'TableShoe = TableShoeAttrs
     type Modes 'TableShoe = TableShoeModes

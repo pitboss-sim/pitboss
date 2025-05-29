@@ -23,8 +23,8 @@ import Pitboss.FSM.DealerTable
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.PlayerSpot
 import Pitboss.FSM.PlayerTable
-import Pitboss.State.Types.FiniteMap.Occupancy
 import Pitboss.State.Types.Core
+import Pitboss.State.Types.FiniteMap.Occupancy
 
 data DeltaSemantics
     = TransactionBoundary -- "This delta marks semantic completion"
@@ -89,7 +89,6 @@ data instance Delta 'DealerHand ('PartialUpdate 'Rels)
     = DDealerHandSetRound (EntityId 'DealerRound) (EntityId 'DealerRound)
     | DDealerHandSetDealer (EntityId 'Dealer) (EntityId 'Dealer)
     deriving (Eq, Show, Generic)
-
 
 -- DDealerRound
 
@@ -180,7 +179,6 @@ data instance Delta 'Table ('PartialUpdate 'Modes)
 data instance Delta 'Table ('PartialUpdate 'Rels)
     = DTableSetDealer (Maybe (EntityId 'Dealer)) (Maybe (EntityId 'Dealer))
     deriving (Eq, Show, Generic)
-
 
 -- DTableShoe
 

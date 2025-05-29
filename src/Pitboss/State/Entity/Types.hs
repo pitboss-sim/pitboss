@@ -12,6 +12,9 @@ module Pitboss.State.Entity.Types (
     DeltaSemantics (..),
     EntityStatePart (..),
     Uid (..),
+    BoutAttrs (..),
+    BoutModes (..),
+    BoutRels (..),
     DealerAttrs (..),
     DealerModes (..),
     DealerRels (..),
@@ -68,8 +71,30 @@ import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.BoundedEnum
 import Pitboss.State.Types.FiniteMap.Occupancy
+import Pitboss.Blackjack.Play (Outcome)
+import Pitboss.FSM.Bout (SomeBoutFSM)
 
 data family EntityState (k :: EntityKind)
+
+data BoutAttrs = BoutAttrs
+    { _boutAttrsOutcome :: Maybe Outcome
+    } deriving (Eq, Show, Generic)
+
+data BoutModes = BoutModes
+    { _boutModesFSM :: SomeBoutFSM
+    } deriving (Eq, Show, Generic)
+
+data BoutRels = BoutRels
+    { _boutRelsPlayerHand :: EntityId 'PlayerHand
+    , _boutRelsDealerHand :: EntityId 'DealerHand
+    , _boutRelsTableShoe :: EntityId 'TableShoe
+    } deriving (Eq, Show, Generic)
+
+data instance EntityState 'Bout = EBout
+    { _boutAttrs :: BoutAttrs
+    , _boutModes :: BoutModes
+    , _boutRels :: BoutRels
+    } deriving (Eq, Show, Generic)
 
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
@@ -312,6 +337,15 @@ data CardState
     | InDiscard
     | Burned
     deriving (Eq, Show, Generic)
+
+instance ToJSON BoutAttrs
+instance FromJSON BoutAttrs
+instance ToJSON BoutModes
+instance FromJSON BoutModes
+instance ToJSON BoutRels
+instance FromJSON BoutRels
+instance ToJSON (EntityState 'Bout)
+instance FromJSON (EntityState 'Bout)
 
 instance ToJSON CardState
 instance FromJSON CardState

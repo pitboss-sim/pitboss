@@ -6,11 +6,7 @@
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 module Pitboss.State.Entity.Types (
-    EntityKind (..),
-    EntityId (..),
     EntityState (..),
-    EntityStatePart (..),
-    Uid (..),
     DealerAttrs (..),
     DealerModes (..),
     DealerRels (..),
@@ -32,24 +28,15 @@ module Pitboss.State.Entity.Types (
     PlayerSpotAttrs (..),
     PlayerSpotModes (..),
     PlayerSpotRels (..),
-    PlayerSpotIx (..),
-    PlayerSpotHandIx (..),
     TableAttrs (..),
     TableModes (..),
     TableRels (..),
     TableShoeAttrs (..),
     TableShoeModes (..),
     TableShoeRels (..),
-    CardIx,
-    CardState,
 ) where
 
-import Data.Aeson (
-    FromJSON (..),
-    FromJSONKey,
-    ToJSON (..),
-    ToJSONKey,
- )
+import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Card)
@@ -67,10 +54,76 @@ import Pitboss.FSM.PlayerTable
 import Pitboss.FSM.Table
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
-import Pitboss.State.Types.FiniteMap.BoundedEnum
 import Pitboss.State.Types.FiniteMap.Occupancy
 
 data family EntityState (k :: EntityKind)
+
+-- EIntent
+
+data IntentAttrs = IntentAttrs
+    { _intentAttrsType :: IntentType
+    , _intentAttrsDetails :: IntentDetails
+    , _intentAttrsTimestamp :: Tick
+    , _intentAttrsDescription :: String
+    }
+    deriving (Eq, Show, Generic)
+
+data IntentModes = IntentModes
+    deriving (Eq, Show, Generic)
+
+data IntentRels = IntentRels
+    { _intentRelsOriginatingEntity :: OriginatingEntity
+    , _intentRelsTargetBout :: Maybe (EntityId 'Bout)
+    }
+    deriving (Eq, Show, Generic)
+
+data instance EntityState 'Intent = EIntent
+    { _intentAttrs :: IntentAttrs
+    , _intentModes :: IntentModes
+    , _intentRels :: IntentRels
+    }
+    deriving (Eq, Show, Generic)
+
+data EventType
+    = CardDealt
+    | HandScored
+    | BoutTransitioned
+    | IntentValidated
+    | IntentRejected
+    deriving (Eq, Show, Generic)
+
+data EventDetails
+    = CardDealtDetails Card (EntityId 'PlayerHand)
+    | HandScoredDetails SomeHand Int
+    | BoutTransitionedDetails SomeBoutFSM SomeBoutFSM
+    | IntentValidatedDetails (EntityId 'Intent)
+    | IntentRejectedDetails (EntityId 'Intent) String
+    deriving (Eq, Show, Generic)
+
+data EventAttrs = EventAttrs
+    { _eventAttrsType :: EventType
+    , _eventAttrsDetails :: EventDetails
+    , _eventAttrsTimestamp :: Tick
+    , _eventAttrsDescription :: String
+    }
+    deriving (Eq, Show, Generic)
+
+data EventModes = EventModes
+    deriving (Eq, Show, Generic)
+
+data EventRels = EventRels
+    { _eventRelsCausingIntent :: EntityId 'Intent
+    }
+    deriving (Eq, Show, Generic)
+
+data instance EntityState 'Event = EEvent
+    { _eventAttrs :: EventAttrs
+    , _eventModes :: EventModes
+    , _eventRels :: EventRels
+    }
+    deriving (Eq, Show, Generic)
+
+-- EBout
 
 data BoutAttrs = BoutAttrs
     { _boutAttrsOutcome :: Maybe Outcome
@@ -95,6 +148,8 @@ data instance EntityState 'Bout = EBout
     , _boutRels :: BoutRels
     }
     deriving (Eq, Show, Generic)
+
+-- EDealer
 
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
@@ -122,6 +177,8 @@ data instance EntityState 'Dealer = EDealer
     }
     deriving (Eq, Show, Generic)
 
+-- EDealerHand
+
 data DealerHandAttrs = DealerHandAttrs
     {_dhAttrsHand :: SomeHand}
     deriving (Eq, Show, Generic)
@@ -144,6 +201,8 @@ data instance EntityState 'DealerHand = EDealerHand
     }
     deriving (Eq, Show, Generic)
 
+-- EDealerRound
+
 data DealerRoundAttrs = DealerRoundAttrs
     { _drAttrsNumber :: Int
     , _drAttrsIsActive :: Bool
@@ -165,6 +224,8 @@ data instance EntityState 'DealerRound = EDealerRound
     }
     deriving (Eq, Show, Generic)
 
+-- EOffering
+
 data OfferingAttrs = OfferingAttrs
     { _oAttrsOffering :: O.Offering
     }
@@ -182,6 +243,8 @@ data instance EntityState 'Offering = EOffering
     , _oRels :: OfferingRels
     }
     deriving (Eq, Show, Generic)
+
+-- EPlayer
 
 data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
@@ -205,6 +268,8 @@ data instance EntityState 'Player = EPlayer
     , _pRels :: PlayerRels
     }
     deriving (Eq, Show, Generic)
+
+-- EPlayerHand
 
 data PlayerHandAttrs = PlayerHandAttrs
     { _phAttrsHand :: SomeHand
@@ -233,6 +298,8 @@ data instance EntityState 'PlayerHand = EPlayerHand
     }
     deriving (Eq, Show, Generic)
 
+-- EPlayerSpot
+
 data PlayerSpotAttrs = PlayerSpotAttrs
     { _psAttrsSpotIndex :: PlayerSpotIx
     , _psAttrsWager :: Chips
@@ -258,31 +325,7 @@ data instance EntityState 'PlayerSpot = EPlayerSpot
     }
     deriving (Eq, Show, Generic)
 
-data PlayerSpotIx
-    = EPlayerSpot1
-    | EPlayerSpot2
-    | EPlayerSpot3
-    | EPlayerSpot4
-    deriving (Eq, Show, Ord, Enum, Bounded, Generic)
-
-instance ToJSONKey PlayerSpotIx
-instance FromJSONKey PlayerSpotIx
-instance ToJSON PlayerSpotIx
-instance FromJSON PlayerSpotIx
-instance BoundedEnum PlayerSpotIx
-
-data PlayerSpotHandIx
-    = EPlayerSpotHand1
-    | EPlayerSpotHand2
-    | EPlayerSpotHand3
-    | EPlayerSpotHand4
-    deriving (Eq, Show, Ord, Enum, Bounded, Generic)
-
-instance ToJSONKey PlayerSpotHandIx
-instance FromJSONKey PlayerSpotHandIx
-instance ToJSON PlayerSpotHandIx
-instance FromJSON PlayerSpotHandIx
-instance BoundedEnum PlayerSpotHandIx
+-- ETable
 
 data TableAttrs = TableAttrs
     { _tAttrsName :: String
@@ -309,6 +352,8 @@ data instance EntityState 'Table = ETable
     }
     deriving (Eq, Show, Generic)
 
+-- ETableShoe
+
 data TableShoeAttrs = TableShoeAttrs
     { _tsAttrsCards :: [Card]
     , _tsAttrsCardStates :: Map CardIx CardState
@@ -330,16 +375,14 @@ data instance EntityState 'TableShoe = ETableShoe
     }
     deriving (Eq, Show, Generic)
 
-type CardIx = Int
-
-data CardState
-    = InHand
-    | InDiscard
-    | Burned
-    deriving (Eq, Show, Generic)
-
-instance ToJSON CardState
-instance FromJSON CardState
+instance ToJSON BoutAttrs
+instance FromJSON BoutAttrs
+instance ToJSON BoutModes
+instance FromJSON BoutModes
+instance ToJSON BoutRels
+instance FromJSON BoutRels
+instance ToJSON (EntityState 'Bout)
+instance FromJSON (EntityState 'Bout)
 
 instance ToJSON DealerAttrs
 instance FromJSON DealerAttrs

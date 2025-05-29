@@ -11,6 +11,7 @@ module Pitboss.State.Entity.Instances.Replaceable (
 ) where
 
 import Pitboss.State.Entity.Types
+import Pitboss.State.Types.Core
 
 class ReplaceableAttrs (k :: EntityKind) where
     replaceAttrs :: EntityState k -> EntityState k -> EntityState k

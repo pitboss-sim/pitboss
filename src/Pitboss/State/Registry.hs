@@ -14,8 +14,8 @@ module Pitboss.State.Registry (
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Data.Word (Word64)
-import Pitboss.State.Entity.Types
 import Pitboss.State.Timeline
+import Pitboss.State.Types.Core
 
 -- delta timeline per type
 

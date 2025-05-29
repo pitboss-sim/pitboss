@@ -46,5 +46,5 @@ findLastCompleteTransaction deltas =
         (incomplete, boundary : complete) ->
             (reverse (boundary : complete), reverse incomplete)
   where
-    isBoundary (Boundary _) = True
+    isBoundary (BoundaryDelta _ _) = True
     isBoundary _ = False

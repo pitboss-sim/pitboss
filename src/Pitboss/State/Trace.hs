@@ -10,29 +10,34 @@ module Pitboss.State.Trace (
 
 import Control.Lens (makeLenses)
 import Data.Aeson
-import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics (Generic)
 import Pitboss.State.Delta.Types
 import Pitboss.State.Registry
 import Pitboss.State.Types.Core
 
 data Trace = Trace
-    { _offerings :: Registry 'Offering (Delta 'Offering 'TransactionBoundary)
-    , _tables :: Registry 'Table (Delta 'Table 'TransactionBoundary)
-    , _tableShoes :: Registry 'TableShoe (Delta 'TableShoe 'TransactionBoundary)
-    , _dealers :: Registry 'Dealer (Delta 'Dealer 'TransactionBoundary)
-    , _dealerHands :: Registry 'DealerHand (Delta 'DealerHand 'TransactionBoundary)
-    , _dealerRounds :: Registry 'DealerRound (Delta 'DealerRound 'TransactionBoundary)
-    , _players :: Registry 'Player (Delta 'Player 'TransactionBoundary)
-    , _playerSpots :: Registry 'PlayerSpot (Delta 'PlayerSpot 'TransactionBoundary)
-    , _playerHands :: Registry 'PlayerHand (Delta 'PlayerHand 'TransactionBoundary)
+    { _intents :: Registry 'Intent (SomeDelta 'Intent)
+    , _events :: Registry 'Event (SomeDelta 'Event)
+    , _bouts :: Registry 'Bout (SomeDelta 'Bout)
+    , _offerings :: Registry 'Offering (SomeDelta 'Offering)
+    , _tables :: Registry 'Table (SomeDelta 'Table)
+    , _tableShoes :: Registry 'TableShoe (SomeDelta 'TableShoe)
+    , _dealers :: Registry 'Dealer (SomeDelta 'Dealer)
+    , _dealerHands :: Registry 'DealerHand (SomeDelta 'DealerHand)
+    , _dealerRounds :: Registry 'DealerRound (SomeDelta 'DealerRound)
+    , _players :: Registry 'Player (SomeDelta 'Player)
+    , _playerSpots :: Registry 'PlayerSpot (SomeDelta 'PlayerSpot)
+    , _playerHands :: Registry 'PlayerHand (SomeDelta 'PlayerHand)
     }
     deriving (Eq, Generic)
 
 instance ToJSON Trace where
-    toJSON (Trace o t s d dh dr p ps ph) =
+    toJSON (Trace i e b o t s d dh dr p ps ph) =
         object
-            [ "offerings" .= o
+            [ "intents" .= i
+            , "events" .= e
+            , "bouts" .= b
+            , "offerings" .= o
             , "tables" .= t
             , "shoes" .= s
             , "dealers" .= d
@@ -46,7 +51,10 @@ instance ToJSON Trace where
 instance FromJSON Trace where
     parseJSON = withObject "Trace" $ \o ->
         Trace
-            <$> o .: "offerings"
+            <$> o .: "intents"
+            <*> o .: "events"
+            <*> o .: "bouts"
+            <*> o .: "offerings"
             <*> o .: "tables"
             <*> o .: "shoes"
             <*> o .: "dealers"
@@ -56,27 +64,13 @@ instance FromJSON Trace where
             <*> o .: "playerSpots"
             <*> o .: "playerHands"
 
-instance Show Trace where
-    show (Trace o t s d dh dr p ps ph) =
-        unlines
-            [ "Trace:"
-            , "  Offerings: " ++ showKeys o
-            , "  Tables: " ++ showKeys t
-            , "  TableShoes: " ++ showKeys s
-            , "  Dealers: " ++ showKeys d
-            , "  DealerHands: " ++ showKeys dh
-            , "  DealerRounds: " ++ showKeys dr
-            , "  Players: " ++ showKeys p
-            , "  PlayerSpots: " ++ showKeys ps
-            , "  PlayerHands: " ++ showKeys ph
-            ]
-      where
-        showKeys = show . IHM.keys . unRegistry
-
 emptyTrace :: Trace
 emptyTrace =
     Trace
-        { _offerings = mempty
+        { _intents = mempty
+        , _events = mempty
+        , _bouts = mempty
+        , _offerings = mempty
         , _tables = mempty
         , _tableShoes = mempty
         , _dealers = mempty

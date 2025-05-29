@@ -38,10 +38,10 @@ reconstructAt timeline tick =
   where
     applyDeltaToEntity :: (IncrementalWithWitness k) => EntityState k -> SomeDelta k -> Maybe (EntityState k)
     applyDeltaToEntity entity delta = case delta of
-        AttrsUpdate d -> Just $ applyWithWitness AttrsWitness d entity
-        ModesUpdate d -> Just $ applyWithWitness ModesWitness d entity
-        RelsUpdate d -> Just $ applyWithWitness RelsWitness d entity
-        Boundary _ -> Just entity
+        AttrsDelta _ d -> Just $ applyWithWitness AttrsWitness d entity
+        ModesDelta _ d -> Just $ applyWithWitness ModesWitness d entity
+        RelsDelta _ d -> Just $ applyWithWitness RelsWitness d entity
+        BoundaryDelta _ _ -> Just entity
 
 findLastCompleteTransaction :: [SomeDelta k] -> ([SomeDelta k], [SomeDelta k])
 findLastCompleteTransaction deltas =
@@ -50,7 +50,7 @@ findLastCompleteTransaction deltas =
         (incomplete, boundary : complete) ->
             (reverse (boundary : complete), reverse incomplete)
   where
-    isBoundary (Boundary _) = True
+    isBoundary (BoundaryDelta _ _) = True
     isBoundary _ = False
 
 -- This needs to be implemented based on how we want to handle

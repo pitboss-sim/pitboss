@@ -5,12 +5,12 @@
 
 module Pitboss.Blackjack.Play where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Card, Rank (..))
 import Pitboss.Blackjack.Materia.Hand (HandKindWitness (..), SomeHand (..), characterize, extractPairRank, handScore, unHand, witness)
 import Pitboss.Blackjack.Offering (Offering, ruleSet)
 import Pitboss.Blackjack.Offering.RuleSet (DoubleRule (..), ResplitAcesAllowed (..), RuleSet, SplitAcesAllowed (..), canSplitAnotherHand, doubling, resplitAcesAllowed, splitAcesAllowed, splitHands)
-import GHC.Generics (Generic)
-import Data.Aeson (ToJSON, FromJSON)
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)

@@ -9,6 +9,8 @@ import Pitboss.Blackjack.Materia.Card (Card, Rank (..))
 import Pitboss.Blackjack.Materia.Hand (HandKindWitness (..), SomeHand (..), characterize, extractPairRank, handScore, unHand, witness)
 import Pitboss.Blackjack.Offering (Offering, ruleSet)
 import Pitboss.Blackjack.Offering.RuleSet (DoubleRule (..), ResplitAcesAllowed (..), RuleSet, SplitAcesAllowed (..), canSplitAnotherHand, doubling, resplitAcesAllowed, splitAcesAllowed, splitHands)
+import GHC.Generics (Generic)
+import Data.Aeson (ToJSON, FromJSON)
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)
@@ -52,7 +54,10 @@ data Outcome
     | Push
     | PlayerBusts
     | DealerBusts
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
+
+instance ToJSON Outcome
+instance FromJSON Outcome
 
 extractCards :: LifecycleHand phase -> [Card]
 extractCards EmptyLifecycleHand = []

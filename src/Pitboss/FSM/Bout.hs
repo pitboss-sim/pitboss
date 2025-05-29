@@ -8,7 +8,7 @@ module Pitboss.FSM.Bout (
     SomeBoutFSM (..),
 ) where
 
-import Data.Aeson (FromJSON(..), ToJSON(..), object, withObject, (.:), (.=), Value (..))
+import Data.Aeson (FromJSON (..), ToJSON (..), Value (..), object, withObject, (.:), (.=))
 import Pitboss.FSM.Bout.FSM
 import Pitboss.FSM.Bout.Phase
 import Pitboss.FSM.Bout.Transition

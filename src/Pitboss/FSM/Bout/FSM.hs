@@ -7,7 +7,6 @@ module Pitboss.FSM.Bout.FSM where
 import Pitboss.FSM.Bout.Phase
 import Pitboss.FSM.Types.Transitionable
 
-
 data BoutFSM (p :: BoutPhase) where
     AwaitingFirstCardFSM :: BoutFSM 'AwaitingFirstCard
     AwaitingSecondCardFSM :: BoutFSM 'AwaitingSecondCard

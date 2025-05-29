@@ -4,12 +4,20 @@
 {-# LANGUAGE UndecidableInstances #-}
 
 module Pitboss.State.Types.Core (
-    EntityKind (..), EntityStatePart (..), EntityId (..),
-    Uid (..), UidPrefix, EntityRef (..),
+    EntityKind (..),
+    EntityStatePart (..),
+    EntityId (..),
+    Uid (..),
+    UidPrefix,
+    EntityRef (..),
     Tick (..),
-    IntentType (..), IntentDetails (..), OriginatingEntity (..),
-    CardIx, CardState (..),
-    PlayerSpotIx (..), PlayerSpotHandIx (..),
+    IntentType (..),
+    IntentDetails (..),
+    OriginatingEntity (..),
+    CardIx,
+    CardState (..),
+    PlayerSpotIx (..),
+    PlayerSpotHandIx (..),
     uidTick,
     uidEntityId,
     entityRefTick,
@@ -31,9 +39,8 @@ import Data.Word (Word64)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
-import System.Random (Random (..), RandomGen)
 import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
-
+import System.Random (Random (..), RandomGen)
 
 data EntityKind
     = Intent

@@ -6,7 +6,7 @@
 module Pitboss.State.Delta.Instances.Reversible where
 
 import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
+import Pitboss.State.Types.Core
 
 data InversionError
     = NotInvertible

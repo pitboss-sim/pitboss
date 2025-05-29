@@ -22,6 +22,8 @@ import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
 import Pitboss.FSM.PlayerTable
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.FiniteMap.Occupancy
+import Pitboss.Blackjack.Play (Outcome)
+import Pitboss.FSM.Bout (SomeBoutFSM)
 
 data family Delta (k :: EntityKind) (s :: DeltaSemantics)
 
@@ -63,6 +65,34 @@ instance FromJSON (Delta 'Dealer ('PartialUpdate 'Modes))
 
 instance ToJSON (Delta 'Dealer ('PartialUpdate 'Rels))
 instance FromJSON (Delta 'Dealer ('PartialUpdate 'Rels))
+
+-- DBout
+
+data instance Delta 'Bout ('PartialUpdate 'Attrs)
+    = DBoutSetOutcome (Maybe Outcome) (Maybe Outcome)
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Bout ('PartialUpdate 'Modes)
+    = DBoutSetFSM SomeBoutFSM SomeBoutFSM
+    deriving (Eq, Show, Generic)
+
+data instance Delta 'Bout ('PartialUpdate 'Rels)
+    = DBoutSetPlayerHand (EntityId 'PlayerHand) (EntityId 'PlayerHand)
+    | DBoutSetDealerHand (EntityId 'DealerHand) (EntityId 'DealerHand)
+    | DBoutSetTableShoe (EntityId 'TableShoe) (EntityId 'TableShoe)
+    deriving (Eq, Show, Generic)
+
+instance ToJSON (Delta 'Bout 'TransactionBoundary)
+instance FromJSON (Delta 'Bout 'TransactionBoundary)
+
+instance ToJSON (Delta 'Bout ('PartialUpdate 'Attrs))
+instance FromJSON (Delta 'Bout ('PartialUpdate 'Attrs))
+
+instance ToJSON (Delta 'Bout ('PartialUpdate 'Modes))
+instance FromJSON (Delta 'Bout ('PartialUpdate 'Modes))
+
+instance ToJSON (Delta 'Bout ('PartialUpdate 'Rels))
+instance FromJSON (Delta 'Bout ('PartialUpdate 'Rels))
 
 -- DDealerHand
 

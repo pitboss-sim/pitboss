@@ -38,7 +38,8 @@ import System.Random (Random (..), RandomGen)
 -- entity identification
 
 data EntityKind
-    = Dealer
+    = Bout
+    | Dealer
     | DealerHand
     | DealerRound
     | Offering

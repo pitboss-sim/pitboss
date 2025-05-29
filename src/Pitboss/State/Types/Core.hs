@@ -6,7 +6,6 @@
 module Pitboss.State.Types.Core (
     EntityKind (..),
     EntityStatePart (..),
-    DeltaSemantics (..),
     EntityId (..),
     Uid (..),
     UidPrefix,
@@ -52,10 +51,6 @@ data EntityKind
 
 data EntityStatePart = Attrs | Modes | Rels
     deriving (Eq, Show, Generic)
-
-data DeltaSemantics
-    = TransactionBoundary -- "This delta marks semantic completion"
-    | PartialUpdate EntityStatePart -- "This delta modifies a specific part"
 
 -- time
 

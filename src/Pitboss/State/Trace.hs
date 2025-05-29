@@ -13,8 +13,8 @@ import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import GHC.Generics (Generic)
 import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
 import Pitboss.State.Registry
+import Pitboss.State.Types.Core
 
 data Trace = Trace
     { _offerings :: Registry 'Offering (Delta 'Offering 'TransactionBoundary)

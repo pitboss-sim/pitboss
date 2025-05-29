@@ -13,7 +13,6 @@ import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol)
-import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 import Prelude hiding (id)
 

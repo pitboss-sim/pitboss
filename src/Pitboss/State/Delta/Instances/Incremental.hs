@@ -51,12 +51,12 @@ instance Incremental IntentAttrs where
     type Applicable IntentAttrs = Delta 'Intent (PartialUpdate 'Attrs)
 
     apply (DIntentSetType new _) attrs = attrs{_intentAttrsType = new}
-    apply (DIntentSetDetails new _) attrs = attrs{_intentAttrsDetails = new}
+    apply (DIntentSetKind new _) attrs = attrs{_intentAttrsKind = new}
     apply (DIntentSetTimestamp new _) attrs = attrs{_intentAttrsTimestamp = new}
     apply (DIntentSetDescription new _) attrs = attrs{_intentAttrsDescription = new}
 
     describe (DIntentSetType new old) _ = "Set intent type: " ++ show old ++ " → " ++ show new
-    describe (DIntentSetDetails new old) _ = "Set intent details: " ++ show old ++ " → " ++ show new
+    describe (DIntentSetKind new old) _ = "Set intent kind: " ++ show old ++ " → " ++ show new
     describe (DIntentSetTimestamp new old) _ = "Set intent timestamp: " ++ show old ++ " → " ++ show new
     describe (DIntentSetDescription new old) _ = "Set intent description: " ++ show old ++ " → " ++ show new
 
@@ -139,10 +139,14 @@ instance Incremental BoutRels where
     apply (DBoutSetPlayerHand new _) rels = rels{_boutRelsPlayerHand = new}
     apply (DBoutSetDealerHand new _) rels = rels{_boutRelsDealerHand = new}
     apply (DBoutSetTableShoe new _) rels = rels{_boutRelsTableShoe = new}
+    apply (DBoutSetTable new _) rels = rels{_boutRelsTable = new} -- new
+    apply (DBoutSetDealerRound new _) rels = rels{_boutRelsDealerRound = new} -- new
 
     describe (DBoutSetPlayerHand new old) _ = "Set bout player hand: " ++ show old ++ " → " ++ show new
     describe (DBoutSetDealerHand new old) _ = "Set bout dealer hand: " ++ show old ++ " → " ++ show new
     describe (DBoutSetTableShoe new old) _ = "Set bout table shoe: " ++ show old ++ " → " ++ show new
+    describe (DBoutSetTable new old) _ = "Set bout table: " ++ show old ++ " → " ++ show new -- new
+    describe (DBoutSetDealerRound new old) _ = "Set bout dealer round: " ++ show old ++ " → " ++ show new -- new
 
 instance IncrementalWithWitness 'Bout where
     applyWithWitness AttrsWitness delta (EBout attrs modes rels) =
@@ -339,11 +343,9 @@ instance Incremental TableAttrs where
     type Applicable TableAttrs = Delta 'Table (PartialUpdate 'Attrs)
 
     apply (DTableSetName new _) attrs = attrs{_tAttrsName = new}
-    apply (DTableSetMinBet new _) attrs = attrs{_tAttrsMinBet = new}
-    apply (DTableSetOffering new _) attrs = attrs{_tAttrsOfferingUsed = new}
+    apply (DTableSetOffering new _) attrs = attrs{_tAttrsOffering = new}
 
     describe (DTableSetName new old) _ = "Set table name: " ++ show old ++ " → " ++ show new
-    describe (DTableSetMinBet new old) _ = "Set table min bet: " ++ show old ++ " → " ++ show new
     describe (DTableSetOffering new old) _ = "Set table offering: " ++ show old ++ " → " ++ show new
 
 instance Incremental TableModes where

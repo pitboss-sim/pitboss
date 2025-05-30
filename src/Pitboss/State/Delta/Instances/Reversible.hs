@@ -20,7 +20,7 @@ class Reversible d where
 -- DIntent
 instance Reversible (Delta 'Intent (PartialUpdate 'Attrs)) where
     invert (DIntentSetType old new) = Right (DIntentSetType new old)
-    invert (DIntentSetDetails old new) = Right (DIntentSetDetails new old)
+    invert (DIntentSetKind old new) = Right (DIntentSetKind new old)
     invert (DIntentSetTimestamp old new) = Right (DIntentSetTimestamp new old)
     invert (DIntentSetDescription old new) = Right (DIntentSetDescription new old)
 
@@ -55,6 +55,8 @@ instance Reversible (Delta 'Bout (PartialUpdate 'Rels)) where
     invert (DBoutSetPlayerHand a b) = Right (DBoutSetPlayerHand b a)
     invert (DBoutSetDealerHand a b) = Right (DBoutSetDealerHand b a)
     invert (DBoutSetTableShoe a b) = Right (DBoutSetTableShoe b a)
+    invert (DBoutSetTable a b) = Right (DBoutSetTable b a)
+    invert (DBoutSetDealerRound a b) = Right (DBoutSetDealerRound b a)
 
 -- DDealer
 instance Reversible (Delta 'Dealer (PartialUpdate 'Attrs)) where
@@ -141,7 +143,6 @@ instance Reversible (Delta 'PlayerSpot (PartialUpdate 'Rels)) where
 -- DTable
 instance Reversible (Delta 'Table (PartialUpdate 'Attrs)) where
     invert (DTableSetName old new) = Right (DTableSetName new old)
-    invert (DTableSetMinBet old new) = Right (DTableSetMinBet new old)
     invert (DTableSetOffering old new) = Right (DTableSetOffering new old)
 
 instance Reversible (Delta 'Table (PartialUpdate 'Modes)) where

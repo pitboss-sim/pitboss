@@ -9,8 +9,8 @@ import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Card, Rank (..))
 import Pitboss.Blackjack.Materia.Hand (HandKindWitness (..), SomeHand (..), characterize, extractPairRank, handScore, unHand, witness)
-import Pitboss.Blackjack.Offering (Offering, ruleSet)
-import Pitboss.Blackjack.Offering.RuleSet (DoubleRule (..), ResplitAcesAllowed (..), RuleSet, SplitAcesAllowed (..), canSplitAnotherHand, doubling, resplitAcesAllowed, splitAcesAllowed, splitHands)
+import Pitboss.Blackjack.Offering (Offering, gameRuleSet)
+import Pitboss.Blackjack.Offering.RuleSet (DoubleRule (..), GameRuleSet, ResplitAcesAllowed (..), SplitAcesAllowed (..), canSplitAnotherHand, doubling, resplitAcesAllowed, splitAcesAllowed, splitHands)
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)
@@ -84,7 +84,7 @@ boutResolution playerHand dealerHand
 
 canDoubleHand :: (CanDouble phase ~ 'True, CanCharacterize phase ~ 'True) => LifecycleHand phase -> Offering -> Bool
 canDoubleHand hand offering =
-    canDoubleWithRules (ruleSet offering) (handScore (characterizeHand hand))
+    canDoubleWithRules (gameRuleSet offering) (handScore (characterizeHand hand))
 
 canDoubleSomeHand :: SomeHand -> Offering -> Bool
 canDoubleSomeHand hand offering =
@@ -98,7 +98,7 @@ canSplitHand hand splitCount offering =
     let someHand = characterizeHand hand
      in case someHand of
             SomeHand h -> case witness h of
-                PairWitness -> canSplitWithRules (ruleSet offering) someHand splitCount
+                PairWitness -> canSplitWithRules (gameRuleSet offering) someHand splitCount
                 _ -> False
 
 canSplitSomeHand :: SomeHand -> Int -> Offering -> Bool
@@ -108,14 +108,14 @@ canSplitSomeHand hand splitCount offering =
         SomeLifecycleHand (ActedUponLifecycleHand _) -> False
         _ -> False
 
-canDoubleWithRules :: RuleSet -> Int -> Bool
+canDoubleWithRules :: GameRuleSet -> Int -> Bool
 canDoubleWithRules rules total = case doubling rules of
     DoubleAny -> True
     Double9_10 -> total == 9 || total == 10
     Double9_11 -> total >= 9 && total <= 11
     Double10_11 -> total == 10 || total == 11
 
-canSplitWithRules :: RuleSet -> SomeHand -> Int -> Bool
+canSplitWithRules :: GameRuleSet -> SomeHand -> Int -> Bool
 canSplitWithRules rules hand splitCount =
     let withinSplitLimit = canSplitAnotherHand (splitHands rules) splitCount
      in if isPairOfAces hand

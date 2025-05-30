@@ -5,7 +5,7 @@
 
 module Pitboss.FSM.DealerRound.ENHC.Transition where
 
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack.Offering.RuleSet.Game
 import Pitboss.FSM.DealerRound.ENHC.FSM
 import Pitboss.FSM.DealerRound.ENHC.Phase
 
@@ -41,7 +41,7 @@ dealCardsENHC ::
 dealCardsENHC ENHCDealFSM = ENHCEarlySurrenderFSM
 
 maybeEnterEarlySurrenderENHC ::
-    RuleSet ->
+    GameRuleSet ->
     ENHCFSM 'ENHCDeal ->
     Either (ENHCFSM 'ENHCPlayers) (ENHCFSM 'ENHCEarlySurrender)
 maybeEnterEarlySurrenderENHC rules fsm =

@@ -1,4 +1,6 @@
-module Pitboss.Strategy.Types where
+module Pitboss.Blackjack.BasicStrategy.Types where
+
+import Pitboss.Blackjack.Action
 
 newtype Fallback
     = Else Move
@@ -7,12 +9,4 @@ newtype Fallback
 data Decision
     = Always Move
     | Prefer Move Fallback
-    deriving (Eq, Show)
-
-data Move
-    = Hit
-    | Stand
-    | Double
-    | Split
-    | Surrender
     deriving (Eq, Show)

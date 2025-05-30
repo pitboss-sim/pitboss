@@ -1,4 +1,4 @@
-module Pitboss.Strategy.Chart.Types where
+module Pitboss.Blackjack.BasicStrategy.Chart.Types where
 
 import Data.Map.Strict
 import Pitboss.Blackjack.Materia.Card (Rank)

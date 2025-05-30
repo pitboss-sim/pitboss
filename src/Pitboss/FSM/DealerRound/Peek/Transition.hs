@@ -5,7 +5,7 @@
 
 module Pitboss.FSM.DealerRound.Peek.Transition where
 
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack
 import Pitboss.FSM.DealerRound.Peek.FSM
 import Pitboss.FSM.DealerRound.Peek.Phase
 
@@ -70,7 +70,7 @@ dealerNoBlackjackPeek ::
 dealerNoBlackjackPeek PeekPeekFSM = PeekInsuranceDecisionFSM
 
 maybeEnterEarlySurrenderPeek ::
-    RuleSet ->
+    GameRuleSet ->
     PeekFSM 'PeekDeal ->
     Either (PeekFSM 'PeekPeek) (PeekFSM 'PeekEarlySurrender)
 maybeEnterEarlySurrenderPeek rules fsm =

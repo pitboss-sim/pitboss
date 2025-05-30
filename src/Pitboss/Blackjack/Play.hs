@@ -5,12 +5,10 @@
 
 module Pitboss.Blackjack.Play where
 
-import Data.Aeson (FromJSON, ToJSON)
-import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Card (Card, Rank (..))
-import Pitboss.Blackjack.Materia.Hand (HandKindWitness (..), SomeHand (..), characterize, extractPairRank, handScore, unHand, witness)
-import Pitboss.Blackjack.Offering (Offering, ruleSet)
-import Pitboss.Blackjack.Offering.RuleSet (DoubleRule (..), ResplitAcesAllowed (..), RuleSet, SplitAcesAllowed (..), canSplitAnotherHand, doubling, resplitAcesAllowed, splitAcesAllowed, splitHands)
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack.Offering
+import Pitboss.Blackjack.Outcome
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)
@@ -48,17 +46,6 @@ type family CanSplit (phase :: HandPhase) :: Bool where
     CanSplit 'Full = 'True
     CanSplit _ = 'False
 
-data Outcome
-    = PlayerWins
-    | DealerWins
-    | Push
-    | PlayerBusts
-    | DealerBusts
-    deriving (Eq, Show, Generic)
-
-instance ToJSON Outcome
-instance FromJSON Outcome
-
 extractCards :: LifecycleHand phase -> [Card]
 extractCards EmptyLifecycleHand = []
 extractCards (PartialLifecycleHand cards) = cards
@@ -71,20 +58,31 @@ isBusted hand = handScore hand > 21
 characterizeHand :: (CanCharacterize phase ~ 'True) => LifecycleHand phase -> SomeHand
 characterizeHand hand = characterize (extractCards hand)
 
-boutResolution :: SomeHand -> SomeHand -> Outcome
+boutResolution :: SomeHand -> SomeHand -> DetailedOutcome
 boutResolution playerHand dealerHand
-    | isBusted playerHand = PlayerBusts
-    | isBusted dealerHand = DealerBusts
-    | playerScore > dealerScore = PlayerWins
-    | dealerScore > playerScore = DealerWins
-    | otherwise = Push
+    | isBusted playerHand = dealerWinsPlayerBust
+    | isBusted dealerHand = playerWinsDealerBust
+    | isBlackjack playerHand && not (isBlackjack dealerHand) = playerWinsBlackjack
+    | isBlackjack dealerHand && not (isBlackjack playerHand) = dealerWinsBlackjack
+    | playerScore > dealerScore = playerWinsHigher
+    | dealerScore > playerScore = dealerWinsHigher
+    | otherwise = pushOutcome
   where
     playerScore = handScore playerHand
     dealerScore = handScore dealerHand
 
+    isBlackjack :: SomeHand -> Bool
+    isBlackjack (SomeHand hand) = case witness hand of
+        BlackjackWitness -> True
+        _ -> False
+
+simpleBoutResolution :: SomeHand -> SomeHand -> BoutOutcome
+simpleBoutResolution playerHand dealerHand =
+    outcome (boutResolution playerHand dealerHand)
+
 canDoubleHand :: (CanDouble phase ~ 'True, CanCharacterize phase ~ 'True) => LifecycleHand phase -> Offering -> Bool
 canDoubleHand hand offering =
-    canDoubleWithRules (ruleSet offering) (handScore (characterizeHand hand))
+    canDoubleWithRules (gameRuleSet offering) (handScore (characterizeHand hand))
 
 canDoubleSomeHand :: SomeHand -> Offering -> Bool
 canDoubleSomeHand hand offering =
@@ -98,7 +96,7 @@ canSplitHand hand splitCount offering =
     let someHand = characterizeHand hand
      in case someHand of
             SomeHand h -> case witness h of
-                PairWitness -> canSplitWithRules (ruleSet offering) someHand splitCount
+                PairWitness -> canSplitWithRules (gameRuleSet offering) someHand splitCount
                 _ -> False
 
 canSplitSomeHand :: SomeHand -> Int -> Offering -> Bool
@@ -108,14 +106,14 @@ canSplitSomeHand hand splitCount offering =
         SomeLifecycleHand (ActedUponLifecycleHand _) -> False
         _ -> False
 
-canDoubleWithRules :: RuleSet -> Int -> Bool
+canDoubleWithRules :: GameRuleSet -> Int -> Bool
 canDoubleWithRules rules total = case doubling rules of
     DoubleAny -> True
     Double9_10 -> total == 9 || total == 10
     Double9_11 -> total >= 9 && total <= 11
     Double10_11 -> total == 10 || total == 11
 
-canSplitWithRules :: RuleSet -> SomeHand -> Int -> Bool
+canSplitWithRules :: GameRuleSet -> SomeHand -> Int -> Bool
 canSplitWithRules rules hand splitCount =
     let withinSplitLimit = canSplitAnotherHand (splitHands rules) splitCount
      in if isPairOfAces hand

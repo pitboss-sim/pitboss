@@ -64,6 +64,8 @@ import Pitboss.FSM.Table
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.Occupancy
+import Pitboss.Agency.Dealer.Archetype
+import Pitboss.Agency.Player.Archetype
 
 data family EntityState (k :: EntityKind)
 
@@ -131,6 +133,8 @@ data BoutRels = BoutRels
     { _boutRelsPlayerHand :: EntityId 'PlayerHand
     , _boutRelsDealerHand :: EntityId 'DealerHand
     , _boutRelsTableShoe :: EntityId 'TableShoe
+    , _boutRelsTable :: EntityId 'Table
+    , _boutRelsDealerRound :: EntityId 'DealerRound
     }
     deriving (Eq, Show, Generic)
 
@@ -144,6 +148,7 @@ data instance EntityState 'Bout = EBout
 -- EDealer
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
+    , _dAttrsArchetype :: SomeDealerArchetype
     }
     deriving (Eq, Show, Generic)
 
@@ -236,6 +241,7 @@ data instance EntityState 'Offering = EOffering
 data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
     , _pAttrsBankroll :: Chips
+    , _pAttrsArchetype :: SomePlayerArchetype
     }
     deriving (Eq, Show, Generic)
 
@@ -314,8 +320,7 @@ data instance EntityState 'PlayerSpot = EPlayerSpot
 data TableAttrs = TableAttrs
     { _tAttrsName :: String
     , _tAttrsCurrentRound :: Maybe (EntityId 'DealerRound)
-    , _tAttrsOfferingUsed :: EntityId 'Offering
-    , _tAttrsMinBet :: Chips
+    , _tAttrsOffering :: O.Offering
     }
     deriving (Eq, Show, Generic)
 

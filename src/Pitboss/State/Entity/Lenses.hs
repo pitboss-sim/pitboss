@@ -1,6 +1,5 @@
 {-# LANGUAGE DataKinds #-}
 -- EBout
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE RankNTypes #-}
 
 module Pitboss.State.Entity.Lenses where
@@ -25,6 +24,7 @@ import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap (FiniteMap)
 import Pitboss.State.Types.FiniteMap.Occupancy (Occupancy)
 import Prelude hiding (round)
+import Pitboss.Agency.Player.Archetype
 
 bAttrs :: Lens' (EntityState 'Bout) BoutAttrs
 bAttrs f (EBout a m r) = fmap (\a' -> EBout a' m r) (f a)
@@ -41,14 +41,21 @@ bAttrsOutcome f (BoutAttrs outcome) = fmap BoutAttrs (f outcome)
 bModesFSM :: Lens' BoutModes SomeBoutFSM
 bModesFSM f (BoutModes fsm) = fmap BoutModes (f fsm)
 
-bRelsPlayerHand :: Lens' BoutRels (EntityId 'PlayerHand)
-bRelsPlayerHand f (BoutRels player dealer shoe) = fmap (\p -> BoutRels p dealer shoe) (f player)
-
+-- EBout
 bRelsDealerHand :: Lens' BoutRels (EntityId 'DealerHand)
-bRelsDealerHand f (BoutRels player dealer shoe) = fmap (\d -> BoutRels player d shoe) (f dealer)
+bRelsDealerHand f (BoutRels player dealer shoe table round) = fmap (\d -> BoutRels player d shoe table round) (f dealer)
+
+bRelsDealerRound :: Lens' BoutRels (EntityId 'DealerRound)
+bRelsDealerRound f (BoutRels player dealer shoe table round) = fmap (BoutRels player dealer shoe table) (f round)
+
+bRelsPlayerHand :: Lens' BoutRels (EntityId 'PlayerHand)
+bRelsPlayerHand f (BoutRels player dealer shoe table round) = fmap (\p -> BoutRels p dealer shoe table round) (f player)
+
+bRelsTable :: Lens' BoutRels (EntityId 'Table)
+bRelsTable f (BoutRels player dealer shoe table round) = fmap (\t -> BoutRels player dealer shoe t round) (f table)
 
 bRelsTableShoe :: Lens' BoutRels (EntityId 'TableShoe)
-bRelsTableShoe f (BoutRels player dealer shoe) = fmap (BoutRels player dealer) (f shoe)
+bRelsTableShoe f (BoutRels player dealer shoe table round) = fmap (\s -> BoutRels player dealer s table round) (f shoe)
 
 -- EIntent
 iAttrs :: Lens' (EntityState 'Intent) IntentAttrs
@@ -114,7 +121,7 @@ dRels :: Lens' (EntityState 'Dealer) DealerRels
 dRels f (EDealer a m r) = fmap (EDealer a m) (f r)
 
 dAttrsName :: Lens' DealerAttrs String
-dAttrsName f (DealerAttrs name) = fmap DealerAttrs (f name)
+dAttrsName f (DealerAttrs name archetype) = fmap (`DealerAttrs` archetype) (f name)
 
 dModesDealerTable :: (Functor f) => (SomeDealerTableFSM -> f SomeDealerTableFSM) -> DealerModes -> f DealerModes
 dModesDealerTable f (DealerModes table round hand) = fmap (\t -> DealerModes t round hand) (f table)
@@ -199,10 +206,13 @@ pRels :: Lens' (EntityState 'Player) PlayerRels
 pRels f (EPlayer a m r) = fmap (EPlayer a m) (f r)
 
 pAttrsName :: Lens' PlayerAttrs String
-pAttrsName f (PlayerAttrs name bankroll) = fmap (`PlayerAttrs` bankroll) (f name)
+pAttrsName f (PlayerAttrs name bankroll archetype) = fmap (\n -> PlayerAttrs n bankroll archetype) (f name)
 
 pAttrsBankroll :: Lens' PlayerAttrs Chips
-pAttrsBankroll f (PlayerAttrs name bankroll) = fmap (PlayerAttrs name) (f bankroll)
+pAttrsBankroll f (PlayerAttrs name bankroll archetype) = fmap (\b -> PlayerAttrs name b archetype) (f bankroll)
+
+pAttrsArchetype :: Lens' PlayerAttrs SomePlayerArchetype
+pAttrsArchetype f (PlayerAttrs name bankroll archetype) = fmap (PlayerAttrs name bankroll) (f archetype)
 
 pModesPlayerTable :: Lens' PlayerModes SomePlayerTableFSM
 pModesPlayerTable f (PlayerModes table spot hand) = fmap (\t -> PlayerModes t spot hand) (f table)
@@ -286,16 +296,13 @@ tRels :: Lens' (EntityState 'Table) TableRels
 tRels f (ETable a m r) = fmap (ETable a m) (f r)
 
 tAttrsName :: Lens' TableAttrs String
-tAttrsName f (TableAttrs name round offering minBet) = fmap (\n -> TableAttrs n round offering minBet) (f name)
+tAttrsName f (TableAttrs name round offering) = fmap (\n -> TableAttrs n round offering) (f name)
 
 tAttrsCurrentRound :: Lens' TableAttrs (Maybe (EntityId 'DealerRound))
-tAttrsCurrentRound f (TableAttrs name round offering minBet) = fmap (\r -> TableAttrs name r offering minBet) (f round)
+tAttrsCurrentRound f (TableAttrs name round offering) = fmap (\r -> TableAttrs name r offering) (f round)
 
-tAttrsOfferingUsed :: Lens' TableAttrs (EntityId 'Offering)
-tAttrsOfferingUsed f (TableAttrs name round offering minBet) = fmap (\o -> TableAttrs name round o minBet) (f offering)
-
-tAttrsMinBet :: Lens' TableAttrs Chips
-tAttrsMinBet f (TableAttrs name round offering minBet) = fmap (TableAttrs name round offering) (f minBet)
+tAttrsOffering :: Lens' TableAttrs O.Offering
+tAttrsOffering f (TableAttrs name round offering) = fmap (TableAttrs name round) (f offering)
 
 tModesFSM :: Lens' TableModes SomeTableFSM
 tModesFSM f (TableModes fsm) = fmap TableModes (f fsm)

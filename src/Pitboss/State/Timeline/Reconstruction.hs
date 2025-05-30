@@ -29,19 +29,18 @@ reconstructAt ::
     Maybe (EntityState k)
 reconstructAt timeline tick =
     let allDeltas = collectDeltasUpTo timeline tick
-        (completeDeltas, incompleteDeltas) = findLastCompleteTransaction allDeltas
-     in case completeDeltas of
-            [] -> Nothing -- No complete entity state available
-            _ -> do
-                baseEntity <- reconstructFromBoundaries completeDeltas
-                foldM applyDeltaToEntity baseEntity incompleteDeltas
+     in case timelineInitialState timeline of
+            Nothing -> Nothing -- No initial state, can't reconstruct
+            Just initialState ->
+                -- Start with initial state and apply all deltas up to tick
+                foldM applyDeltaToEntity initialState allDeltas
   where
     applyDeltaToEntity :: (IncrementalWithWitness k) => EntityState k -> SomeDelta k -> Maybe (EntityState k)
     applyDeltaToEntity entity delta = case delta of
         AttrsDelta _ d -> Just $ applyWithWitness AttrsWitness d entity
         ModesDelta _ d -> Just $ applyWithWitness ModesWitness d entity
         RelsDelta _ d -> Just $ applyWithWitness RelsWitness d entity
-        BoundaryDelta _ _ -> Just entity
+        BoundaryDelta _ _ -> Just entity -- Boundaries don't mutate state
 
 findLastCompleteTransaction :: [SomeDelta k] -> ([SomeDelta k], [SomeDelta k])
 findLastCompleteTransaction deltas =

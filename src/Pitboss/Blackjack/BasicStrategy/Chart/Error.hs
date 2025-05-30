@@ -1,10 +1,10 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Strategy.Chart.Error where
+module Pitboss.Blackjack.BasicStrategy.Chart.Error where
 
-import Pitboss.Blackjack.Materia.Card (Rank)
-import Pitboss.Blackjack.Materia.Hand (HandKind)
-import Pitboss.Strategy.Chart.Types (kindToHandPrefix)
+import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Hand
 import Text.Printf (printf)
 
 data ChartParseErrorReason
@@ -101,8 +101,8 @@ prettyChartParseErrors errs =
      in header ++ body ++ footer
 
 prettyValidationError :: (HandKind, Maybe Int, Rank) -> String
-prettyValidationError (kind, value, up) =
-    let prefix = kindToHandPrefix kind value
+prettyValidationError (kind, value', up) =
+    let prefix = kindToHandPrefix kind value'
         suggestion = "Consider adding a strategy code or use '.' for explicitly undefined"
      in printf
             "  ❌ Missing strategy for %s vs dealer %s\n     💡 %s"

@@ -7,23 +7,22 @@ module Pitboss.FSM.PlayerTable.FSM where
 import Pitboss.FSM.PlayerTable.Phase
 import Pitboss.FSM.Types.Transitionable
 
-data PlayerTableFSM (p :: PlayerPhase) where
-    IdleFSM :: PlayerTableFSM 'Idle
-    ChoosingTableFSM :: PlayerTableFSM 'ChoosingTable
-    PlacingBetFSM :: PlayerTableFSM 'PlacingBet
-    PlayingHandFSM :: PlayerTableFSM 'PlayingHand
-    ObservingFSM :: PlayerTableFSM 'Observing
-    DoneFSM :: PlayerTableFSM 'Done
+data PlayerTableFSM (p :: PlayerTablePhase) where
+    PTIdleFSM :: PlayerTableFSM 'PTIdle
+    PTChoosingTableFSM :: PlayerTableFSM 'PTChoosingTable
+    PTPlacingBetFSM :: PlayerTableFSM 'PTPlacingBet
+    PTPlayingHandFSM :: PlayerTableFSM 'PTPlayingHand
+    PTObservingFSM :: PlayerTableFSM 'PTObserving
+    PTDoneFSM :: PlayerTableFSM 'PTDone
 
 deriving instance Show (PlayerTableFSM p)
-
 deriving instance Eq (PlayerTableFSM p)
 
 instance Transitionable (PlayerTableFSM p) where
     transitionType = \case
-        IdleFSM -> AwaitInput
-        ChoosingTableFSM -> AwaitInput
-        PlacingBetFSM -> AwaitInput
-        PlayingHandFSM -> AwaitInput
-        ObservingFSM -> AutoAdvance
-        DoneFSM -> TerminalPhase
+        PTIdleFSM -> AwaitInput
+        PTChoosingTableFSM -> AwaitInput
+        PTPlacingBetFSM -> AwaitInput
+        PTPlayingHandFSM -> AwaitInput
+        PTObservingFSM -> AutoAdvance
+        PTDoneFSM -> TerminalPhase

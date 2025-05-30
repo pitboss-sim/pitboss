@@ -8,21 +8,21 @@ import Pitboss.FSM.Table.Phase
 import Pitboss.FSM.Types.Transitionable
 
 data TableFSM (p :: TablePhase) where
-    ClosedFSM :: TableFSM 'Closed
-    OpeningFSM :: TableFSM 'Opening
-    RoundInProgressFSM :: TableFSM 'RoundInProgress
-    IntermissionFSM :: TableFSM 'Intermission
-    InterruptedFSM :: InterruptReason -> TableFSM ('Interrupted r)
-    ClosingFSM :: TableFSM 'Closing
+    TClosedFSM :: TableFSM 'TClosed
+    TOpeningFSM :: TableFSM 'TOpening
+    TRoundInProgressFSM :: TableFSM 'TRoundInProgress
+    TIntermissionFSM :: TableFSM 'TIntermission
+    TInterruptedFSM :: TInterruptReason -> TableFSM ('TInterrupted r)
+    TClosingFSM :: TableFSM 'TClosing
 
 deriving instance Show (TableFSM p)
 deriving instance Eq (TableFSM p)
 
 instance Transitionable (TableFSM p) where
     transitionType = \case
-        ClosedFSM -> AwaitInput
-        OpeningFSM -> AutoAdvance
-        RoundInProgressFSM -> AwaitInput
-        IntermissionFSM -> AutoAdvance
-        InterruptedFSM _ -> AwaitInput
-        ClosingFSM -> AutoAdvance
+        TClosedFSM -> AwaitInput
+        TOpeningFSM -> AutoAdvance
+        TRoundInProgressFSM -> AwaitInput
+        TIntermissionFSM -> AutoAdvance
+        TInterruptedFSM _ -> AwaitInput
+        TClosingFSM -> AutoAdvance

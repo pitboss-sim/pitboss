@@ -9,54 +9,54 @@ import Pitboss.FSM.DealerTable.FSM
 import Pitboss.FSM.DealerTable.Phase
 
 type family ValidDealerTableTransition (from :: DealerTablePhase) (to :: DealerTablePhase) :: Bool where
-    ValidDealerTableTransition 'OffDuty 'OnDuty = 'True
-    ValidDealerTableTransition 'OnDuty 'Pushing = 'True
-    ValidDealerTableTransition 'Pushing 'OnDuty = 'True
-    ValidDealerTableTransition 'OnDuty ('Tasking task) = 'True
-    ValidDealerTableTransition ('Tasking task) 'OnDuty = 'True
-    ValidDealerTableTransition 'OnDuty 'Leaving = 'True
-    ValidDealerTableTransition 'Leaving 'OffDuty = 'True
+    ValidDealerTableTransition 'DTOffDuty 'DTOnDuty = 'True
+    ValidDealerTableTransition 'DTOnDuty 'DTPushing = 'True
+    ValidDealerTableTransition 'DTPushing 'DTOnDuty = 'True
+    ValidDealerTableTransition 'DTOnDuty ('DTTasking task) = 'True
+    ValidDealerTableTransition ('DTTasking task) 'DTOnDuty = 'True
+    ValidDealerTableTransition 'DTOnDuty 'DTLeaving = 'True
+    ValidDealerTableTransition 'DTLeaving 'DTOffDuty = 'True
     ValidDealerTableTransition _ _ = 'False
 
 goOnDuty ::
-    (ValidDealerTableTransition 'OffDuty 'OnDuty ~ 'True) =>
-    DealerTableFSM 'OffDuty ->
-    DealerTableFSM 'OnDuty
-goOnDuty OffDutyFSM = OnDutyFSM
+    (ValidDealerTableTransition 'DTOffDuty 'DTOnDuty ~ 'True) =>
+    DealerTableFSM 'DTOffDuty ->
+    DealerTableFSM 'DTOnDuty
+goOnDuty DTOffDutyFSM = DTOnDutyFSM
 
 beginPushing ::
-    (ValidDealerTableTransition 'OnDuty 'Pushing ~ 'True) =>
-    DealerTableFSM 'OnDuty ->
-    DealerTableFSM 'Pushing
-beginPushing OnDutyFSM = PushingFSM
+    (ValidDealerTableTransition 'DTOnDuty 'DTPushing ~ 'True) =>
+    DealerTableFSM 'DTOnDuty ->
+    DealerTableFSM 'DTPushing
+beginPushing DTOnDutyFSM = DTPushingFSM
 
 finishPushing ::
-    (ValidDealerTableTransition 'Pushing 'OnDuty ~ 'True) =>
-    DealerTableFSM 'Pushing ->
-    DealerTableFSM 'OnDuty
-finishPushing PushingFSM = OnDutyFSM
+    (ValidDealerTableTransition 'DTPushing 'DTOnDuty ~ 'True) =>
+    DealerTableFSM 'DTPushing ->
+    DealerTableFSM 'DTOnDuty
+finishPushing DTPushingFSM = DTOnDutyFSM
 
 assignTask ::
-    (ValidDealerTableTransition 'OnDuty ('Tasking task) ~ 'True) =>
-    DealerTableFSM 'OnDuty ->
+    (ValidDealerTableTransition 'DTOnDuty ('DTTasking task) ~ 'True) =>
+    DealerTableFSM 'DTOnDuty ->
     DealerTask ->
-    DealerTableFSM ('Tasking task)
-assignTask OnDutyFSM = TaskingFSM
+    DealerTableFSM ('DTTasking task)
+assignTask DTOnDutyFSM = DTTaskingFSM
 
 completeTask ::
-    (ValidDealerTableTransition ('Tasking task) 'OnDuty ~ 'True) =>
-    DealerTableFSM ('Tasking task) ->
-    DealerTableFSM 'OnDuty
-completeTask (TaskingFSM _) = OnDutyFSM
+    (ValidDealerTableTransition ('DTTasking task) 'DTOnDuty ~ 'True) =>
+    DealerTableFSM ('DTTasking task) ->
+    DealerTableFSM 'DTOnDuty
+completeTask (DTTaskingFSM _) = DTOnDutyFSM
 
 beginLeaving ::
-    (ValidDealerTableTransition 'OnDuty 'Leaving ~ 'True) =>
-    DealerTableFSM 'OnDuty ->
-    DealerTableFSM 'Leaving
-beginLeaving OnDutyFSM = LeavingFSM
+    (ValidDealerTableTransition 'DTOnDuty 'DTLeaving ~ 'True) =>
+    DealerTableFSM 'DTOnDuty ->
+    DealerTableFSM 'DTLeaving
+beginLeaving DTOnDutyFSM = DTLeavingFSM
 
 completeLeaving ::
-    (ValidDealerTableTransition 'Leaving 'OffDuty ~ 'True) =>
-    DealerTableFSM 'Leaving ->
-    DealerTableFSM 'OffDuty
-completeLeaving LeavingFSM = OffDutyFSM
+    (ValidDealerTableTransition 'DTLeaving 'DTOffDuty ~ 'True) =>
+    DealerTableFSM 'DTLeaving ->
+    DealerTableFSM 'DTOffDuty
+completeLeaving DTLeavingFSM = DTOffDutyFSM

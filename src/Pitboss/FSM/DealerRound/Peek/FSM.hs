@@ -8,7 +8,7 @@ import Pitboss.FSM.DealerRound.Peek.Phase
 import Pitboss.FSM.DealerRound.Phase
 import Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
 import Pitboss.FSM.DealerRound.Typeclass.PhaseTag
-import Pitboss.FSM.Types (InterruptReason)
+import Pitboss.FSM.Types
 import Pitboss.FSM.Types.Transitionable
 
 data PeekFSM (p :: PeekPhase) where
@@ -36,18 +36,18 @@ instance AtDecisionPoint (PeekFSM p) where
 
 instance PhaseTag PeekFSM DealerRoundPhase where
     phaseTag = \case
-        PeekAwaitingFSM -> Awaiting
-        PeekBetsFSM -> Bets
-        PeekDealFSM -> Deal
-        PeekEarlySurrenderFSM -> EarlySurrender
-        PeekPeekFSM -> Peek
-        PeekInsuranceDecisionFSM -> InsuranceDecision
-        PeekInsuranceSettledFSM -> InsuranceSettled
-        PeekPlayersFSM -> Players
-        PeekDealingFSM -> Dealing
-        PeekSettleFSM -> Settle
-        PeekCompleteFSM -> Complete
-        PeekInterruptedFSM r -> Interrupted r
+        PeekAwaitingFSM -> DRAwaiting
+        PeekBetsFSM -> DRBets
+        PeekDealFSM -> DRDeal
+        PeekEarlySurrenderFSM -> DREarlySurrender
+        PeekPeekFSM -> DRPeek
+        PeekInsuranceDecisionFSM -> DRInsuranceDecision
+        PeekInsuranceSettledFSM -> DRInsuranceSettled
+        PeekPlayersFSM -> DRPlayers
+        PeekDealingFSM -> DRDealing
+        PeekSettleFSM -> DRSettle
+        PeekCompleteFSM -> DRComplete
+        PeekInterruptedFSM r -> DRInterrupted r
 
 instance Transitionable (PeekFSM p) where
     transitionType = \case

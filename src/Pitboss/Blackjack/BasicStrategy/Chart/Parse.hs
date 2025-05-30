@@ -1,12 +1,12 @@
-module Pitboss.Strategy.Chart.Parse where
+module Pitboss.Blackjack.BasicStrategy.Chart.Parse where
 
 import Data.Char (isDigit)
 import Data.Map.Strict qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Pitboss.Blackjack.Materia.Card (Rank (..))
-import Pitboss.Strategy.Chart.Error
-import Pitboss.Strategy.Chart.Types
+import Pitboss.Blackjack.BasicStrategy.Chart.Error
+import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Materia.Card
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =
@@ -28,12 +28,12 @@ parseLine lnum fullLine =
             [] -> Left $ ChartParseError (Pos lnum Nothing) (T.unpack fullLine) (InvalidRowPrefix "empty line")
             (prefixTxt : moveToks) -> do
                 prefix <- parsePrefix lnum prefixTxt fullLine
-                let (kind, value) = handPrefixToKind prefix
+                let (kind, value') = handPrefixToKind prefix
                 validateTokenCount lnum fullLine moveToks >>= \validToks -> do
                     let tokenColumns = actualTokenColumns raw validToks
                     moves' <- sequence [parseToken lnum fullLine col tok | (col, tok) <- tokenColumns]
                     let moveMap = Map.fromList (zip dealerRanks moves')
-                    pure $ ChartEntry kind value moveMap
+                    pure $ ChartEntry kind value' moveMap
 
 validateTokenCount :: Int -> Text -> [Text] -> Either ChartParseError [Text]
 validateTokenCount lnum fullLine moveToks =
@@ -52,77 +52,47 @@ validateTokenCount lnum fullLine moveToks =
                     (T.unpack fullLine)
                     (WrongTokenCount 10 (length moveToks))
 
+parseDigitSuffix :: Int -> Text -> String -> Either ChartParseError Int
+parseDigitSuffix lnum fullLine str
+    | all isDigit str && not (null str) = Right (read str)
+    | otherwise =
+        Left $
+            ChartParseError
+                (Pos lnum Nothing)
+                (T.unpack fullLine)
+                (UnreadableHardTotal str)
+
+validateRange :: Int -> Text -> Int -> Int -> Int -> Either ChartParseError Int
+validateRange lnum fullLine value' minVal maxVal
+    | value' >= minVal && value' <= maxVal = Right value'
+    | otherwise =
+        Left $
+            ChartParseError
+                (Pos lnum Nothing)
+                (T.unpack fullLine)
+                (OutOfRangeHardTotal value')
+
 parsePrefix :: Int -> Text -> Text -> Either ChartParseError HandPrefix
 parsePrefix lnum txt fullLine =
     case T.unpack txt of
         "PA" -> Right PA
         "PT" -> Right PT
-        'P' : ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 2 && n <= 10
-                        then Right (P n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        'A' : ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 13 && n <= 21
-                        then Right (A n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        'H' : ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 5 && n <= 21
-                        then Right (H n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 5 && n <= 21
-                        then Right (H n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        'H' : ns ->
-            Left $
-                ChartParseError
-                    (Pos lnum Nothing)
-                    (T.unpack fullLine)
-                    (UnreadableHardTotal ns)
-        'A' : ns ->
-            Left $
-                ChartParseError
-                    (Pos lnum Nothing)
-                    (T.unpack fullLine)
-                    (UnreadableHardTotal ns)
-        'P' : ns ->
-            Left $
-                ChartParseError
-                    (Pos lnum Nothing)
-                    (T.unpack fullLine)
-                    (UnreadableHardTotal ns)
+        'P' : ns -> do
+            n <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine n 2 10
+            pure (P n)
+        'A' : ns -> do
+            nonAceValue <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine nonAceValue 2 9
+            pure (A (11 + nonAceValue))
+        'H' : ns -> do
+            n <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine n 4 21
+            pure (H n)
+        ns | all isDigit ns && not (null ns) -> do
+            n <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine n 4 21
+            pure (H n)
         _ ->
             Left $
                 ChartParseError

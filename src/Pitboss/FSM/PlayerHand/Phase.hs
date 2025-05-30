@@ -7,35 +7,36 @@ import Data.Aeson.Types
 import Data.Text
 import Data.Text qualified as T
 import GHC.Generics
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack hiding (NaturalBlackjack, HandPhase)
+import Pitboss.FSM.Types
 
 data HandPhase
-    = Abandoned AbandonedReason
-    | NaturalBlackjack
-    | Decision
-    | Hitting
-    | OneCardDraw OneCardDrawReason
-    | Resolved PlayerHandResolution
+    = PHAbandoned AbandonedReason
+    | PHNaturalBlackjack
+    | PHDecision
+    | PHHitting
+    | PHOneCardDraw OneCardDrawReason
+    | PHResolved PlayerHandResolution
     deriving (Eq, Show, Generic)
 
 data AbandonedReason
-    = Surrender Surrender
-    | Insurance InsuranceOutcome
+    = PHSurrender Surrender
+    | PHInsurance InsuranceOutcome
     deriving (Eq, Show, Generic)
 
-data OneCardDrawReason = Double | SplitAce
+data OneCardDrawReason = PHDouble | PHSplitAce
     deriving (Eq, Show, Generic)
 
 data PlayerHandResolution
-    = Surrendered
-    | Blackjack
-    | Stand
-    | Bust
-    | Push
-    | SplitNonAces
-    | SplitAces
-    | DealerBlackjack
-    | Void BankrollImpact
+    = PHSurrendered
+    | PHBlackjack
+    | PHStand
+    | PHBust
+    | PHPush
+    | PHSplitNonAces
+    | PHSplitAces
+    | PHDealerBlackjack
+    | PHVoid BankrollImpact
     deriving (Eq, Show, Generic)
 
 data BankrollImpact = Loss | Refund
@@ -43,23 +44,23 @@ data BankrollImpact = Loss | Refund
 
 instance ToJSON HandPhase where
     toJSON = \case
-        Abandoned r -> object ["tag" .= String "Abandoned", "reason" .= r]
-        NaturalBlackjack -> object ["tag" .= String "NaturalBlackjack"]
-        Decision -> object ["tag" .= String "Decision"]
-        Hitting -> object ["tag" .= String "Hitting"]
-        OneCardDraw reason -> object ["tag" .= String "OneCardDraw", "reason" .= reason]
-        Resolved res -> object ["tag" .= String "Resolved", "resolution" .= res]
+        PHAbandoned r -> object ["tag" .= String "Abandoned", "reason" .= r]
+        PHNaturalBlackjack -> object ["tag" .= String "NaturalBlackjack"]
+        PHDecision -> object ["tag" .= String "Decision"]
+        PHHitting -> object ["tag" .= String "Hitting"]
+        PHOneCardDraw reason -> object ["tag" .= String "OneCardDraw", "reason" .= reason]
+        PHResolved res -> object ["tag" .= String "Resolved", "resolution" .= res]
 
 instance FromJSON HandPhase where
     parseJSON = withObject "HandPhase" $ \obj -> do
         tag <- obj .: "tag"
         case tag :: Text of
-            "Abandoned" -> Abandoned <$> obj .: "reason"
-            "NaturalBlackjack" -> pure NaturalBlackjack
-            "Decision" -> pure Decision
-            "Hitting" -> pure Hitting
-            "OneCardDraw" -> OneCardDraw <$> obj .: "reason"
-            "Resolved" -> Resolved <$> obj .: "resolution"
+            "Abandoned" -> PHAbandoned <$> obj .: "reason"
+            "NaturalBlackjack" -> pure PHNaturalBlackjack
+            "Decision" -> pure PHDecision
+            "Hitting" -> pure PHHitting
+            "OneCardDraw" -> PHOneCardDraw <$> obj .: "reason"
+            "Resolved" -> PHResolved <$> obj .: "resolution"
             _ -> fail $ "Unknown HandPhase tag: " ++ T.unpack tag
 
 instance ToJSON AbandonedReason

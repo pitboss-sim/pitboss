@@ -5,23 +5,23 @@ module Pitboss.FSM.Table.Phase where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 
-data InterruptReason
-    = AttendingToPlayer
-    | PitIntervention
-    | Banking
-    | Environment
+data TInterruptReason
+    = TAttendingToPlayer
+    | TPitIntervention
+    | TBanking
+    | TEnvironment
     deriving (Eq, Show, Generic)
 
 data TablePhase
-    = Closed
-    | Opening
-    | RoundInProgress
-    | Intermission
-    | Interrupted InterruptReason
-    | Closing
+    = TClosed
+    | TOpening
+    | TRoundInProgress
+    | TIntermission
+    | TInterrupted TInterruptReason
+    | TClosing
     deriving (Eq, Show, Generic)
 
-instance ToJSON InterruptReason
-instance FromJSON InterruptReason
+instance ToJSON TInterruptReason
+instance FromJSON TInterruptReason
 instance ToJSON TablePhase
 instance FromJSON TablePhase

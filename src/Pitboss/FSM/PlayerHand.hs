@@ -27,39 +27,39 @@ instance Show SomePlayerHandFSM where
 
 instance Eq SomePlayerHandFSM where
     (SomePlayerHandFSM f1) == (SomePlayerHandFSM f2) = case (f1, f2) of
-        (AbandonedFSM r1, AbandonedFSM r2) -> r1 == r2
-        (BlackjackFSM, BlackjackFSM) -> True
-        (DecisionFSM, DecisionFSM) -> True
-        (HittingFSM, HittingFSM) -> True
-        (OneCardDrawFSM r1, OneCardDrawFSM r2) -> r1 == r2
-        (ResolvedFSM r1, ResolvedFSM r2) -> r1 == r2
+        (PHAbandonedFSM r1, PHAbandonedFSM r2) -> r1 == r2
+        (PHBlackjackFSM, PHBlackjackFSM) -> True
+        (PHDecisionFSM, PHDecisionFSM) -> True
+        (PHHittingFSM, PHHittingFSM) -> True
+        (PHOneCardDrawFSM r1, PHOneCardDrawFSM r2) -> r1 == r2
+        (PHResolvedFSM r1, PHResolvedFSM r2) -> r1 == r2
         _ -> False
 
 instance ToJSON SomePlayerHandFSM where
     toJSON (SomePlayerHandFSM fsm) = case fsm of
-        AbandonedFSM reason ->
+        PHAbandonedFSM reason ->
             object ["tag" .= String "Abandoned", "reason" .= reason]
-        BlackjackFSM ->
+        PHBlackjackFSM ->
             object ["tag" .= String "NaturalBlackjack"]
-        DecisionFSM ->
+        PHDecisionFSM ->
             object ["tag" .= String "Decision"]
-        HittingFSM ->
+        PHHittingFSM ->
             object ["tag" .= String "Hitting"]
-        OneCardDrawFSM reason ->
+        PHOneCardDrawFSM reason ->
             object ["tag" .= String "OneCardDraw", "reason" .= reason]
-        ResolvedFSM resolution ->
+        PHResolvedFSM resolution ->
             object ["tag" .= String "Resolved", "resolution" .= resolution]
 
 instance FromJSON SomePlayerHandFSM where
     parseJSON = withObject "SomePlayerHandFSM" $ \obj -> do
         tag <- obj .: "tag"
         case tag :: Text of
-            "Abandoned" -> SomePlayerHandFSM . AbandonedFSM <$> obj .: "reason"
-            "NaturalBlackjack" -> pure $ SomePlayerHandFSM BlackjackFSM
-            "Decision" -> pure $ SomePlayerHandFSM DecisionFSM
-            "Hitting" -> pure $ SomePlayerHandFSM HittingFSM
-            "OneCardDraw" -> SomePlayerHandFSM . OneCardDrawFSM <$> obj .: "reason"
-            "Resolved" -> SomePlayerHandFSM . ResolvedFSM <$> obj .: "resolution"
+            "Abandoned" -> SomePlayerHandFSM . PHAbandonedFSM <$> obj .: "reason"
+            "NaturalBlackjack" -> pure $ SomePlayerHandFSM PHBlackjackFSM
+            "Decision" -> pure $ SomePlayerHandFSM PHDecisionFSM
+            "Hitting" -> pure $ SomePlayerHandFSM PHHittingFSM
+            "OneCardDraw" -> SomePlayerHandFSM . PHOneCardDrawFSM <$> obj .: "reason"
+            "Resolved" -> SomePlayerHandFSM . PHResolvedFSM <$> obj .: "resolution"
             _ -> fail $ "Unknown tag for SomePlayerHandFSM: " ++ T.unpack tag
 
 isHandTerminal :: SomePlayerHandFSM -> Bool
@@ -70,9 +70,9 @@ isHandTerminal (SomePlayerHandFSM fsm) =
 
 resolutionImpact :: PlayerHandResolution -> Maybe BankrollImpact
 resolutionImpact = \case
-    Surrendered -> Just Refund
-    Push -> Just Refund
-    Bust -> Just Loss
-    DealerBlackjack -> Just Loss
-    Void i -> Just i
+    PHSurrendered -> Just Refund
+    PHPush -> Just Refund
+    PHBust -> Just Loss
+    PHDealerBlackjack -> Just Loss
+    PHVoid i -> Just i
     _ -> Nothing

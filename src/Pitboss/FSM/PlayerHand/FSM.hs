@@ -8,12 +8,12 @@ import Pitboss.FSM.PlayerHand.Phase
 import Pitboss.FSM.Types.Transitionable
 
 data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
-    AbandonedFSM :: AbandonedReason -> PlayerHandFSM ('Abandoned reason) 'NoHit 'NoDbl 'NoSpl
-    BlackjackFSM :: PlayerHandFSM 'NaturalBlackjack 'NoHit 'NoDbl 'NoSpl
-    DecisionFSM :: PlayerHandFSM 'Decision h d s
-    HittingFSM :: PlayerHandFSM 'Hitting h d s
-    OneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
-    ResolvedFSM :: PlayerHandResolution -> PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
+    PHAbandonedFSM :: AbandonedReason -> PlayerHandFSM ('PHAbandoned reason) 'NoHit 'NoDbl 'NoSpl
+    PHBlackjackFSM :: PlayerHandFSM 'PHNaturalBlackjack 'NoHit 'NoDbl 'NoSpl
+    PHDecisionFSM :: PlayerHandFSM 'PHDecision h d s
+    PHHittingFSM :: PlayerHandFSM 'PHHitting h d s
+    PHOneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('PHOneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
+    PHResolvedFSM :: PlayerHandResolution -> PlayerHandFSM ('PHResolved res) 'NoHit 'NoDbl 'NoSpl
 
 data OHit = OKHit | NoHit
 
@@ -27,9 +27,9 @@ deriving instance Eq (PlayerHandFSM p h d s)
 
 instance Transitionable (PlayerHandFSM p h d s) where
     transitionType = \case
-        DecisionFSM -> AwaitInput
-        HittingFSM -> AwaitInput
-        OneCardDrawFSM _ -> AutoAdvance
-        ResolvedFSM _ -> TerminalPhase
-        AbandonedFSM _ -> TerminalPhase
-        BlackjackFSM -> TerminalPhase
+        PHDecisionFSM -> AwaitInput
+        PHHittingFSM -> AwaitInput
+        PHOneCardDrawFSM _ -> AutoAdvance
+        PHResolvedFSM _ -> TerminalPhase
+        PHAbandonedFSM _ -> TerminalPhase
+        PHBlackjackFSM -> TerminalPhase

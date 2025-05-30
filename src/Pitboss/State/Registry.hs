@@ -9,22 +9,17 @@ module Pitboss.State.Registry (
     Registry (..),
 ) where
 
--- timeline utilities
-
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
-import Data.Word (Word64)
 import Pitboss.State.Timeline
 import Pitboss.State.Types.Core
 
--- delta timeline per type
-
 newtype Registry (k :: EntityKind) delta = Registry
-    { unRegistry :: InsOrdHashMap Word64 (Timeline k delta)
+    { unRegistry :: InsOrdHashMap (EntityId k) (Timeline k delta)
     }
 
-deriving instance (Eq delta) => Eq (Registry k delta)
-deriving instance (Show delta) => Show (Registry k delta)
+deriving instance (Eq a, Eq (Timeline k a)) => Eq (Registry k a)
+deriving instance (Show a, Show (Timeline k a)) => Show (Registry k a)
 
 instance (ToJSON (Timeline k delta)) => ToJSON (Registry k delta) where
     toJSON (Registry m) = toJSON m

@@ -1,10 +1,13 @@
-module Pitboss.Strategy.Chart.Types where
+{-# LANGUAGE DeriveGeneric #-}
 
+module Pitboss.Blackjack.BasicStrategy.Chart.Types where
+
+import Data.Aeson
 import Data.Map.Strict
-import Pitboss.Blackjack.Materia.Card (Rank)
-import Pitboss.Blackjack.Materia.Hand (HandKind (..))
+import GHC.Generics (Generic)
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Hand
 
--- Keep HandPrefix only for parsing/serialization
 data HandPrefix
     = PA
     | PT
@@ -22,32 +25,36 @@ data MoveCode
     | MoveSplitOrHit
     | MoveSurrenderOrStand
     | MoveUndefined
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
 
--- Strategy charts now use HandKind directly
 data ChartEntry = ChartEntry
     { handKind :: HandKind
-    , kindValue :: Maybe Int -- for H/A/P types that need values
+    , kindValue :: Maybe Int
     , moves :: Map Rank MoveCode
     }
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
 
 type StrategyChart = [ChartEntry]
 
--- Conversion functions for parsing/display
 handPrefixToKind :: HandPrefix -> (HandKind, Maybe Int)
-handPrefixToKind PA = (PairHand, Just 1) -- Aces
+handPrefixToKind PA = (PairHand, Just 1)
 handPrefixToKind PT = (BlackjackHand, Nothing)
 handPrefixToKind (P n) = (PairHand, Just n)
-handPrefixToKind (A n) = (SoftHand, Just n)
+handPrefixToKind (A nonAceValue) = (SoftHand, Just (11 + nonAceValue))
 handPrefixToKind (H n) = (HardHand, Just n)
 
 kindToHandPrefix :: HandKind -> Maybe Int -> HandPrefix
 kindToHandPrefix PairHand (Just 1) = PA
 kindToHandPrefix BlackjackHand _ = PT
 kindToHandPrefix PairHand (Just n) = P n
-kindToHandPrefix SoftHand (Just n) = A n
+kindToHandPrefix SoftHand (Just softTotal) = A (softTotal - 11)
 kindToHandPrefix HardHand (Just n) = H n
 kindToHandPrefix TwentyOneHand (Just n) = H n
 kindToHandPrefix BustHand (Just n) = H n
-kindToHandPrefix _ _ = H 0 -- fallback
+kindToHandPrefix _ _ = H 0
+
+instance ToJSON MoveCode
+instance FromJSON MoveCode
+
+instance ToJSON ChartEntry
+instance FromJSON ChartEntry

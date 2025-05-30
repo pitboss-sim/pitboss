@@ -1,16 +1,16 @@
 module Pitboss.Blackjack.Action where
 
-data PlayerAction
-    = Hit
-    | Stand
-    | Double
-    | Split
-    | Surrender
-    | TakeInsurance
-    | DeclineInsurance
-    deriving (Eq, Show, Ord, Enum)
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 
-data DealerAction
-    = DealerHit
-    | DealerStand
-    deriving (Eq, Show, Ord, Enum)
+data Move = Hit | Stand | Double | Split | Surrender
+    deriving (Eq, Show, Generic)
+
+data InsuranceDecision = TakeInsurance | DeclineInsurance
+    deriving (Eq, Show, Generic)
+
+instance ToJSON Move
+instance FromJSON Move
+
+instance ToJSON InsuranceDecision
+instance FromJSON InsuranceDecision

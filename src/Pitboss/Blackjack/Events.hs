@@ -1,0 +1,34 @@
+{-# LANGUAGE DataKinds #-}
+
+module Pitboss.Blackjack.Events where
+
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.State.Types.Core
+
+data BlackjackEvent
+    = CardDealt Card CardDestination
+    | PlayerStood (EntityId 'Player) (EntityId 'PlayerHand)
+    | PlayerHit (EntityId 'Player) (EntityId 'PlayerHand)
+    | PlayerDoubledDown (EntityId 'Player) (EntityId 'PlayerHand)
+    | PlayerSplit (EntityId 'Player) (EntityId 'PlayerHand)
+    | PlayerSurrender (EntityId 'Player) (EntityId 'PlayerHand)
+    | BoutSettled (EntityId 'Bout) BoutOutcome
+    | DealerRevealed (EntityId 'Dealer) (EntityId 'DealerHand)
+    deriving (Eq, Show, Generic)
+
+data CardDestination
+    = ToPlayerHand (EntityId 'PlayerHand)
+    | ToDealerHand (EntityId 'DealerHand)
+    deriving (Eq, Show, Generic)
+
+data BoutOutcome = PlayerWins | DealerWins | Push
+    deriving (Eq, Show, Generic)
+
+instance ToJSON BlackjackEvent
+instance FromJSON BlackjackEvent
+instance ToJSON CardDestination
+instance FromJSON CardDestination
+instance ToJSON BoutOutcome
+instance FromJSON BoutOutcome

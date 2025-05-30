@@ -7,10 +7,13 @@
 
 module Pitboss.State.TickCache (
     TickCache (..),
+    TickCacheContext (..),
     Deref (..),
     mkTickCache,
     populateTickCache,
     withTickCache,
+    ctxTickCache,
+    ctxTick,
 ) where
 
 import Control.Lens

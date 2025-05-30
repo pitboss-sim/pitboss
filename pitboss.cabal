@@ -18,14 +18,18 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Pitboss.Blackjack.Action
+    exposed-modules:  Pitboss.Archetype.Dealer
+                      Pitboss.Archetype.Player
+                      Pitboss.Blackjack.Action
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
                       Pitboss.Blackjack.Materia.Deck
                       Pitboss.Blackjack.Materia.Hand
                       Pitboss.Blackjack.Offering
-                      Pitboss.Blackjack.Offering.Matter
+                      Pitboss.Blackjack.Offering.Materia
                       Pitboss.Blackjack.Offering.RuleSet
+                      Pitboss.Blackjack.Offering.RuleSet.Game
+                      Pitboss.Blackjack.Offering.RuleSet.Table
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Play
                       Pitboss.FSM.Bout
@@ -70,6 +74,10 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.Intent.Context
+                      Pitboss.Intent.Generate
+                      Pitboss.Intent.Generate.Mistake
+                      Pitboss.Intent.Generate.Strategy
                       Pitboss.State.TickCache
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible

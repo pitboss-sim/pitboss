@@ -2,16 +2,16 @@
 
 module Pitboss.Blackjack.Offering.WellKnown where
 
-import Pitboss.Blackjack.Offering (Offering, mkOffering)
-import Pitboss.Blackjack.Offering.Matter (Dealt (..), DeckCount (..), Matter (..))
+import Pitboss.Blackjack.Offering (BurnPolicy (..), MidShoeEntryPolicy (..), MultiSpotMinBetPolicy (..), Offering, TableRuleSet (..), mkOffering)
+import Pitboss.Blackjack.Offering.Materia (Dealt (..), DeckCount (..), Materia (..))
 import Pitboss.Blackjack.Offering.RuleSet (
     DASRule (..),
     DoubleRule (..),
+    GameRuleSet (..),
     HoleCardRule (..),
     Payout (..),
     Pen (..),
     ResplitAcesAllowed (..),
-    RuleSet (..),
     Soft17Rule (..),
     SplitAcesAllowed (..),
     SplitAcesFrozen (..),
@@ -19,18 +19,17 @@ import Pitboss.Blackjack.Offering.RuleSet (
     Surrender (..),
  )
 
--- | Standard 6-deck Vegas shoe game
 vegas6 :: Offering
 vegas6 =
-    mkOffering matter ruleSet
+    mkOffering matter gameRuleSet tableRuleSet
   where
     matter =
-        Matter
+        Materia
             { matterDecks = D6
             , matterDealt = FaceUp
             }
-    ruleSet =
-        RuleSet
+    gameRuleSet =
+        GameRuleSet
             { soft17 = StandSoft17
             , das = DAS
             , doubling = DoubleAny
@@ -43,19 +42,28 @@ vegas6 =
             , pen = PenFrac 5 6
             , holeCardRule = Peek
             }
+    tableRuleSet =
+        TableRuleSet
+            { minBet = 25
+            , maxBet = 5000
+            , maxSpotsPerPlayer = 2
+            , midShoeEntry = AllowMidShoe
+            , multiSpotMinBetPolicy = MultipliedMinBet 2.0
+            , burnPolicy = SingleCardBurn
+            , standardPenetration = 0.75
+            }
 
--- | Single-deck downtown pitch game (face-down!)
 downtownSingleDeck :: Offering
 downtownSingleDeck =
-    mkOffering matter ruleSet
+    mkOffering matter gameRuleSet tableRuleSet
   where
     matter =
-        Matter
+        Materia
             { matterDecks = D1
             , matterDealt = Pitch
             }
-    ruleSet =
-        RuleSet
+    gameRuleSet =
+        GameRuleSet
             { soft17 = HitSoft17
             , das = NoDAS
             , doubling = Double10_11
@@ -67,4 +75,14 @@ downtownSingleDeck =
             , payout = P6_5
             , pen = PenCards 50
             , holeCardRule = Peek
+            }
+    tableRuleSet =
+        TableRuleSet
+            { minBet = 5
+            , maxBet = 500
+            , maxSpotsPerPlayer = 1
+            , midShoeEntry = NoMidShoe
+            , multiSpotMinBetPolicy = SameMinBet
+            , burnPolicy = NoBurn
+            , standardPenetration = 0.85
             }

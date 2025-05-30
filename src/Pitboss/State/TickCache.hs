@@ -7,16 +7,18 @@
 
 module Pitboss.State.TickCache (
     TickCache (..),
+    TickCacheContext (..),
     Deref (..),
     mkTickCache,
     populateTickCache,
     withTickCache,
+    ctxTickCache,
+    ctxTick,
 ) where
 
 import Control.Lens
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
-import Data.Word (Word64)
 
 import Pitboss.State.Delta.Instances.Incremental
 import Pitboss.State.Delta.Types
@@ -27,18 +29,18 @@ import Pitboss.State.Types.Core
 import Prelude hiding (round)
 
 data TickCache = TickCache
-    { _cacheIntent :: IHM.InsOrdHashMap Word64 (EntityState 'Intent)
-    , _cacheEvent :: IHM.InsOrdHashMap Word64 (EntityState 'Event)
-    , _cacheBout :: IHM.InsOrdHashMap Word64 (EntityState 'Bout)
-    , _cacheDealer :: IHM.InsOrdHashMap Word64 (EntityState 'Dealer)
-    , _cachePlayer :: IHM.InsOrdHashMap Word64 (EntityState 'Player)
-    , _cacheDealerHand :: IHM.InsOrdHashMap Word64 (EntityState 'DealerHand)
-    , _cacheDealerRound :: IHM.InsOrdHashMap Word64 (EntityState 'DealerRound)
-    , _cacheOffering :: IHM.InsOrdHashMap Word64 (EntityState 'Offering)
-    , _cachePlayerHand :: IHM.InsOrdHashMap Word64 (EntityState 'PlayerHand)
-    , _cachePlayerSpot :: IHM.InsOrdHashMap Word64 (EntityState 'PlayerSpot)
-    , _cacheTable :: IHM.InsOrdHashMap Word64 (EntityState 'Table)
-    , _cacheTableShoe :: IHM.InsOrdHashMap Word64 (EntityState 'TableShoe)
+    { _cacheIntent :: IHM.InsOrdHashMap (EntityId 'Intent) (EntityState 'Intent)
+    , _cacheEvent :: IHM.InsOrdHashMap (EntityId 'Event) (EntityState 'Event)
+    , _cacheBout :: IHM.InsOrdHashMap (EntityId 'Bout) (EntityState 'Bout)
+    , _cacheDealer :: IHM.InsOrdHashMap (EntityId 'Dealer) (EntityState 'Dealer)
+    , _cachePlayer :: IHM.InsOrdHashMap (EntityId 'Player) (EntityState 'Player)
+    , _cacheDealerHand :: IHM.InsOrdHashMap (EntityId 'DealerHand) (EntityState 'DealerHand)
+    , _cacheDealerRound :: IHM.InsOrdHashMap (EntityId 'DealerRound) (EntityState 'DealerRound)
+    , _cacheOffering :: IHM.InsOrdHashMap (EntityId 'Offering) (EntityState 'Offering)
+    , _cachePlayerHand :: IHM.InsOrdHashMap (EntityId 'PlayerHand) (EntityState 'PlayerHand)
+    , _cachePlayerSpot :: IHM.InsOrdHashMap (EntityId 'PlayerSpot) (EntityState 'PlayerSpot)
+    , _cacheTable :: IHM.InsOrdHashMap (EntityId 'Table) (EntityState 'Table)
+    , _cacheTableShoe :: IHM.InsOrdHashMap (EntityId 'TableShoe) (EntityState 'TableShoe)
     , _cacheTick :: Tick
     }
 
@@ -55,77 +57,62 @@ class (MonadReader TickCacheContext m) => Deref id m where
     type DerefTarget id
     deref :: id -> m (Maybe (DerefTarget id))
 
+-- Helper to implement Deref instances uniformly
+derefHelper :: (MonadReader TickCacheContext m) =>
+               Getting (IHM.InsOrdHashMap (EntityId k) (EntityState k)) TickCache (IHM.InsOrdHashMap (EntityId k) (EntityState k)) ->
+               EntityId k ->
+               m (Maybe (EntityState k))
+derefHelper cacheLens entityId = do
+    cache <- view ctxTickCache
+    pure $ IHM.lookup entityId (cache ^. cacheLens)
+
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Intent) m where
     type DerefTarget (EntityId 'Intent) = EntityState 'Intent
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheIntent)
+    deref = derefHelper cacheIntent
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Event) m where
     type DerefTarget (EntityId 'Event) = EntityState 'Event
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheEvent)
+    deref = derefHelper cacheEvent
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Bout) m where
     type DerefTarget (EntityId 'Bout) = EntityState 'Bout
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheBout)
+    deref = derefHelper cacheBout
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Player) m where
     type DerefTarget (EntityId 'Player) = EntityState 'Player
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cachePlayer)
+    deref = derefHelper cachePlayer
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Dealer) m where
     type DerefTarget (EntityId 'Dealer) = EntityState 'Dealer
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheDealer)
+    deref = derefHelper cacheDealer
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'PlayerHand) m where
     type DerefTarget (EntityId 'PlayerHand) = EntityState 'PlayerHand
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cachePlayerHand)
+    deref = derefHelper cachePlayerHand
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'PlayerSpot) m where
     type DerefTarget (EntityId 'PlayerSpot) = EntityState 'PlayerSpot
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cachePlayerSpot)
+    deref = derefHelper cachePlayerSpot
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'DealerHand) m where
     type DerefTarget (EntityId 'DealerHand) = EntityState 'DealerHand
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheDealerHand)
+    deref = derefHelper cacheDealerHand
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'DealerRound) m where
     type DerefTarget (EntityId 'DealerRound) = EntityState 'DealerRound
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheDealerRound)
+    deref = derefHelper cacheDealerRound
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Offering) m where
     type DerefTarget (EntityId 'Offering) = EntityState 'Offering
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheOffering)
+    deref = derefHelper cacheOffering
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Table) m where
     type DerefTarget (EntityId 'Table) = EntityState 'Table
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheTable)
+    deref = derefHelper cacheTable
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'TableShoe) m where
     type DerefTarget (EntityId 'TableShoe) = EntityState 'TableShoe
-    deref (EntityId entropy) = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entropy (cache ^. cacheTableShoe)
+    deref = derefHelper cacheTableShoe
 
 mkTickCache :: Tick -> TickCache
 mkTickCache tick =
@@ -146,8 +133,6 @@ mkTickCache tick =
         }
 
 populateTickCache ::
-    Registry 'Intent (SomeDelta 'Intent) ->
-    Registry 'Event (SomeDelta 'Event) ->
     Registry 'Bout (SomeDelta 'Bout) ->
     Registry 'Player (SomeDelta 'Player) ->
     Registry 'PlayerHand (SomeDelta 'PlayerHand) ->
@@ -160,14 +145,14 @@ populateTickCache ::
     Registry 'TableShoe (SomeDelta 'TableShoe) ->
     Tick ->
     TickCache
-populateTickCache intentReg eventReg boutReg playerReg handReg spotReg dealerReg dealerHandReg dealerRoundReg offeringReg tableReg tableShoeReg tick =
+populateTickCache boutReg playerReg handReg spotReg dealerReg dealerHandReg dealerRoundReg offeringReg tableReg tableShoeReg tick =
     let baseTickCache = mkTickCache tick
 
         populateFromRegistry ::
             (IncrementalWithWitness k) =>
             Registry k (SomeDelta k) ->
-            (TickCache -> IHM.InsOrdHashMap Word64 (EntityState k)) ->
-            (TickCache -> IHM.InsOrdHashMap Word64 (EntityState k) -> TickCache) ->
+            (TickCache -> IHM.InsOrdHashMap (EntityId k) (EntityState k)) ->
+            (TickCache -> IHM.InsOrdHashMap (EntityId k) (EntityState k) -> TickCache) ->
             TickCache ->
             TickCache
         populateFromRegistry registry getter setter cache =
@@ -178,8 +163,6 @@ populateTickCache intentReg eventReg boutReg playerReg handReg spotReg dealerReg
                         Nothing -> []
              in setter cache (getter cache <> IHM.fromList entities)
      in baseTickCache
-            & populateFromRegistry intentReg _cacheIntent (\c m -> c{_cacheIntent = m})
-            & populateFromRegistry eventReg _cacheEvent (\c m -> c{_cacheEvent = m})
             & populateFromRegistry boutReg _cacheBout (\c m -> c{_cacheBout = m})
             & populateFromRegistry playerReg _cachePlayer (\c m -> c{_cachePlayer = m})
             & populateFromRegistry handReg _cachePlayerHand (\c m -> c{_cachePlayerHand = m})

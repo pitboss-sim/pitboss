@@ -5,7 +5,7 @@ module Pitboss.FSM.DealerRound.Phase where
 
 import Data.Aeson.Types
 import GHC.Generics
-import Pitboss.FSM.Types (InterruptReason)
+import Pitboss.FSM.Types
 
 data DealerRoundPhase
     = Awaiting

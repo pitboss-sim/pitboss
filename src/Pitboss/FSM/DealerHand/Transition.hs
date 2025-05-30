@@ -5,11 +5,10 @@
 
 module Pitboss.FSM.DealerHand.Transition where
 
-import Pitboss.Blackjack.Materia.Hand
-import Pitboss.Blackjack.Offering.RuleSet (RuleSet, isH17)
+import Pitboss.Blackjack
 import Pitboss.FSM.DealerHand.FSM
-import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))
-import Pitboss.FSM.Types (InterruptReason)
+import Pitboss.FSM.DealerHand.Phase
+import Pitboss.FSM.Types
 
 type family ValidDealerHandTransition (from :: DealerHandPhase) (to :: DealerHandPhase) :: Bool where
     ValidDealerHandTransition 'Dealing 'Evaluating = 'True
@@ -50,7 +49,7 @@ resumeFromInterruptTyped ::
     DealerHandFSM 'Dealing
 resumeFromInterruptTyped _hand (InterruptedFSM _) = DealingFSM
 
-dealerShouldHit :: RuleSet -> SomeHand -> Bool
+dealerShouldHit :: GameRuleSet -> SomeHand -> Bool
 dealerShouldHit ruleset (SomeHand hand) = case witness hand of
     BlackjackWitness -> False
     TwentyOneWitness -> False

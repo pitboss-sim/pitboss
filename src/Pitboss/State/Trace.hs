@@ -5,7 +5,17 @@
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
 module Pitboss.State.Trace (
+    Trace (..),
     emptyTrace,
+    bouts,
+    tables,
+    tableShoes,
+    dealers,
+    dealerHands,
+    dealerRounds,
+    players,
+    playerSpots,
+    playerHands,
 ) where
 
 import Control.Lens (makeLenses)
@@ -16,10 +26,7 @@ import Pitboss.State.Registry
 import Pitboss.State.Types.Core
 
 data Trace = Trace
-    { _intents :: Registry 'Intent (SomeDelta 'Intent)
-    , _events :: Registry 'Event (SomeDelta 'Event)
-    , _bouts :: Registry 'Bout (SomeDelta 'Bout)
-    , _offerings :: Registry 'Offering (SomeDelta 'Offering)
+    { _bouts :: Registry 'Bout (SomeDelta 'Bout)
     , _tables :: Registry 'Table (SomeDelta 'Table)
     , _tableShoes :: Registry 'TableShoe (SomeDelta 'TableShoe)
     , _dealers :: Registry 'Dealer (SomeDelta 'Dealer)
@@ -32,12 +39,9 @@ data Trace = Trace
     deriving (Eq, Generic)
 
 instance ToJSON Trace where
-    toJSON (Trace i e b o t s d dh dr p ps ph) =
+    toJSON (Trace b t s d dh dr p ps ph) =
         object
-            [ "intents" .= i
-            , "events" .= e
-            , "bouts" .= b
-            , "offerings" .= o
+            [ "bouts" .= b
             , "tables" .= t
             , "shoes" .= s
             , "dealers" .= d
@@ -51,10 +55,7 @@ instance ToJSON Trace where
 instance FromJSON Trace where
     parseJSON = withObject "Trace" $ \o ->
         Trace
-            <$> o .: "intents"
-            <*> o .: "events"
-            <*> o .: "bouts"
-            <*> o .: "offerings"
+            <$> o .: "bouts"
             <*> o .: "tables"
             <*> o .: "shoes"
             <*> o .: "dealers"
@@ -67,10 +68,7 @@ instance FromJSON Trace where
 emptyTrace :: Trace
 emptyTrace =
     Trace
-        { _intents = mempty
-        , _events = mempty
-        , _bouts = mempty
-        , _offerings = mempty
+        { _bouts = mempty
         , _tables = mempty
         , _tableShoes = mempty
         , _dealers = mempty

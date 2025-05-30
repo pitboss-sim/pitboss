@@ -7,7 +7,8 @@ import Data.Aeson.Types
 import Data.Text
 import Data.Text qualified as T
 import GHC.Generics
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack hiding (NaturalBlackjack, HandPhase)
+import Pitboss.FSM.Types
 
 data HandPhase
     = Abandoned AbandonedReason

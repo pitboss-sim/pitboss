@@ -18,13 +18,14 @@ where
 
 import Data.Aeson.Types
 import Data.Text qualified as T
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack hiding (Surrender)
 import Pitboss.FSM.DealerRound.ENHC
 import Pitboss.FSM.DealerRound.Peek
 import Pitboss.FSM.DealerRound.Phase
 import Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
 import Pitboss.FSM.DealerRound.Typeclass.PhaseTag
 import Pitboss.FSM.PlayerHand
+import Pitboss.FSM.Types
 import Pitboss.FSM.Types.Transitionable
 
 data DealerRoundFSM
@@ -69,7 +70,7 @@ instance FromJSON DealerRoundFSM where
 
 -- helpers
 
-abandonHandDueToSurrender :: RuleSet -> Bool -> SomePlayerHandFSM
+abandonHandDueToSurrender :: GameRuleSet -> Bool -> SomePlayerHandFSM
 abandonHandDueToSurrender _ early =
     SomePlayerHandFSM $
         if early

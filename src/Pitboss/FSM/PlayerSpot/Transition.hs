@@ -7,7 +7,7 @@ module Pitboss.FSM.PlayerSpot.Transition where
 
 import Pitboss.FSM.PlayerSpot.FSM
 import Pitboss.FSM.PlayerSpot.Phase
-import Pitboss.FSM.Types (InterruptReason)
+import Pitboss.FSM.Types
 
 type family ValidPlayerSpotTransition (from :: PlayerSpotPhase) (to :: PlayerSpotPhase) :: Bool where
     ValidPlayerSpotTransition 'SpotIdle 'SpotEngaged = 'True

@@ -1,17 +1,17 @@
-module Pitboss.Strategy.Chart.Validate where
+module Pitboss.Blackjack.BasicStrategy.Chart.Validate where
 
 import Data.Map.Strict (toList)
-import Pitboss.Blackjack.Materia.Card (Rank)
-import Pitboss.Blackjack.Materia.Hand (HandKind)
-import Pitboss.Strategy.Chart.Error (prettyValidationErrors)
-import Pitboss.Strategy.Chart.Types (ChartEntry (..), MoveCode (..))
+import Pitboss.Blackjack.BasicStrategy.Chart.Error
+import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Hand
 
 validateStrategyChart :: [ChartEntry] -> [(HandKind, Maybe Int, Rank)]
 validateStrategyChart =
     concatMap validateEntry
   where
-    validateEntry (ChartEntry kind value moves') =
-        [ (kind, value, up)
+    validateEntry (ChartEntry kind value' moves') =
+        [ (kind, value', up)
         | (up, mv) <- toList moves'
         , mv == MoveUndefined
         ]

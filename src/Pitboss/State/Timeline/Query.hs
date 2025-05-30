@@ -27,7 +27,7 @@ lookupInRegistry ::
     Uid k ->
     Maybe (Timeline k (SomeDelta k))
 lookupInRegistry (Registry registry) uid =
-    IHM.lookup (entityIdToWord64 (uidEntityId uid)) registry
+    IHM.lookup (uidEntityId uid) registry
 
 lookupEntityAtTick ::
     (IncrementalWithWitness k) =>

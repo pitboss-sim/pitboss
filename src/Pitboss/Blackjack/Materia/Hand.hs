@@ -13,7 +13,7 @@ import Data.Aeson.Types (Parser)
 import Data.Kind (Type)
 import Data.Text (Text)
 import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), rankValue)
-import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (matterDecks))
+import Pitboss.Blackjack.Offering.Materia (DeckCount (..), Materia (matterDecks))
 
 data Hand (k :: HandKind) where
     Hand :: [Card] -> Hand k
@@ -33,7 +33,7 @@ deriving instance Eq (Hand k)
 unHand :: Hand (k :: HandKind) -> [Card]
 unHand (Hand cards) = cards
 
-mkValidatedHand :: Matter -> [Card] -> Maybe SomeHand
+mkValidatedHand :: Materia -> [Card] -> Maybe SomeHand
 mkValidatedHand matter cards = do
     guard (length cards <= maxCardsFor (matterDecks matter))
     pure (characterize cards)

@@ -48,8 +48,6 @@ module Pitboss.State.Entity.Types (
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Archetype.Dealer
-import Pitboss.Archetype.Player
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -66,6 +64,8 @@ import Pitboss.FSM.Table
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.Occupancy
+import Pitboss.Agency.Dealer.Archetype
+import Pitboss.Agency.Player.Archetype
 
 data family EntityState (k :: EntityKind)
 

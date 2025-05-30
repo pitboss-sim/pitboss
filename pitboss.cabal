@@ -18,8 +18,17 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Pitboss.Archetype.Dealer
-                      Pitboss.Archetype.Player
+    exposed-modules:  Pitboss.Agency.Dealer.Archetype
+                      Pitboss.Agency.Dealer.Intent.DealCard
+                      Pitboss.Agency.Dealer.Intent.Hit
+                      Pitboss.Agency.Dealer.Intent.SettleBout
+                      Pitboss.Agency.Dealer.Intent.Stand
+                      Pitboss.Agency.Player.Archetype
+                      Pitboss.Agency.Player.Intent.Double
+                      Pitboss.Agency.Player.Intent.Hit
+                      Pitboss.Agency.Player.Intent.Split
+                      Pitboss.Agency.Player.Intent.Stand
+                      Pitboss.Agency.Player.Intent.Surrender
                       Pitboss.Blackjack.Action
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
@@ -74,10 +83,6 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
-                      Pitboss.Intent.Context
-                      Pitboss.Intent.Generate
-                      Pitboss.Intent.Generate.Mistake
-                      Pitboss.Intent.Generate.Strategy
                       Pitboss.State.TickCache
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible

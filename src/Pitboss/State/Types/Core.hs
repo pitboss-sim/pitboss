@@ -12,7 +12,6 @@ module Pitboss.State.Types.Core (
     EntityRef (..),
     Tick (..),
     IntentType (..),
-    IntentDetails (..),
     EventType (..),
     EventDetails (..),
     OriginatingEntity (..),
@@ -29,7 +28,7 @@ module Pitboss.State.Types.Core (
     parseDisplayUid,
 ) where
 
-import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey, withText)
+import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey (..), withText)
 import Data.Bits (Bits ((.|.)), shiftL)
 import Data.Char (toUpper)
 import Data.Data (Proxy (..))
@@ -73,18 +72,6 @@ data IntentType
     | TableIntent
     deriving (Eq, Show, Generic)
 
-data IntentDetails
-    = PlayerHitIntent
-    | PlayerStandIntent
-    | PlayerDoubleIntent
-    | PlayerSplitIntent
-    | PlayerSurrenderIntent
-    | DealerHitIntent
-    | DealerStandIntent
-    | TableDealCardIntent (EntityId 'PlayerHand)
-    | TableSettleBoutIntent (EntityId 'Bout)
-    deriving (Eq, Show, Generic)
-
 data OriginatingEntity
     = FromPlayer (EntityId 'Player)
     | FromDealer (EntityId 'Dealer)
@@ -93,8 +80,6 @@ data OriginatingEntity
 
 instance ToJSON IntentType
 instance FromJSON IntentType
-instance ToJSON IntentDetails
-instance FromJSON IntentDetails
 instance ToJSON OriginatingEntity
 instance FromJSON OriginatingEntity
 
@@ -274,6 +259,9 @@ instance forall k. (KnownSymbol (UidPrefix k)) => FromJSON (Uid k) where
         case parseDisplayUid (T.unpack t) of
             Just uid -> pure uid
             Nothing -> fail "Invalid prefixed UID format"
+
+instance ToJSONKey (EntityId k)
+instance FromJSONKey (EntityId k)
 
 instance ToJSON (EntityId k) where
     toJSON (EntityId entropy) = toJSON entropy

@@ -12,8 +12,9 @@ import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import Data.Aeson.Types (Parser)
 import Data.Kind (Type)
 import Data.Text (Text)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), rankValue)
-import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (matterDecks))
+import Pitboss.Blackjack.Offering.Materia (DeckCount (..), Materia (matterDecks))
 
 data Hand (k :: HandKind) where
     Hand :: [Card] -> Hand k
@@ -33,7 +34,7 @@ deriving instance Eq (Hand k)
 unHand :: Hand (k :: HandKind) -> [Card]
 unHand (Hand cards) = cards
 
-mkValidatedHand :: Matter -> [Card] -> Maybe SomeHand
+mkValidatedHand :: Materia -> [Card] -> Maybe SomeHand
 mkValidatedHand matter cards = do
     guard (length cards <= maxCardsFor (matterDecks matter))
     pure (characterize cards)
@@ -52,7 +53,7 @@ data HandKind
     | HardHand
     | PairHand
     | BustHand
-    deriving (Eq, Show, Ord)
+    deriving (Eq, Show, Ord, Generic)
 
 type family Score (k :: HandKind) :: Type where
     Score 'BlackjackHand = Int
@@ -108,6 +109,9 @@ data PairInfo = PairInfo
     , pairValue :: Int
     }
     deriving (Eq, Show)
+
+instance ToJSON HandKind
+instance FromJSON HandKind
 
 instance ToJSON SomeHand where
     toJSON (SomeHand hand) =

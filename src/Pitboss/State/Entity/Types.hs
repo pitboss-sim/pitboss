@@ -48,6 +48,8 @@ module Pitboss.State.Entity.Types (
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
+import Pitboss.Agency.Archetype.Dealer
+import Pitboss.Agency.Archetype.Player
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -131,6 +133,8 @@ data BoutRels = BoutRels
     { _boutRelsPlayerHand :: EntityId 'PlayerHand
     , _boutRelsDealerHand :: EntityId 'DealerHand
     , _boutRelsTableShoe :: EntityId 'TableShoe
+    , _boutRelsTable :: EntityId 'Table
+    , _boutRelsDealerRound :: EntityId 'DealerRound
     }
     deriving (Eq, Show, Generic)
 
@@ -144,6 +148,7 @@ data instance EntityState 'Bout = EBout
 -- EDealer
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
+    , _dAttrsArchetype :: SomeDealerArchetype
     }
     deriving (Eq, Show, Generic)
 
@@ -236,6 +241,7 @@ data instance EntityState 'Offering = EOffering
 data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
     , _pAttrsBankroll :: Chips
+    , _pAttrsArchetype :: SomePlayerArchetype
     }
     deriving (Eq, Show, Generic)
 
@@ -314,8 +320,7 @@ data instance EntityState 'PlayerSpot = EPlayerSpot
 data TableAttrs = TableAttrs
     { _tAttrsName :: String
     , _tAttrsCurrentRound :: Maybe (EntityId 'DealerRound)
-    , _tAttrsOfferingUsed :: EntityId 'Offering
-    , _tAttrsMinBet :: Chips
+    , _tAttrsOffering :: O.Offering
     }
     deriving (Eq, Show, Generic)
 

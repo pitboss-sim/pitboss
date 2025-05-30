@@ -2,12 +2,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
 module Pitboss.State.Delta.Types (
     DeltaSemantics (..),
     SomeDelta (..),
+    CausalHistory (..),
     Delta (..),
     extractCausalHistory,
     extractCausalIntent,
@@ -46,11 +47,14 @@ data SomeDelta k where
     RelsDelta :: CausalHistory -> Delta k ('PartialUpdate 'Rels) -> SomeDelta k
     BoundaryDelta :: CausalHistory -> Delta k 'TransactionBoundary -> SomeDelta k
 
-instance ( Eq (Delta k ('PartialUpdate 'Attrs))
-         , Eq (Delta k ('PartialUpdate 'Modes))
-         , Eq (Delta k ('PartialUpdate 'Rels))
-         , Eq (Delta k 'TransactionBoundary)
-         ) => Eq (SomeDelta k) where
+instance
+    ( Eq (Delta k ('PartialUpdate 'Attrs))
+    , Eq (Delta k ('PartialUpdate 'Modes))
+    , Eq (Delta k ('PartialUpdate 'Rels))
+    , Eq (Delta k 'TransactionBoundary)
+    ) =>
+    Eq (SomeDelta k)
+    where
     (AttrsDelta h1 d1) == (AttrsDelta h2 d2) = h1 == h2 && d1 == d2
     (ModesDelta h1 d1) == (ModesDelta h2 d2) = h1 == h2 && d1 == d2
     (RelsDelta h1 d1) == (RelsDelta h2 d2) = h1 == h2 && d1 == d2
@@ -131,6 +135,8 @@ data instance Delta 'Bout ('PartialUpdate 'Rels)
     = DBoutSetPlayerHand (EntityId 'PlayerHand) (EntityId 'PlayerHand)
     | DBoutSetDealerHand (EntityId 'DealerHand) (EntityId 'DealerHand)
     | DBoutSetTableShoe (EntityId 'TableShoe) (EntityId 'TableShoe)
+    | DBoutSetTable (EntityId 'Table) (EntityId 'Table)
+    | DBoutSetDealerRound (EntityId 'DealerRound) (EntityId 'DealerRound)
     deriving (Eq, Show, Generic)
 
 -- DDealer
@@ -237,8 +243,7 @@ data instance Delta 'PlayerSpot ('PartialUpdate 'Rels)
 -- DTable
 data instance Delta 'Table ('PartialUpdate 'Attrs)
     = DTableSetName String String
-    | DTableSetMinBet Chips Chips
-    | DTableSetOffering (EntityId 'Offering) (EntityId 'Offering)
+    | DTableSetOffering O.Offering O.Offering
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Table ('PartialUpdate 'Modes)
@@ -262,11 +267,14 @@ data instance Delta 'TableShoe ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 -- json support
-instance ( ToJSON (Delta k ('PartialUpdate 'Attrs))
-         , ToJSON (Delta k ('PartialUpdate 'Modes))
-         , ToJSON (Delta k ('PartialUpdate 'Rels))
-         , ToJSON (Delta k 'TransactionBoundary)
-         ) => ToJSON (SomeDelta k) where
+instance
+    ( ToJSON (Delta k ('PartialUpdate 'Attrs))
+    , ToJSON (Delta k ('PartialUpdate 'Modes))
+    , ToJSON (Delta k ('PartialUpdate 'Rels))
+    , ToJSON (Delta k 'TransactionBoundary)
+    ) =>
+    ToJSON (SomeDelta k)
+    where
     toJSON (AttrsDelta history delta) =
         object ["type" .= ("AttrsDelta" :: T.Text), "history" .= history, "delta" .= delta]
     toJSON (ModesDelta history delta) =
@@ -276,11 +284,14 @@ instance ( ToJSON (Delta k ('PartialUpdate 'Attrs))
     toJSON (BoundaryDelta history delta) =
         object ["type" .= ("BoundaryDelta" :: T.Text), "history" .= history, "delta" .= delta]
 
-instance ( FromJSON (Delta k ('PartialUpdate 'Attrs))
-         , FromJSON (Delta k ('PartialUpdate 'Modes))
-         , FromJSON (Delta k ('PartialUpdate 'Rels))
-         , FromJSON (Delta k 'TransactionBoundary)
-         ) => FromJSON (SomeDelta k) where
+instance
+    ( FromJSON (Delta k ('PartialUpdate 'Attrs))
+    , FromJSON (Delta k ('PartialUpdate 'Modes))
+    , FromJSON (Delta k ('PartialUpdate 'Rels))
+    , FromJSON (Delta k 'TransactionBoundary)
+    ) =>
+    FromJSON (SomeDelta k)
+    where
     parseJSON = withObject "SomeDelta" $ \v -> do
         typ <- v .: "type" :: Parser T.Text
         case typ of

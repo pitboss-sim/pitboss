@@ -18,14 +18,29 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Pitboss.Blackjack.Action
+    exposed-modules:  Pitboss.Agency.Archetype.Dealer
+                      Pitboss.Agency.Archetype.Player
+                      Pitboss.Agency.Archetype.Types
+                      Pitboss.Agency.Intent.Instances.Buildable
+                      Pitboss.Agency.Intent.Instances.Validateable
+                      Pitboss.Agency.Intent.Types
+                      Pitboss.Blackjack.Action
+                      Pitboss.Blackjack.BasicStrategy.Chart.Error
+                      Pitboss.Blackjack.BasicStrategy.Chart.Interpret
+                      Pitboss.Blackjack.BasicStrategy.Chart.Overlay
+                      Pitboss.Blackjack.BasicStrategy.Chart.Parse
+                      Pitboss.Blackjack.BasicStrategy.Chart.Types
+                      Pitboss.Blackjack.BasicStrategy.Chart.Validate
+                      Pitboss.Blackjack.BasicStrategy.Types
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
                       Pitboss.Blackjack.Materia.Deck
                       Pitboss.Blackjack.Materia.Hand
                       Pitboss.Blackjack.Offering
-                      Pitboss.Blackjack.Offering.Matter
+                      Pitboss.Blackjack.Offering.Materia
                       Pitboss.Blackjack.Offering.RuleSet
+                      Pitboss.Blackjack.Offering.RuleSet.Game
+                      Pitboss.Blackjack.Offering.RuleSet.Table
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Play
                       Pitboss.FSM.Bout
@@ -70,6 +85,8 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.Orchestration.DeltaGen
+                      Pitboss.Orchestration.EventGen
                       Pitboss.State.TickCache
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
@@ -87,13 +104,6 @@ library
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
                       Pitboss.State.Types.FiniteMap.Occupancy
-                      Pitboss.Strategy.Chart.Error
-                      Pitboss.Strategy.Chart.Interpret
-                      Pitboss.Strategy.Chart.Overlay
-                      Pitboss.Strategy.Chart.Parse
-                      Pitboss.Strategy.Chart.Types
-                      Pitboss.Strategy.Chart.Validate
-                      Pitboss.Strategy.Types
 
     -- other-modules:
     -- other-extensions:
@@ -126,11 +136,18 @@ executable pitboss
 test-suite pitboss-test
     import:           warnings
     default-language: GHC2021
-    -- other-modules:
+    other-modules:    Pitboss.Integration.TimelineSpec
+                      Pitboss.Orchestration.DeltaGenSpec
+                      Pitboss.Orchestration.EventGenSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
     build-depends:
         base ^>=4.18.2.1,
-        pitboss
+        insert-ordered-containers,
+        mtl,
+        pitboss,
+        hspec
+    build-tool-depends:
+        hspec-discover:hspec-discover

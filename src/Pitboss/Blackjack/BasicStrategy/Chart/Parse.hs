@@ -1,12 +1,12 @@
-module Pitboss.Strategy.Chart.Parse where
+module Pitboss.Blackjack.BasicStrategy.Chart.Parse where
 
 import Data.Char (isDigit)
 import Data.Map.Strict qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
 import Pitboss.Blackjack.Materia.Card (Rank (..))
-import Pitboss.Strategy.Chart.Error
-import Pitboss.Strategy.Chart.Types
+import Pitboss.Blackjack.BasicStrategy.Chart.Error
+import Pitboss.Blackjack.BasicStrategy.Chart.Types
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =

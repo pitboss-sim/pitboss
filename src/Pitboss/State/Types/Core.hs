@@ -29,7 +29,7 @@ module Pitboss.State.Types.Core (
     parseDisplayUid,
 ) where
 
-import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey, withText)
+import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey (..), withText)
 import Data.Bits (Bits ((.|.)), shiftL)
 import Data.Char (toUpper)
 import Data.Data (Proxy (..))
@@ -274,6 +274,9 @@ instance forall k. (KnownSymbol (UidPrefix k)) => FromJSON (Uid k) where
         case parseDisplayUid (T.unpack t) of
             Just uid -> pure uid
             Nothing -> fail "Invalid prefixed UID format"
+
+instance ToJSONKey (EntityId k)
+instance FromJSONKey (EntityId k)
 
 instance ToJSON (EntityId k) where
     toJSON (EntityId entropy) = toJSON entropy

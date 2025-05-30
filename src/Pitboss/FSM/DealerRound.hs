@@ -25,6 +25,7 @@ import Pitboss.FSM.DealerRound.Phase
 import Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
 import Pitboss.FSM.DealerRound.Typeclass.PhaseTag
 import Pitboss.FSM.PlayerHand
+import Pitboss.FSM.Types
 import Pitboss.FSM.Types.Transitionable
 
 data DealerRoundFSM
@@ -69,7 +70,7 @@ instance FromJSON DealerRoundFSM where
 
 -- helpers
 
-abandonHandDueToSurrender :: RuleSet -> Bool -> SomePlayerHandFSM
+abandonHandDueToSurrender :: GameRuleSet -> Bool -> SomePlayerHandFSM
 abandonHandDueToSurrender _ early =
     SomePlayerHandFSM $
         if early

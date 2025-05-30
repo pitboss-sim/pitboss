@@ -42,6 +42,7 @@
         pkgs:
         let
           inherit (pkgs) cabal2nix treefmt;
+          inherit (pkgs) claude-code;
           inherit (pkgs.haskellPackages)
             ghc
             cabal-fmt
@@ -56,6 +57,7 @@
             buildInputs = [
               cabal2nix
               treefmt
+              claude-code
 
               # from haskellPackages
               ghc

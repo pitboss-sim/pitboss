@@ -17,26 +17,6 @@ class Decomposable (k :: EntityKind) where
     getModes :: EntityState k -> Modes k
     getRels :: EntityState k -> Rels k
 
--- EIntent
-instance Decomposable 'Intent where
-    type Attrs 'Intent = IntentAttrs
-    type Modes 'Intent = IntentModes
-    type Rels 'Intent = IntentRels
-
-    getAttrs (EIntent a _ _) = a
-    getModes (EIntent _ m _) = m
-    getRels (EIntent _ _ r) = r
-
--- EEvent
-instance Decomposable 'Event where
-    type Attrs 'Event = EventAttrs
-    type Modes 'Event = EventModes
-    type Rels 'Event = EventRels
-
-    getAttrs (EEvent a _ _) = a
-    getModes (EEvent _ m _) = m
-    getRels (EEvent _ _ r) = r
-
 -- EBout
 instance Decomposable 'Bout where
     type Attrs 'Bout = BoutAttrs
@@ -76,16 +56,6 @@ instance Decomposable 'DealerRound where
     getAttrs (EDealerRound a _ _) = a
     getModes (EDealerRound _ m _) = m
     getRels (EDealerRound _ _ r) = r
-
--- EOffering
-instance Decomposable 'Offering where
-    type Attrs 'Offering = OfferingAttrs
-    type Modes 'Offering = OfferingModes
-    type Rels 'Offering = OfferingRels
-
-    getAttrs (EOffering a _ _) = a
-    getModes (EOffering _ m _) = m
-    getRels (EOffering _ _ r) = r
 
 -- EPlayer
 instance Decomposable 'Player where

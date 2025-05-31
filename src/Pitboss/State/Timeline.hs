@@ -12,13 +12,15 @@ module Pitboss.State.Timeline (
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import GHC.Generics (Generic)
+import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 import Prelude hiding (id)
 
-mkTimeline :: EntityId k -> Tick -> Timeline k a
-mkTimeline entityId birthTick =
+mkTimeline :: EntityId k -> Tick -> EntityState k -> Timeline k a
+mkTimeline entityId birthTick initialState =
     Timeline
         { timelineMeta = Meta entityId birthTick Nothing
+        , timelineInitialState = Just initialState
         , timelineDeltas = mempty
         }
 
@@ -48,17 +50,20 @@ instance FromJSON (Meta k) where
 
 data Timeline (k :: EntityKind) a = Timeline
     { timelineMeta :: Meta k
+    , timelineInitialState :: Maybe (EntityState k) -- entities born at this state
     , timelineDeltas :: InsOrdHashMap Tick [a]
     }
-    deriving (Generic, Show, Eq)
+
+deriving instance (Eq a, Eq (EntityState k)) => Eq (Timeline k a)
+deriving instance (Show a, Show (EntityState k)) => Show (Timeline k a)
 
 instance Semigroup (Timeline k a) where
-    Timeline meta1 deltas1 <> Timeline _meta2 deltas2 =
-        Timeline meta1 (deltas1 <> deltas2)
+    Timeline meta1 initialState1 deltas1 <> Timeline _meta2 _initiatState2 deltas2 =
+        Timeline meta1 initialState1 (deltas1 <> deltas2)
 
-instance (ToJSON a) => ToJSON (Timeline k a) where
-    toJSON (Timeline meta deltas) = object ["meta" .= meta, "deltas" .= deltas]
+instance (ToJSON a, ToJSON (EntityState k)) => ToJSON (Timeline k a) where
+    toJSON (Timeline meta initialState deltas) = object ["meta" .= meta, "initialState" .= initialState, "deltas" .= deltas]
 
-instance (FromJSON a) => FromJSON (Timeline k a) where
+instance (FromJSON a, FromJSON (EntityState k)) => FromJSON (Timeline k a) where
     parseJSON = withObject "Timeline" $ \o ->
-        Timeline <$> o .: "meta" <*> o .: "deltas"
+        Timeline <$> o .: "meta" <*> o .: "initialState" <*> o .: "deltas"

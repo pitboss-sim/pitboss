@@ -18,17 +18,12 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Pitboss.Agency.Dealer.Archetype
-                      Pitboss.Agency.Dealer.Intent.DealCard
-                      Pitboss.Agency.Dealer.Intent.Hit
-                      Pitboss.Agency.Dealer.Intent.SettleBout
-                      Pitboss.Agency.Dealer.Intent.Stand
-                      Pitboss.Agency.Player.Archetype
-                      Pitboss.Agency.Player.Intent.Double
-                      Pitboss.Agency.Player.Intent.Hit
-                      Pitboss.Agency.Player.Intent.Split
-                      Pitboss.Agency.Player.Intent.Stand
-                      Pitboss.Agency.Player.Intent.Surrender
+    exposed-modules:  Pitboss.Agency.Archetype.Dealer
+                      Pitboss.Agency.Archetype.Player
+                      Pitboss.Agency.Archetype.Types
+                      Pitboss.Agency.Intent.Instances.Buildable
+                      Pitboss.Agency.Intent.Instances.Validateable
+                      Pitboss.Agency.Intent.Types
                       Pitboss.Blackjack.Action
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
@@ -83,6 +78,8 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
+                      Pitboss.Orchestration.DeltaGen
+                      Pitboss.Orchestration.EventGen
                       Pitboss.State.TickCache
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
@@ -139,11 +136,18 @@ executable pitboss
 test-suite pitboss-test
     import:           warnings
     default-language: GHC2021
-    -- other-modules:
+    other-modules:    Pitboss.Integration.TimelineSpec
+                      Pitboss.Orchestration.DeltaGenSpec
+                      Pitboss.Orchestration.EventGenSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
     build-depends:
         base ^>=4.18.2.1,
-        pitboss
+        insert-ordered-containers,
+        mtl,
+        pitboss,
+        hspec
+    build-tool-depends:
+        hspec-discover:hspec-discover

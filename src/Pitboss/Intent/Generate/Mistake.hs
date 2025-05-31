@@ -2,12 +2,12 @@ module Pitboss.Intent.Generate.Mistake where
 
 import Control.Lens
 import Control.Monad.State
+import Pitboss.Archetype.Player
 import Pitboss.Intent.Context
 import Pitboss.Intent.Generate.Strategy
 import Pitboss.State.Types.Core
 import Pitboss.Strategy.Types
 import System.Random
-import Pitboss.Archetype.Player
 
 generateMistake ::
     MistakeProfile ->

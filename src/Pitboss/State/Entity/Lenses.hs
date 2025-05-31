@@ -6,6 +6,7 @@ module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
+import Pitboss.Agency.Archetype.Player
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -24,7 +25,6 @@ import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap (FiniteMap)
 import Pitboss.State.Types.FiniteMap.Occupancy (Occupancy)
 import Prelude hiding (round)
-import Pitboss.Agency.Player.Archetype
 
 bAttrs :: Lens' (EntityState 'Bout) BoutAttrs
 bAttrs f (EBout a m r) = fmap (\a' -> EBout a' m r) (f a)

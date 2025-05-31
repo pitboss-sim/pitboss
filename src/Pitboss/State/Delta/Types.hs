@@ -8,6 +8,7 @@
 module Pitboss.State.Delta.Types (
     DeltaSemantics (..),
     SomeDelta (..),
+    CausalHistory (..),
     Delta (..),
     extractCausalHistory,
     extractCausalIntent,

@@ -4,13 +4,13 @@ module Pitboss.Intent.Generate where
 
 import Control.Lens
 import Control.Monad.State
+import Pitboss.Agency.Player.Archetype
 import Pitboss.Intent.Context
 import Pitboss.Intent.Generate.Mistake
 import Pitboss.Intent.Generate.Strategy
 import Pitboss.State.Types.Core
 import Pitboss.Strategy.Types
 import System.Random (StdGen, randomR)
-import Pitboss.Agency.Player.Archetype
 
 generatePlayerIntent ::
     PlayerArchetype ->

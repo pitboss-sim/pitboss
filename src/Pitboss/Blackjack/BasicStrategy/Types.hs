@@ -1,4 +1,4 @@
-module Pitboss.Strategy.Types where
+module Pitboss.Blackjack.BasicStrategy.Types where
 
 newtype Fallback
     = Else Move

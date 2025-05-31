@@ -8,7 +8,7 @@ import Pitboss.Blackjack.Materia.Hand
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Play (canDoubleSomeHand, canSplitSomeHand)
 import Pitboss.State.Types.Core
-import Pitboss.Strategy.Types
+import Pitboss.Blackjack.BasicStrategy.Types
 
 data GameContext = GameContext
     { _contextPlayerHand :: SomeHand

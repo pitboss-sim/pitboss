@@ -7,7 +7,7 @@ module Pitboss.Agency.Archetype.Player where
 import Data.Aeson (FromJSON, ToJSON, object, toJSON, withObject, (.:), (.=))
 import Data.Aeson.Types (Parser, parseJSON)
 import GHC.Generics (Generic)
-import Pitboss.Strategy.Chart.Types (StrategyChart)
+import Pitboss.Blackjack.BasicStrategy.Chart.Types (StrategyChart)
 
 -- Player archetypes
 data PlayerArchetype t where

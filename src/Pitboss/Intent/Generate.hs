@@ -9,7 +9,7 @@ import Pitboss.Intent.Context
 import Pitboss.Intent.Generate.Mistake
 import Pitboss.Intent.Generate.Strategy
 import Pitboss.State.Types.Core
-import Pitboss.Strategy.Types
+import Pitboss.Blackjack.BasicStrategy.Types
 import System.Random (StdGen, randomR)
 
 generatePlayerIntent ::

@@ -25,6 +25,13 @@ library
                       Pitboss.Agency.Intent.Instances.Validateable
                       Pitboss.Agency.Intent.Types
                       Pitboss.Blackjack.Action
+                      Pitboss.Blackjack.BasicStrategy.Chart.Error
+                      Pitboss.Blackjack.BasicStrategy.Chart.Interpret
+                      Pitboss.Blackjack.BasicStrategy.Chart.Overlay
+                      Pitboss.Blackjack.BasicStrategy.Chart.Parse
+                      Pitboss.Blackjack.BasicStrategy.Chart.Types
+                      Pitboss.Blackjack.BasicStrategy.Chart.Validate
+                      Pitboss.Blackjack.BasicStrategy.Types
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
                       Pitboss.Blackjack.Materia.Deck
@@ -97,13 +104,6 @@ library
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
                       Pitboss.State.Types.FiniteMap.Occupancy
-                      Pitboss.Strategy.Chart.Error
-                      Pitboss.Strategy.Chart.Interpret
-                      Pitboss.Strategy.Chart.Overlay
-                      Pitboss.Strategy.Chart.Parse
-                      Pitboss.Strategy.Chart.Types
-                      Pitboss.Strategy.Chart.Validate
-                      Pitboss.Strategy.Types
 
     -- other-modules:
     -- other-extensions:

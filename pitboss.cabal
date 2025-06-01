@@ -18,20 +18,17 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Pitboss.Agency.Archetype.Dealer
-                      Pitboss.Agency.Archetype.Player
-                      Pitboss.Agency.Archetype.Player.Strategy
-                      Pitboss.Agency.Archetype.Player.Strategy.Advantage
-                      Pitboss.Agency.Archetype.Player.Strategy.Basic
-                      Pitboss.Agency.Archetype.Player.Strategy.Mistake
-                      Pitboss.Agency.Archetype.Player.Strategy.Types
+    exposed-modules:  Pitboss.Agency.Archetype.Dealer.Rules
+                      Pitboss.Agency.Archetype.Player.Advantage
+                      Pitboss.Agency.Archetype.Player.BasicStrategy
+                      Pitboss.Agency.Archetype.Player.Perfect
+                      Pitboss.Agency.Archetype.Player.Superstitious
                       Pitboss.Agency.Archetype.Types
-                      Pitboss.Agency.Archetype.Example
                       Pitboss.Agency.Intent.Generate
-                      Pitboss.Agency.Intent.Generate.Strategy
                       Pitboss.Agency.Intent.Instances.Buildable
                       Pitboss.Agency.Intent.Instances.Validateable
                       Pitboss.Agency.Intent.Types
+                      Pitboss.Agency.Types
                       Pitboss.Blackjack.Action
                       Pitboss.Blackjack.BasicStrategy.Chart.Error
                       Pitboss.Blackjack.BasicStrategy.Chart.Interpret

@@ -45,6 +45,7 @@ import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.FSM.Bout (SomeBoutFSM)
 import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
 import System.Random (Random (..), RandomGen)
+import Pitboss.Agency.Archetype.Types
 
 data EntityKind
     = Intent
@@ -73,8 +74,8 @@ data IntentType
     deriving (Eq, Show, Generic)
 
 data OriginatingEntity
-    = FromPlayer (EntityId 'Player)
-    | FromDealer (EntityId 'Dealer)
+    = FromPlayer (EntityId 'Player) SomePlayerArchetype
+    | FromDealer (EntityId 'Dealer) SomeDealerArchetype
     | FromTable (EntityId 'Table)
     deriving (Eq, Show, Generic)
 

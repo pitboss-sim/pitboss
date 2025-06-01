@@ -12,7 +12,6 @@ module Pitboss.State.Types.Core (
     EntityRef (..),
     Tick (..),
     IntentType (..),
-    IntentDetails (..),
     EventType (..),
     EventDetails (..),
     OriginatingEntity (..),
@@ -73,18 +72,6 @@ data IntentType
     | TableIntent
     deriving (Eq, Show, Generic)
 
-data IntentDetails
-    = PlayerHitIntent
-    | PlayerStandIntent
-    | PlayerDoubleIntent
-    | PlayerSplitIntent
-    | PlayerSurrenderIntent
-    | DealerHitIntent
-    | DealerStandIntent
-    | TableDealCardIntent (EntityId 'PlayerHand)
-    | TableSettleBoutIntent (EntityId 'Bout)
-    deriving (Eq, Show, Generic)
-
 data OriginatingEntity
     = FromPlayer (EntityId 'Player)
     | FromDealer (EntityId 'Dealer)
@@ -93,8 +80,6 @@ data OriginatingEntity
 
 instance ToJSON IntentType
 instance FromJSON IntentType
-instance ToJSON IntentDetails
-instance FromJSON IntentDetails
 instance ToJSON OriginatingEntity
 instance FromJSON OriginatingEntity
 

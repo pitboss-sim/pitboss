@@ -27,6 +27,7 @@ import Data.Aeson.Types (Parser)
 import Data.Map.Strict (Map)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
+import Pitboss.Agency.Intent.Types (IntentKind)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
@@ -94,7 +95,7 @@ extractCausalEvent = causalEvent . extractCausalHistory
 -- DIntent
 data instance Delta 'Intent ('PartialUpdate 'Attrs)
     = DIntentSetType IntentType IntentType
-    | DIntentSetDetails IntentDetails IntentDetails
+    | DIntentSetKind IntentKind IntentKind
     | DIntentSetTimestamp Tick Tick
     | DIntentSetDescription String String
     deriving (Eq, Show, Generic)

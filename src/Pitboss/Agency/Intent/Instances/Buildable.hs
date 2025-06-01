@@ -214,8 +214,9 @@ instance Buildable 'IDealerDeal where
         intent <- deref intentId
         case intent of
             Just (EIntent attrs _ rels) ->
-                case _intentAttrsDetails attrs of
-                    TableDealCardIntent targetHandId -> do
+                case _intentAttrsKind attrs of
+                    IDealerDeal -> do
+                        let targetHandId = error "Placeholder for playerHandId"
                         bout <- maybe (pure Nothing) deref (_intentRelsTargetBout rels)
 
                         round <- case bout of

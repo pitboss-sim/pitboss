@@ -1,14 +1,13 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Pitboss.Intent.Context where
+module Pitboss.Agency.Archetype.Player.Strategy.Types where
 
 import Control.Lens
 import Pitboss.Blackjack.Materia.Card
 import Pitboss.Blackjack.Materia.Hand
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Play (canDoubleSomeHand, canSplitSomeHand)
-import Pitboss.State.Types.Core
-import Pitboss.Blackjack.BasicStrategy.Types
 
 data GameContext = GameContext
     { _contextPlayerHand :: SomeHand
@@ -46,10 +45,3 @@ buildGameContext hand upcard offering count decks =
         , _contextHandNumber = 1
         , _contextSplitCount = 0
         }
-
-moveToIntentDetails :: Move -> IntentDetails
-moveToIntentDetails Hit = PlayerHitIntent
-moveToIntentDetails Stand = PlayerStandIntent
-moveToIntentDetails Double = PlayerDoubleIntent
-moveToIntentDetails Split = PlayerSplitIntent
-moveToIntentDetails Surrender = PlayerSurrenderIntent

@@ -1,6 +1,10 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Pitboss.Blackjack.BasicStrategy.Chart.Types where
 
+import Data.Aeson
 import Data.Map.Strict
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Rank)
 import Pitboss.Blackjack.Materia.Hand (HandKind (..))
 
@@ -22,7 +26,7 @@ data MoveCode
     | MoveSplitOrHit
     | MoveSurrenderOrStand
     | MoveUndefined
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
 
 -- Strategy charts now use HandKind directly
 data ChartEntry = ChartEntry
@@ -30,7 +34,7 @@ data ChartEntry = ChartEntry
     , kindValue :: Maybe Int -- for H/A/P types that need values
     , moves :: Map Rank MoveCode
     }
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
 
 type StrategyChart = [ChartEntry]
 
@@ -51,3 +55,9 @@ kindToHandPrefix HardHand (Just n) = H n
 kindToHandPrefix TwentyOneHand (Just n) = H n
 kindToHandPrefix BustHand (Just n) = H n
 kindToHandPrefix _ _ = H 0 -- fallback
+
+instance ToJSON MoveCode
+instance FromJSON MoveCode
+
+instance ToJSON ChartEntry
+instance FromJSON ChartEntry

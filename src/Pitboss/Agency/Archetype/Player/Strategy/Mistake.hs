@@ -1,27 +1,25 @@
-module Pitboss.Intent.Generate.Mistake where
+module Pitboss.Agency.Archetype.Player.Strategy.Mistake where
 
 import Control.Lens
 import Control.Monad.State
-import Pitboss.Archetype.Player
-import Pitboss.Intent.Context
-import Pitboss.Intent.Generate.Strategy
-import Pitboss.State.Types.Core
+import Pitboss.Agency.Archetype.Player
+import Pitboss.Agency.Archetype.Player.Strategy.Basic
+import Pitboss.Agency.Archetype.Player.Strategy.Types
 import Pitboss.Blackjack.BasicStrategy.Types
 import System.Random
 
 generateMistake ::
     MistakeProfile ->
     GameContext ->
-    State StdGen IntentDetails
+    State StdGen Move
 generateMistake profile ctx = do
     let correct = lookupBasicStrategy ctx
-        dist = profile ^. mistakeTypes
+        dist = profile ^. mistakeDistribution
     gen <- get
     let (roll, gen') = randomR (0.0, 1.0) gen
     put gen'
 
-    let mistake = selectMistakeType dist roll correct ctx
-    pure $ moveToIntentDetails mistake
+    pure $ selectMistakeType dist roll correct ctx
 
 selectMistakeType ::
     MistakeDistribution ->
@@ -46,3 +44,9 @@ selectMistakeType dist roll correct ctx =
             | roll < dist ^. splitWhenShouldnt && ctx ^. contextCanSplit ->
                 Split
         _ -> correct
+
+rollForMistake :: MistakeProfile -> StdGen -> (Bool, StdGen)
+rollForMistake profile gen =
+    let rate = profile ^. mistakeRate
+        (roll, gen') = randomR (0.0, 1.0) gen
+     in (roll < rate, gen')

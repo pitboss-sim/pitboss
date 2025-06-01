@@ -4,9 +4,9 @@ import Data.Char (isDigit)
 import Data.Map.Strict qualified as Map
 import Data.Text (Text)
 import Data.Text qualified as T
-import Pitboss.Blackjack.Materia.Card (Rank (..))
 import Pitboss.Blackjack.BasicStrategy.Chart.Error
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Materia.Card (Rank (..))
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =

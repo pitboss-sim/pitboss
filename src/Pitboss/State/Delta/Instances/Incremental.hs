@@ -51,12 +51,12 @@ instance Incremental IntentAttrs where
     type Applicable IntentAttrs = Delta 'Intent (PartialUpdate 'Attrs)
 
     apply (DIntentSetType new _) attrs = attrs{_intentAttrsType = new}
-    apply (DIntentSetDetails new _) attrs = attrs{_intentAttrsDetails = new}
+    apply (DIntentSetKind new _) attrs = attrs{_intentAttrsKind = new}
     apply (DIntentSetTimestamp new _) attrs = attrs{_intentAttrsTimestamp = new}
     apply (DIntentSetDescription new _) attrs = attrs{_intentAttrsDescription = new}
 
     describe (DIntentSetType new old) _ = "Set intent type: " ++ show old ++ " → " ++ show new
-    describe (DIntentSetDetails new old) _ = "Set intent details: " ++ show old ++ " → " ++ show new
+    describe (DIntentSetKind new old) _ = "Set intent kind: " ++ show old ++ " → " ++ show new
     describe (DIntentSetTimestamp new old) _ = "Set intent timestamp: " ++ show old ++ " → " ++ show new
     describe (DIntentSetDescription new old) _ = "Set intent description: " ++ show old ++ " → " ++ show new
 

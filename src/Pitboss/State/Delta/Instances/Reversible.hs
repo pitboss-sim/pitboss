@@ -20,7 +20,7 @@ class Reversible d where
 -- DIntent
 instance Reversible (Delta 'Intent (PartialUpdate 'Attrs)) where
     invert (DIntentSetType old new) = Right (DIntentSetType new old)
-    invert (DIntentSetDetails old new) = Right (DIntentSetDetails new old)
+    invert (DIntentSetKind old new) = Right (DIntentSetKind new old)
     invert (DIntentSetTimestamp old new) = Right (DIntentSetTimestamp new old)
     invert (DIntentSetDescription old new) = Right (DIntentSetDescription new old)
 

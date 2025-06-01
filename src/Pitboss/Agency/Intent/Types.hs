@@ -4,6 +4,8 @@
 
 module Pitboss.Agency.Intent.Types where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -25,7 +27,10 @@ data IntentKind
     | IDealerDeal
     | IDealerSettleBout
     | IDealerSettleInsurance
-    deriving (Eq, Show)
+    deriving (Eq, Show, Generic)
+
+instance ToJSON IntentKind
+instance FromJSON IntentKind
 
 data family IntentCtx (k :: IntentKind)
 

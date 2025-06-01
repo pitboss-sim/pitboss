@@ -6,7 +6,8 @@ module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
-import Pitboss.Agency.Archetype.Player
+import Pitboss.Agency.Archetype.Types (SomePlayerArchetype (..))
+import Pitboss.Agency.Intent.Types (IntentKind)
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -68,16 +69,16 @@ iRels :: Lens' (EntityState 'Intent) IntentRels
 iRels f (EIntent a m r) = fmap (EIntent a m) (f r)
 
 iAttrsType :: Lens' IntentAttrs IntentType
-iAttrsType f (IntentAttrs typ details timestamp desc) = fmap (\t -> IntentAttrs t details timestamp desc) (f typ)
+iAttrsType f (IntentAttrs typ kind timestamp desc) = fmap (\t -> IntentAttrs t kind timestamp desc) (f typ)
 
-iAttrsDetails :: Lens' IntentAttrs IntentDetails
-iAttrsDetails f (IntentAttrs typ details timestamp desc) = fmap (\d -> IntentAttrs typ d timestamp desc) (f details)
+iAttrsKind :: Lens' IntentAttrs IntentKind
+iAttrsKind f (IntentAttrs typ kind timestamp desc) = fmap (\k -> IntentAttrs typ k timestamp desc) (f kind)
 
 iAttrsTimestamp :: Lens' IntentAttrs Tick
-iAttrsTimestamp f (IntentAttrs typ details timestamp desc) = fmap (\t -> IntentAttrs typ details t desc) (f timestamp)
+iAttrsTimestamp f (IntentAttrs typ kind timestamp desc) = fmap (\t -> IntentAttrs typ kind t desc) (f timestamp)
 
 iAttrsDescription :: Lens' IntentAttrs String
-iAttrsDescription f (IntentAttrs typ details timestamp desc) = fmap (IntentAttrs typ details timestamp) (f desc)
+iAttrsDescription f (IntentAttrs typ kind timestamp desc) = fmap (IntentAttrs typ kind timestamp) (f desc)
 
 iRelsOriginatingEntity :: Lens' IntentRels OriginatingEntity
 iRelsOriginatingEntity f (IntentRels orig target) = fmap (`IntentRels` target) (f orig)

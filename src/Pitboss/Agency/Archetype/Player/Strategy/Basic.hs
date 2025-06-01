@@ -1,11 +1,11 @@
-module Pitboss.Intent.Generate.Strategy where
+module Pitboss.Agency.Archetype.Player.Strategy.Basic where
 
 import Control.Lens
-import Pitboss.Blackjack.Materia.Card
-import Pitboss.Intent.Context
+import Pitboss.Agency.Archetype.Player.Strategy.Types
 import Pitboss.Blackjack.BasicStrategy.Chart.Interpret
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
 import Pitboss.Blackjack.BasicStrategy.Types
+import Pitboss.Blackjack.Materia.Card
 
 lookupBasicStrategy :: GameContext -> Move
 lookupBasicStrategy ctx =

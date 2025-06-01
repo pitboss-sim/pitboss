@@ -1,10 +1,10 @@
 module Pitboss.Blackjack.BasicStrategy.Chart.Validate where
 
 import Data.Map.Strict (toList)
-import Pitboss.Blackjack.Materia.Card (Rank)
-import Pitboss.Blackjack.Materia.Hand (HandKind)
 import Pitboss.Blackjack.BasicStrategy.Chart.Error (prettyValidationErrors)
 import Pitboss.Blackjack.BasicStrategy.Chart.Types (ChartEntry (..), MoveCode (..))
+import Pitboss.Blackjack.Materia.Card (Rank)
+import Pitboss.Blackjack.Materia.Hand (HandKind)
 
 validateStrategyChart :: [ChartEntry] -> [(HandKind, Maybe Int, Rank)]
 validateStrategyChart =

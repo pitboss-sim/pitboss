@@ -1,5 +1,6 @@
 module Pitboss.Orchestration.DeltaGenSpec (spec) where
 
+import Pitboss.Agency.Intent.Types (IntentKind (..))
 import Pitboss.FSM.PlayerHand
 import Pitboss.Orchestration.DeltaGen
 import Pitboss.State.Delta.Types
@@ -20,7 +21,7 @@ spec = describe "DeltaGen" $ do
                     { _intentAttrs =
                         IntentAttrs
                             { _intentAttrsType = PlayerIntent
-                            , _intentAttrsDetails = PlayerStandIntent
+                            , _intentAttrsKind = IPlayerStand
                             , _intentAttrsTimestamp = Tick 999
                             , _intentAttrsDescription = "Player stands"
                             }

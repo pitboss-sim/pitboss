@@ -3,19 +3,20 @@
 
 module Pitboss.Orchestration.EventGen where
 
+import Pitboss.Agency.Intent.Types (IntentKind (..))
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 
 -- Transform validated intent into event entity
-processIntent :: EntityId 'Intent -> IntentDetails -> Tick -> EntityState 'Event
-processIntent intentId details timestamp =
+processIntent :: EntityId 'Intent -> IntentKind -> Tick -> EntityState 'Event
+processIntent intentId kind timestamp =
     EEvent
         { _eventAttrs =
             EventAttrs
                 { _eventAttrsType = IntentValidated
                 , _eventAttrsDetails = IntentValidatedDetails intentId
                 , _eventAttrsTimestamp = timestamp
-                , _eventAttrsDescription = describeIntent details
+                , _eventAttrsDescription = describeIntent kind
                 }
         , _eventModes = EventModes -- No modes for events currently
         , _eventRels =
@@ -24,14 +25,15 @@ processIntent intentId details timestamp =
                 }
         }
 
-describeIntent :: IntentDetails -> String
+describeIntent :: IntentKind -> String
 describeIntent = \case
-    PlayerHitIntent -> "Player hit intent validated"
-    PlayerStandIntent -> "Player stand intent validated"
-    PlayerDoubleIntent -> "Player double intent validated"
-    PlayerSplitIntent -> "Player split intent validated"
-    PlayerSurrenderIntent -> "Player surrender intent validated"
-    DealerHitIntent -> "Dealer hit intent validated"
-    DealerStandIntent -> "Dealer stand intent validated"
-    TableDealCardIntent handId -> "Table deal card intent validated for hand " ++ show handId
-    TableSettleBoutIntent boutId -> "Table settle bout intent validated for bout " ++ show boutId
+    IPlayerHit -> "Player hit intent validated"
+    IPlayerStand -> "Player stand intent validated"
+    IPlayerDouble -> "Player double intent validated"
+    IPlayerSplit -> "Player split intent validated"
+    IPlayerSurrender -> "Player surrender intent validated"
+    IDealerHit -> "Dealer hit intent validated"
+    IDealerStand -> "Dealer stand intent validated"
+    IDealerDeal -> "Table deal card intent validated"
+    IDealerSettleBout -> "Table settle bout intent validated"
+    IDealerSettleInsurance -> "Table settle insurance intent validated"

@@ -48,8 +48,8 @@ module Pitboss.State.Entity.Types (
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Agency.Archetype.Dealer
-import Pitboss.Agency.Archetype.Player
+import Pitboss.Agency.Archetype.Types (SomeDealerArchetype (..), SomePlayerArchetype (..))
+import Pitboss.Agency.Intent.Types (IntentKind)
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -72,7 +72,7 @@ data family EntityState (k :: EntityKind)
 -- EIntent
 data IntentAttrs = IntentAttrs
     { _intentAttrsType :: IntentType
-    , _intentAttrsDetails :: IntentDetails
+    , _intentAttrsKind :: IntentKind
     , _intentAttrsTimestamp :: Tick
     , _intentAttrsDescription :: String
     }

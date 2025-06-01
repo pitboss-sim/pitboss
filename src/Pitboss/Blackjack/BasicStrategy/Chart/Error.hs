@@ -2,9 +2,9 @@
 
 module Pitboss.Blackjack.BasicStrategy.Chart.Error where
 
+import Pitboss.Blackjack.BasicStrategy.Chart.Types (kindToHandPrefix)
 import Pitboss.Blackjack.Materia.Card (Rank)
 import Pitboss.Blackjack.Materia.Hand (HandKind)
-import Pitboss.Blackjack.BasicStrategy.Chart.Types (kindToHandPrefix)
 import Text.Printf (printf)
 
 data ChartParseErrorReason

@@ -27,7 +27,6 @@ import Data.Aeson.Types (Parser)
 import Data.Map.Strict (Map)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
-import Pitboss.Agency.Intent.Types (IntentKind)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
 import Pitboss.Blackjack.Offering qualified as O
@@ -110,17 +109,13 @@ data instance Delta 'Intent ('PartialUpdate 'Rels)
 
 -- DEvent
 data instance Delta 'Event ('PartialUpdate 'Attrs)
-    = DEventSetType EventType EventType
-    | DEventSetDetails EventDetails EventDetails
-    | DEventSetTimestamp Tick Tick
-    | DEventSetDescription String String
+    -- No setters! Events are immutable
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Event ('PartialUpdate 'Modes)
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Event ('PartialUpdate 'Rels)
-    = DEventSetCausingIntent (EntityId 'Intent) (EntityId 'Intent)
     deriving (Eq, Show, Generic)
 
 -- DBout

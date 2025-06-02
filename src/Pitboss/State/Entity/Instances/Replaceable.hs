@@ -22,26 +22,6 @@ class ReplaceableModes (k :: EntityKind) where
 class ReplaceableRels (k :: EntityKind) where
     replaceRels :: EntityState k -> EntityState k -> EntityState k
 
--- EIntent
-instance ReplaceableAttrs 'Intent where
-    replaceAttrs (EIntent newAttrs _ _) (EIntent _ mo r) = EIntent newAttrs mo r
-
-instance ReplaceableModes 'Intent where
-    replaceModes (EIntent _ newModes _) (EIntent a _ r) = EIntent a newModes r
-
-instance ReplaceableRels 'Intent where
-    replaceRels (EIntent _ _ newRels) (EIntent a mo _) = EIntent a mo newRels
-
--- EEvent
-instance ReplaceableAttrs 'Event where
-    replaceAttrs (EEvent newAttrs _ _) (EEvent _ mo r) = EEvent newAttrs mo r
-
-instance ReplaceableModes 'Event where
-    replaceModes (EEvent _ newModes _) (EEvent a _ r) = EEvent a newModes r
-
-instance ReplaceableRels 'Event where
-    replaceRels (EEvent _ _ newRels) (EEvent a mo _) = EEvent a mo newRels
-
 -- EBout
 instance ReplaceableAttrs 'Bout where
     replaceAttrs (EBout newAttrs _ _) (EBout _ mo r) = EBout newAttrs mo r

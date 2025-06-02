@@ -6,13 +6,13 @@ module Pitboss.Agency.Archetype.Player.Superstitious where
 import Control.Monad.State
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
+import Pitboss.Blackjack.Action
 import Pitboss.Blackjack.BasicStrategy.Chart.Interpret (safeDecisionLookup)
+import Pitboss.Blackjack.BasicStrategy.Chart.Types
 import Pitboss.Blackjack.BasicStrategy.Types (Decision (..), Fallback (..))
-import Pitboss.Blackjack.BasicStrategy.Types qualified as BS
 import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), rank)
 import Pitboss.Blackjack.Materia.Hand (SomeHand (..), extractPairRank, handScore)
 import System.Random
-import Pitboss.Blackjack.BasicStrategy.Chart.Types
 
 getSuperstitiousMove :: ArchetypeConfig 'Superstitious -> GameContext -> State StdGen Move
 getSuperstitiousMove config ctx =
@@ -24,9 +24,9 @@ findApplicableSuperstition :: [Superstition] -> GameContext -> Maybe Move
 findApplicableSuperstition beliefs ctx =
     let hand = _contextPlayerHand ctx
         dealerCard = _contextDealerUpcard ctx
-    in case filter (superstitionApplies hand dealerCard) beliefs of
-        (belief : _) -> Just (superstitionMove belief)
-        [] -> Nothing
+     in case filter (superstitionApplies hand dealerCard) beliefs of
+            (belief : _) -> Just (superstitionMove belief)
+            [] -> Nothing
 
 superstitionApplies :: SomeHand -> Card -> Superstition -> Bool
 superstitionApplies hand (Card dealerRank _) = \case
@@ -57,18 +57,11 @@ lookupFallbackStrategy chart ctx =
         upcard = rank (_contextDealerUpcard ctx)
         offering = _contextOffering ctx
         decision = safeDecisionLookup chart hand upcard offering
-    in decisionToMove decision
+     in decisionToMove decision
 
 decisionToMove :: Decision -> Move
-decisionToMove (Always move) = bsToMove move
-decisionToMove (Prefer primary (Else _)) = bsToMove primary
-
-bsToMove :: BS.Move -> Move
-bsToMove BS.Hit = Hit
-bsToMove BS.Stand = Stand
-bsToMove BS.Double = Double
-bsToMove BS.Split = Split
-bsToMove BS.Surrender = Surrender
+decisionToMove (Always move) = move
+decisionToMove (Prefer primary (Else _)) = primary
 
 isSoftHand :: SomeHand -> Bool
 isSoftHand _ = False

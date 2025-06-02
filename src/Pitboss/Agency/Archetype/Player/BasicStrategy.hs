@@ -1,13 +1,14 @@
 {-# LANGUAGE DataKinds #-}
+
 module Pitboss.Agency.Archetype.Player.BasicStrategy where
 
 import Control.Lens
 import Control.Monad.State
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
+import Pitboss.Blackjack.Action
 import Pitboss.Blackjack.BasicStrategy.Chart.Interpret (safeDecisionLookup)
 import Pitboss.Blackjack.BasicStrategy.Types (Decision (..), Fallback (..))
-import Pitboss.Blackjack.BasicStrategy.Types qualified as BS
 import Pitboss.Blackjack.Materia.Card (rank)
 import System.Random
 
@@ -26,15 +27,8 @@ getBasicStrategyMove config ctx = do
         else pure baseMove
 
 decisionToMove :: Decision -> Move
-decisionToMove (Always move) = bsToMove move
-decisionToMove (Prefer primary (Else _)) = bsToMove primary
-
-bsToMove :: BS.Move -> Move
-bsToMove BS.Hit = Hit
-bsToMove BS.Stand = Stand
-bsToMove BS.Double = Double
-bsToMove BS.Split = Split
-bsToMove BS.Surrender = Surrender
+decisionToMove (Always move) = move
+decisionToMove (Prefer primary (Else _)) = primary
 
 rollForMistake :: MistakeProfile -> State StdGen Bool
 rollForMistake profile = do

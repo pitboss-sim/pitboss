@@ -1,15 +1,9 @@
 module Pitboss.Blackjack.BasicStrategy.Types where
 
+import Pitboss.Blackjack.Action
+
 newtype Fallback
     = Else Move
-    deriving (Eq, Show)
-
-data Move
-    = Hit
-    | Stand
-    | Double
-    | Split
-    | Surrender
     deriving (Eq, Show)
 
 data Decision

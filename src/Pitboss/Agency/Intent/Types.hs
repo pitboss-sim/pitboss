@@ -4,8 +4,6 @@
 
 module Pitboss.Agency.Intent.Types where
 
-import Data.Aeson (FromJSON, ToJSON)
-import GHC.Generics (Generic)
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -15,22 +13,6 @@ import Pitboss.FSM.DealerHand (SomeDealerHandFSM)
 import Pitboss.FSM.DealerRound (DealerRoundFSM)
 import Pitboss.FSM.PlayerHand (SomePlayerHandFSM)
 import Pitboss.State.Types.Core
-
-data IntentKind
-    = IPlayerHit
-    | IPlayerStand
-    | IPlayerDouble
-    | IPlayerSplit
-    | IPlayerSurrender
-    | IDealerHit
-    | IDealerStand
-    | IDealerDeal
-    | IDealerSettleBout
-    | IDealerSettleInsurance
-    deriving (Eq, Show, Generic)
-
-instance ToJSON IntentKind
-instance FromJSON IntentKind
 
 data family IntentCtx (k :: IntentKind)
 

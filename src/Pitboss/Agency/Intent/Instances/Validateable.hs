@@ -11,6 +11,7 @@ import Pitboss.Blackjack.Play (canDoubleSomeHand, isBusted)
 import Pitboss.FSM.DealerHand (DealerHandFSM (..), SomeDealerHandFSM (..))
 import Pitboss.FSM.DealerHand.Transition (dealerShouldHit)
 import Pitboss.FSM.PlayerHand (PlayerHandFSM (..), SomePlayerHandFSM (..), isHandTerminal)
+import Pitboss.State.Types.Core
 
 class Validateable (k :: IntentKind) where
     validate :: IntentCtx k -> Either String ()

@@ -6,8 +6,7 @@ module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
-import Pitboss.Agency.Archetype.Types (SomePlayerArchetype (..))
-import Pitboss.Agency.Intent.Types (IntentKind)
+import Pitboss.Agency.Archetype.Types (SomeDealerArchetype, SomePlayerArchetype (..))
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips (Chips)
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -58,59 +57,6 @@ bRelsTable f (BoutRels player dealer shoe table round) = fmap (\t -> BoutRels pl
 bRelsTableShoe :: Lens' BoutRels (EntityId 'TableShoe)
 bRelsTableShoe f (BoutRels player dealer shoe table round) = fmap (\s -> BoutRels player dealer s table round) (f shoe)
 
--- EIntent
-iAttrs :: Lens' (EntityState 'Intent) IntentAttrs
-iAttrs f (EIntent a m r) = fmap (\a' -> EIntent a' m r) (f a)
-
-iModes :: Lens' (EntityState 'Intent) IntentModes
-iModes f (EIntent a m r) = fmap (\m' -> EIntent a m' r) (f m)
-
-iRels :: Lens' (EntityState 'Intent) IntentRels
-iRels f (EIntent a m r) = fmap (EIntent a m) (f r)
-
-iAttrsType :: Lens' IntentAttrs IntentType
-iAttrsType f (IntentAttrs typ kind timestamp desc) = fmap (\t -> IntentAttrs t kind timestamp desc) (f typ)
-
-iAttrsKind :: Lens' IntentAttrs IntentKind
-iAttrsKind f (IntentAttrs typ kind timestamp desc) = fmap (\k -> IntentAttrs typ k timestamp desc) (f kind)
-
-iAttrsTimestamp :: Lens' IntentAttrs Tick
-iAttrsTimestamp f (IntentAttrs typ kind timestamp desc) = fmap (\t -> IntentAttrs typ kind t desc) (f timestamp)
-
-iAttrsDescription :: Lens' IntentAttrs String
-iAttrsDescription f (IntentAttrs typ kind timestamp desc) = fmap (IntentAttrs typ kind timestamp) (f desc)
-
-iRelsOriginatingEntity :: Lens' IntentRels OriginatingEntity
-iRelsOriginatingEntity f (IntentRels orig target) = fmap (`IntentRels` target) (f orig)
-
-iRelsTargetBout :: Lens' IntentRels (Maybe (EntityId 'Bout))
-iRelsTargetBout f (IntentRels orig target) = fmap (IntentRels orig) (f target)
-
--- EEvent
-eAttrs :: Lens' (EntityState 'Event) EventAttrs
-eAttrs f (EEvent a m r) = fmap (\a' -> EEvent a' m r) (f a)
-
-eModes :: Lens' (EntityState 'Event) EventModes
-eModes f (EEvent a m r) = fmap (\m' -> EEvent a m' r) (f m)
-
-eRels :: Lens' (EntityState 'Event) EventRels
-eRels f (EEvent a m r) = fmap (EEvent a m) (f r)
-
-eAttrsType :: Lens' EventAttrs EventType
-eAttrsType f (EventAttrs typ details timestamp desc) = fmap (\t -> EventAttrs t details timestamp desc) (f typ)
-
-eAttrsDetails :: Lens' EventAttrs EventDetails
-eAttrsDetails f (EventAttrs typ details timestamp desc) = fmap (\d -> EventAttrs typ d timestamp desc) (f details)
-
-eAttrsTimestamp :: Lens' EventAttrs Tick
-eAttrsTimestamp f (EventAttrs typ details timestamp desc) = fmap (\t -> EventAttrs typ details t desc) (f timestamp)
-
-eAttrsDescription :: Lens' EventAttrs String
-eAttrsDescription f (EventAttrs typ details timestamp desc) = fmap (EventAttrs typ details timestamp) (f desc)
-
-eRelsCausingIntent :: Lens' EventRels (EntityId 'Intent)
-eRelsCausingIntent f (EventRels intent) = fmap EventRels (f intent)
-
 -- EDealer
 dAttrs :: Lens' (EntityState 'Dealer) DealerAttrs
 dAttrs f (EDealer a m r) = fmap (\a' -> EDealer a' m r) (f a)
@@ -120,6 +66,9 @@ dModes f (EDealer a m r) = fmap (\m' -> EDealer a m' r) (f m)
 
 dRels :: Lens' (EntityState 'Dealer) DealerRels
 dRels f (EDealer a m r) = fmap (EDealer a m) (f r)
+
+dAttrsArchetype :: Lens' DealerAttrs SomeDealerArchetype
+dAttrsArchetype f (DealerAttrs name archetype) = fmap (DealerAttrs name) (f archetype)
 
 dAttrsName :: Lens' DealerAttrs String
 dAttrsName f (DealerAttrs name archetype) = fmap (`DealerAttrs` archetype) (f name)

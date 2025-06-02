@@ -22,18 +22,7 @@ data GameContext = GameContext
     }
     deriving (Eq, Show, Generic)
 
-data Move
-    = Hit
-    | Stand
-    | Double
-    | Split
-    | Surrender
-    deriving (Eq, Show, Generic)
-
 makeLenses ''GameContext
 
 instance ToJSON GameContext
 instance FromJSON GameContext
-
-instance ToJSON Move
-instance FromJSON Move

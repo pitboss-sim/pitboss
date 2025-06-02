@@ -1,5 +1,5 @@
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Pitboss.Agency.Archetype.Dealer.Rules where
 
@@ -18,9 +18,9 @@ data DealerRequiredAction
 determineRequiredDealerAction :: GameContext -> SomeHand -> DealerRequiredAction
 determineRequiredDealerAction ctx dealerHand =
     let rules = gameRuleSet (_contextOffering ctx)
-    in if dealerShouldHit rules dealerHand
-        then MustHit
-        else MustStand
+     in if dealerShouldHit rules dealerHand
+            then MustHit
+            else MustStand
 
 dealerShouldHit :: GameRuleSet -> SomeHand -> Bool
 dealerShouldHit ruleset (SomeHand hand) = case witness hand of
@@ -30,7 +30,7 @@ dealerShouldHit ruleset (SomeHand hand) = case witness hand of
     HardWitness -> handScore (SomeHand hand) < 17
     SoftWitness ->
         let score = handScore (SomeHand hand)
-        in score < 17 || (score == 17 && isH17 ruleset)
+         in score < 17 || (score == 17 && isH17 ruleset)
     PairWitness -> handScore (SomeHand hand) < 17
 
 applyDealerArchetypeVariation :: SomeDealerArchetype -> DealerRequiredAction -> IO ()

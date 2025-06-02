@@ -1,55 +1,15 @@
-{-# HLINT ignore "Use newtype instead of data" #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.State.Entity.Types (
-    EntityState (..),
-    IntentAttrs (..),
-    IntentModes (..),
-    IntentRels (..),
-    EventAttrs (..),
-    EventModes (..),
-    EventRels (..),
-    BoutAttrs (..),
-    BoutModes (..),
-    BoutRels (..),
-    DealerAttrs (..),
-    DealerModes (..),
-    DealerRels (..),
-    DealerHandAttrs (..),
-    DealerHandModes (..),
-    DealerHandRels (..),
-    DealerRoundAttrs (..),
-    DealerRoundModes (..),
-    DealerRoundRels (..),
-    OfferingAttrs (..),
-    OfferingModes (..),
-    OfferingRels (..),
-    PlayerAttrs (..),
-    PlayerModes (..),
-    PlayerRels (..),
-    PlayerHandAttrs (..),
-    PlayerHandModes (..),
-    PlayerHandRels (..),
-    PlayerSpotAttrs (..),
-    PlayerSpotModes (..),
-    PlayerSpotRels (..),
-    TableAttrs (..),
-    TableModes (..),
-    TableRels (..),
-    TableShoeAttrs (..),
-    TableShoeModes (..),
-    TableShoeRels (..),
-) where
+{-# HLINT ignore "Use newtype instead of data" #-}
+
+module Pitboss.State.Entity.Types where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
 import Pitboss.Agency.Archetype.Types (SomeDealerArchetype (..), SomePlayerArchetype (..))
-import Pitboss.Agency.Intent.Types (IntentKind)
 import Pitboss.Blackjack.Materia.Card (Card)
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand (SomeHand)
@@ -69,54 +29,34 @@ import Pitboss.State.Types.FiniteMap.Occupancy
 
 data family EntityState (k :: EntityKind)
 
--- EIntent
-data IntentAttrs = IntentAttrs
-    { _intentAttrsType :: IntentType
-    , _intentAttrsKind :: IntentKind
-    , _intentAttrsTimestamp :: Tick
-    , _intentAttrsDescription :: String
-    }
-    deriving (Eq, Show, Generic)
+-- Witness for EntityKind
+data EntityKindWitness (k :: EntityKind) where
+    BoutWitness :: EntityKindWitness 'Bout
+    PlayerWitness :: EntityKindWitness 'Player
+    DealerWitness :: EntityKindWitness 'Dealer
+    PlayerHandWitness :: EntityKindWitness 'PlayerHand
+    DealerHandWitness :: EntityKindWitness 'DealerHand
+    PlayerSpotWitness :: EntityKindWitness 'PlayerSpot
+    DealerRoundWitness :: EntityKindWitness 'DealerRound
+    TableWitness :: EntityKindWitness 'Table
+    TableShoeWitness :: EntityKindWitness 'TableShoe
+    OfferingWitness :: EntityKindWitness 'Offering
 
-data IntentModes = IntentModes
-    deriving (Eq, Show, Generic)
+instance Show (EntityKindWitness k) where
+    show BoutWitness = "BoutWitness"
+    show PlayerWitness = "PlayerWitness"
+    show DealerWitness = "DealerWitness"
+    show PlayerHandWitness = "PlayerHandWitness"
+    show DealerHandWitness = "DealerHandWitness"
+    show PlayerSpotWitness = "PlayerSpotWitness"
+    show DealerRoundWitness = "DealerRoundWitness"
+    show TableWitness = "TableWitness"
+    show TableShoeWitness = "TableShoeWitness"
+    show OfferingWitness = "OfferingWitness"
 
-data IntentRels = IntentRels
-    { _intentRelsOriginatingEntity :: OriginatingEntity
-    , _intentRelsTargetBout :: Maybe (EntityId 'Bout)
-    }
-    deriving (Eq, Show, Generic)
-
-data instance EntityState 'Intent = EIntent
-    { _intentAttrs :: IntentAttrs
-    , _intentModes :: IntentModes
-    , _intentRels :: IntentRels
-    }
-    deriving (Eq, Show, Generic)
-
--- EEvent
-data EventAttrs = EventAttrs
-    { _eventAttrsType :: EventType
-    , _eventAttrsDetails :: EventDetails
-    , _eventAttrsTimestamp :: Tick
-    , _eventAttrsDescription :: String
-    }
-    deriving (Eq, Show, Generic)
-
-data EventModes = EventModes
-    deriving (Eq, Show, Generic)
-
-data EventRels = EventRels
-    { _eventRelsCausingIntent :: EntityId 'Intent
-    }
-    deriving (Eq, Show, Generic)
-
-data instance EntityState 'Event = EEvent
-    { _eventAttrs :: EventAttrs
-    , _eventModes :: EventModes
-    , _eventRels :: EventRels
-    }
-    deriving (Eq, Show, Generic)
+-- HasWitness class for extracting witnesses from entity states
+class HasWitness (k :: EntityKind) where
+    witness :: EntityState k -> EntityKindWitness k
 
 -- EBout
 data BoutAttrs = BoutAttrs
@@ -143,7 +83,10 @@ data instance EntityState 'Bout = EBout
     , _boutModes :: BoutModes
     , _boutRels :: BoutRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'Bout where
+    witness _ = BoutWitness
 
 -- EDealer
 data DealerAttrs = DealerAttrs
@@ -171,7 +114,10 @@ data instance EntityState 'Dealer = EDealer
     , _dModes :: DealerModes
     , _dRels :: DealerRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'Dealer where
+    witness _ = DealerWitness
 
 -- EDealerHand
 data DealerHandAttrs = DealerHandAttrs
@@ -194,7 +140,10 @@ data instance EntityState 'DealerHand = EDealerHand
     , _dhModes :: DealerHandModes
     , _dhRels :: DealerHandRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'DealerHand where
+    witness _ = DealerHandWitness
 
 -- EDealerRound
 data DealerRoundAttrs = DealerRoundAttrs
@@ -216,7 +165,10 @@ data instance EntityState 'DealerRound = EDealerRound
     , _drModes :: DealerRoundModes
     , _drRels :: DealerRoundRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'DealerRound where
+    witness _ = DealerRoundWitness
 
 -- EOffering
 data OfferingAttrs = OfferingAttrs
@@ -235,7 +187,10 @@ data instance EntityState 'Offering = EOffering
     , _oModes :: OfferingModes
     , _oRels :: OfferingRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'Offering where
+    witness _ = OfferingWitness
 
 -- EPlayer
 data PlayerAttrs = PlayerAttrs
@@ -260,7 +215,10 @@ data instance EntityState 'Player = EPlayer
     , _pModes :: PlayerModes
     , _pRels :: PlayerRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'Player where
+    witness _ = PlayerWitness
 
 -- EPlayerHand
 data PlayerHandAttrs = PlayerHandAttrs
@@ -288,7 +246,10 @@ data instance EntityState 'PlayerHand = EPlayerHand
     , _phModes :: PlayerHandModes
     , _phRels :: PlayerHandRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'PlayerHand where
+    witness _ = PlayerHandWitness
 
 -- EPlayerSpot
 data PlayerSpotAttrs = PlayerSpotAttrs
@@ -314,7 +275,10 @@ data instance EntityState 'PlayerSpot = EPlayerSpot
     , _psModes :: PlayerSpotModes
     , _psRels :: PlayerSpotRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'PlayerSpot where
+    witness _ = PlayerSpotWitness
 
 -- ETable
 data TableAttrs = TableAttrs
@@ -339,7 +303,10 @@ data instance EntityState 'Table = ETable
     , _tModes :: TableModes
     , _tRels :: TableRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
+
+instance HasWitness 'Table where
+    witness _ = TableWitness
 
 -- ETableShoe
 data TableShoeAttrs = TableShoeAttrs
@@ -361,26 +328,12 @@ data instance EntityState 'TableShoe = ETableShoe
     , _tsModes :: TableShoeModes
     , _tsRels :: TableShoeRels
     }
-    deriving (Eq, Show, Generic)
+    deriving (Eq, Generic)
 
-instance ToJSON IntentAttrs
-instance FromJSON IntentAttrs
-instance ToJSON IntentModes
-instance FromJSON IntentModes
-instance ToJSON IntentRels
-instance FromJSON IntentRels
-instance ToJSON (EntityState 'Intent)
-instance FromJSON (EntityState 'Intent)
+instance HasWitness 'TableShoe where
+    witness _ = TableShoeWitness
 
-instance ToJSON EventAttrs
-instance FromJSON EventAttrs
-instance ToJSON EventModes
-instance FromJSON EventModes
-instance ToJSON EventRels
-instance FromJSON EventRels
-instance ToJSON (EntityState 'Event)
-instance FromJSON (EntityState 'Event)
-
+-- JSON instances (unchanged)
 instance ToJSON BoutAttrs
 instance FromJSON BoutAttrs
 instance ToJSON BoutModes
@@ -470,3 +423,43 @@ instance ToJSON TableShoeRels
 instance FromJSON TableShoeRels
 instance ToJSON (EntityState 'TableShoe)
 instance FromJSON (EntityState 'TableShoe)
+
+instance Show (EntityState 'Bout) where
+    show (EBout attrs modes rels) =
+        "EBout " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'Dealer) where
+    show (EDealer attrs modes rels) =
+        "EDealer " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'DealerHand) where
+    show (EDealerHand attrs modes rels) =
+        "EDealerHand " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'DealerRound) where
+    show (EDealerRound attrs modes rels) =
+        "EDealerRound " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'Offering) where
+    show (EOffering attrs modes rels) =
+        "EOffering " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'Player) where
+    show (EPlayer attrs modes rels) =
+        "EPlayer " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'PlayerHand) where
+    show (EPlayerHand attrs modes rels) =
+        "EPlayerHand " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'PlayerSpot) where
+    show (EPlayerSpot attrs modes rels) =
+        "EPlayerSpot " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'Table) where
+    show (ETable attrs modes rels) =
+        "ETable " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
+
+instance Show (EntityState 'TableShoe) where
+    show (ETableShoe attrs modes rels) =
+        "ETableShoe " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels

@@ -25,7 +25,6 @@ library
                       Pitboss.Agency.Archetype.Player.Superstitious
                       Pitboss.Agency.Archetype.Types
                       Pitboss.Agency.Intent.Generate
-                      Pitboss.Agency.Intent.Instances.Buildable
                       Pitboss.Agency.Intent.Instances.Validateable
                       Pitboss.Agency.Intent.Types
                       Pitboss.Agency.Types
@@ -37,6 +36,7 @@ library
                       Pitboss.Blackjack.BasicStrategy.Chart.Types
                       Pitboss.Blackjack.BasicStrategy.Chart.Validate
                       Pitboss.Blackjack.BasicStrategy.Types
+                      Pitboss.Blackjack.Events
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
                       Pitboss.Blackjack.Materia.Deck
@@ -90,8 +90,9 @@ library
                       Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types
                       Pitboss.FSM.Types.Transitionable
-                      Pitboss.Orchestration.DeltaGen
-                      Pitboss.Orchestration.EventGen
+                      Pitboss.Sim.Engine.DeltaGen
+                      Pitboss.Sim.Engine.Runtime
+                      Pitboss.Sim.Types
                       Pitboss.State.TickCache
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible
@@ -101,10 +102,13 @@ library
                       Pitboss.State.Entity.Lenses
                       Pitboss.State.Entity.Types
                       Pitboss.State.Registry
+                      Pitboss.State.Sim
                       Pitboss.State.Timeline
                       Pitboss.State.Timeline.Query
                       Pitboss.State.Timeline.Reconstruction
                       Pitboss.State.Trace
+                      Pitboss.State.Trace.Ops
+                      Pitboss.State.Trace.Types
                       Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
@@ -141,9 +145,10 @@ executable pitboss
 test-suite pitboss-test
     import:           warnings
     default-language: GHC2021
-    other-modules:    Pitboss.Integration.TimelineSpec
+    other-modules:    Pitboss.TestHelpers
+                      Pitboss.Integration.BoutFlowSpec
+                      Pitboss.Integration.TimelineSpec
                       Pitboss.Orchestration.DeltaGenSpec
-                      Pitboss.Orchestration.EventGenSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
@@ -151,6 +156,7 @@ test-suite pitboss-test
     build-depends:
         base,
         insert-ordered-containers,
+        lens,
         mtl,
         pitboss,
         hspec

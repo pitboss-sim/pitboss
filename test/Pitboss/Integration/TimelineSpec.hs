@@ -69,8 +69,6 @@ spec = describe "Timeline Integration" $ do
             -- Create TickCache at updateTick
             cache =
                 populateTickCache
-                    mempty -- empty intent registry
-                    mempty -- empty event registry
                     mempty -- empty bout registry
                     mempty -- empty player registry
                     registry -- our hand registry with the delta

@@ -148,8 +148,6 @@ mkTickCache tick =
         }
 
 populateTickCache ::
-    Registry 'Intent (SomeDelta 'Intent) ->
-    Registry 'Event (SomeDelta 'Event) ->
     Registry 'Bout (SomeDelta 'Bout) ->
     Registry 'Player (SomeDelta 'Player) ->
     Registry 'PlayerHand (SomeDelta 'PlayerHand) ->
@@ -162,7 +160,7 @@ populateTickCache ::
     Registry 'TableShoe (SomeDelta 'TableShoe) ->
     Tick ->
     TickCache
-populateTickCache intentReg eventReg boutReg playerReg handReg spotReg dealerReg dealerHandReg dealerRoundReg offeringReg tableReg tableShoeReg tick =
+populateTickCache boutReg playerReg handReg spotReg dealerReg dealerHandReg dealerRoundReg offeringReg tableReg tableShoeReg tick =
     let baseTickCache = mkTickCache tick
 
         populateFromRegistry ::
@@ -180,8 +178,6 @@ populateTickCache intentReg eventReg boutReg playerReg handReg spotReg dealerReg
                         Nothing -> []
              in setter cache (getter cache <> IHM.fromList entities)
      in baseTickCache
-            & populateFromRegistry intentReg _cacheIntent (\c m -> c{_cacheIntent = m})
-            & populateFromRegistry eventReg _cacheEvent (\c m -> c{_cacheEvent = m})
             & populateFromRegistry boutReg _cacheBout (\c m -> c{_cacheBout = m})
             & populateFromRegistry playerReg _cachePlayer (\c m -> c{_cachePlayer = m})
             & populateFromRegistry handReg _cachePlayerHand (\c m -> c{_cachePlayerHand = m})

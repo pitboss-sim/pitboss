@@ -6,6 +6,7 @@ import Control.Monad.State
 import Data.Map qualified as Map
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
+import Pitboss.Blackjack.Action
 import Pitboss.Blackjack.Materia.Hand (handScore)
 import System.Random
 
@@ -19,7 +20,7 @@ getAdvantageMove config state' ctx = do
 calculateBaseMove :: GameContext -> Move
 calculateBaseMove ctx =
     let score = handScore (_contextPlayerHand ctx)
-    in if score < 17 then Hit else Stand
+     in if score < 17 then Hit else Stand
 
 applyDeviations :: DeviationChart -> Int -> Move -> GameContext -> Move
 applyDeviations (DeviationChart deviationMap) trueCount baseMove ctx =
@@ -33,10 +34,10 @@ applyDeviations (DeviationChart deviationMap) trueCount baseMove ctx =
 findApplicableDeviation :: [Deviation] -> GameContext -> Maybe Deviation
 findApplicableDeviation deviations ctx =
     let playerTotal = handScore (_contextPlayerHand ctx)
-    in listToMaybe [d | d <- deviations, devPlayerTotal d == playerTotal]
+     in listToMaybe [d | d <- deviations, devPlayerTotal d == playerTotal]
   where
     listToMaybe [] = Nothing
-    listToMaybe (x:_) = Just x
+    listToMaybe (x : _) = Just x
 
 applyDeviation :: Deviation -> Move -> Move
 applyDeviation (Deviation _ _ action) _ =

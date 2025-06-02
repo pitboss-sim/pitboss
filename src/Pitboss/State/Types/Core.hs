@@ -2,8 +2,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
 
 module Pitboss.State.Types.Core (
+    IntentKind (..),
+    HandTarget (..),
     EntityKind (..),
     EntityStatePart (..),
     EntityId (..),
@@ -12,8 +17,6 @@ module Pitboss.State.Types.Core (
     EntityRef (..),
     Tick (..),
     IntentType (..),
-    EventType (..),
-    EventDetails (..),
     OriginatingEntity (..),
     CardIx,
     CardState (..),
@@ -40,12 +43,8 @@ import Data.Word (Word64)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
-import Pitboss.Blackjack.Materia.Card (Card)
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.FSM.Bout (SomeBoutFSM)
 import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
 import System.Random (Random (..), RandomGen)
-import Pitboss.Agency.Archetype.Types
 
 data EntityKind
     = Intent
@@ -74,8 +73,8 @@ data IntentType
     deriving (Eq, Show, Generic)
 
 data OriginatingEntity
-    = FromPlayer (EntityId 'Player) SomePlayerArchetype
-    | FromDealer (EntityId 'Dealer) SomeDealerArchetype
+    = FromPlayer (EntityId 'Player)
+    | FromDealer (EntityId 'Dealer)
     | FromTable (EntityId 'Table)
     deriving (Eq, Show, Generic)
 
@@ -84,27 +83,26 @@ instance FromJSON IntentType
 instance ToJSON OriginatingEntity
 instance FromJSON OriginatingEntity
 
-data EventType
-    = CardDealt
-    | HandScored
-    | BoutTransitioned
-    | IntentValidated
-    | IntentRejected
+data IntentKind
+    = IPlayerHit
+    | IPlayerStand
+    | IPlayerDouble
+    | IPlayerSplit
+    | IPlayerSurrender
+    | IDealerHit
+    | IDealerStand
+    | IDealerDeal
+    | IDealerSettleBout
+    | IDealerSettleInsurance
     deriving (Eq, Show, Generic)
 
-instance ToJSON EventType
-instance FromJSON EventType
+instance ToJSON IntentKind
+instance FromJSON IntentKind
 
-data EventDetails
-    = CardDealtDetails Card (EntityId 'PlayerHand)
-    | HandScoredDetails SomeHand Int
-    | BoutTransitionedDetails SomeBoutFSM SomeBoutFSM
-    | IntentValidatedDetails (EntityId 'Intent)
-    | IntentRejectedDetails (EntityId 'Intent) String
-    deriving (Eq, Show, Generic)
-
-instance ToJSON EventDetails
-instance FromJSON EventDetails
+data HandTarget
+    = ToPlayer (EntityId 'PlayerHand)
+    | ToDealer (EntityId 'DealerHand)
+    deriving (Show, Eq)
 
 -- card state minutiae
 

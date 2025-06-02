@@ -101,8 +101,14 @@ mkTestDealer _dealerId name =
         , _dRels = DealerRels Nothing Nothing Nothing
         }
 
-mkTestPlayerHand :: EntityId 'PlayerHand -> EntityId 'PlayerSpot -> EntityId 'DealerRound -> EntityId 'Player -> EntityState 'PlayerHand
-mkTestPlayerHand _handId spotId roundId playerId =
+mkTestPlayerHand ::
+    EntityId 'PlayerHand ->
+    EntityId 'PlayerSpot ->
+    EntityId 'DealerRound ->
+    EntityId 'Player ->
+    EntityId 'Bout ->
+    EntityState 'PlayerHand
+mkTestPlayerHand _handId spotId roundId playerId boutId =
     EPlayerHand
         { _phAttrs =
             PlayerHandAttrs
@@ -112,7 +118,7 @@ mkTestPlayerHand _handId spotId roundId playerId =
                 , _phAttrsHandIx = 0
                 }
         , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
-        , _phRels = PlayerHandRels spotId roundId playerId
+        , _phRels = PlayerHandRels spotId roundId playerId boutId
         }
 
 mkTestDealerHand :: EntityId 'DealerHand -> EntityId 'DealerRound -> EntityId 'Dealer -> EntityState 'DealerHand
@@ -129,4 +135,30 @@ mkTestBout _boutId playerHandId dealerHandId shoeId tableId roundId =
         { _boutAttrs = BoutAttrs Nothing
         , _boutModes = BoutModes (SomeBoutFSM AwaitingFirstCardFSM)
         , _boutRels = BoutRels playerHandId dealerHandId shoeId tableId roundId
+        }
+
+createPlayerHandForBout ::
+    EntityId 'PlayerHand ->
+    EntityId 'PlayerSpot ->
+    EntityId 'DealerRound ->
+    EntityId 'Player ->
+    EntityId 'Bout ->
+    Chips ->
+    EntityState 'PlayerHand
+createPlayerHandForBout handId spotId roundId playerId boutId wager =
+    EPlayerHand
+        { _phAttrs =
+            PlayerHandAttrs
+                { _phAttrsHand = characterize []
+                , _phAttrsOriginalBet = wager
+                , _phAttrsSplitDepth = 0
+                , _phAttrsHandIx = 0
+                }
+        , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
+        , _phRels = PlayerHandRels
+            { _phRelsBelongsToPlayerSpot = spotId
+            , _phRelsBelongsToDealerRound = roundId
+            , _phRelsOwnedByPlayer = playerId
+            , _phRelsBelongsToBout = boutId
+            }
         }

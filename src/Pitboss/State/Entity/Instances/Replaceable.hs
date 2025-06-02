@@ -22,102 +22,142 @@ class ReplaceableModes (k :: EntityKind) where
 class ReplaceableRels (k :: EntityKind) where
     replaceRels :: EntityState k -> EntityState k -> EntityState k
 
--- EBout
+replaceBoutPart :: EntityStatePart -> EntityState 'Bout -> EntityState 'Bout -> EntityState 'Bout
+replaceBoutPart Attrs (EBout newAttrs _ _) (EBout _ oldModes oldRels) = EBout newAttrs oldModes oldRels
+replaceBoutPart Modes (EBout _ newModes _) (EBout oldAttrs _ oldRels) = EBout oldAttrs newModes oldRels
+replaceBoutPart Rels  (EBout _ _ newRels) (EBout oldAttrs oldModes _) = EBout oldAttrs oldModes newRels
+
+replaceDealerPart :: EntityStatePart -> EntityState 'Dealer -> EntityState 'Dealer -> EntityState 'Dealer
+replaceDealerPart Attrs (EDealer newAttrs _ _) (EDealer _ oldModes oldRels) = EDealer newAttrs oldModes oldRels
+replaceDealerPart Modes (EDealer _ newModes _) (EDealer oldAttrs _ oldRels) = EDealer oldAttrs newModes oldRels
+replaceDealerPart Rels  (EDealer _ _ newRels) (EDealer oldAttrs oldModes _) = EDealer oldAttrs oldModes newRels
+
+replaceDealerHandPart :: EntityStatePart -> EntityState 'DealerHand -> EntityState 'DealerHand -> EntityState 'DealerHand
+replaceDealerHandPart Attrs (EDealerHand newAttrs _ _) (EDealerHand _ oldModes oldRels) = EDealerHand newAttrs oldModes oldRels
+replaceDealerHandPart Modes (EDealerHand _ newModes _) (EDealerHand oldAttrs _ oldRels) = EDealerHand oldAttrs newModes oldRels
+replaceDealerHandPart Rels  (EDealerHand _ _ newRels) (EDealerHand oldAttrs oldModes _) = EDealerHand oldAttrs oldModes newRels
+
+replaceDealerRoundPart :: EntityStatePart -> EntityState 'DealerRound -> EntityState 'DealerRound -> EntityState 'DealerRound
+replaceDealerRoundPart Attrs (EDealerRound newAttrs _ _) (EDealerRound _ oldModes oldRels) = EDealerRound newAttrs oldModes oldRels
+replaceDealerRoundPart Modes (EDealerRound _ newModes _) (EDealerRound oldAttrs _ oldRels) = EDealerRound oldAttrs newModes oldRels
+replaceDealerRoundPart Rels  (EDealerRound _ _ newRels) (EDealerRound oldAttrs oldModes _) = EDealerRound oldAttrs oldModes newRels
+
+replaceOfferingPart :: EntityStatePart -> EntityState 'Offering -> EntityState 'Offering -> EntityState 'Offering
+replaceOfferingPart Attrs (EOffering newAttrs _ _) (EOffering _ oldModes oldRels) = EOffering newAttrs oldModes oldRels
+replaceOfferingPart Modes (EOffering _ newModes _) (EOffering oldAttrs _ oldRels) = EOffering oldAttrs newModes oldRels
+replaceOfferingPart Rels  (EOffering _ _ newRels) (EOffering oldAttrs oldModes _) = EOffering oldAttrs oldModes newRels
+
+replacePlayerPart :: EntityStatePart -> EntityState 'Player -> EntityState 'Player -> EntityState 'Player
+replacePlayerPart Attrs (EPlayer newAttrs _ _) (EPlayer _ oldModes oldRels) = EPlayer newAttrs oldModes oldRels
+replacePlayerPart Modes (EPlayer _ newModes _) (EPlayer oldAttrs _ oldRels) = EPlayer oldAttrs newModes oldRels
+replacePlayerPart Rels  (EPlayer _ _ newRels) (EPlayer oldAttrs oldModes _) = EPlayer oldAttrs oldModes newRels
+
+replacePlayerHandPart :: EntityStatePart -> EntityState 'PlayerHand -> EntityState 'PlayerHand -> EntityState 'PlayerHand
+replacePlayerHandPart Attrs (EPlayerHand newAttrs _ _) (EPlayerHand _ oldModes oldRels) = EPlayerHand newAttrs oldModes oldRels
+replacePlayerHandPart Modes (EPlayerHand _ newModes _) (EPlayerHand oldAttrs _ oldRels) = EPlayerHand oldAttrs newModes oldRels
+replacePlayerHandPart Rels  (EPlayerHand _ _ newRels) (EPlayerHand oldAttrs oldModes _) = EPlayerHand oldAttrs oldModes newRels
+
+replacePlayerSpotPart :: EntityStatePart -> EntityState 'PlayerSpot -> EntityState 'PlayerSpot -> EntityState 'PlayerSpot
+replacePlayerSpotPart Attrs (EPlayerSpot newAttrs _ _) (EPlayerSpot _ oldModes oldRels) = EPlayerSpot newAttrs oldModes oldRels
+replacePlayerSpotPart Modes (EPlayerSpot _ newModes _) (EPlayerSpot oldAttrs _ oldRels) = EPlayerSpot oldAttrs newModes oldRels
+replacePlayerSpotPart Rels  (EPlayerSpot _ _ newRels) (EPlayerSpot oldAttrs oldModes _) = EPlayerSpot oldAttrs oldModes newRels
+
+replaceTablePart :: EntityStatePart -> EntityState 'Table -> EntityState 'Table -> EntityState 'Table
+replaceTablePart Attrs (ETable newAttrs _ _) (ETable _ oldModes oldRels) = ETable newAttrs oldModes oldRels
+replaceTablePart Modes (ETable _ newModes _) (ETable oldAttrs _ oldRels) = ETable oldAttrs newModes oldRels
+replaceTablePart Rels  (ETable _ _ newRels) (ETable oldAttrs oldModes _) = ETable oldAttrs oldModes newRels
+
+replaceTableShoePart :: EntityStatePart -> EntityState 'TableShoe -> EntityState 'TableShoe -> EntityState 'TableShoe
+replaceTableShoePart Attrs (ETableShoe newAttrs _ _) (ETableShoe _ oldModes oldRels) = ETableShoe newAttrs oldModes oldRels
+replaceTableShoePart Modes (ETableShoe _ newModes _) (ETableShoe oldAttrs _ oldRels) = ETableShoe oldAttrs newModes oldRels
+replaceTableShoePart Rels  (ETableShoe _ _ newRels) (ETableShoe oldAttrs oldModes _) = ETableShoe oldAttrs oldModes newRels
+
 instance ReplaceableAttrs 'Bout where
-    replaceAttrs (EBout newAttrs _ _) (EBout _ mo r) = EBout newAttrs mo r
+    replaceAttrs = replaceBoutPart Attrs
 
 instance ReplaceableModes 'Bout where
-    replaceModes (EBout _ newModes _) (EBout a _ r) = EBout a newModes r
+    replaceModes = replaceBoutPart Modes
 
 instance ReplaceableRels 'Bout where
-    replaceRels (EBout _ _ newRels) (EBout a mo _) = EBout a mo newRels
+    replaceRels = replaceBoutPart Rels
 
--- EDealer
 instance ReplaceableAttrs 'Dealer where
-    replaceAttrs (EDealer newAttrs _ _) (EDealer _ mo r) = EDealer newAttrs mo r
+    replaceAttrs = replaceDealerPart Attrs
 
 instance ReplaceableModes 'Dealer where
-    replaceModes (EDealer _ newModes _) (EDealer a _ r) = EDealer a newModes r
+    replaceModes = replaceDealerPart Modes
 
 instance ReplaceableRels 'Dealer where
-    replaceRels (EDealer _ _ newRels) (EDealer a mo _) = EDealer a mo newRels
+    replaceRels = replaceDealerPart Rels
 
--- EDealerHand
 instance ReplaceableAttrs 'DealerHand where
-    replaceAttrs (EDealerHand newAttrs _ _) (EDealerHand _ mo r) = EDealerHand newAttrs mo r
+    replaceAttrs = replaceDealerHandPart Attrs
 
 instance ReplaceableModes 'DealerHand where
-    replaceModes (EDealerHand _ newModes _) (EDealerHand a _ r) = EDealerHand a newModes r
+    replaceModes = replaceDealerHandPart Modes
 
 instance ReplaceableRels 'DealerHand where
-    replaceRels (EDealerHand _ _ newRels) (EDealerHand a mo _) = EDealerHand a mo newRels
+    replaceRels = replaceDealerHandPart Rels
 
--- EDealerRound
 instance ReplaceableAttrs 'DealerRound where
-    replaceAttrs (EDealerRound newAttrs _ _) (EDealerRound _ mo r) = EDealerRound newAttrs mo r
+    replaceAttrs = replaceDealerRoundPart Attrs
 
 instance ReplaceableModes 'DealerRound where
-    replaceModes (EDealerRound _ newModes _) (EDealerRound a _ r) = EDealerRound a newModes r
+    replaceModes = replaceDealerRoundPart Modes
 
 instance ReplaceableRels 'DealerRound where
-    replaceRels (EDealerRound _ _ newRels) (EDealerRound a mo _) = EDealerRound a mo newRels
+    replaceRels = replaceDealerRoundPart Rels
 
--- EOffering
 instance ReplaceableAttrs 'Offering where
-    replaceAttrs (EOffering newAttrs _ _) (EOffering _ mo r) = EOffering newAttrs mo r
+    replaceAttrs = replaceOfferingPart Attrs
 
 instance ReplaceableModes 'Offering where
-    replaceModes (EOffering _ newModes _) (EOffering a _ r) = EOffering a newModes r
+    replaceModes = replaceOfferingPart Modes
 
 instance ReplaceableRels 'Offering where
-    replaceRels (EOffering _ _ newRels) (EOffering a mo _) = EOffering a mo newRels
+    replaceRels = replaceOfferingPart Rels
 
--- EPlayer
 instance ReplaceableAttrs 'Player where
-    replaceAttrs (EPlayer newAttrs _ _) (EPlayer _ mo r) = EPlayer newAttrs mo r
+    replaceAttrs = replacePlayerPart Attrs
 
 instance ReplaceableModes 'Player where
-    replaceModes (EPlayer _ newModes _) (EPlayer a _ r) = EPlayer a newModes r
+    replaceModes = replacePlayerPart Modes
 
 instance ReplaceableRels 'Player where
-    replaceRels (EPlayer _ _ newRels) (EPlayer a mo _) = EPlayer a mo newRels
+    replaceRels = replacePlayerPart Rels
 
--- EPlayerHand
 instance ReplaceableAttrs 'PlayerHand where
-    replaceAttrs (EPlayerHand newAttrs _ _) (EPlayerHand _ mo r) = EPlayerHand newAttrs mo r
+    replaceAttrs = replacePlayerHandPart Attrs
 
 instance ReplaceableModes 'PlayerHand where
-    replaceModes (EPlayerHand _ newModes _) (EPlayerHand a _ r) = EPlayerHand a newModes r
+    replaceModes = replacePlayerHandPart Modes
 
 instance ReplaceableRels 'PlayerHand where
-    replaceRels (EPlayerHand _ _ newRels) (EPlayerHand a mo _) = EPlayerHand a mo newRels
+    replaceRels = replacePlayerHandPart Rels
 
--- EPlayerSpot
 instance ReplaceableAttrs 'PlayerSpot where
-    replaceAttrs (EPlayerSpot newAttrs _ _) (EPlayerSpot _ mo r) = EPlayerSpot newAttrs mo r
+    replaceAttrs = replacePlayerSpotPart Attrs
 
 instance ReplaceableModes 'PlayerSpot where
-    replaceModes (EPlayerSpot _ newModes _) (EPlayerSpot a _ r) = EPlayerSpot a newModes r
+    replaceModes = replacePlayerSpotPart Modes
 
 instance ReplaceableRels 'PlayerSpot where
-    replaceRels (EPlayerSpot _ _ newRels) (EPlayerSpot a mo _) = EPlayerSpot a mo newRels
+    replaceRels = replacePlayerSpotPart Rels
 
--- ETable
 instance ReplaceableAttrs 'Table where
-    replaceAttrs (ETable newAttrs _ _) (ETable _ mo r) = ETable newAttrs mo r
+    replaceAttrs = replaceTablePart Attrs
 
 instance ReplaceableModes 'Table where
-    replaceModes (ETable _ newModes _) (ETable a _ r) = ETable a newModes r
+    replaceModes = replaceTablePart Modes
 
 instance ReplaceableRels 'Table where
-    replaceRels (ETable _ _ newRels) (ETable a mo _) = ETable a mo newRels
+    replaceRels = replaceTablePart Rels
 
--- ETableShoe
 instance ReplaceableAttrs 'TableShoe where
-    replaceAttrs (ETableShoe newAttrs _ _) (ETableShoe _ mo r) = ETableShoe newAttrs mo r
+    replaceAttrs = replaceTableShoePart Attrs
 
 instance ReplaceableModes 'TableShoe where
-    replaceModes (ETableShoe _ newModes _) (ETableShoe a _ r) = ETableShoe a newModes r
+    replaceModes = replaceTableShoePart Modes
 
 instance ReplaceableRels 'TableShoe where
-    replaceRels (ETableShoe _ _ newRels) (ETableShoe a mo _) = ETableShoe a mo newRels
+    replaceRels = replaceTableShoePart Rels

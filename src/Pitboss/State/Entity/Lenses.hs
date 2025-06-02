@@ -198,14 +198,17 @@ phAttrsHandIx f (PlayerHandAttrs cards bet depth ix) = fmap (PlayerHandAttrs car
 phFsm :: Lens' PlayerHandModes SomePlayerHandFSM
 phFsm f (PlayerHandModes fsm) = fmap PlayerHandModes (f fsm)
 
+phRelsBelongsToBout :: Lens' PlayerHandRels (EntityId 'Bout)
+phRelsBelongsToBout f (PlayerHandRels spot round player bout) = fmap (PlayerHandRels spot round player) (f bout)
+
 phRelsBelongsToPlayerSpot :: Lens' PlayerHandRels (EntityId 'PlayerSpot)
-phRelsBelongsToPlayerSpot f (PlayerHandRels spot round player) = fmap (\s -> PlayerHandRels s round player) (f spot)
+phRelsBelongsToPlayerSpot f (PlayerHandRels spot round player bout) = fmap (\s -> PlayerHandRels s round player bout) (f spot)
 
 phRelsBelongsToDealerRound :: Lens' PlayerHandRels (EntityId 'DealerRound)
-phRelsBelongsToDealerRound f (PlayerHandRels spot round player) = fmap (\r -> PlayerHandRels spot r player) (f round)
+phRelsBelongsToDealerRound f (PlayerHandRels spot round player bout) = fmap (\r -> PlayerHandRels spot r player bout) (f round)
 
 phRelsOwnedByPlayer :: Lens' PlayerHandRels (EntityId 'Player)
-phRelsOwnedByPlayer f (PlayerHandRels spot round player) = fmap (PlayerHandRels spot round) (f player)
+phRelsOwnedByPlayer f (PlayerHandRels spot round player bout) = fmap (\p -> PlayerHandRels spot round p bout) (f player)
 
 -- EPlayerSpot
 psAttrs :: Lens' (EntityState 'PlayerSpot) PlayerSpotAttrs

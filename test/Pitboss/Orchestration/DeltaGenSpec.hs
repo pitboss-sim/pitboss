@@ -19,11 +19,12 @@ mkTestTrace startTick = do
     let playerId = EntityId 100
     let handId = EntityId 400
     let spotId = EntityId 500
+    let boutId = EntityId 300
     let roundId = EntityId 600
 
     playerState <- mkTestPlayer playerId "Test Player"
 
-    let handState = mkTestPlayerHand handId spotId roundId playerId
+    let handState = mkTestPlayerHand handId spotId roundId playerId boutId
     let trace0 = emptyTrace
     let trace1 = applyTraceOp (createBirth playerId playerState) startTick trace0
     let trace2 = applyTraceOp (createBirth handId handState) startTick trace1

@@ -238,6 +238,7 @@ data PlayerHandRels = PlayerHandRels
     { _phRelsBelongsToPlayerSpot :: EntityId 'PlayerSpot
     , _phRelsBelongsToDealerRound :: EntityId 'DealerRound
     , _phRelsOwnedByPlayer :: EntityId 'Player
+    , _phRelsBelongsToBout :: EntityId 'Bout  -- NEW
     }
     deriving (Eq, Show, Generic)
 

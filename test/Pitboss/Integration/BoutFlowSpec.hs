@@ -88,7 +88,7 @@ mkInitialTrace startTick =
                         , _phAttrsHandIx = 0
                         }
                 , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
-                , _phRels = PlayerHandRels undefined undefined playerId
+                , _phRels = PlayerHandRels undefined undefined playerId boutId
                 }
 
         dealerHandState =

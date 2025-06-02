@@ -57,77 +57,62 @@ class (MonadReader TickCacheContext m) => Deref id m where
     type DerefTarget id
     deref :: id -> m (Maybe (DerefTarget id))
 
+-- Helper to implement Deref instances uniformly
+derefHelper :: (MonadReader TickCacheContext m) =>
+               Getting (IHM.InsOrdHashMap (EntityId k) (EntityState k)) TickCache (IHM.InsOrdHashMap (EntityId k) (EntityState k)) ->
+               EntityId k ->
+               m (Maybe (EntityState k))
+derefHelper cacheLens entityId = do
+    cache <- view ctxTickCache
+    pure $ IHM.lookup entityId (cache ^. cacheLens)
+
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Intent) m where
     type DerefTarget (EntityId 'Intent) = EntityState 'Intent
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheIntent)
+    deref = derefHelper cacheIntent
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Event) m where
     type DerefTarget (EntityId 'Event) = EntityState 'Event
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheEvent)
+    deref = derefHelper cacheEvent
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Bout) m where
     type DerefTarget (EntityId 'Bout) = EntityState 'Bout
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheBout)
+    deref = derefHelper cacheBout
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Player) m where
     type DerefTarget (EntityId 'Player) = EntityState 'Player
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cachePlayer)
+    deref = derefHelper cachePlayer
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Dealer) m where
     type DerefTarget (EntityId 'Dealer) = EntityState 'Dealer
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheDealer)
+    deref = derefHelper cacheDealer
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'PlayerHand) m where
     type DerefTarget (EntityId 'PlayerHand) = EntityState 'PlayerHand
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cachePlayerHand)
+    deref = derefHelper cachePlayerHand
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'PlayerSpot) m where
     type DerefTarget (EntityId 'PlayerSpot) = EntityState 'PlayerSpot
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cachePlayerSpot)
+    deref = derefHelper cachePlayerSpot
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'DealerHand) m where
     type DerefTarget (EntityId 'DealerHand) = EntityState 'DealerHand
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheDealerHand)
+    deref = derefHelper cacheDealerHand
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'DealerRound) m where
     type DerefTarget (EntityId 'DealerRound) = EntityState 'DealerRound
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheDealerRound)
+    deref = derefHelper cacheDealerRound
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Offering) m where
     type DerefTarget (EntityId 'Offering) = EntityState 'Offering
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheOffering)
+    deref = derefHelper cacheOffering
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Table) m where
     type DerefTarget (EntityId 'Table) = EntityState 'Table
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheTable)
+    deref = derefHelper cacheTable
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'TableShoe) m where
     type DerefTarget (EntityId 'TableShoe) = EntityState 'TableShoe
-    deref entityId = do
-        cache <- view ctxTickCache
-        pure $ IHM.lookup entityId (cache ^. cacheTableShoe)
+    deref = derefHelper cacheTableShoe
 
 mkTickCache :: Tick -> TickCache
 mkTickCache tick =

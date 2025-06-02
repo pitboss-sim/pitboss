@@ -52,78 +52,47 @@ validateTokenCount lnum fullLine moveToks =
                     (T.unpack fullLine)
                     (WrongTokenCount 10 (length moveToks))
 
+-- Helper to parse and validate digit suffixes
+parseDigitSuffix :: Int -> Text -> String -> Either ChartParseError Int
+parseDigitSuffix lnum fullLine str
+    | all isDigit str && not (null str) = Right (read str)
+    | otherwise =
+        Left $ ChartParseError
+            (Pos lnum Nothing)
+            (T.unpack fullLine)
+            (UnreadableHardTotal str)
+
+-- Helper to validate numeric ranges
+validateRange :: Int -> Text -> Int -> Int -> Int -> Either ChartParseError Int
+validateRange lnum fullLine value minVal maxVal
+    | value >= minVal && value <= maxVal = Right value
+    | otherwise =
+        Left $ ChartParseError
+            (Pos lnum Nothing)
+            (T.unpack fullLine)
+            (OutOfRangeHardTotal value)
+
 parsePrefix :: Int -> Text -> Text -> Either ChartParseError HandPrefix
 parsePrefix lnum txt fullLine =
     case T.unpack txt of
         "PA" -> Right PA
         "PT" -> Right PT
-        'P' : ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 2 && n <= 10
-                        then Right (P n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        'A' : ns
-            | all isDigit ns
-            , not (null ns) ->
-                let nonAceValue = read ns
-                    softTotal = 11 + nonAceValue
-                 in if nonAceValue >= 2 && nonAceValue <= 9
-                        then Right (A softTotal)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal nonAceValue)
-        'H' : ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 4 && n <= 21
-                        then Right (H n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        ns
-            | all isDigit ns
-            , not (null ns) ->
-                let n = read ns
-                 in if n >= 4 && n <= 21
-                        then Right (H n)
-                        else
-                            Left $
-                                ChartParseError
-                                    (Pos lnum Nothing)
-                                    (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
-        'H' : ns ->
-            Left $
-                ChartParseError
-                    (Pos lnum Nothing)
-                    (T.unpack fullLine)
-                    (UnreadableHardTotal ns)
-        'A' : ns ->
-            Left $
-                ChartParseError
-                    (Pos lnum Nothing)
-                    (T.unpack fullLine)
-                    (UnreadableHardTotal ns)
-        'P' : ns ->
-            Left $
-                ChartParseError
-                    (Pos lnum Nothing)
-                    (T.unpack fullLine)
-                    (UnreadableHardTotal ns)
+        'P' : ns -> do
+            n <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine n 2 10
+            pure (P n)
+        'A' : ns -> do
+            nonAceValue <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine nonAceValue 2 9
+            pure (A (11 + nonAceValue))
+        'H' : ns -> do
+            n <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine n 4 21
+            pure (H n)
+        ns | all isDigit ns && not (null ns) -> do
+            n <- parseDigitSuffix lnum fullLine ns
+            _ <- validateRange lnum fullLine n 4 21
+            pure (H n)
         _ ->
             Left $
                 ChartParseError

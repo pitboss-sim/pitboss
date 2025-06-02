@@ -5,12 +5,7 @@ module Pitboss.Orchestration.DeltaGenSpec (spec) where
 import Control.Monad.Reader
 import Pitboss.Blackjack.Events
 import Pitboss.Sim.Engine.DeltaGen
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.TickCache
-import Pitboss.State.Trace
-import Pitboss.State.Trace.Ops
-import Pitboss.State.Types.Core
+import Pitboss.State
 import Pitboss.TestHelpers
 import Test.Hspec
 

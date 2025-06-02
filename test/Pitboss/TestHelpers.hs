@@ -8,8 +8,7 @@ import Pitboss.Agency.Archetype.Types
 import Pitboss.Blackjack
 import Pitboss.Blackjack.BasicStrategy.Chart
 import Pitboss.FSM
-import Pitboss.State.Entity.Types
-import Pitboss.State.Types.Core
+import Pitboss.State
 
 loadCanonicalStrategy :: IO StrategyChart
 loadCanonicalStrategy = handle handleError $ do

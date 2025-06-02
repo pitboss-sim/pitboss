@@ -3,10 +3,7 @@ module Pitboss.Sim.Engine.DeltaGen where
 import Control.Monad.Reader
 import Pitboss.Blackjack hiding (Stand)
 import Pitboss.FSM
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.TickCache
-import Pitboss.State.Trace.Ops
+import Pitboss.State
 
 generateDeltas :: BlackjackEvent -> CausalHistory -> Reader TickCacheContext [TraceOp]
 generateDeltas event history = case event of

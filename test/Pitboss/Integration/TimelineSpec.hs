@@ -5,12 +5,7 @@ module Pitboss.Integration.TimelineSpec (spec) where
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Blackjack hiding (Stand)
 import Pitboss.FSM
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.Registry
-import Pitboss.State.TickCache
-import Pitboss.State.Timeline
-import Pitboss.State.Types.Core
+import Pitboss.State hiding (describe)
 import Test.Hspec
 
 spec :: Spec

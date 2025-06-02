@@ -39,15 +39,5 @@ reconstructAt timeline tick =
         RelsDelta _ d -> Just $ applyWithWitness RelsWitness d entity
         BoundaryDelta _ _ -> Just entity
 
-findLastCompleteTransaction :: [SomeDelta k] -> ([SomeDelta k], [SomeDelta k])
-findLastCompleteTransaction deltas =
-    case break isBoundary (reverse deltas) of
-        (_, []) -> ([], deltas)
-        (incomplete, boundary : complete) ->
-            (reverse (boundary : complete), reverse incomplete)
-  where
-    isBoundary (BoundaryDelta _ _) = True
-    isBoundary _ = False
-
 reconstructFromBoundaries :: [SomeDelta k] -> Maybe (EntityState k)
 reconstructFromBoundaries _ = Nothing -- TODO: implement

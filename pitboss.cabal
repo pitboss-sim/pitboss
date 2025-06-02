@@ -76,6 +76,7 @@ library
                       Pitboss.Sim.Engine.DeltaGen
                       Pitboss.Sim.Engine.Runtime
                       Pitboss.Sim.Types
+                      Pitboss.State
                       Pitboss.State.TickCache
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible

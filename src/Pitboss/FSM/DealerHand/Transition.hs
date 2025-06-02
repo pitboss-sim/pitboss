@@ -11,43 +11,43 @@ import Pitboss.FSM.DealerHand.Phase
 import Pitboss.FSM.Types
 
 type family ValidDealerHandTransition (from :: DealerHandPhase) (to :: DealerHandPhase) :: Bool where
-    ValidDealerHandTransition 'Dealing 'Evaluating = 'True
-    ValidDealerHandTransition 'Evaluating ('Resolved res) = 'True
-    ValidDealerHandTransition p ('Interrupted r) = 'True
-    ValidDealerHandTransition ('Interrupted r) 'Dealing = 'True
+    ValidDealerHandTransition 'DHDealing 'DHEvaluating = 'True
+    ValidDealerHandTransition 'DHEvaluating ('DHResolved res) = 'True
+    ValidDealerHandTransition p ('DHInterrupted r) = 'True
+    ValidDealerHandTransition ('DHInterrupted r) 'DHDealing = 'True
     ValidDealerHandTransition _ _ = 'False
 
 beginEvaluationTyped ::
-    (ValidDealerHandTransition 'Dealing 'Evaluating ~ 'True) =>
+    (ValidDealerHandTransition 'DHDealing 'DHEvaluating ~ 'True) =>
     SomeHand ->
-    DealerHandFSM 'Dealing ->
-    DealerHandFSM 'Evaluating
-beginEvaluationTyped _hand DealingFSM = EvaluatingFSM
+    DealerHandFSM 'DHDealing ->
+    DealerHandFSM 'DHEvaluating
+beginEvaluationTyped _hand DHDealingFSM = DHEvaluatingFSM
 
 resolveHandTyped ::
-    (ValidDealerHandTransition 'Evaluating ('Resolved res) ~ 'True) =>
+    (ValidDealerHandTransition 'DHEvaluating ('DHResolved res) ~ 'True) =>
     SomeHand ->
-    DealerHandFSM 'Evaluating ->
-    DealerHandFSM ('Resolved res)
-resolveHandTyped (SomeHand hand) EvaluatingFSM = case witness hand of
-    BlackjackWitness -> ResolvedFSM DealerBlackjack
-    BustWitness -> ResolvedFSM DealerBust
-    _ -> ResolvedFSM DealerStand
+    DealerHandFSM 'DHEvaluating ->
+    DealerHandFSM ('DHResolved res)
+resolveHandTyped (SomeHand hand) DHEvaluatingFSM = case witness hand of
+    BlackjackWitness -> DHResolvedFSM DHDealerBlackjack
+    BustWitness -> DHResolvedFSM DHDealerBust
+    _ -> DHResolvedFSM DHDealerStand
 
 interruptHandTyped ::
-    (ValidDealerHandTransition from ('Interrupted r) ~ 'True) =>
+    (ValidDealerHandTransition from ('DHInterrupted r) ~ 'True) =>
     InterruptReason ->
     SomeHand ->
     DealerHandFSM from ->
-    DealerHandFSM ('Interrupted r)
-interruptHandTyped reason _hand _ = InterruptedFSM reason
+    DealerHandFSM ('DHInterrupted r)
+interruptHandTyped reason _hand _ = DHInterruptedFSM reason
 
 resumeFromInterruptTyped ::
-    (ValidDealerHandTransition ('Interrupted r) 'Dealing ~ 'True) =>
+    (ValidDealerHandTransition ('DHInterrupted r) 'DHDealing ~ 'True) =>
     SomeHand ->
-    DealerHandFSM ('Interrupted r) ->
-    DealerHandFSM 'Dealing
-resumeFromInterruptTyped _hand (InterruptedFSM _) = DealingFSM
+    DealerHandFSM ('DHInterrupted r) ->
+    DealerHandFSM 'DHDealing
+resumeFromInterruptTyped _hand (DHInterruptedFSM _) = DHDealingFSM
 
 dealerShouldHit :: GameRuleSet -> SomeHand -> Bool
 dealerShouldHit ruleset (SomeHand hand) = case witness hand of
@@ -62,6 +62,6 @@ dealerShouldHit ruleset (SomeHand hand) = case witness hand of
 
 resolveDealerHand :: SomeHand -> DealerHandResolution
 resolveDealerHand (SomeHand hand) = case witness hand of
-    BlackjackWitness -> DealerBlackjack
-    BustWitness -> DealerBust
-    _ -> DealerStand
+    BlackjackWitness -> DHDealerBlackjack
+    BustWitness -> DHDealerBust
+    _ -> DHDealerStand

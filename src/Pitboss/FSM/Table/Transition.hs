@@ -9,61 +9,61 @@ import Pitboss.FSM.Table.FSM
 import Pitboss.FSM.Table.Phase
 
 type family ValidTableTransition (from :: TablePhase) (to :: TablePhase) :: Bool where
-    ValidTableTransition 'Closed 'Opening = 'True
-    ValidTableTransition 'Opening 'RoundInProgress = 'True
-    ValidTableTransition 'RoundInProgress 'Intermission = 'True
-    ValidTableTransition 'Intermission 'RoundInProgress = 'True
-    ValidTableTransition 'Intermission 'Closing = 'True
-    ValidTableTransition 'Closing 'Closed = 'True
-    ValidTableTransition p ('Interrupted r) = 'True
-    ValidTableTransition ('Interrupted r) 'Intermission = 'True
+    ValidTableTransition 'TClosed 'TOpening = 'True
+    ValidTableTransition 'TOpening 'TRoundInProgress = 'True
+    ValidTableTransition 'TRoundInProgress 'TIntermission = 'True
+    ValidTableTransition 'TIntermission 'TRoundInProgress = 'True
+    ValidTableTransition 'TIntermission 'TClosing = 'True
+    ValidTableTransition 'TClosing 'TClosed = 'True
+    ValidTableTransition p ('TInterrupted r) = 'True
+    ValidTableTransition ('TInterrupted r) 'TIntermission = 'True
     ValidTableTransition _ _ = 'False
 
 openTable ::
-    (ValidTableTransition 'Closed 'Opening ~ 'True) =>
-    TableFSM 'Closed ->
-    TableFSM 'Opening
-openTable ClosedFSM = OpeningFSM
+    (ValidTableTransition 'TClosed 'TOpening ~ 'True) =>
+    TableFSM 'TClosed ->
+    TableFSM 'TOpening
+openTable TClosedFSM = TOpeningFSM
 
 beginRound ::
-    (ValidTableTransition 'Opening 'RoundInProgress ~ 'True) =>
-    TableFSM 'Opening ->
-    TableFSM 'RoundInProgress
-beginRound OpeningFSM = RoundInProgressFSM
+    (ValidTableTransition 'TOpening 'TRoundInProgress ~ 'True) =>
+    TableFSM 'TOpening ->
+    TableFSM 'TRoundInProgress
+beginRound TOpeningFSM = TRoundInProgressFSM
 
-pauseForIntermission ::
-    (ValidTableTransition 'RoundInProgress 'Intermission ~ 'True) =>
-    TableFSM 'RoundInProgress ->
-    TableFSM 'Intermission
-pauseForIntermission RoundInProgressFSM = IntermissionFSM
+pauseForTIntermission ::
+    (ValidTableTransition 'TRoundInProgress 'TIntermission ~ 'True) =>
+    TableFSM 'TRoundInProgress ->
+    TableFSM 'TIntermission
+pauseForTIntermission TRoundInProgressFSM = TIntermissionFSM
 
 resumeRound ::
-    (ValidTableTransition 'Intermission 'RoundInProgress ~ 'True) =>
-    TableFSM 'Intermission ->
-    TableFSM 'RoundInProgress
-resumeRound IntermissionFSM = RoundInProgressFSM
+    (ValidTableTransition 'TIntermission 'TRoundInProgress ~ 'True) =>
+    TableFSM 'TIntermission ->
+    TableFSM 'TRoundInProgress
+resumeRound TIntermissionFSM = TRoundInProgressFSM
 
 closeTable ::
-    (ValidTableTransition 'Intermission 'Closing ~ 'True) =>
-    TableFSM 'Intermission ->
-    TableFSM 'Closing
-closeTable IntermissionFSM = ClosingFSM
+    (ValidTableTransition 'TIntermission 'TClosing ~ 'True) =>
+    TableFSM 'TIntermission ->
+    TableFSM 'TClosing
+closeTable TIntermissionFSM = TClosingFSM
 
-completeClosing ::
-    (ValidTableTransition 'Closing 'Closed ~ 'True) =>
-    TableFSM 'Closing ->
-    TableFSM 'Closed
-completeClosing ClosingFSM = ClosedFSM
+completeTClosing ::
+    (ValidTableTransition 'TClosing 'TClosed ~ 'True) =>
+    TableFSM 'TClosing ->
+    TableFSM 'TClosed
+completeTClosing TClosingFSM = TClosedFSM
 
 interruptTable ::
-    (ValidTableTransition from ('Interrupted r) ~ 'True) =>
-    InterruptReason ->
+    (ValidTableTransition from ('TInterrupted r) ~ 'True) =>
+    TInterruptReason ->
     TableFSM from ->
-    TableFSM ('Interrupted r)
-interruptTable reason _ = InterruptedFSM reason
+    TableFSM ('TInterrupted r)
+interruptTable reason _ = TInterruptedFSM reason
 
-resumeFromInterrupt ::
-    (ValidTableTransition ('Interrupted r) 'Intermission ~ 'True) =>
-    TableFSM ('Interrupted r) ->
-    TableFSM 'Intermission
-resumeFromInterrupt (InterruptedFSM _) = IntermissionFSM
+resumeFromTInterrupt ::
+    (ValidTableTransition ('TInterrupted r) 'TIntermission ~ 'True) =>
+    TableFSM ('TInterrupted r) ->
+    TableFSM 'TIntermission
+resumeFromTInterrupt (TInterruptedFSM _) = TIntermissionFSM

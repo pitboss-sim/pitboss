@@ -9,11 +9,11 @@ import Pitboss.FSM.Types
 import Pitboss.FSM.Types.Transitionable
 
 data PlayerSpotFSM (p :: PlayerSpotPhase) where
-    SpotIdleFSM :: PlayerSpotFSM 'SpotIdle
-    SpotEngagedFSM :: PlayerSpotFSM 'SpotEngaged
-    SpotWaitingForHandsFSM :: PlayerSpotFSM 'SpotWaitingForHands
-    SpotResolvedFSM :: PlayerSpotFSM 'SpotResolved
-    SpotInterruptedFSM :: InterruptReason -> PlayerSpotFSM ('SpotInterrupted r)
+    PSIdleFSM :: PlayerSpotFSM 'PSIdle
+    PSEngagedFSM :: PlayerSpotFSM 'PSEngaged
+    PSWaitingForHandsFSM :: PlayerSpotFSM 'PSWaitingForHands
+    PSResolvedFSM :: PlayerSpotFSM 'PSResolved
+    PSInterruptedFSM :: InterruptReason -> PlayerSpotFSM ('PSInterrupted r)
 
 deriving instance Show (PlayerSpotFSM p)
 
@@ -21,8 +21,8 @@ deriving instance Eq (PlayerSpotFSM p)
 
 instance Transitionable (PlayerSpotFSM p) where
     transitionType = \case
-        SpotIdleFSM -> AwaitInput
-        SpotEngagedFSM -> AwaitInput
-        SpotWaitingForHandsFSM -> AwaitInput
-        SpotResolvedFSM -> TerminalPhase
-        SpotInterruptedFSM _ -> AwaitInput
+        PSIdleFSM -> AwaitInput
+        PSEngagedFSM -> AwaitInput
+        PSWaitingForHandsFSM -> AwaitInput
+        PSResolvedFSM -> TerminalPhase
+        PSInterruptedFSM _ -> AwaitInput

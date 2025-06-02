@@ -24,22 +24,22 @@ instance Show SomePlayerSpotFSM where
 
 instance Eq SomePlayerSpotFSM where
     SomePlayerSpotFSM f1 == SomePlayerSpotFSM f2 = case (f1, f2) of
-        (SpotIdleFSM, SpotIdleFSM) -> True
-        (SpotEngagedFSM, SpotEngagedFSM) -> True
-        (SpotWaitingForHandsFSM, SpotWaitingForHandsFSM) -> True
-        (SpotResolvedFSM, SpotResolvedFSM) -> True
-        (SpotInterruptedFSM r1, SpotInterruptedFSM r2) -> r1 == r2
+        (PSIdleFSM, PSIdleFSM) -> True
+        (PSEngagedFSM, PSEngagedFSM) -> True
+        (PSWaitingForHandsFSM, PSWaitingForHandsFSM) -> True
+        (PSResolvedFSM, PSResolvedFSM) -> True
+        (PSInterruptedFSM r1, PSInterruptedFSM r2) -> r1 == r2
         _ -> False
 
 instance ToJSON SomePlayerSpotFSM where
     toJSON (SomePlayerSpotFSM fsm) = case fsm of
-        SpotIdleFSM -> object ["tag" .= String "SpotIdle"]
-        SpotEngagedFSM -> object ["tag" .= String "SpotEngaged"]
-        SpotWaitingForHandsFSM -> object ["tag" .= String "SpotWaitingForHands"]
-        SpotResolvedFSM -> object ["tag" .= String "SpotResolved"]
-        SpotInterruptedFSM reason ->
+        PSIdleFSM -> object ["tag" .= String "Idle"]
+        PSEngagedFSM -> object ["tag" .= String "Engaged"]
+        PSWaitingForHandsFSM -> object ["tag" .= String "WaitingForHands"]
+        PSResolvedFSM -> object ["tag" .= String "Resolved"]
+        PSInterruptedFSM reason ->
             object
-                [ "tag" .= String "SpotInterrupted"
+                [ "tag" .= String "Interrupted"
                 , "reason" .= reason
                 ]
 
@@ -47,13 +47,13 @@ instance FromJSON SomePlayerSpotFSM where
     parseJSON = withObject "SomePlayerSpotFSM" $ \obj -> do
         tag <- obj .: "tag"
         case (tag :: T.Text) of
-            "SpotIdle" -> pure $ SomePlayerSpotFSM SpotIdleFSM
-            "SpotEngaged" -> pure $ SomePlayerSpotFSM SpotEngagedFSM
-            "SpotWaitingForHands" -> pure $ SomePlayerSpotFSM SpotWaitingForHandsFSM
-            "SpotResolved" -> pure $ SomePlayerSpotFSM SpotResolvedFSM
-            "SpotInterrupted" -> do
+            "Idle" -> pure $ SomePlayerSpotFSM PSIdleFSM
+            "Engaged" -> pure $ SomePlayerSpotFSM PSEngagedFSM
+            "WaitingForHands" -> pure $ SomePlayerSpotFSM PSWaitingForHandsFSM
+            "Resolved" -> pure $ SomePlayerSpotFSM PSResolvedFSM
+            "Interrupted" -> do
                 reason <- obj .: "reason"
-                pure $ SomePlayerSpotFSM (SpotInterruptedFSM reason)
+                pure $ SomePlayerSpotFSM (PSInterruptedFSM reason)
             other -> fail $ "Unknown tag for SomePlayerSpotFSM: " ++ T.unpack other
 
 instance Transitionable SomePlayerSpotFSM where

@@ -8,21 +8,21 @@ import Pitboss.FSM.Bout.Phase
 import Pitboss.FSM.Types.Transitionable
 
 data BoutFSM (p :: BoutPhase) where
-    AwaitingFirstCardFSM :: BoutFSM 'AwaitingFirstCard
-    AwaitingSecondCardFSM :: BoutFSM 'AwaitingSecondCard
-    PlayerTurnFSM :: BoutFSM 'PlayerTurn
-    DealerTurnFSM :: BoutFSM 'DealerTurn
-    SettlementFSM :: BoutFSM 'Settlement
-    DoneFSM :: BoutFSM 'Done
+    BAwaitingFirstCardFSM :: BoutFSM 'BAwaitingFirstCard
+    BAwaitingSecondCardFSM :: BoutFSM 'BAwaitingSecondCard
+    BPlayerTurnFSM :: BoutFSM 'BPlayerTurn
+    BDealerTurnFSM :: BoutFSM 'BDealerTurn
+    BSettlementFSM :: BoutFSM 'BSettlement
+    BDoneFSM :: BoutFSM 'BDone
 
 deriving instance Show (BoutFSM p)
 deriving instance Eq (BoutFSM p)
 
 instance Transitionable (BoutFSM p) where
     transitionType = \case
-        AwaitingFirstCardFSM -> AwaitInput
-        AwaitingSecondCardFSM -> AwaitInput
-        PlayerTurnFSM -> AwaitInput
-        DealerTurnFSM -> AutoAdvance
-        SettlementFSM -> AutoAdvance
-        DoneFSM -> TerminalPhase
+        BAwaitingFirstCardFSM -> AwaitInput
+        BAwaitingSecondCardFSM -> AwaitInput
+        BPlayerTurnFSM -> AwaitInput
+        BDealerTurnFSM -> AutoAdvance
+        BSettlementFSM -> AutoAdvance
+        BDoneFSM -> TerminalPhase

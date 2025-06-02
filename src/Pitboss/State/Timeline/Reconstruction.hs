@@ -20,8 +20,6 @@ collectDeltasUpTo timeline targetTick =
         allDeltas = concatMap (\t -> fromMaybe [] (IHM.lookup t (timelineDeltas timeline))) relevantTicks
      in allDeltas
 
--- Simple approach: find the last complete entity state from transaction boundaries
--- and apply subsequent deltas from there
 reconstructAt ::
     (IncrementalWithWitness k) =>
     Timeline k (SomeDelta k) ->
@@ -30,9 +28,8 @@ reconstructAt ::
 reconstructAt timeline tick =
     let allDeltas = collectDeltasUpTo timeline tick
      in case timelineInitialState timeline of
-            Nothing -> Nothing -- No initial state, can't reconstruct
+            Nothing -> Nothing
             Just initialState ->
-                -- Start with initial state and apply all deltas up to tick
                 foldM applyDeltaToEntity initialState allDeltas
   where
     applyDeltaToEntity :: (IncrementalWithWitness k) => EntityState k -> SomeDelta k -> Maybe (EntityState k)
@@ -40,19 +37,17 @@ reconstructAt timeline tick =
         AttrsDelta _ d -> Just $ applyWithWitness AttrsWitness d entity
         ModesDelta _ d -> Just $ applyWithWitness ModesWitness d entity
         RelsDelta _ d -> Just $ applyWithWitness RelsWitness d entity
-        BoundaryDelta _ _ -> Just entity -- Boundaries don't mutate state
+        BoundaryDelta _ _ -> Just entity
 
 findLastCompleteTransaction :: [SomeDelta k] -> ([SomeDelta k], [SomeDelta k])
 findLastCompleteTransaction deltas =
     case break isBoundary (reverse deltas) of
-        (_, []) -> ([], deltas) -- No boundary found
+        (_, []) -> ([], deltas)
         (incomplete, boundary : complete) ->
             (reverse (boundary : complete), reverse incomplete)
   where
     isBoundary (BoundaryDelta _ _) = True
     isBoundary _ = False
 
--- This needs to be implemented based on how we want to handle
--- initial entity creation from transaction boundaries
 reconstructFromBoundaries :: [SomeDelta k] -> Maybe (EntityState k)
-reconstructFromBoundaries _ = Nothing -- Placeholder - needs implementation
+reconstructFromBoundaries _ = Nothing -- TODO: implement

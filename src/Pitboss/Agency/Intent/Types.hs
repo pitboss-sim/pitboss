@@ -5,9 +5,7 @@
 module Pitboss.Agency.Intent.Types where
 
 import Pitboss.Blackjack
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.DealerRound
-import Pitboss.FSM.PlayerHand
+import Pitboss.FSM
 import Pitboss.State.Types.Core
 
 data family IntentCtx (k :: IntentKind)

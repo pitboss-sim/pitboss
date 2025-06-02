@@ -22,33 +22,33 @@ instance Show SomeTableFSM where
 
 instance Eq SomeTableFSM where
     SomeTableFSM a == SomeTableFSM b = case (a, b) of
-        (ClosedFSM, ClosedFSM) -> True
-        (OpeningFSM, OpeningFSM) -> True
-        (RoundInProgressFSM, RoundInProgressFSM) -> True
-        (IntermissionFSM, IntermissionFSM) -> True
-        (ClosingFSM, ClosingFSM) -> True
-        (InterruptedFSM r1, InterruptedFSM r2) -> r1 == r2
+        (TClosedFSM, TClosedFSM) -> True
+        (TOpeningFSM, TOpeningFSM) -> True
+        (TRoundInProgressFSM, TRoundInProgressFSM) -> True
+        (TIntermissionFSM, TIntermissionFSM) -> True
+        (TClosingFSM, TClosingFSM) -> True
+        (TInterruptedFSM r1, TInterruptedFSM r2) -> r1 == r2
         _ -> False
 
 instance ToJSON SomeTableFSM where
     toJSON (SomeTableFSM fsm) = case fsm of
-        ClosedFSM -> object ["tag" .= String "Closed"]
-        OpeningFSM -> object ["tag" .= String "Opening"]
-        RoundInProgressFSM -> object ["tag" .= String "RoundInProgress"]
-        IntermissionFSM -> object ["tag" .= String "Intermission"]
-        ClosingFSM -> object ["tag" .= String "Closing"]
-        InterruptedFSM r -> object ["tag" .= String "Interrupted", "reason" .= r]
+        TClosedFSM -> object ["tag" .= String "Closed"]
+        TOpeningFSM -> object ["tag" .= String "Opening"]
+        TRoundInProgressFSM -> object ["tag" .= String "RoundInProgress"]
+        TIntermissionFSM -> object ["tag" .= String "Intermission"]
+        TClosingFSM -> object ["tag" .= String "Closing"]
+        TInterruptedFSM r -> object ["tag" .= String "Interrupted", "reason" .= r]
 
 instance FromJSON SomeTableFSM where
     parseJSON = withObject "SomeTableFSM" $ \obj -> do
         tag <- obj .: "tag"
         case tag :: T.Text of
-            "Closed" -> pure $ SomeTableFSM ClosedFSM
-            "Opening" -> pure $ SomeTableFSM OpeningFSM
-            "RoundInProgress" -> pure $ SomeTableFSM RoundInProgressFSM
-            "Intermission" -> pure $ SomeTableFSM IntermissionFSM
-            "Closing" -> pure $ SomeTableFSM ClosingFSM
-            "Interrupted" -> SomeTableFSM . InterruptedFSM <$> obj .: "reason"
+            "Closed" -> pure $ SomeTableFSM TClosedFSM
+            "Opening" -> pure $ SomeTableFSM TOpeningFSM
+            "RoundInProgress" -> pure $ SomeTableFSM TRoundInProgressFSM
+            "Intermission" -> pure $ SomeTableFSM TIntermissionFSM
+            "Closing" -> pure $ SomeTableFSM TClosingFSM
+            "Interrupted" -> SomeTableFSM . TInterruptedFSM <$> obj .: "reason"
             other -> fail $ "Unknown tag for SomeTableFSM: " ++ T.unpack other
 
 instance Transitionable SomeTableFSM where

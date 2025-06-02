@@ -9,7 +9,6 @@ import Pitboss.Blackjack.BasicStrategy.Chart.Types
 import Pitboss.Blackjack.Materia.Card
 import Pitboss.Blackjack.Materia.Hand
 
--- Use the actual chart entry structure for indexing
 indexEntries :: [ChartEntry] -> Map (HandKind, Maybe Int, Rank) MoveCode
 indexEntries =
     Map.unions . map entryToMap
@@ -34,7 +33,5 @@ groupBackToChart =
     insert ((kind, value', up), mv) =
         Map.insertWith Map.union (kind, value') (Map.singleton up mv)
 
--- Reduce a list of charts into one, using overlay semantics.
--- Later entries override earlier ones.
 reduceOverlay :: [[ChartEntry]] -> [ChartEntry]
 reduceOverlay = foldr overlayStrategy []

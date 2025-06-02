@@ -11,14 +11,7 @@ import Data.Map.Strict
 import GHC.Generics (Generic)
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Blackjack hiding (HasWitness)
-import Pitboss.FSM.Bout
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.DealerRound
-import Pitboss.FSM.DealerTable
-import Pitboss.FSM.PlayerHand
-import Pitboss.FSM.PlayerSpot
-import Pitboss.FSM.PlayerTable
-import Pitboss.FSM.Table
+import Pitboss.FSM
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.Occupancy
@@ -208,7 +201,7 @@ data PlayerHandRels = PlayerHandRels
     { _phRelsBelongsToPlayerSpot :: EntityId 'PlayerSpot
     , _phRelsBelongsToDealerRound :: EntityId 'DealerRound
     , _phRelsOwnedByPlayer :: EntityId 'Player
-    , _phRelsBelongsToBout :: EntityId 'Bout -- NEW
+    , _phRelsBelongsToBout :: EntityId 'Bout
     }
     deriving (Eq, Show, Generic)
 
@@ -304,7 +297,6 @@ data instance EntityState 'TableShoe = ETableShoe
 instance HasWitness 'TableShoe where
     witness _ = TableShoeWitness
 
--- JSON instances (unchanged)
 instance ToJSON BoutAttrs
 instance FromJSON BoutAttrs
 instance ToJSON BoutModes

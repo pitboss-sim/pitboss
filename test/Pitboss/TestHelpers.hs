@@ -7,13 +7,7 @@ import Data.Text.IO qualified as TIO
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Blackjack
 import Pitboss.Blackjack.BasicStrategy.Chart
-import Pitboss.FSM.Bout
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.DealerRound
-import Pitboss.FSM.DealerTable
-import Pitboss.FSM.PlayerHand
-import Pitboss.FSM.PlayerSpot
-import Pitboss.FSM.PlayerTable
+import Pitboss.FSM
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 
@@ -74,9 +68,9 @@ mkTestPlayer _playerId name = do
                     }
             , _pModes =
                 PlayerModes
-                    { _pModesPlayerTable = SomePlayerTableFSM IdleFSM
-                    , _pModesPlayerSpot = SomePlayerSpotFSM SpotIdleFSM
-                    , _pModesPlayerHand = SomePlayerHandFSM DecisionFSM
+                    { _pModesPlayerTable = SomePlayerTableFSM PTIdleFSM
+                    , _pModesPlayerSpot = SomePlayerSpotFSM PSIdleFSM
+                    , _pModesPlayerHand = SomePlayerHandFSM PHDecisionFSM
                     }
             , _pRels = PlayerRels
             }
@@ -91,9 +85,9 @@ mkTestDealer _dealerId name =
                 }
         , _dModes =
             DealerModes
-                { _dModesDealerTable = SomeDealerTableFSM OffDutyFSM
+                { _dModesDealerTable = SomeDealerTableFSM DTOffDutyFSM
                 , _dModesDealerRound = PeekDealerRound (SomePeekFSM PeekAwaitingFSM)
-                , _dModesDealerHand = SomeDealerHandFSM DealingFSM
+                , _dModesDealerHand = SomeDealerHandFSM DHDealingFSM
                 }
         , _dRels = DealerRels Nothing Nothing Nothing
         }
@@ -114,7 +108,7 @@ mkTestPlayerHand _handId spotId roundId playerId boutId =
                 , _phAttrsSplitDepth = 0
                 , _phAttrsHandIx = 0
                 }
-        , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
+        , _phModes = PlayerHandModes (SomePlayerHandFSM PHDecisionFSM)
         , _phRels = PlayerHandRels spotId roundId playerId boutId
         }
 
@@ -122,7 +116,7 @@ mkTestDealerHand :: EntityId 'DealerHand -> EntityId 'DealerRound -> EntityId 'D
 mkTestDealerHand _handId roundId dealerId =
     EDealerHand
         { _dhAttrs = DealerHandAttrs (characterize [])
-        , _dhModes = DealerHandModes (SomeDealerHandFSM DealingFSM)
+        , _dhModes = DealerHandModes (SomeDealerHandFSM DHDealingFSM)
         , _dhRels = DealerHandRels roundId dealerId
         }
 
@@ -130,7 +124,7 @@ mkTestBout :: EntityId 'Bout -> EntityId 'PlayerHand -> EntityId 'DealerHand -> 
 mkTestBout _boutId playerHandId dealerHandId shoeId tableId roundId =
     EBout
         { _boutAttrs = BoutAttrs Nothing
-        , _boutModes = BoutModes (SomeBoutFSM AwaitingFirstCardFSM)
+        , _boutModes = BoutModes (SomeBoutFSM BAwaitingFirstCardFSM)
         , _boutRels = BoutRels playerHandId dealerHandId shoeId tableId roundId
         }
 
@@ -151,7 +145,7 @@ createPlayerHandForBout _handId spotId roundId playerId boutId wager =
                 , _phAttrsSplitDepth = 0
                 , _phAttrsHandIx = 0
                 }
-        , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
+        , _phModes = PlayerHandModes (SomePlayerHandFSM PHDecisionFSM)
         , _phRels =
             PlayerHandRels
                 { _phRelsBelongsToPlayerSpot = spotId

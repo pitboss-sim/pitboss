@@ -28,13 +28,7 @@ import Data.Map.Strict (Map)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack
-import Pitboss.FSM.Bout
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.DealerRound
-import Pitboss.FSM.DealerTable
-import Pitboss.FSM.PlayerHand
-import Pitboss.FSM.PlayerSpot
-import Pitboss.FSM.PlayerTable
+import Pitboss.FSM
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap.Occupancy
 
@@ -62,8 +56,8 @@ data instance Delta k 'TransactionBoundary = DTransactionBoundary
     deriving (Eq, Show, Generic)
 
 data DeltaSemantics
-    = TransactionBoundary -- "This delta marks semantic completion"
-    | PartialUpdate EntityStatePart -- "This delta modifies a specific part"
+    = TransactionBoundary
+    | PartialUpdate EntityStatePart
 
 data CausalHistory = CausalHistory
     { causalIntent :: Maybe (EntityId 'Intent)
@@ -106,7 +100,6 @@ data instance Delta 'Intent ('PartialUpdate 'Rels)
 
 -- DEvent
 data instance Delta 'Event ('PartialUpdate 'Attrs)
-    -- No setters! Events are immutable
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Event ('PartialUpdate 'Modes)
@@ -248,7 +241,6 @@ data instance Delta 'TableShoe ('PartialUpdate 'Rels)
     = DTableShoeSetTable (EntityId 'Table) (EntityId 'Table)
     deriving (Eq, Show, Generic)
 
--- json support
 instance
     ( ToJSON (Delta k ('PartialUpdate 'Attrs))
     , ToJSON (Delta k ('PartialUpdate 'Modes))

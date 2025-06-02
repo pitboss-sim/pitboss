@@ -8,11 +8,11 @@ import Pitboss.FSM.DealerTable.Phase
 import Pitboss.FSM.Types.Transitionable
 
 data DealerTableFSM (p :: DealerTablePhase) where
-    OffDutyFSM :: DealerTableFSM 'OffDuty
-    PushingFSM :: DealerTableFSM 'Pushing
-    OnDutyFSM :: DealerTableFSM 'OnDuty
-    TaskingFSM :: DealerTask -> DealerTableFSM ('Tasking task)
-    LeavingFSM :: DealerTableFSM 'Leaving
+    DTOffDutyFSM :: DealerTableFSM 'DTOffDuty
+    DTPushingFSM :: DealerTableFSM 'DTPushing
+    DTOnDutyFSM :: DealerTableFSM 'DTOnDuty
+    DTTaskingFSM :: DealerTask -> DealerTableFSM ('DTTasking task)
+    DTLeavingFSM :: DealerTableFSM 'DTLeaving
 
 deriving instance Eq (DealerTableFSM p)
 
@@ -20,8 +20,8 @@ deriving instance Show (DealerTableFSM p)
 
 instance Transitionable (DealerTableFSM p) where
     transitionType = \case
-        OffDutyFSM -> AwaitInput
-        PushingFSM -> AutoAdvance
-        OnDutyFSM -> AwaitInput
-        TaskingFSM _ -> AwaitInput
-        LeavingFSM -> AutoAdvance
+        DTOffDutyFSM -> AwaitInput
+        DTPushingFSM -> AutoAdvance
+        DTOnDutyFSM -> AwaitInput
+        DTTaskingFSM _ -> AwaitInput
+        DTLeavingFSM -> AutoAdvance

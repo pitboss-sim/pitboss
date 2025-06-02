@@ -10,110 +10,110 @@ import Pitboss.FSM.PlayerHand.FSM
 import Pitboss.FSM.PlayerHand.Phase
 
 type family ValidPlayerHandTransition (from :: HandPhase) (to :: HandPhase) :: Bool where
-    ValidPlayerHandTransition 'Decision 'Hitting = 'True
-    ValidPlayerHandTransition 'Decision ('OneCardDraw reason) = 'True
-    ValidPlayerHandTransition 'Decision ('Resolved res) = 'True
-    ValidPlayerHandTransition 'Hitting 'Hitting = 'True
-    ValidPlayerHandTransition 'Hitting ('Resolved 'Bust) = 'True
-    ValidPlayerHandTransition 'Hitting ('Resolved 'Stand) = 'True
-    ValidPlayerHandTransition ('OneCardDraw reason) ('Resolved res) = 'True
+    ValidPlayerHandTransition 'PHDecision 'PHHitting = 'True
+    ValidPlayerHandTransition 'PHDecision ('PHOneCardDraw reason) = 'True
+    ValidPlayerHandTransition 'PHDecision ('PHResolved res) = 'True
+    ValidPlayerHandTransition 'PHHitting 'PHHitting = 'True
+    ValidPlayerHandTransition 'PHHitting ('PHResolved 'PHBust) = 'True
+    ValidPlayerHandTransition 'PHHitting ('PHResolved 'PHStand) = 'True
+    ValidPlayerHandTransition ('PHOneCardDraw reason) ('PHResolved res) = 'True
     ValidPlayerHandTransition _ _ = 'False
 
-initialDecisionTyped :: SomeHand -> PlayerHandFSM 'Decision 'OKHit 'OKDbl 'OKSpl
-initialDecisionTyped _hand = DecisionFSM
+initialDecisionTyped :: SomeHand -> PlayerHandFSM 'PHDecision 'OKHit 'OKDbl 'OKSpl
+initialDecisionTyped _hand = PHDecisionFSM
 
 resolveSurrenderTyped ::
-    (ValidPlayerHandTransition 'Decision ('Resolved 'Surrendered) ~ 'True) =>
+    (ValidPlayerHandTransition 'PHDecision ('PHResolved 'PHSurrendered) ~ 'True) =>
     SomeHand ->
-    PlayerHandFSM 'Decision h d s ->
-    PlayerHandFSM ('Resolved 'Surrendered) 'NoHit 'NoDbl 'NoSpl
-resolveSurrenderTyped _hand DecisionFSM = ResolvedFSM Surrendered
+    PlayerHandFSM 'PHDecision h d s ->
+    PlayerHandFSM ('PHResolved 'PHSurrendered) 'NoHit 'NoDbl 'NoSpl
+resolveSurrenderTyped _hand PHDecisionFSM = PHResolvedFSM PHSurrendered
 
 toOneCardDrawFromDecisionTyped ::
-    (ValidPlayerHandTransition 'Decision ('OneCardDraw reason) ~ 'True) =>
+    (ValidPlayerHandTransition 'PHDecision ('PHOneCardDraw reason) ~ 'True) =>
     OneCardDrawReason ->
     SomeHand ->
-    PlayerHandFSM 'Decision 'OKHit d s ->
-    PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
-toOneCardDrawFromDecisionTyped reason _hand DecisionFSM = OneCardDrawFSM reason
+    PlayerHandFSM 'PHDecision 'OKHit d s ->
+    PlayerHandFSM ('PHOneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
+toOneCardDrawFromDecisionTyped reason _hand PHDecisionFSM = PHOneCardDrawFSM reason
 
 toHittingTyped ::
-    (ValidPlayerHandTransition 'Decision 'Hitting ~ 'True) =>
+    (ValidPlayerHandTransition 'PHDecision 'PHHitting ~ 'True) =>
     SomeHand ->
-    PlayerHandFSM 'Decision 'OKHit d s ->
-    PlayerHandFSM 'Hitting 'OKHit d s
-toHittingTyped _hand DecisionFSM = HittingFSM
+    PlayerHandFSM 'PHDecision 'OKHit d s ->
+    PlayerHandFSM 'PHHitting 'OKHit d s
+toHittingTyped _hand PHDecisionFSM = PHHittingFSM
 
 continueHittingTyped ::
-    (ValidPlayerHandTransition 'Hitting 'Hitting ~ 'True) =>
+    (ValidPlayerHandTransition 'PHHitting 'PHHitting ~ 'True) =>
     SomeHand ->
-    PlayerHandFSM 'Hitting h d s ->
-    PlayerHandFSM 'Hitting h d s
-continueHittingTyped _hand HittingFSM = HittingFSM
+    PlayerHandFSM 'PHHitting h d s ->
+    PlayerHandFSM 'PHHitting h d s
+continueHittingTyped _hand PHHittingFSM = PHHittingFSM
 
 resolveStandTyped ::
-    (ValidPlayerHandTransition 'Decision ('Resolved 'Stand) ~ 'True) =>
+    (ValidPlayerHandTransition 'PHDecision ('PHResolved 'PHStand) ~ 'True) =>
     SomeHand ->
-    PlayerHandFSM 'Decision h d s ->
-    PlayerHandFSM ('Resolved 'Stand) 'NoHit 'NoDbl 'NoSpl
-resolveStandTyped _hand DecisionFSM = ResolvedFSM Stand
+    PlayerHandFSM 'PHDecision h d s ->
+    PlayerHandFSM ('PHResolved 'PHStand) 'NoHit 'NoDbl 'NoSpl
+resolveStandTyped _hand PHDecisionFSM = PHResolvedFSM PHStand
 
 resolveBustTyped ::
-    (ValidPlayerHandTransition 'Hitting ('Resolved 'Bust) ~ 'True) =>
+    (ValidPlayerHandTransition 'PHHitting ('PHResolved 'PHBust) ~ 'True) =>
     SomeHand ->
-    PlayerHandFSM 'Hitting h d s ->
-    PlayerHandFSM ('Resolved 'Bust) 'NoHit 'NoDbl 'NoSpl
-resolveBustTyped (SomeHand hand) HittingFSM = case witness hand of
-    BustWitness -> ResolvedFSM Bust
+    PlayerHandFSM 'PHHitting h d s ->
+    PlayerHandFSM ('PHResolved 'PHBust) 'NoHit 'NoDbl 'NoSpl
+resolveBustTyped (SomeHand hand) PHHittingFSM = case witness hand of
+    BustWitness -> PHResolvedFSM PHBust
     _ -> error "resolveBustTyped: hand is not busted"
 
 resolveOneCardDrawTyped ::
-    (ValidPlayerHandTransition ('OneCardDraw reason) ('Resolved res) ~ 'True) =>
+    (ValidPlayerHandTransition ('PHOneCardDraw reason) ('PHResolved res) ~ 'True) =>
     SomeHand ->
     PlayerHandResolution ->
-    PlayerHandFSM ('OneCardDraw reason) 'NoHit 'NoDbl 'NoSpl ->
-    PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
-resolveOneCardDrawTyped (SomeHand hand) res (OneCardDrawFSM _) = case (witness hand, res) of
-    (BustWitness, Bust) -> ResolvedFSM res
-    (BlackjackWitness, Blackjack) -> ResolvedFSM res
-    (_, Stand) | handScore (SomeHand hand) <= 21 -> ResolvedFSM res
+    PlayerHandFSM ('PHOneCardDraw reason) 'NoHit 'NoDbl 'NoSpl ->
+    PlayerHandFSM ('PHResolved res) 'NoHit 'NoDbl 'NoSpl
+resolveOneCardDrawTyped (SomeHand hand) res (PHOneCardDrawFSM _) = case (witness hand, res) of
+    (BustWitness, PHBust) -> PHResolvedFSM res
+    (BlackjackWitness, PHBlackjack) -> PHResolvedFSM res
+    (_, PHStand) | handScore (SomeHand hand) <= 21 -> PHResolvedFSM res
     _ -> error "resolveOneCardDrawTyped: invalid resolution for hand"
 
 resolveSplitTyped ::
-    (ValidPlayerHandTransition 'Decision ('Resolved res) ~ 'True) =>
+    (ValidPlayerHandTransition 'PHDecision ('PHResolved res) ~ 'True) =>
     SomeHand ->
-    PlayerHandFSM 'Decision h d s ->
+    PlayerHandFSM 'PHDecision h d s ->
     Offering ->
-    PlayerHandFSM ('Resolved res) 'NoHit 'NoDbl 'NoSpl
-resolveSplitTyped someHand DecisionFSM offering =
+    PlayerHandFSM ('PHResolved res) 'NoHit 'NoDbl 'NoSpl
+resolveSplitTyped someHand PHDecisionFSM offering =
     case fromSomeHand someHand of
         SomeLifecycleHand fullHand@(FullLifecycleHand _) ->
             if canSplitHand fullHand 0 offering
                 then case extractPairRank someHand of
-                    Just Ace -> ResolvedFSM SplitAces
-                    Just _ -> ResolvedFSM SplitNonAces
+                    Just Ace -> PHResolvedFSM PHSplitAces
+                    Just _ -> PHResolvedFSM PHSplitNonAces
                     Nothing -> error "resolveSplitTyped: not a pair"
                 else error "resolveSplitTyped: hand cannot be split"
         _ -> error "resolveSplitTyped: not a full hand"
 
 resolvePushTyped ::
-    (ValidPlayerHandTransition from ('Resolved 'Push) ~ 'True) =>
+    (ValidPlayerHandTransition from ('PHResolved 'PHPush) ~ 'True) =>
     SomeHand ->
     PlayerHandFSM from h d s ->
-    PlayerHandFSM ('Resolved 'Push) 'NoHit 'NoDbl 'NoSpl
-resolvePushTyped _hand _ = ResolvedFSM Push
+    PlayerHandFSM ('PHResolved 'PHPush) 'NoHit 'NoDbl 'NoSpl
+resolvePushTyped _hand _ = PHResolvedFSM PHPush
 
 resolveDealerBlackjackTyped ::
-    (ValidPlayerHandTransition from ('Resolved 'DealerBlackjack) ~ 'True) =>
+    (ValidPlayerHandTransition from ('PHResolved 'PHDealerBlackjack) ~ 'True) =>
     SomeHand ->
     PlayerHandFSM from h d s ->
-    PlayerHandFSM ('Resolved 'DealerBlackjack) 'NoHit 'NoDbl 'NoSpl
-resolveDealerBlackjackTyped _hand _ = ResolvedFSM DealerBlackjack
+    PlayerHandFSM ('PHResolved 'PHDealerBlackjack) 'NoHit 'NoDbl 'NoSpl
+resolveDealerBlackjackTyped _hand _ = PHResolvedFSM PHDealerBlackjack
 
 resolveVoidTyped ::
-    (ValidPlayerHandTransition from ('Resolved ('Void impact)) ~ 'True) =>
+    (ValidPlayerHandTransition from ('PHResolved ('PHVoid impact)) ~ 'True) =>
     SomeHand ->
     BankrollImpact ->
     PlayerHandFSM from h d s ->
-    PlayerHandFSM ('Resolved ('Void impact)) 'NoHit 'NoDbl 'NoSpl
-resolveVoidTyped _hand impact _ = ResolvedFSM (Void impact)
+    PlayerHandFSM ('PHResolved ('PHVoid impact)) 'NoHit 'NoDbl 'NoSpl
+resolveVoidTyped _hand impact _ = PHResolvedFSM (PHVoid impact)

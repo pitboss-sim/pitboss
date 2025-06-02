@@ -2,7 +2,7 @@ module Pitboss.Sim.Engine.DeltaGen where
 
 import Control.Monad.Reader
 import Pitboss.Blackjack hiding (Stand)
-import Pitboss.FSM.PlayerHand hiding (Push)
+import Pitboss.FSM
 import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.TickCache
@@ -15,7 +15,7 @@ generateDeltas event history = case event of
         case maybeHand of
             Just hand -> do
                 let oldFSM = _phFsm (_phModes hand)
-                    newFSM = SomePlayerHandFSM (ResolvedFSM Stand)
+                    newFSM = SomePlayerHandFSM (PHResolvedFSM PHStand)
                     delta = ModesDelta history (DPlayerHandSetPlayerHandFSM newFSM oldFSM)
                     mutation = createMutation handId hand delta
                 pure [mutation]

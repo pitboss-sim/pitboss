@@ -60,7 +60,7 @@ validateDecision hand decision offering = case decision of
 safeDecisionLookup :: StrategyChart -> SomeHand -> Rank -> Offering -> Decision
 safeDecisionLookup chart hand upcard offering =
     case lookupDecisionTyped chart hand upcard offering of
-        Just decision -> decision -- validation already handled in lookupDecisionTyped
+        Just decision -> decision
         Nothing -> Always Hit
 
 fallbackForInvalidDecision :: Decision -> Decision

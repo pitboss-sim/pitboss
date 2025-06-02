@@ -21,31 +21,31 @@ instance Show SomePlayerTableFSM where
 
 instance Eq SomePlayerTableFSM where
     SomePlayerTableFSM f1 == SomePlayerTableFSM f2 = case (f1, f2) of
-        (IdleFSM, IdleFSM) -> True
-        (ChoosingTableFSM, ChoosingTableFSM) -> True
-        (PlacingBetFSM, PlacingBetFSM) -> True
-        (PlayingHandFSM, PlayingHandFSM) -> True
-        (ObservingFSM, ObservingFSM) -> True
-        (DoneFSM, DoneFSM) -> True
+        (PTIdleFSM, PTIdleFSM) -> True
+        (PTChoosingTableFSM, PTChoosingTableFSM) -> True
+        (PTPlacingBetFSM, PTPlacingBetFSM) -> True
+        (PTPlayingHandFSM, PTPlayingHandFSM) -> True
+        (PTObservingFSM, PTObservingFSM) -> True
+        (PTDoneFSM, PTDoneFSM) -> True
         _ -> False
 
 instance ToJSON SomePlayerTableFSM where
     toJSON (SomePlayerTableFSM fsm) = case fsm of
-        IdleFSM -> object ["tag" .= String "Idle"]
-        ChoosingTableFSM -> object ["tag" .= String "ChoosingTable"]
-        PlacingBetFSM -> object ["tag" .= String "PlacingBet"]
-        PlayingHandFSM -> object ["tag" .= String "PlayingHand"]
-        ObservingFSM -> object ["tag" .= String "Observing"]
-        DoneFSM -> object ["tag" .= String "Done"]
+        PTIdleFSM -> object ["tag" .= String "Idle"]
+        PTChoosingTableFSM -> object ["tag" .= String "ChoosingTable"]
+        PTPlacingBetFSM -> object ["tag" .= String "PlacingBet"]
+        PTPlayingHandFSM -> object ["tag" .= String "PlayingHand"]
+        PTObservingFSM -> object ["tag" .= String "Observing"]
+        PTDoneFSM -> object ["tag" .= String "Done"]
 
 instance FromJSON SomePlayerTableFSM where
     parseJSON = withObject "SomePlayerTableFSM" $ \obj -> do
         tag <- obj .: "tag"
         case tag of
-            "Idle" -> pure $ SomePlayerTableFSM IdleFSM
-            "ChoosingTable" -> pure $ SomePlayerTableFSM ChoosingTableFSM
-            "PlacingBet" -> pure $ SomePlayerTableFSM PlacingBetFSM
-            "PlayingHand" -> pure $ SomePlayerTableFSM PlayingHandFSM
-            "Observing" -> pure $ SomePlayerTableFSM ObservingFSM
-            "Done" -> pure $ SomePlayerTableFSM DoneFSM
+            "Idle" -> pure $ SomePlayerTableFSM PTIdleFSM
+            "ChoosingTable" -> pure $ SomePlayerTableFSM PTChoosingTableFSM
+            "PlacingBet" -> pure $ SomePlayerTableFSM PTPlacingBetFSM
+            "PlayingHand" -> pure $ SomePlayerTableFSM PTPlayingHandFSM
+            "Observing" -> pure $ SomePlayerTableFSM PTObservingFSM
+            "Done" -> pure $ SomePlayerTableFSM PTDoneFSM
             _ -> fail $ "Unknown tag for SomePlayerTableFSM: " ++ tag

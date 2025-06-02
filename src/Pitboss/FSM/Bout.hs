@@ -21,12 +21,12 @@ instance Show SomeBoutFSM where
 
 instance Eq SomeBoutFSM where
     SomeBoutFSM f1 == SomeBoutFSM f2 = case (f1, f2) of
-        (AwaitingFirstCardFSM, AwaitingFirstCardFSM) -> True
-        (AwaitingSecondCardFSM, AwaitingSecondCardFSM) -> True
-        (PlayerTurnFSM, PlayerTurnFSM) -> True
-        (DealerTurnFSM, DealerTurnFSM) -> True
-        (SettlementFSM, SettlementFSM) -> True
-        (DoneFSM, DoneFSM) -> True
+        (BAwaitingFirstCardFSM, BAwaitingFirstCardFSM) -> True
+        (BAwaitingSecondCardFSM, BAwaitingSecondCardFSM) -> True
+        (BPlayerTurnFSM, BPlayerTurnFSM) -> True
+        (BDealerTurnFSM, BDealerTurnFSM) -> True
+        (BSettlementFSM, BSettlementFSM) -> True
+        (BDoneFSM, BDoneFSM) -> True
         _ -> False
 
 instance Transitionable SomeBoutFSM where
@@ -34,21 +34,21 @@ instance Transitionable SomeBoutFSM where
 
 instance ToJSON SomeBoutFSM where
     toJSON (SomeBoutFSM fsm) = case fsm of
-        AwaitingFirstCardFSM -> object ["tag" .= String "AwaitingFirstCard"]
-        AwaitingSecondCardFSM -> object ["tag" .= String "AwaitingSecondCard"]
-        PlayerTurnFSM -> object ["tag" .= String "PlayerTurn"]
-        DealerTurnFSM -> object ["tag" .= String "DealerTurn"]
-        SettlementFSM -> object ["tag" .= String "Settlement"]
-        DoneFSM -> object ["tag" .= String "Done"]
+        BAwaitingFirstCardFSM -> object ["tag" .= String "AwaitingFirstCard"]
+        BAwaitingSecondCardFSM -> object ["tag" .= String "AwaitingSecondCard"]
+        BPlayerTurnFSM -> object ["tag" .= String "PlayerTurn"]
+        BDealerTurnFSM -> object ["tag" .= String "DealerTurn"]
+        BSettlementFSM -> object ["tag" .= String "Settlement"]
+        BDoneFSM -> object ["tag" .= String "Done"]
 
 instance FromJSON SomeBoutFSM where
     parseJSON = withObject "SomeBoutFSM" $ \obj -> do
         tag <- obj .: "tag"
         case tag of
-            "AwaitingFirstCard" -> pure $ SomeBoutFSM AwaitingFirstCardFSM
-            "AwaitingSecondCard" -> pure $ SomeBoutFSM AwaitingSecondCardFSM
-            "PlayerTurn" -> pure $ SomeBoutFSM PlayerTurnFSM
-            "DealerTurn" -> pure $ SomeBoutFSM DealerTurnFSM
-            "Settlement" -> pure $ SomeBoutFSM SettlementFSM
-            "Done" -> pure $ SomeBoutFSM DoneFSM
+            "AwaitingFirstCard" -> pure $ SomeBoutFSM BAwaitingFirstCardFSM
+            "AwaitingSecondCard" -> pure $ SomeBoutFSM BAwaitingSecondCardFSM
+            "PlayerTurn" -> pure $ SomeBoutFSM BPlayerTurnFSM
+            "DealerTurn" -> pure $ SomeBoutFSM BDealerTurnFSM
+            "Settlement" -> pure $ SomeBoutFSM BSettlementFSM
+            "Done" -> pure $ SomeBoutFSM BDoneFSM
             _ -> fail $ "Unknown BoutFSM tag: " ++ tag

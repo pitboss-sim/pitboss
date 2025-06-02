@@ -50,7 +50,7 @@ instance FromJSON (Meta k) where
 
 data Timeline (k :: EntityKind) a = Timeline
     { timelineMeta :: Meta k
-    , timelineInitialState :: Maybe (EntityState k) -- entities born at this state
+    , timelineInitialState :: Maybe (EntityState k)
     , timelineDeltas :: InsOrdHashMap Tick [a]
     }
 

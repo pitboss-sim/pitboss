@@ -9,12 +9,8 @@ import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
 import Pitboss.Agency.Archetype.Types
-import Pitboss.Blackjack.Events
-import Pitboss.Blackjack.Materia.Card
-import Pitboss.Blackjack.Materia.Chips
-import Pitboss.Blackjack.Materia.Hand
-import Pitboss.FSM.Bout
-import Pitboss.FSM.PlayerHand
+import Pitboss.Blackjack
+import Pitboss.FSM
 import Pitboss.Sim.Engine.DeltaGen
 import Pitboss.Sim.Types
 import Pitboss.State.Delta.Types
@@ -26,7 +22,6 @@ import Pitboss.State.Trace.Ops
 import Pitboss.State.Types.Core
 import Test.Hspec
 
--- Helper to extract Word64 from Tick
 unTick :: Tick -> Word64
 unTick (Tick w) = w
 
@@ -74,7 +69,7 @@ mkInitialTrace startTick =
         boutState =
             EBout
                 { _boutAttrs = BoutAttrs Nothing
-                , _boutModes = BoutModes (SomeBoutFSM AwaitingFirstCardFSM)
+                , _boutModes = BoutModes (SomeBoutFSM BAwaitingFirstCardFSM)
                 , _boutRels = BoutRels playerHandId dealerHandId undefined undefined undefined
                 }
 
@@ -87,7 +82,7 @@ mkInitialTrace startTick =
                         , _phAttrsSplitDepth = 0
                         , _phAttrsHandIx = 0
                         }
-                , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
+                , _phModes = PlayerHandModes (SomePlayerHandFSM PHDecisionFSM)
                 , _phRels = PlayerHandRels undefined undefined playerId boutId
                 }
 
@@ -123,7 +118,6 @@ runEvent event state =
         Tick tickNum = tick
         nextTick = Tick (tickNum + 1)
 
-        -- Fix: Use unTick to extract Word64 from Tick for eventId
         simEvent =
             SimEvent
                 { eventId = unTick tick
@@ -132,7 +126,6 @@ runEvent event state =
                 , eventCausingIntent = Nothing
                 }
 
-        -- Fix: Create TickCacheContext properly
         cache =
             populateTickCache
                 (_bouts $ simTrace state)
@@ -146,19 +139,17 @@ runEvent event state =
                 (_tableShoes $ simTrace state)
                 tick
 
-        -- Fix: Wrap Word64 in EntityId constructor for CausalHistory
         traceOps =
             withTickCache cache $
                 generateDeltas event (CausalHistory Nothing (Just $ EntityId $ eventId simEvent))
 
         newTrace = foldl (flip $ \op' -> applyTraceOp op' tick) (simTrace state) traceOps
 
-        -- Fix: Use Tick as key (consistent with EventLog definition)
         newEventLog =
             EventLog $
                 IHM.insertWith
                     (++)
-                    tick -- Use tick directly, not tickNum
+                    tick
                     [simEvent]
                     (eventLogEvents $ simEventLog state)
      in state
@@ -197,7 +188,7 @@ spec = describe "Bout Flow Integration" $ do
 
         case result of
             Just hand ->
-                _phFsm (_phModes hand) `shouldBe` SomePlayerHandFSM (ResolvedFSM Stand)
+                _phFsm (_phModes hand) `shouldBe` SomePlayerHandFSM (PHResolvedFSM PHStand)
             Nothing ->
                 expectationFailure "Player hand not found"
 
@@ -210,7 +201,6 @@ spec = describe "Bout Flow Integration" $ do
 
         let EventLog eventMap = simEventLog state1
             tick = simTick state0
-            -- Fix: Use Tick directly for lookup (consistent with EventLog using Tick keys)
             events = IHM.lookup tick eventMap
 
         case events of

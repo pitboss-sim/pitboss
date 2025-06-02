@@ -16,13 +16,11 @@ import Pitboss.State.Trace
 import Pitboss.State.Trace.Types
 import Pitboss.State.Types.Core
 
--- Simplified trace operations carrying witnesses explicitly
 data TraceOp where
     BirthOp :: EntityKindWitness k -> EntityId k -> EntityState k -> TraceOp
     MutationOp :: EntityKindWitness k -> EntityId k -> SomeDelta k -> TraceOp
     DeathOp :: EntityKindWitness k -> EntityId k -> DeathReason k -> TraceOp
 
--- Registry access using type applications
 class HasRegistry (k :: EntityKind) where
     registryLens :: Lens' Trace (Registry k (SomeDelta k))
 
@@ -53,7 +51,6 @@ instance HasRegistry 'PlayerSpot where
 instance HasRegistry 'PlayerHand where
     registryLens = playerHands
 
--- Type-safe birth operation
 applyBirthTyped :: forall k. (HasRegistry k) => EntityId k -> EntityState k -> Tick -> Trace -> Trace
 applyBirthTyped eid state tick trace =
     let timeline = mkTimeline eid tick state
@@ -61,7 +58,6 @@ applyBirthTyped eid state tick trace =
         updatedReg = Registry $ IHM.insert eid timeline reg
      in trace & registryLens @k .~ updatedReg
 
--- Type-safe mutation operation
 applyMutationTyped :: forall k. (HasRegistry k) => EntityId k -> SomeDelta k -> Tick -> Trace -> Trace
 applyMutationTyped eid someDelta tick trace =
     let Registry reg = trace ^. registryLens @k
@@ -75,7 +71,6 @@ applyMutationTyped eid someDelta tick trace =
                  in trace & registryLens @k .~ updatedReg
             Nothing -> trace
 
--- Main trace operation application using witness dispatch
 applyTraceOp :: TraceOp -> Tick -> Trace -> Trace
 applyTraceOp (BirthOp witness' eid state) tick trace =
     case witness' of
@@ -101,7 +96,6 @@ applyTraceOp (MutationOp witness' eid someDelta) tick trace =
         TableShoeWitness -> applyMutationTyped @'TableShoe eid someDelta tick trace
 applyTraceOp (DeathOp _witness _eid _reason) _tick trace = trace -- TODO: implement death handling
 
--- Show instance for TraceOp
 instance Show TraceOp where
     show (BirthOp witness' eid _state) =
         "BirthOp " ++ show witness' ++ " " ++ show eid ++ " <state>"
@@ -110,7 +104,6 @@ instance Show TraceOp where
     show (DeathOp witness' eid _reason) =
         "DeathOp " ++ show witness' ++ " " ++ show eid ++ " <reason>"
 
--- Helper constructors using HasWitness to extract witness
 createBirth :: (HasWitness k) => EntityId k -> EntityState k -> TraceOp
 createBirth eid state = BirthOp (witness state) eid state
 

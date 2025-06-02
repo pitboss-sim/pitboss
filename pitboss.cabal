@@ -51,6 +51,7 @@ library
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Outcome
                       Pitboss.Blackjack.Play
+                      Pitboss.FSM
                       Pitboss.FSM.Bout
                       Pitboss.FSM.Bout.FSM
                       Pitboss.FSM.Bout.Phase

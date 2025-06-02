@@ -52,7 +52,6 @@ validateTokenCount lnum fullLine moveToks =
                     (T.unpack fullLine)
                     (WrongTokenCount 10 (length moveToks))
 
--- Helper to parse and validate digit suffixes
 parseDigitSuffix :: Int -> Text -> String -> Either ChartParseError Int
 parseDigitSuffix lnum fullLine str
     | all isDigit str && not (null str) = Right (read str)
@@ -63,7 +62,6 @@ parseDigitSuffix lnum fullLine str
                 (T.unpack fullLine)
                 (UnreadableHardTotal str)
 
--- Helper to validate numeric ranges
 validateRange :: Int -> Text -> Int -> Int -> Int -> Either ChartParseError Int
 validateRange lnum fullLine value' minVal maxVal
     | value' >= minVal && value' <= maxVal = Right value'

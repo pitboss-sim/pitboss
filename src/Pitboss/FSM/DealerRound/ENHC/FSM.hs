@@ -33,15 +33,15 @@ instance AtDecisionPoint (ENHCFSM p) where
 
 instance PhaseTag ENHCFSM DealerRoundPhase where
     phaseTag = \case
-        ENHCAwaitingFSM -> Awaiting
-        ENHCBetsFSM -> Bets
-        ENHCDealFSM -> Deal
-        ENHCEarlySurrenderFSM -> EarlySurrender
-        ENHCPlayersFSM -> Players
-        ENHCDealingFSM -> Dealing
-        ENHCSettleFSM -> Settle
-        ENHCCompleteFSM -> Complete
-        ENHCInterruptedFSM r -> Interrupted r
+        ENHCAwaitingFSM -> DRAwaiting
+        ENHCBetsFSM -> DRBets
+        ENHCDealFSM -> DRDeal
+        ENHCEarlySurrenderFSM -> DREarlySurrender
+        ENHCPlayersFSM -> DRPlayers
+        ENHCDealingFSM -> DRDealing
+        ENHCSettleFSM -> DRSettle
+        ENHCCompleteFSM -> DRComplete
+        ENHCInterruptedFSM r -> DRInterrupted r
 
 instance Transitionable (ENHCFSM p) where
     transitionType = \case

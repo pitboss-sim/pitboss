@@ -10,7 +10,6 @@ data InterruptReason
     | Environment
     deriving (Eq, Show, Generic)
 
--- Move InsuranceOutcome here from RuleSet:
 data InsuranceOutcome = Lost | Paid | PaidEvenMoney
     deriving (Eq, Show, Generic)
 

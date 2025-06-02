@@ -56,7 +56,6 @@ class (MonadReader TickCacheContext m) => Deref id m where
     type DerefTarget id
     deref :: id -> m (Maybe (DerefTarget id))
 
--- Helper to implement Deref instances uniformly
 derefHelper ::
     (MonadReader TickCacheContext m) =>
     Getting (IHM.InsOrdHashMap (EntityId k) (EntityState k)) TickCache (IHM.InsOrdHashMap (EntityId k) (EntityState k)) ->

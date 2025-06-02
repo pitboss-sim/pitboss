@@ -9,17 +9,17 @@ import Pitboss.FSM.Types
 import Pitboss.FSM.Types.Transitionable
 
 data DealerHandFSM (p :: DealerHandPhase) where
-    DealingFSM :: DealerHandFSM 'Dealing
-    EvaluatingFSM :: DealerHandFSM 'Evaluating
-    ResolvedFSM :: DealerHandResolution -> DealerHandFSM ('Resolved r)
-    InterruptedFSM :: InterruptReason -> DealerHandFSM ('Interrupted r)
+    DHDealingFSM :: DealerHandFSM 'DHDealing
+    DHEvaluatingFSM :: DealerHandFSM 'DHEvaluating
+    DHResolvedFSM :: DealerHandResolution -> DealerHandFSM ('DHResolved r)
+    DHInterruptedFSM :: InterruptReason -> DealerHandFSM ('DHInterrupted r)
 
 deriving instance Show (DealerHandFSM p)
 deriving instance Eq (DealerHandFSM p)
 
 instance Transitionable (DealerHandFSM p) where
     transitionType = \case
-        DealingFSM -> AwaitInput
-        EvaluatingFSM -> AutoAdvance
-        ResolvedFSM _ -> TerminalPhase
-        InterruptedFSM _ -> AwaitInput
+        DHDealingFSM -> AwaitInput
+        DHEvaluatingFSM -> AutoAdvance
+        DHResolvedFSM _ -> TerminalPhase
+        DHInterruptedFSM _ -> AwaitInput

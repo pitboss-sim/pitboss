@@ -9,14 +9,10 @@ module Pitboss.State.Registry (
     Registry (..),
 ) where
 
--- timeline utilities
-
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import Pitboss.State.Timeline
 import Pitboss.State.Types.Core
-
--- delta timeline per type
 
 newtype Registry (k :: EntityKind) delta = Registry
     { unRegistry :: InsOrdHashMap (EntityId k) (Timeline k delta)

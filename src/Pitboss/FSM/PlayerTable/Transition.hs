@@ -8,40 +8,40 @@ module Pitboss.FSM.PlayerTable.Transition where
 import Pitboss.FSM.PlayerTable.FSM
 import Pitboss.FSM.PlayerTable.Phase
 
-type family ValidPlayerTableTransition (from :: PlayerPhase) (to :: PlayerPhase) :: Bool where
-    ValidPlayerTableTransition 'Idle 'ChoosingTable = 'True
-    ValidPlayerTableTransition 'ChoosingTable 'PlacingBet = 'True
-    ValidPlayerTableTransition 'PlacingBet 'PlayingHand = 'True
-    ValidPlayerTableTransition 'PlayingHand 'Observing = 'True
-    ValidPlayerTableTransition 'Observing 'Done = 'True
+type family ValidPlayerTableTransition (from :: PlayerTablePhase) (to :: PlayerTablePhase) :: Bool where
+    ValidPlayerTableTransition 'PTIdle 'PTChoosingTable = 'True
+    ValidPlayerTableTransition 'PTChoosingTable 'PTPlacingBet = 'True
+    ValidPlayerTableTransition 'PTPlacingBet 'PTPlayingHand = 'True
+    ValidPlayerTableTransition 'PTPlayingHand 'PTObserving = 'True
+    ValidPlayerTableTransition 'PTObserving 'PTDone = 'True
     ValidPlayerTableTransition _ _ = 'False
 
 beginChoosingTable ::
-    (ValidPlayerTableTransition 'Idle 'ChoosingTable ~ 'True) =>
-    PlayerTableFSM 'Idle ->
-    PlayerTableFSM 'ChoosingTable
-beginChoosingTable IdleFSM = ChoosingTableFSM
+    (ValidPlayerTableTransition 'PTIdle 'PTChoosingTable ~ 'True) =>
+    PlayerTableFSM 'PTIdle ->
+    PlayerTableFSM 'PTChoosingTable
+beginChoosingTable PTIdleFSM = PTChoosingTableFSM
 
 confirmTableChoice ::
-    (ValidPlayerTableTransition 'ChoosingTable 'PlacingBet ~ 'True) =>
-    PlayerTableFSM 'ChoosingTable ->
-    PlayerTableFSM 'PlacingBet
-confirmTableChoice ChoosingTableFSM = PlacingBetFSM
+    (ValidPlayerTableTransition 'PTChoosingTable 'PTPlacingBet ~ 'True) =>
+    PlayerTableFSM 'PTChoosingTable ->
+    PlayerTableFSM 'PTPlacingBet
+confirmTableChoice PTChoosingTableFSM = PTPlacingBetFSM
 
 placeBet ::
-    (ValidPlayerTableTransition 'PlacingBet 'PlayingHand ~ 'True) =>
-    PlayerTableFSM 'PlacingBet ->
-    PlayerTableFSM 'PlayingHand
-placeBet PlacingBetFSM = PlayingHandFSM
+    (ValidPlayerTableTransition 'PTPlacingBet 'PTPlayingHand ~ 'True) =>
+    PlayerTableFSM 'PTPlacingBet ->
+    PlayerTableFSM 'PTPlayingHand
+placeBet PTPlacingBetFSM = PTPlayingHandFSM
 
 startObservation ::
-    (ValidPlayerTableTransition 'PlayingHand 'Observing ~ 'True) =>
-    PlayerTableFSM 'PlayingHand ->
-    PlayerTableFSM 'Observing
-startObservation PlayingHandFSM = ObservingFSM
+    (ValidPlayerTableTransition 'PTPlayingHand 'PTObserving ~ 'True) =>
+    PlayerTableFSM 'PTPlayingHand ->
+    PlayerTableFSM 'PTObserving
+startObservation PTPlayingHandFSM = PTObservingFSM
 
 completeSession ::
-    (ValidPlayerTableTransition 'Observing 'Done ~ 'True) =>
-    PlayerTableFSM 'Observing ->
-    PlayerTableFSM 'Done
-completeSession ObservingFSM = DoneFSM
+    (ValidPlayerTableTransition 'PTObserving 'PTDone ~ 'True) =>
+    PlayerTableFSM 'PTObserving ->
+    PlayerTableFSM 'PTDone
+completeSession PTObservingFSM = PTDoneFSM

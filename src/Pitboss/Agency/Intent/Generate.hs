@@ -14,8 +14,7 @@ import Pitboss.Agency.Archetype.Player.Superstitious
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
 import Pitboss.Blackjack
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.PlayerHand hiding (Surrender, Double, Stand)
+import Pitboss.FSM
 import Pitboss.State.Entity.Types
 import Pitboss.State.TickCache
 import Pitboss.State.Types.Core
@@ -24,14 +23,14 @@ import System.Random (StdGen)
 generatePlayerHandIntent ::
     EntityId 'Player ->
     EntityId 'PlayerHand ->
-    StdGen -> -- Pass generator in
+    StdGen ->
     Reader TickCacheContext (Maybe BlackjackEvent)
 generatePlayerHandIntent playerId handId gen = do
     maybeHand <- deref handId
     case maybeHand of
         Nothing -> pure Nothing
         Just hand -> case _phFsm (_phModes hand) of
-            SomePlayerHandFSM DecisionFSM -> do
+            SomePlayerHandFSM PHDecisionFSM -> do
                 maybePlayer <- deref playerId
                 case maybePlayer of
                     Nothing -> pure Nothing
@@ -46,18 +45,15 @@ generatePlayerHandIntent playerId handId gen = do
 
 buildContext :: EntityState 'PlayerHand -> Reader TickCacheContext (Maybe GameContext)
 buildContext hand = do
-    -- Direct traversal using cached bout reference
     let boutId = _phRelsBelongsToBout (_phRels hand)
     maybeBout <- deref boutId
 
     case maybeBout of
         Nothing -> pure Nothing
         Just bout -> do
-            -- Get dealer hand from bout
             let dealerHandId = _boutRelsDealerHand (_boutRels bout)
             maybeDealerHand <- deref dealerHandId
 
-            -- Get table from bout
             let tableId = _boutRelsTable (_boutRels bout)
             maybeTable <- deref tableId
 
@@ -66,7 +62,7 @@ buildContext hand = do
                     let dealerCards = case _dhAttrsHand (_dhAttrs dealerHand) of
                             SomeHand hand' -> handCards hand'
                         dealerUpcard = case dealerCards of
-                            (c : _) -> c -- First card is upcard
+                            (c : _) -> c
                             [] -> error "Dealer hand has no cards - invalid game state"
 
                         offering = _tAttrsOffering (_tAttrs table)
@@ -106,7 +102,6 @@ decideByArchetype archetype ctx = case archetype of
     SomePlayerSuperstitious arch ->
         getSuperstitiousMove (ssConfig arch) ctx
 
--- Dealer intent generation now cleaner too
 generateDealerIntent ::
     EntityId 'Dealer ->
     EntityId 'DealerHand ->
@@ -116,9 +111,6 @@ generateDealerIntent _dealerId handId = do
     case maybeDealerHand of
         Nothing -> pure Nothing
         Just dealerHand -> case _dhModesDealerHand (_dhModes dealerHand) of
-            SomeDealerHandFSM DealingFSM -> do
-                -- Need to find the bout this dealer hand belongs to
-                -- Could either cache this relation too, or find via dealer->round->bout
-                -- For now, assuming we'd add _dhRelsBelongsToBout
+            SomeDealerHandFSM DHDealingFSM -> do
                 pure Nothing -- TODO: implement when dealer hand gets bout reference
             _ -> pure Nothing

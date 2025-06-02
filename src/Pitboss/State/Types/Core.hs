@@ -64,8 +64,6 @@ data EntityKind
 data EntityStatePart = Attrs | Modes | Rels
     deriving (Eq, Show, Generic)
 
--- provenance
-
 data IntentType
     = PlayerIntent
     | DealerIntent
@@ -104,8 +102,6 @@ data HandTarget
     | ToDealer (EntityId 'DealerHand)
     deriving (Show, Eq)
 
--- card state minutiae
-
 type CardIx = Int
 
 data CardState
@@ -116,8 +112,6 @@ data CardState
 
 instance ToJSON CardState
 instance FromJSON CardState
-
--- player spot minutiae
 
 data PlayerSpotIx
     = EPlayerSpot1
@@ -145,12 +139,8 @@ instance ToJSON PlayerSpotHandIx
 instance FromJSON PlayerSpotHandIx
 instance BoundedEnum PlayerSpotHandIx
 
--- time
-
 newtype Tick = Tick Word64
     deriving (Eq, Ord, Show, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
-
--- uid
 
 newtype EntityId (k :: EntityKind) = EntityId Word64
     deriving (Eq, Ord, Show, Generic)
@@ -161,7 +151,6 @@ newtype Uid (k :: EntityKind) = Uid (Tick, EntityId k)
 newtype EntityRef (k :: EntityKind) = EntityRef (Uid k)
     deriving (Eq, Ord, Show, Generic)
 
--- Helper functions
 uidTick :: Uid k -> Tick
 uidTick (Uid (tick, _)) = tick
 

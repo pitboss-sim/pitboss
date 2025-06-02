@@ -68,20 +68,18 @@ instance FromJSON DealerRoundFSM where
             "ENHC" -> ENHCDealerRound <$> obj .: "state"
             other -> fail $ "Unknown flavor for DealerRoundFSM: " ++ T.unpack other
 
--- helpers
-
 abandonHandDueToSurrender :: GameRuleSet -> Bool -> SomePlayerHandFSM
 abandonHandDueToSurrender _ early =
     SomePlayerHandFSM $
         if early
-            then AbandonedFSM (Surrender Early)
-            else AbandonedFSM (Surrender Late)
+            then PHAbandonedFSM (PHSurrender Early)
+            else PHAbandonedFSM (PHSurrender Late)
 
 abandonHandDueToInsurance :: Bool -> SomePlayerHandFSM
 abandonHandDueToInsurance evenMoney =
     SomePlayerHandFSM $
-        AbandonedFSM $
-            if evenMoney then Insurance PaidEvenMoney else Insurance Paid
+        PHAbandonedFSM $
+            if evenMoney then PHInsurance PaidEvenMoney else PHInsurance Paid
 
 atPlayersPhase :: DealerRoundFSM -> Bool
 atPlayersPhase = \case

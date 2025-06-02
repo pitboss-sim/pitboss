@@ -4,7 +4,7 @@ module Pitboss.Integration.TimelineSpec (spec) where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Blackjack hiding (Stand)
-import Pitboss.FSM.PlayerHand
+import Pitboss.FSM
 import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Registry
@@ -20,7 +20,6 @@ spec = describe "Timeline Integration" $ do
             initialTick = Tick 1000
             updateTick = Tick 1001
 
-            -- Initial hand entity
             initialHand =
                 EPlayerHand
                     { _phAttrs =
@@ -32,7 +31,7 @@ spec = describe "Timeline Integration" $ do
                             }
                     , _phModes =
                         PlayerHandModes
-                            { _phFsm = SomePlayerHandFSM DecisionFSM
+                            { _phFsm = SomePlayerHandFSM PHDecisionFSM
                             }
                     , _phRels =
                         PlayerHandRels
@@ -43,29 +42,24 @@ spec = describe "Timeline Integration" $ do
                             }
                     }
 
-            -- Create timeline with initial state
             timeline = mkTimeline handId initialTick initialHand
             -- TODO: Need to add initial creation deltas to timeline
 
-            -- Create the stand delta
             standDelta =
                 ModesDelta
                     (CausalHistory (Just (EntityId 100)) (Just (EntityId 200)))
                     ( DPlayerHandSetPlayerHandFSM
-                        (SomePlayerHandFSM (ResolvedFSM Stand))
-                        (SomePlayerHandFSM DecisionFSM)
+                        (SomePlayerHandFSM (PHResolvedFSM PHStand))
+                        (SomePlayerHandFSM PHDecisionFSM)
                     )
 
-            -- Add delta to timeline at updateTick
             updatedTimeline =
                 timeline
                     { timelineDeltas = IHM.insert updateTick [standDelta] (timelineDeltas timeline)
                     }
 
-            -- Create registry with our timeline
             registry = Registry $ IHM.singleton handId updatedTimeline
 
-            -- Create TickCache at updateTick
             cache =
                 populateTickCache
                     mempty -- empty bout registry
@@ -79,12 +73,10 @@ spec = describe "Timeline Integration" $ do
                     mempty -- empty shoe registry
                     updateTick
 
-            -- Look up the hand in cache with explicit type
             result = withTickCache cache $ deref (handId :: EntityId 'PlayerHand)
 
-        -- Verify hand was reconstructed with stand resolution
         case result of
             Just (EPlayerHand _ modes _) ->
-                _phFsm modes `shouldBe` SomePlayerHandFSM (ResolvedFSM Stand)
+                _phFsm modes `shouldBe` SomePlayerHandFSM (PHResolvedFSM PHStand)
             Nothing ->
                 expectationFailure "Hand not found in cache"

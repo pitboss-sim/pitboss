@@ -7,7 +7,7 @@
 module Pitboss.State.Trace.Types where
 
 import Pitboss.Blackjack
-import Pitboss.FSM.PlayerHand
+import Pitboss.FSM
 import Pitboss.State.Types.Core
 
 data family DeathReason (k :: EntityKind)

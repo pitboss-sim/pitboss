@@ -8,21 +8,20 @@ import GHC.Generics
 import Pitboss.FSM.Types
 
 data DealerRoundPhase
-    = Awaiting
-    | Bets
-    | Deal
-    | EarlySurrender
-    | InsuranceDecision
-    | InsuranceSettled
-    | Peek
-    | LateSurrender
-    | Players
-    | Dealing
-    | Settle
-    | Complete
-    | Interrupted InterruptReason
+    = DRAwaiting
+    | DRBets
+    | DRDeal
+    | DREarlySurrender
+    | DRInsuranceDecision
+    | DRInsuranceSettled
+    | DRPeek
+    | DRLateSurrender
+    | DRPlayers
+    | DRDealing
+    | DRSettle
+    | DRComplete
+    | DRInterrupted InterruptReason
     deriving (Eq, Show, Generic)
 
 instance ToJSON DealerRoundPhase
-
 instance FromJSON DealerRoundPhase

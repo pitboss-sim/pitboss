@@ -67,14 +67,14 @@ instance Incremental BoutRels where
     apply (DBoutSetPlayerHand new _) rels = rels{_boutRelsPlayerHand = new}
     apply (DBoutSetDealerHand new _) rels = rels{_boutRelsDealerHand = new}
     apply (DBoutSetTableShoe new _) rels = rels{_boutRelsTableShoe = new}
-    apply (DBoutSetTable new _) rels = rels{_boutRelsTable = new} -- new
-    apply (DBoutSetDealerRound new _) rels = rels{_boutRelsDealerRound = new} -- new
+    apply (DBoutSetTable new _) rels = rels{_boutRelsTable = new}
+    apply (DBoutSetDealerRound new _) rels = rels{_boutRelsDealerRound = new}
 
     describe (DBoutSetPlayerHand new old) _ = "Set bout player hand: " ++ show old ++ " → " ++ show new
     describe (DBoutSetDealerHand new old) _ = "Set bout dealer hand: " ++ show old ++ " → " ++ show new
     describe (DBoutSetTableShoe new old) _ = "Set bout table shoe: " ++ show old ++ " → " ++ show new
-    describe (DBoutSetTable new old) _ = "Set bout table: " ++ show old ++ " → " ++ show new -- new
-    describe (DBoutSetDealerRound new old) _ = "Set bout dealer round: " ++ show old ++ " → " ++ show new -- new
+    describe (DBoutSetTable new old) _ = "Set bout table: " ++ show old ++ " → " ++ show new
+    describe (DBoutSetDealerRound new old) _ = "Set bout dealer round: " ++ show old ++ " → " ++ show new
 
 instance IncrementalWithWitness 'Bout where
     applyWithWitness AttrsWitness delta (EBout attrs modes rels) =

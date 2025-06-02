@@ -6,8 +6,7 @@ module Pitboss.Agency.Intent.Instances.Validateable where
 
 import Pitboss.Agency.Intent.Types
 import Pitboss.Blackjack
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.PlayerHand
+import Pitboss.FSM
 import Pitboss.State.Types.Core
 
 class Validateable (k :: IntentKind) where
@@ -35,8 +34,8 @@ instance Validateable 'IPlayerHit where
 
         checkCanMakeDecision :: IntentCtx 'IPlayerHit -> Either String ()
         checkCanMakeDecision ctx' = case phICtxPlayerHandFSM ctx' of
-            SomePlayerHandFSM DecisionFSM -> Right ()
-            SomePlayerHandFSM HittingFSM -> Right ()
+            SomePlayerHandFSM PHDecisionFSM -> Right ()
+            SomePlayerHandFSM PHHittingFSM -> Right ()
             _ -> Left "Hand not in a state where hitting is allowed"
 
         checkShoeHasCards :: IntentCtx 'IPlayerHit -> Either String ()
@@ -71,8 +70,8 @@ instance Validateable 'IPlayerStand where
 
         checkCanMakeDecision :: IntentCtx 'IPlayerStand -> Either String ()
         checkCanMakeDecision ctx' = case psICtxPlayerHandFSM ctx' of
-            SomePlayerHandFSM DecisionFSM -> Right ()
-            SomePlayerHandFSM HittingFSM -> Right ()
+            SomePlayerHandFSM PHDecisionFSM -> Right ()
+            SomePlayerHandFSM PHHittingFSM -> Right ()
             _ -> Left "Hand not in a state where standing is allowed"
 
 instance Validateable 'IPlayerDouble where
@@ -106,7 +105,7 @@ instance Validateable 'IPlayerDouble where
 
         checkCanMakeDecision :: IntentCtx 'IPlayerDouble -> Either String ()
         checkCanMakeDecision ctx' = case pdICtxPlayerHandFSM ctx' of
-            SomePlayerHandFSM DecisionFSM -> Right ()
+            SomePlayerHandFSM PHDecisionFSM -> Right ()
             _ -> Left "Hand not in initial decision state"
 
 instance Validateable 'IPlayerSplit where
@@ -128,7 +127,7 @@ instance Validateable 'IDealerHit where
 
         checkInDealingPhase :: IntentCtx 'IDealerHit -> Either String ()
         checkInDealingPhase ctx' = case dhICtxDealerHandFSM ctx' of
-            SomeDealerHandFSM DealingFSM -> Right ()
+            SomeDealerHandFSM DHDealingFSM -> Right ()
             _ -> Left "Dealer hand not in dealing phase"
 
 instance Validateable 'IDealerStand where
@@ -144,7 +143,7 @@ instance Validateable 'IDealerStand where
 
         checkInDealingPhase :: IntentCtx 'IDealerStand -> Either String ()
         checkInDealingPhase ctx' = case dsICtxDealerHandFSM ctx' of
-            SomeDealerHandFSM DealingFSM -> Right ()
+            SomeDealerHandFSM DHDealingFSM -> Right ()
             _ -> Left "Dealer hand not in dealing phase"
 
 instance Validateable 'IDealerDeal where

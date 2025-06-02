@@ -80,16 +80,6 @@ instance Reversible (Delta 'DealerRound (PartialUpdate 'Modes)) where
 instance Reversible (Delta 'DealerRound (PartialUpdate 'Rels)) where
     invert (DDealerRoundSetTableShoe a b) = Right (DDealerRoundSetTableShoe b a)
 
--- DOffering
-instance Reversible (Delta 'Offering (PartialUpdate 'Attrs)) where
-    invert (DOfferingSetOffering old new) = Right (DOfferingSetOffering new old)
-
-instance Reversible (Delta 'Offering (PartialUpdate 'Modes)) where
-    invert DOfferingModes = Right DOfferingModes
-
-instance Reversible (Delta 'Offering (PartialUpdate 'Rels)) where
-    invert DOfferingRels = Right DOfferingRels
-
 -- DPlayer
 instance Reversible (Delta 'Player (PartialUpdate 'Attrs)) where
     invert (DPlayerSetName old new) = Right (DPlayerSetName new old)

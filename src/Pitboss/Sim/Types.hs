@@ -3,8 +3,8 @@
 module Pitboss.Sim.Types where
 
 import Data.Word (Word64)
-import Pitboss.Blackjack.Events
-import Pitboss.State.Trace.Ops (TraceOp)
+import Pitboss.Blackjack
+import Pitboss.State.Trace.Ops
 import Pitboss.State.Types.Core
 
 data SimIntent = SimIntent

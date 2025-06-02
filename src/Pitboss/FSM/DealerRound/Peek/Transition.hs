@@ -5,7 +5,7 @@
 
 module Pitboss.FSM.DealerRound.Peek.Transition where
 
-import Pitboss.Blackjack.Offering.RuleSet.Game
+import Pitboss.Blackjack
 import Pitboss.FSM.DealerRound.Peek.FSM
 import Pitboss.FSM.DealerRound.Peek.Phase
 

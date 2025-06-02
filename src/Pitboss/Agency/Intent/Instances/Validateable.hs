@@ -5,12 +5,9 @@
 module Pitboss.Agency.Intent.Instances.Validateable where
 
 import Pitboss.Agency.Intent.Types
-import Pitboss.Blackjack.Materia.Chips (Chips (..))
-import Pitboss.Blackjack.Materia.Hand (handScore)
-import Pitboss.Blackjack.Play (canDoubleSomeHand, isBusted)
-import Pitboss.FSM.DealerHand (DealerHandFSM (..), SomeDealerHandFSM (..))
-import Pitboss.FSM.DealerHand.Transition (dealerShouldHit)
-import Pitboss.FSM.PlayerHand (PlayerHandFSM (..), SomePlayerHandFSM (..), isHandTerminal)
+import Pitboss.Blackjack
+import Pitboss.FSM.DealerHand
+import Pitboss.FSM.PlayerHand
 import Pitboss.State.Types.Core
 
 class Validateable (k :: IntentKind) where

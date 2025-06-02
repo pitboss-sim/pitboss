@@ -5,7 +5,7 @@
 module Pitboss.FSM.PlayerSpot.FSM where
 
 import Pitboss.FSM.PlayerSpot.Phase
-import Pitboss.FSM.Types (InterruptReason)
+import Pitboss.FSM.Types
 import Pitboss.FSM.Types.Transitionable
 
 data PlayerSpotFSM (p :: PlayerSpotPhase) where

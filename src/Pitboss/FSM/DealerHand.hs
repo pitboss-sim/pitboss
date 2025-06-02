@@ -11,8 +11,8 @@ module Pitboss.FSM.DealerHand (
 where
 
 import Data.Aeson.Types
-import Pitboss.FSM.DealerHand.FSM (DealerHandFSM (..))
-import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))
+import Pitboss.FSM.DealerHand.FSM
+import Pitboss.FSM.DealerHand.Phase
 import Pitboss.FSM.DealerHand.Transition
 
 data SomeDealerHandFSM = forall p. SomeDealerHandFSM (DealerHandFSM p)

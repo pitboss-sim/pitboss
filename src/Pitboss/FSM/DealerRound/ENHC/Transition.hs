@@ -5,7 +5,7 @@
 
 module Pitboss.FSM.DealerRound.ENHC.Transition where
 
-import Pitboss.Blackjack.Offering.RuleSet.Game
+import Pitboss.Blackjack
 import Pitboss.FSM.DealerRound.ENHC.FSM
 import Pitboss.FSM.DealerRound.ENHC.Phase
 

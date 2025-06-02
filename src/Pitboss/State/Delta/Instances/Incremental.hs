@@ -160,28 +160,6 @@ instance Incremental DealerRoundRels where
 
     describe (DDealerRoundSetTableShoe new old) _ = "Set dealer round table shoe: " ++ show old ++ " → " ++ show new
 
--- EOffering
-instance Incremental OfferingAttrs where
-    type Applicable OfferingAttrs = Delta 'Offering (PartialUpdate 'Attrs)
-
-    apply (DOfferingSetOffering new _) _ = OfferingAttrs new
-
-    describe (DOfferingSetOffering new old) _ = "Set offering: " ++ show old ++ " → " ++ show new
-
-instance Incremental OfferingModes where
-    type Applicable OfferingModes = Delta 'Offering (PartialUpdate 'Modes)
-
-    apply DOfferingModes modes = modes
-
-    describe DOfferingModes _ = "No change to offering modes"
-
-instance Incremental OfferingRels where
-    type Applicable OfferingRels = Delta 'Offering (PartialUpdate 'Rels)
-
-    apply DOfferingRels rels = rels
-
-    describe DOfferingRels _ = "No change to offering relations"
-
 -- EPlayer
 instance Incremental PlayerAttrs where
     type Applicable PlayerAttrs = Delta 'Player (PartialUpdate 'Attrs)
@@ -346,14 +324,6 @@ instance IncrementalWithWitness 'DealerRound where
         EDealerRound attrs (apply delta modes) rels
     applyWithWitness RelsWitness delta (EDealerRound attrs modes rels) =
         EDealerRound attrs modes (apply delta rels)
-
-instance IncrementalWithWitness 'Offering where
-    applyWithWitness AttrsWitness delta (EOffering attrs modes rels) =
-        EOffering (apply delta attrs) modes rels
-    applyWithWitness ModesWitness delta (EOffering attrs modes rels) =
-        EOffering attrs (apply delta modes) rels
-    applyWithWitness RelsWitness delta (EOffering attrs modes rels) =
-        EOffering attrs modes (apply delta rels)
 
 instance IncrementalWithWitness 'PlayerHand where
     applyWithWitness AttrsWitness delta (EPlayerHand attrs modes rels) =

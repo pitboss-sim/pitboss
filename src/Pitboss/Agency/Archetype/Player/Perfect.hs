@@ -5,8 +5,7 @@ module Pitboss.Agency.Archetype.Player.Perfect where
 import Control.Monad.State
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
-import Pitboss.Blackjack.Action
-import Pitboss.Blackjack.Materia.Hand (handScore)
+import Pitboss.Blackjack
 import System.Random
 
 getPerfectMove :: ArchetypeConfig 'Perfect -> GameContext -> State StdGen Move

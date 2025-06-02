@@ -43,7 +43,7 @@ import Data.Word (Word64)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
-import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
+import Pitboss.State.Types.FiniteMap.BoundedEnum
 import System.Random (Random (..), RandomGen)
 
 data EntityKind

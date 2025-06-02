@@ -1,7 +1,7 @@
 module Pitboss.Sim.Engine.DeltaGen where
 
 import Control.Monad.Reader
-import Pitboss.Blackjack.Events
+import Pitboss.Blackjack hiding (Stand)
 import Pitboss.FSM.PlayerHand hiding (Push)
 import Pitboss.State.Delta.Types
 import Pitboss.State.Entity.Types
@@ -26,8 +26,8 @@ generateDeltas event history = case event of
         pure []
     CardDealt _card (ToDealerHand _handId) -> do
         pure []
-    BoutSettled _boutId outcome -> do
-        case outcome of
+    BoutSettled _boutId detailedOutcome -> do
+        case outcome detailedOutcome of
             PlayerWins -> pure []
             DealerWins -> pure []
             Push -> pure []

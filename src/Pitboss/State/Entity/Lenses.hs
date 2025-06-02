@@ -6,24 +6,20 @@ module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
-import Pitboss.Agency.Archetype.Types (SomeDealerArchetype, SomePlayerArchetype (..))
-import Pitboss.Blackjack.Materia.Card (Card)
-import Pitboss.Blackjack.Materia.Chips (Chips)
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.Blackjack.Offering qualified as O
-import Pitboss.Blackjack.Play (Outcome)
-import Pitboss.FSM.Bout (SomeBoutFSM)
+import Pitboss.Agency.Archetype.Types
+import Pitboss.Blackjack
+import Pitboss.FSM.Bout
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
-import Pitboss.FSM.PlayerHand (SomePlayerHandFSM)
-import Pitboss.FSM.PlayerSpot (SomePlayerSpotFSM)
-import Pitboss.FSM.PlayerTable (SomePlayerTableFSM)
-import Pitboss.FSM.Table (SomeTableFSM)
+import Pitboss.FSM.PlayerHand
+import Pitboss.FSM.PlayerSpot
+import Pitboss.FSM.PlayerTable
+import Pitboss.FSM.Table
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
-import Pitboss.State.Types.FiniteMap (FiniteMap)
-import Pitboss.State.Types.FiniteMap.Occupancy (Occupancy)
+import Pitboss.State.Types.FiniteMap
+import Pitboss.State.Types.FiniteMap.Occupancy
 import Prelude hiding (round)
 
 bAttrs :: Lens' (EntityState 'Bout) BoutAttrs
@@ -35,7 +31,7 @@ bModes f (EBout a m r) = fmap (\m' -> EBout a m' r) (f m)
 bRels :: Lens' (EntityState 'Bout) BoutRels
 bRels f (EBout a m r) = fmap (EBout a m) (f r)
 
-bAttrsOutcome :: Lens' BoutAttrs (Maybe Outcome)
+bAttrsOutcome :: Lens' BoutAttrs (Maybe DetailedOutcome)
 bAttrsOutcome f (BoutAttrs outcome) = fmap BoutAttrs (f outcome)
 
 bModesFSM :: Lens' BoutModes SomeBoutFSM
@@ -131,19 +127,6 @@ drAttrsIsActive f (DealerRoundAttrs number active) = fmap (DealerRoundAttrs numb
 
 drRelsTableShoeUsed :: Lens' DealerRoundRels (EntityId 'TableShoe)
 drRelsTableShoeUsed f (DealerRoundRels shoe) = fmap DealerRoundRels (f shoe)
-
--- EOffering
-oAttrs :: Lens' (EntityState 'Offering) OfferingAttrs
-oAttrs f (EOffering a m r) = fmap (\a' -> EOffering a' m r) (f a)
-
-oModes :: Lens' (EntityState 'Offering) OfferingModes
-oModes f (EOffering a m r) = fmap (\m' -> EOffering a m' r) (f m)
-
-oRels :: Lens' (EntityState 'Offering) OfferingRels
-oRels f (EOffering a m r) = fmap (EOffering a m) (f r)
-
-oAttrsOffering :: Lens' OfferingAttrs O.Offering
-oAttrsOffering f (OfferingAttrs offering) = fmap OfferingAttrs (f offering)
 
 -- EPlayer
 pAttrs :: Lens' (EntityState 'Player) PlayerAttrs
@@ -254,7 +237,7 @@ tAttrsName f (TableAttrs name round offering) = fmap (\n -> TableAttrs n round o
 tAttrsCurrentRound :: Lens' TableAttrs (Maybe (EntityId 'DealerRound))
 tAttrsCurrentRound f (TableAttrs name round offering) = fmap (\r -> TableAttrs name r offering) (f round)
 
-tAttrsOffering :: Lens' TableAttrs O.Offering
+tAttrsOffering :: Lens' TableAttrs Offering
 tAttrsOffering f (TableAttrs name round offering) = fmap (TableAttrs name round) (f offering)
 
 tModesFSM :: Lens' TableModes SomeTableFSM

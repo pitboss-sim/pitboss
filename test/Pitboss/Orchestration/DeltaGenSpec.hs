@@ -41,7 +41,6 @@ mkCacheFromTrace trace =
         (_dealers trace)
         (_dealerHands trace)
         (_dealerRounds trace)
-        (_offerings trace)
         (_tables trace)
         (_tableShoes trace)
 

@@ -6,13 +6,13 @@
 
 module Pitboss.State.Trace.Types where
 
-import Pitboss.Blackjack.Play (Outcome)
-import Pitboss.FSM.PlayerHand (PlayerHandResolution)
+import Pitboss.Blackjack
+import Pitboss.FSM.PlayerHand
 import Pitboss.State.Types.Core
 
 data family DeathReason (k :: EntityKind)
 
-data instance DeathReason 'Bout = BoutComplete Outcome
+data instance DeathReason 'Bout = BoutComplete DetailedOutcome
     deriving (Show, Eq)
 
 data instance DeathReason 'PlayerHand = HandResolved PlayerHandResolution

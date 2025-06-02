@@ -6,8 +6,7 @@ import Control.Monad.State
 import Data.Map qualified as Map
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
-import Pitboss.Blackjack.Action
-import Pitboss.Blackjack.Materia.Hand (handScore)
+import Pitboss.Blackjack
 import System.Random
 
 getAdvantageMove :: ArchetypeConfig 'Advantage -> ArchetypeState 'Advantage -> GameContext -> State StdGen Move

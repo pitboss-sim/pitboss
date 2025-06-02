@@ -5,9 +5,7 @@ module Pitboss.Agency.Archetype.Dealer.Rules where
 
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
-import Pitboss.Blackjack.Materia.Hand
-import Pitboss.Blackjack.Offering (gameRuleSet)
-import Pitboss.Blackjack.Offering.RuleSet (GameRuleSet, isH17)
+import Pitboss.Blackjack
 
 data DealerRequiredAction
     = MustHit

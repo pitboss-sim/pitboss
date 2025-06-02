@@ -27,11 +27,8 @@ import Data.Aeson.Types (Parser)
 import Data.Map.Strict (Map)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Chips (Chips)
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.Blackjack.Offering qualified as O
-import Pitboss.Blackjack.Play (Outcome)
-import Pitboss.FSM.Bout (SomeBoutFSM)
+import Pitboss.Blackjack
+import Pitboss.FSM.Bout
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
@@ -120,7 +117,7 @@ data instance Delta 'Event ('PartialUpdate 'Rels)
 
 -- DBout
 data instance Delta 'Bout ('PartialUpdate 'Attrs)
-    = DBoutSetOutcome (Maybe Outcome) (Maybe Outcome)
+    = DBoutSetOutcome (Maybe DetailedOutcome) (Maybe DetailedOutcome)
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Bout ('PartialUpdate 'Modes)
@@ -178,17 +175,6 @@ data instance Delta 'DealerRound ('PartialUpdate 'Rels)
     = DDealerRoundSetTableShoe (EntityId 'TableShoe) (EntityId 'TableShoe)
     deriving (Eq, Show, Generic)
 
--- DOffering
-data instance Delta 'Offering ('PartialUpdate 'Attrs)
-    = DOfferingSetOffering O.Offering O.Offering
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Offering ('PartialUpdate 'Modes) = DOfferingModes {}
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Offering ('PartialUpdate 'Rels) = DOfferingRels {}
-    deriving (Eq, Show, Generic)
-
 -- DPlayer
 data instance Delta 'Player ('PartialUpdate 'Attrs)
     = DPlayerSetName String String
@@ -239,7 +225,7 @@ data instance Delta 'PlayerSpot ('PartialUpdate 'Rels)
 -- DTable
 data instance Delta 'Table ('PartialUpdate 'Attrs)
     = DTableSetName String String
-    | DTableSetOffering O.Offering O.Offering
+    | DTableSetOffering Offering Offering
     deriving (Eq, Show, Generic)
 
 data instance Delta 'Table ('PartialUpdate 'Modes)
@@ -350,15 +336,6 @@ instance ToJSON (Delta 'DealerRound ('PartialUpdate 'Modes))
 instance FromJSON (Delta 'DealerRound ('PartialUpdate 'Modes))
 instance ToJSON (Delta 'DealerRound ('PartialUpdate 'Rels))
 instance FromJSON (Delta 'DealerRound ('PartialUpdate 'Rels))
-
-instance ToJSON (Delta 'Offering 'TransactionBoundary)
-instance FromJSON (Delta 'Offering 'TransactionBoundary)
-instance ToJSON (Delta 'Offering ('PartialUpdate 'Attrs))
-instance FromJSON (Delta 'Offering ('PartialUpdate 'Attrs))
-instance ToJSON (Delta 'Offering ('PartialUpdate 'Modes))
-instance FromJSON (Delta 'Offering ('PartialUpdate 'Modes))
-instance ToJSON (Delta 'Offering ('PartialUpdate 'Rels))
-instance FromJSON (Delta 'Offering ('PartialUpdate 'Rels))
 
 instance ToJSON (Delta 'Player 'TransactionBoundary)
 instance FromJSON (Delta 'Player 'TransactionBoundary)

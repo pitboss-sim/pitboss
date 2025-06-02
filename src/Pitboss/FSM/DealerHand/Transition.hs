@@ -5,11 +5,10 @@
 
 module Pitboss.FSM.DealerHand.Transition where
 
-import Pitboss.Blackjack.Materia.Hand
-import Pitboss.Blackjack.Offering.RuleSet (GameRuleSet, isH17)
+import Pitboss.Blackjack
 import Pitboss.FSM.DealerHand.FSM
-import Pitboss.FSM.DealerHand.Phase (DealerHandPhase (..), DealerHandResolution (..))
-import Pitboss.FSM.Types (InterruptReason)
+import Pitboss.FSM.DealerHand.Phase
+import Pitboss.FSM.Types
 
 type family ValidDealerHandTransition (from :: DealerHandPhase) (to :: DealerHandPhase) :: Bool where
     ValidDealerHandTransition 'Dealing 'Evaluating = 'True

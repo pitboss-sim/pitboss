@@ -28,7 +28,9 @@ library
                       Pitboss.Agency.Intent.Instances.Validateable
                       Pitboss.Agency.Intent.Types
                       Pitboss.Agency.Types
+                      Pitboss.Blackjack
                       Pitboss.Blackjack.Action
+                      Pitboss.Blackjack.BasicStrategy.Chart
                       Pitboss.Blackjack.BasicStrategy.Chart.Error
                       Pitboss.Blackjack.BasicStrategy.Chart.Interpret
                       Pitboss.Blackjack.BasicStrategy.Chart.Overlay
@@ -47,6 +49,7 @@ library
                       Pitboss.Blackjack.Offering.RuleSet.Game
                       Pitboss.Blackjack.Offering.RuleSet.Table
                       Pitboss.Blackjack.Offering.WellKnown
+                      Pitboss.Blackjack.Outcome
                       Pitboss.Blackjack.Play
                       Pitboss.FSM.Bout
                       Pitboss.FSM.Bout.FSM

@@ -18,7 +18,7 @@ import Data.Aeson
 import Data.Aeson.Types (Parser)
 import Data.Map (Map)
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.BasicStrategy.Chart.Types (StrategyChart)
+import Pitboss.Blackjack.BasicStrategy.Chart
 
 data PlayerArchetypeKind
     = BasicStrategy

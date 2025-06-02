@@ -18,7 +18,7 @@ where
 
 import Data.Aeson.Types
 import Data.Text qualified as T
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack hiding (Surrender)
 import Pitboss.FSM.DealerRound.ENHC
 import Pitboss.FSM.DealerRound.Peek
 import Pitboss.FSM.DealerRound.Phase

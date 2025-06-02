@@ -8,7 +8,6 @@ module Pitboss.State.Trace (
     Trace (..),
     emptyTrace,
     bouts,
-    offerings,
     tables,
     tableShoes,
     dealers,
@@ -28,7 +27,6 @@ import Pitboss.State.Types.Core
 
 data Trace = Trace
     { _bouts :: Registry 'Bout (SomeDelta 'Bout)
-    , _offerings :: Registry 'Offering (SomeDelta 'Offering)
     , _tables :: Registry 'Table (SomeDelta 'Table)
     , _tableShoes :: Registry 'TableShoe (SomeDelta 'TableShoe)
     , _dealers :: Registry 'Dealer (SomeDelta 'Dealer)
@@ -41,10 +39,9 @@ data Trace = Trace
     deriving (Eq, Generic)
 
 instance ToJSON Trace where
-    toJSON (Trace b o t s d dh dr p ps ph) =
+    toJSON (Trace b t s d dh dr p ps ph) =
         object
             [ "bouts" .= b
-            , "offerings" .= o
             , "tables" .= t
             , "shoes" .= s
             , "dealers" .= d
@@ -59,7 +56,6 @@ instance FromJSON Trace where
     parseJSON = withObject "Trace" $ \o ->
         Trace
             <$> o .: "bouts"
-            <*> o .: "offerings"
             <*> o .: "tables"
             <*> o .: "shoes"
             <*> o .: "dealers"
@@ -73,7 +69,6 @@ emptyTrace :: Trace
 emptyTrace =
     Trace
         { _bouts = mempty
-        , _offerings = mempty
         , _tables = mempty
         , _tableShoes = mempty
         , _dealers = mempty

@@ -6,10 +6,9 @@ import Control.Lens
 import Control.Monad.State
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
-import Pitboss.Blackjack.Action
-import Pitboss.Blackjack.BasicStrategy.Chart.Interpret (safeDecisionLookup)
-import Pitboss.Blackjack.BasicStrategy.Types (Decision (..), Fallback (..))
-import Pitboss.Blackjack.Materia.Card (rank)
+import Pitboss.Blackjack
+import Pitboss.Blackjack.BasicStrategy.Chart
+import Pitboss.Blackjack.BasicStrategy.Types
 import System.Random
 
 getBasicStrategyMove :: ArchetypeConfig 'BasicStrategy -> GameContext -> State StdGen Move

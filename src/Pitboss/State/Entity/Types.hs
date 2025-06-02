@@ -9,13 +9,9 @@ module Pitboss.State.Entity.Types where
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Agency.Archetype.Types (SomeDealerArchetype (..), SomePlayerArchetype (..))
-import Pitboss.Blackjack.Materia.Card (Card)
-import Pitboss.Blackjack.Materia.Chips
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.Blackjack.Offering qualified as O
-import Pitboss.Blackjack.Play (Outcome)
-import Pitboss.FSM.Bout (SomeBoutFSM)
+import Pitboss.Agency.Archetype.Types
+import Pitboss.Blackjack hiding (HasWitness)
+import Pitboss.FSM.Bout
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
 import Pitboss.FSM.DealerTable
@@ -29,7 +25,6 @@ import Pitboss.State.Types.FiniteMap.Occupancy
 
 data family EntityState (k :: EntityKind)
 
--- Witness for EntityKind
 data EntityKindWitness (k :: EntityKind) where
     BoutWitness :: EntityKindWitness 'Bout
     PlayerWitness :: EntityKindWitness 'Player
@@ -40,7 +35,6 @@ data EntityKindWitness (k :: EntityKind) where
     DealerRoundWitness :: EntityKindWitness 'DealerRound
     TableWitness :: EntityKindWitness 'Table
     TableShoeWitness :: EntityKindWitness 'TableShoe
-    OfferingWitness :: EntityKindWitness 'Offering
 
 instance Show (EntityKindWitness k) where
     show BoutWitness = "BoutWitness"
@@ -52,15 +46,13 @@ instance Show (EntityKindWitness k) where
     show DealerRoundWitness = "DealerRoundWitness"
     show TableWitness = "TableWitness"
     show TableShoeWitness = "TableShoeWitness"
-    show OfferingWitness = "OfferingWitness"
 
--- HasWitness class for extracting witnesses from entity states
 class HasWitness (k :: EntityKind) where
     witness :: EntityState k -> EntityKindWitness k
 
 -- EBout
 data BoutAttrs = BoutAttrs
-    { _boutAttrsOutcome :: Maybe Outcome
+    { _boutAttrsOutcome :: Maybe DetailedOutcome
     }
     deriving (Eq, Show, Generic)
 
@@ -170,28 +162,6 @@ data instance EntityState 'DealerRound = EDealerRound
 instance HasWitness 'DealerRound where
     witness _ = DealerRoundWitness
 
--- EOffering
-data OfferingAttrs = OfferingAttrs
-    { _oAttrsOffering :: O.Offering
-    }
-    deriving (Eq, Show, Generic)
-
-data OfferingModes = OfferingModes
-    deriving (Eq, Show, Generic)
-
-data OfferingRels = OfferingRels
-    deriving (Eq, Show, Generic)
-
-data instance EntityState 'Offering = EOffering
-    { _oAttrs :: OfferingAttrs
-    , _oModes :: OfferingModes
-    , _oRels :: OfferingRels
-    }
-    deriving (Eq, Generic)
-
-instance HasWitness 'Offering where
-    witness _ = OfferingWitness
-
 -- EPlayer
 data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
@@ -238,7 +208,7 @@ data PlayerHandRels = PlayerHandRels
     { _phRelsBelongsToPlayerSpot :: EntityId 'PlayerSpot
     , _phRelsBelongsToDealerRound :: EntityId 'DealerRound
     , _phRelsOwnedByPlayer :: EntityId 'Player
-    , _phRelsBelongsToBout :: EntityId 'Bout  -- NEW
+    , _phRelsBelongsToBout :: EntityId 'Bout -- NEW
     }
     deriving (Eq, Show, Generic)
 
@@ -285,7 +255,7 @@ instance HasWitness 'PlayerSpot where
 data TableAttrs = TableAttrs
     { _tAttrsName :: String
     , _tAttrsCurrentRound :: Maybe (EntityId 'DealerRound)
-    , _tAttrsOffering :: O.Offering
+    , _tAttrsOffering :: Offering
     }
     deriving (Eq, Show, Generic)
 
@@ -371,15 +341,6 @@ instance FromJSON DealerRoundRels
 instance ToJSON (EntityState 'DealerRound)
 instance FromJSON (EntityState 'DealerRound)
 
-instance ToJSON OfferingAttrs
-instance FromJSON OfferingAttrs
-instance ToJSON OfferingModes
-instance FromJSON OfferingModes
-instance ToJSON OfferingRels
-instance FromJSON OfferingRels
-instance ToJSON (EntityState 'Offering)
-instance FromJSON (EntityState 'Offering)
-
 instance ToJSON PlayerAttrs
 instance FromJSON PlayerAttrs
 instance ToJSON PlayerModes
@@ -440,10 +401,6 @@ instance Show (EntityState 'DealerHand) where
 instance Show (EntityState 'DealerRound) where
     show (EDealerRound attrs modes rels) =
         "EDealerRound " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
-
-instance Show (EntityState 'Offering) where
-    show (EOffering attrs modes rels) =
-        "EOffering " ++ show attrs ++ " " ++ show modes ++ " " ++ show rels
 
 instance Show (EntityState 'Player) where
     show (EPlayer attrs modes rels) =

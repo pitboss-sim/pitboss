@@ -13,7 +13,7 @@ import Pitboss.State.Entity.Types
 import Pitboss.State.Registry
 import Pitboss.State.Timeline
 import Pitboss.State.Trace
-import Pitboss.State.Trace.Types (DeathReason)
+import Pitboss.State.Trace.Types
 import Pitboss.State.Types.Core
 
 -- Simplified trace operations carrying witnesses explicitly
@@ -28,9 +28,6 @@ class HasRegistry (k :: EntityKind) where
 
 instance HasRegistry 'Bout where
     registryLens = bouts
-
-instance HasRegistry 'Offering where
-    registryLens = offerings
 
 instance HasRegistry 'Table where
     registryLens = tables
@@ -91,7 +88,6 @@ applyTraceOp (BirthOp witness' eid state) tick trace =
         DealerRoundWitness -> applyBirthTyped @'DealerRound eid state tick trace
         TableWitness -> applyBirthTyped @'Table eid state tick trace
         TableShoeWitness -> applyBirthTyped @'TableShoe eid state tick trace
-        OfferingWitness -> applyBirthTyped @'Offering eid state tick trace
 applyTraceOp (MutationOp witness' eid someDelta) tick trace =
     case witness' of
         BoutWitness -> applyMutationTyped @'Bout eid someDelta tick trace
@@ -103,7 +99,6 @@ applyTraceOp (MutationOp witness' eid someDelta) tick trace =
         DealerRoundWitness -> applyMutationTyped @'DealerRound eid someDelta tick trace
         TableWitness -> applyMutationTyped @'Table eid someDelta tick trace
         TableShoeWitness -> applyMutationTyped @'TableShoe eid someDelta tick trace
-        OfferingWitness -> applyMutationTyped @'Offering eid someDelta tick trace
 applyTraceOp (DeathOp _witness _eid _reason) _tick trace = trace -- TODO: implement death handling
 
 -- Show instance for TraceOp

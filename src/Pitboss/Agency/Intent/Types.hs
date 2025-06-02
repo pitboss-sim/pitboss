@@ -4,14 +4,10 @@
 
 module Pitboss.Agency.Intent.Types where
 
-import Pitboss.Blackjack.Materia.Card (Card)
-import Pitboss.Blackjack.Materia.Chips (Chips)
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.Blackjack.Offering (Offering)
-import Pitboss.Blackjack.Offering.RuleSet (GameRuleSet)
-import Pitboss.FSM.DealerHand (SomeDealerHandFSM)
-import Pitboss.FSM.DealerRound (DealerRoundFSM)
-import Pitboss.FSM.PlayerHand (SomePlayerHandFSM)
+import Pitboss.Blackjack
+import Pitboss.FSM.DealerHand
+import Pitboss.FSM.DealerRound
+import Pitboss.FSM.PlayerHand
 import Pitboss.State.Types.Core
 
 data family IntentCtx (k :: IntentKind)

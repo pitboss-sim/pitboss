@@ -2,22 +2,7 @@
 
 module Pitboss.Blackjack.Offering.WellKnown where
 
-import Pitboss.Blackjack.Offering (BurnPolicy (..), MidShoeEntryPolicy (..), MultiSpotMinBetPolicy (..), Offering, TableRuleSet (..), mkOffering)
-import Pitboss.Blackjack.Offering.Materia (Dealt (..), DeckCount (..), Materia (..))
-import Pitboss.Blackjack.Offering.RuleSet (
-    DASRule (..),
-    DoubleRule (..),
-    GameRuleSet (..),
-    HoleCardRule (..),
-    Payout (..),
-    Pen (..),
-    ResplitAcesAllowed (..),
-    Soft17Rule (..),
-    SplitAcesAllowed (..),
-    SplitAcesFrozen (..),
-    SplitHands (..),
-    Surrender (..),
- )
+import Pitboss.Blackjack.Offering
 
 vegas6 :: Offering
 vegas6 =

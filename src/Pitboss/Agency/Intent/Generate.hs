@@ -7,17 +7,15 @@ module Pitboss.Agency.Intent.Generate where
 import Control.Monad.Reader
 import Control.Monad.State
 
-import Pitboss.Agency.Archetype.Player.Advantage (getAdvantageMove)
-import Pitboss.Agency.Archetype.Player.BasicStrategy (getBasicStrategyMove)
-import Pitboss.Agency.Archetype.Player.Perfect (getPerfectMove)
-import Pitboss.Agency.Archetype.Player.Superstitious (getSuperstitiousMove)
+import Pitboss.Agency.Archetype.Player.Advantage
+import Pitboss.Agency.Archetype.Player.BasicStrategy
+import Pitboss.Agency.Archetype.Player.Perfect
+import Pitboss.Agency.Archetype.Player.Superstitious
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
-import Pitboss.Blackjack.Action as Action
-import Pitboss.Blackjack.Events as Events
-import Pitboss.Blackjack.Materia.Hand (SomeHand(..), extractPairRank, handCards)
+import Pitboss.Blackjack
 import Pitboss.FSM.DealerHand
-import Pitboss.FSM.PlayerHand
+import Pitboss.FSM.PlayerHand hiding (Surrender, Double, Stand)
 import Pitboss.State.Entity.Types
 import Pitboss.State.TickCache
 import Pitboss.State.Types.Core
@@ -26,7 +24,7 @@ import System.Random (StdGen)
 generatePlayerHandIntent ::
     EntityId 'Player ->
     EntityId 'PlayerHand ->
-    StdGen ->  -- Pass generator in
+    StdGen -> -- Pass generator in
     Reader TickCacheContext (Maybe BlackjackEvent)
 generatePlayerHandIntent playerId handId gen = do
     maybeHand <- deref handId
@@ -68,32 +66,34 @@ buildContext hand = do
                     let dealerCards = case _dhAttrsHand (_dhAttrs dealerHand) of
                             SomeHand hand' -> handCards hand'
                         dealerUpcard = case dealerCards of
-                            (c:_) -> c  -- First card is upcard
+                            (c : _) -> c -- First card is upcard
                             [] -> error "Dealer hand has no cards - invalid game state"
 
                         offering = _tAttrsOffering (_tAttrs table)
 
-                    pure $ Just GameContext
-                        { _contextPlayerHand = _phAttrsHand (_phAttrs hand)
-                        , _contextDealerUpcard = dealerUpcard
-                        , _contextOffering = offering
-                        , _contextCanDouble = _phAttrsHandIx (_phAttrs hand) == 0
-                        , _contextCanSplit = case extractPairRank (_phAttrsHand (_phAttrs hand)) of
-                            Just _ -> _phAttrsSplitDepth (_phAttrs hand) < 3
-                            Nothing -> False
-                        , _contextCanSurrender = _phAttrsSplitDepth (_phAttrs hand) == 0
-                        , _contextHandNumber = _phAttrsHandIx (_phAttrs hand)
-                        , _contextSplitCount = _phAttrsSplitDepth (_phAttrs hand)
-                        }
+                    pure $
+                        Just
+                            GameContext
+                                { _contextPlayerHand = _phAttrsHand (_phAttrs hand)
+                                , _contextDealerUpcard = dealerUpcard
+                                , _contextOffering = offering
+                                , _contextCanDouble = _phAttrsHandIx (_phAttrs hand) == 0
+                                , _contextCanSplit = case extractPairRank (_phAttrsHand (_phAttrs hand)) of
+                                    Just _ -> _phAttrsSplitDepth (_phAttrs hand) < 3
+                                    Nothing -> False
+                                , _contextCanSurrender = _phAttrsSplitDepth (_phAttrs hand) == 0
+                                , _contextHandNumber = _phAttrsHandIx (_phAttrs hand)
+                                , _contextSplitCount = _phAttrsSplitDepth (_phAttrs hand)
+                                }
                 _ -> pure Nothing
 
 moveToEvent :: EntityId 'Player -> EntityId 'PlayerHand -> Move -> BlackjackEvent
 moveToEvent playerId handId = \case
-    Action.Stand -> Events.PlayerStood playerId handId
-    Action.Hit -> Events.PlayerHit playerId handId
-    Action.Double -> Events.PlayerDoubledDown playerId handId
-    Action.Split -> Events.PlayerSplit playerId handId
-    Action.Surrender -> Events.PlayerSurrender playerId handId
+    Stand -> PlayerStood playerId handId
+    Hit -> PlayerHit playerId handId
+    Double -> PlayerDoubledDown playerId handId
+    Split -> PlayerSplit playerId handId
+    Surrender -> PlayerSurrender playerId handId
 
 decideByArchetype :: SomePlayerArchetype -> GameContext -> State StdGen Move
 decideByArchetype archetype ctx = case archetype of
@@ -120,5 +120,5 @@ generateDealerIntent _dealerId handId = do
                 -- Need to find the bout this dealer hand belongs to
                 -- Could either cache this relation too, or find via dealer->round->bout
                 -- For now, assuming we'd add _dhRelsBelongsToBout
-                pure Nothing  -- TODO: implement when dealer hand gets bout reference
+                pure Nothing -- TODO: implement when dealer hand gets bout reference
             _ -> pure Nothing

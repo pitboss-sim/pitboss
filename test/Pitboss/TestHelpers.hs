@@ -5,11 +5,8 @@ module Pitboss.TestHelpers where
 import Control.Exception (SomeException, handle)
 import Data.Text.IO qualified as TIO
 import Pitboss.Agency.Archetype.Types
-import Pitboss.Blackjack.BasicStrategy.Chart.Overlay (overlayStrategy)
-import Pitboss.Blackjack.BasicStrategy.Chart.Parse (parseStrategyChart)
-import Pitboss.Blackjack.BasicStrategy.Chart.Types (StrategyChart)
-import Pitboss.Blackjack.Materia.Chips
-import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack
+import Pitboss.Blackjack.BasicStrategy.Chart
 import Pitboss.FSM.Bout
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
@@ -145,7 +142,7 @@ createPlayerHandForBout ::
     EntityId 'Bout ->
     Chips ->
     EntityState 'PlayerHand
-createPlayerHandForBout handId spotId roundId playerId boutId wager =
+createPlayerHandForBout _handId spotId roundId playerId boutId wager =
     EPlayerHand
         { _phAttrs =
             PlayerHandAttrs
@@ -155,10 +152,11 @@ createPlayerHandForBout handId spotId roundId playerId boutId wager =
                 , _phAttrsHandIx = 0
                 }
         , _phModes = PlayerHandModes (SomePlayerHandFSM DecisionFSM)
-        , _phRels = PlayerHandRels
-            { _phRelsBelongsToPlayerSpot = spotId
-            , _phRelsBelongsToDealerRound = roundId
-            , _phRelsOwnedByPlayer = playerId
-            , _phRelsBelongsToBout = boutId
-            }
+        , _phRels =
+            PlayerHandRels
+                { _phRelsBelongsToPlayerSpot = spotId
+                , _phRelsBelongsToDealerRound = roundId
+                , _phRelsOwnedByPlayer = playerId
+                , _phRelsBelongsToBout = boutId
+                }
         }

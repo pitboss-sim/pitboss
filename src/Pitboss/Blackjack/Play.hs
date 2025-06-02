@@ -5,12 +5,10 @@
 
 module Pitboss.Blackjack.Play where
 
-import Data.Aeson (FromJSON, ToJSON)
-import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Card (Card, Rank (..))
-import Pitboss.Blackjack.Materia.Hand (HandKindWitness (..), SomeHand (..), characterize, extractPairRank, handScore, unHand, witness)
-import Pitboss.Blackjack.Offering (Offering, gameRuleSet)
-import Pitboss.Blackjack.Offering.RuleSet (DoubleRule (..), GameRuleSet, ResplitAcesAllowed (..), SplitAcesAllowed (..), canSplitAnotherHand, doubling, resplitAcesAllowed, splitAcesAllowed, splitHands)
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack.Offering
+import Pitboss.Blackjack.Outcome
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)
@@ -48,17 +46,6 @@ type family CanSplit (phase :: HandPhase) :: Bool where
     CanSplit 'Full = 'True
     CanSplit _ = 'False
 
-data Outcome
-    = PlayerWins
-    | DealerWins
-    | Push
-    | PlayerBusts
-    | DealerBusts
-    deriving (Eq, Show, Generic)
-
-instance ToJSON Outcome
-instance FromJSON Outcome
-
 extractCards :: LifecycleHand phase -> [Card]
 extractCards EmptyLifecycleHand = []
 extractCards (PartialLifecycleHand cards) = cards
@@ -71,16 +58,27 @@ isBusted hand = handScore hand > 21
 characterizeHand :: (CanCharacterize phase ~ 'True) => LifecycleHand phase -> SomeHand
 characterizeHand hand = characterize (extractCards hand)
 
-boutResolution :: SomeHand -> SomeHand -> Outcome
+boutResolution :: SomeHand -> SomeHand -> DetailedOutcome
 boutResolution playerHand dealerHand
-    | isBusted playerHand = PlayerBusts
-    | isBusted dealerHand = DealerBusts
-    | playerScore > dealerScore = PlayerWins
-    | dealerScore > playerScore = DealerWins
-    | otherwise = Push
+    | isBusted playerHand = dealerWinsPlayerBust
+    | isBusted dealerHand = playerWinsDealerBust
+    | isBlackjack playerHand && not (isBlackjack dealerHand) = playerWinsBlackjack
+    | isBlackjack dealerHand && not (isBlackjack playerHand) = dealerWinsBlackjack
+    | playerScore > dealerScore = playerWinsHigher
+    | dealerScore > playerScore = dealerWinsHigher
+    | otherwise = pushOutcome
   where
     playerScore = handScore playerHand
     dealerScore = handScore dealerHand
+
+    isBlackjack :: SomeHand -> Bool
+    isBlackjack (SomeHand hand) = case witness hand of
+        BlackjackWitness -> True
+        _ -> False
+
+simpleBoutResolution :: SomeHand -> SomeHand -> BoutOutcome
+simpleBoutResolution playerHand dealerHand =
+    outcome (boutResolution playerHand dealerHand)
 
 canDoubleHand :: (CanDouble phase ~ 'True, CanCharacterize phase ~ 'True) => LifecycleHand phase -> Offering -> Bool
 canDoubleHand hand offering =

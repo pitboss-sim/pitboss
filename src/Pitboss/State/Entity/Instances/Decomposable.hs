@@ -57,16 +57,6 @@ instance Decomposable 'DealerRound where
     getModes (EDealerRound _ m _) = m
     getRels (EDealerRound _ _ r) = r
 
--- EOffering
-instance Decomposable 'Offering where
-    type Attrs 'Offering = OfferingAttrs
-    type Modes 'Offering = OfferingModes
-    type Rels 'Offering = OfferingRels
-
-    getAttrs (EOffering a _ _) = a
-    getModes (EOffering _ m _) = m
-    getRels (EOffering _ _ r) = r
-
 -- EPlayer
 instance Decomposable 'Player where
     type Attrs 'Player = PlayerAttrs

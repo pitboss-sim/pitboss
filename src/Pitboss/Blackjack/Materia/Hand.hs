@@ -13,8 +13,8 @@ import Data.Aeson.Types (Parser)
 import Data.Kind (Type)
 import Data.Text (Text)
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), rankValue)
-import Pitboss.Blackjack.Offering.Materia (DeckCount (..), Materia (matterDecks))
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Offering.Materia
 
 data Hand (k :: HandKind) where
     Hand :: [Card] -> Hand k

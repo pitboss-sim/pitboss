@@ -6,9 +6,7 @@ module Pitboss.Agency.Types where
 import Control.Lens
 import Data.Aeson
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Card (Card)
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.Blackjack.Offering (Offering)
+import Pitboss.Blackjack
 
 data GameContext = GameContext
     { _contextPlayerHand :: SomeHand

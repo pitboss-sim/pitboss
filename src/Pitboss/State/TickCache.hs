@@ -36,7 +36,6 @@ data TickCache = TickCache
     , _cachePlayer :: IHM.InsOrdHashMap (EntityId 'Player) (EntityState 'Player)
     , _cacheDealerHand :: IHM.InsOrdHashMap (EntityId 'DealerHand) (EntityState 'DealerHand)
     , _cacheDealerRound :: IHM.InsOrdHashMap (EntityId 'DealerRound) (EntityState 'DealerRound)
-    , _cacheOffering :: IHM.InsOrdHashMap (EntityId 'Offering) (EntityState 'Offering)
     , _cachePlayerHand :: IHM.InsOrdHashMap (EntityId 'PlayerHand) (EntityState 'PlayerHand)
     , _cachePlayerSpot :: IHM.InsOrdHashMap (EntityId 'PlayerSpot) (EntityState 'PlayerSpot)
     , _cacheTable :: IHM.InsOrdHashMap (EntityId 'Table) (EntityState 'Table)
@@ -58,10 +57,11 @@ class (MonadReader TickCacheContext m) => Deref id m where
     deref :: id -> m (Maybe (DerefTarget id))
 
 -- Helper to implement Deref instances uniformly
-derefHelper :: (MonadReader TickCacheContext m) =>
-               Getting (IHM.InsOrdHashMap (EntityId k) (EntityState k)) TickCache (IHM.InsOrdHashMap (EntityId k) (EntityState k)) ->
-               EntityId k ->
-               m (Maybe (EntityState k))
+derefHelper ::
+    (MonadReader TickCacheContext m) =>
+    Getting (IHM.InsOrdHashMap (EntityId k) (EntityState k)) TickCache (IHM.InsOrdHashMap (EntityId k) (EntityState k)) ->
+    EntityId k ->
+    m (Maybe (EntityState k))
 derefHelper cacheLens entityId = do
     cache <- view ctxTickCache
     pure $ IHM.lookup entityId (cache ^. cacheLens)
@@ -102,10 +102,6 @@ instance (MonadReader TickCacheContext m) => Deref (EntityId 'DealerRound) m whe
     type DerefTarget (EntityId 'DealerRound) = EntityState 'DealerRound
     deref = derefHelper cacheDealerRound
 
-instance (MonadReader TickCacheContext m) => Deref (EntityId 'Offering) m where
-    type DerefTarget (EntityId 'Offering) = EntityState 'Offering
-    deref = derefHelper cacheOffering
-
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Table) m where
     type DerefTarget (EntityId 'Table) = EntityState 'Table
     deref = derefHelper cacheTable
@@ -124,7 +120,6 @@ mkTickCache tick =
         , _cachePlayer = IHM.empty
         , _cacheDealerHand = IHM.empty
         , _cacheDealerRound = IHM.empty
-        , _cacheOffering = IHM.empty
         , _cachePlayerHand = IHM.empty
         , _cachePlayerSpot = IHM.empty
         , _cacheTable = IHM.empty
@@ -140,12 +135,11 @@ populateTickCache ::
     Registry 'Dealer (SomeDelta 'Dealer) ->
     Registry 'DealerHand (SomeDelta 'DealerHand) ->
     Registry 'DealerRound (SomeDelta 'DealerRound) ->
-    Registry 'Offering (SomeDelta 'Offering) ->
     Registry 'Table (SomeDelta 'Table) ->
     Registry 'TableShoe (SomeDelta 'TableShoe) ->
     Tick ->
     TickCache
-populateTickCache boutReg playerReg handReg spotReg dealerReg dealerHandReg dealerRoundReg offeringReg tableReg tableShoeReg tick =
+populateTickCache boutReg playerReg handReg spotReg dealerReg dealerHandReg dealerRoundReg tableReg tableShoeReg tick =
     let baseTickCache = mkTickCache tick
 
         populateFromRegistry ::
@@ -170,7 +164,6 @@ populateTickCache boutReg playerReg handReg spotReg dealerReg dealerHandReg deal
             & populateFromRegistry dealerReg _cacheDealer (\c m -> c{_cacheDealer = m})
             & populateFromRegistry dealerHandReg _cacheDealerHand (\c m -> c{_cacheDealerHand = m})
             & populateFromRegistry dealerRoundReg _cacheDealerRound (\c m -> c{_cacheDealerRound = m})
-            & populateFromRegistry offeringReg _cacheOffering (\c m -> c{_cacheOffering = m})
             & populateFromRegistry tableReg _cacheTable (\c m -> c{_cacheTable = m})
             & populateFromRegistry tableShoeReg _cacheTableShoe (\c m -> c{_cacheTableShoe = m})
 

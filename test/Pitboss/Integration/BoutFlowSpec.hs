@@ -142,7 +142,6 @@ runEvent event state =
                 (_dealers $ simTrace state)
                 (_dealerHands $ simTrace state)
                 (_dealerRounds $ simTrace state)
-                (_offerings $ simTrace state)
                 (_tables $ simTrace state)
                 (_tableShoes $ simTrace state)
                 tick
@@ -179,7 +178,6 @@ withSimCache state computation =
                 (_dealers $ simTrace state)
                 (_dealerHands $ simTrace state)
                 (_dealerRounds $ simTrace state)
-                (_offerings $ simTrace state)
                 (_tables $ simTrace state)
                 (_tableShoes $ simTrace state)
                 (simTick state)

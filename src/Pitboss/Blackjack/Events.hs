@@ -4,8 +4,9 @@ module Pitboss.Blackjack.Events where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Card
 import Pitboss.State.Types.Core
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Outcome
 
 data BlackjackEvent
     = CardDealt Card CardDestination
@@ -14,7 +15,7 @@ data BlackjackEvent
     | PlayerDoubledDown (EntityId 'Player) (EntityId 'PlayerHand)
     | PlayerSplit (EntityId 'Player) (EntityId 'PlayerHand)
     | PlayerSurrender (EntityId 'Player) (EntityId 'PlayerHand)
-    | BoutSettled (EntityId 'Bout) BoutOutcome
+    | BoutSettled (EntityId 'Bout) DetailedOutcome
     | DealerRevealed (EntityId 'Dealer) (EntityId 'DealerHand)
     deriving (Eq, Show, Generic)
 
@@ -23,12 +24,7 @@ data CardDestination
     | ToDealerHand (EntityId 'DealerHand)
     deriving (Eq, Show, Generic)
 
-data BoutOutcome = PlayerWins | DealerWins | Push
-    deriving (Eq, Show, Generic)
-
 instance ToJSON BlackjackEvent
 instance FromJSON BlackjackEvent
 instance ToJSON CardDestination
 instance FromJSON CardDestination
-instance ToJSON BoutOutcome
-instance FromJSON BoutOutcome

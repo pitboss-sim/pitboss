@@ -6,7 +6,7 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import Pitboss.Blackjack.BasicStrategy.Chart.Error
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.Materia.Card (Rank (..))
+import Pitboss.Blackjack.Materia.Card
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =
@@ -28,12 +28,12 @@ parseLine lnum fullLine =
             [] -> Left $ ChartParseError (Pos lnum Nothing) (T.unpack fullLine) (InvalidRowPrefix "empty line")
             (prefixTxt : moveToks) -> do
                 prefix <- parsePrefix lnum prefixTxt fullLine
-                let (kind, value) = handPrefixToKind prefix
+                let (kind, value') = handPrefixToKind prefix
                 validateTokenCount lnum fullLine moveToks >>= \validToks -> do
                     let tokenColumns = actualTokenColumns raw validToks
                     moves' <- sequence [parseToken lnum fullLine col tok | (col, tok) <- tokenColumns]
                     let moveMap = Map.fromList (zip dealerRanks moves')
-                    pure $ ChartEntry kind value moveMap
+                    pure $ ChartEntry kind value' moveMap
 
 validateTokenCount :: Int -> Text -> [Text] -> Either ChartParseError [Text]
 validateTokenCount lnum fullLine moveToks =
@@ -57,20 +57,22 @@ parseDigitSuffix :: Int -> Text -> String -> Either ChartParseError Int
 parseDigitSuffix lnum fullLine str
     | all isDigit str && not (null str) = Right (read str)
     | otherwise =
-        Left $ ChartParseError
-            (Pos lnum Nothing)
-            (T.unpack fullLine)
-            (UnreadableHardTotal str)
+        Left $
+            ChartParseError
+                (Pos lnum Nothing)
+                (T.unpack fullLine)
+                (UnreadableHardTotal str)
 
 -- Helper to validate numeric ranges
 validateRange :: Int -> Text -> Int -> Int -> Int -> Either ChartParseError Int
-validateRange lnum fullLine value minVal maxVal
-    | value >= minVal && value <= maxVal = Right value
+validateRange lnum fullLine value' minVal maxVal
+    | value' >= minVal && value' <= maxVal = Right value'
     | otherwise =
-        Left $ ChartParseError
-            (Pos lnum Nothing)
-            (T.unpack fullLine)
-            (OutOfRangeHardTotal value)
+        Left $
+            ChartParseError
+                (Pos lnum Nothing)
+                (T.unpack fullLine)
+                (OutOfRangeHardTotal value')
 
 parsePrefix :: Int -> Text -> Text -> Either ChartParseError HandPrefix
 parsePrefix lnum txt fullLine =

@@ -6,12 +6,9 @@ module Pitboss.Agency.Archetype.Player.Superstitious where
 import Control.Monad.State
 import Pitboss.Agency.Archetype.Types
 import Pitboss.Agency.Types
-import Pitboss.Blackjack.Action
-import Pitboss.Blackjack.BasicStrategy.Chart.Interpret (safeDecisionLookup)
-import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.BasicStrategy.Types (Decision (..), Fallback (..))
-import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), rank)
-import Pitboss.Blackjack.Materia.Hand (SomeHand (..), extractPairRank, handScore)
+import Pitboss.Blackjack
+import Pitboss.Blackjack.BasicStrategy.Chart
+import Pitboss.Blackjack.BasicStrategy.Types
 import System.Random
 
 getSuperstitiousMove :: ArchetypeConfig 'Superstitious -> GameContext -> State StdGen Move

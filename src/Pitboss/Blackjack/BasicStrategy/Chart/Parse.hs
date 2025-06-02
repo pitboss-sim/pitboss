@@ -72,20 +72,21 @@ parsePrefix lnum txt fullLine =
         'A' : ns
             | all isDigit ns
             , not (null ns) ->
-                let n = read ns
-                 in if n >= 13 && n <= 21
-                        then Right (A n)
+                let nonAceValue = read ns
+                    softTotal = 11 + nonAceValue
+                 in if nonAceValue >= 2 && nonAceValue <= 9
+                        then Right (A softTotal)
                         else
                             Left $
                                 ChartParseError
                                     (Pos lnum Nothing)
                                     (T.unpack fullLine)
-                                    (OutOfRangeHardTotal n)
+                                    (OutOfRangeHardTotal nonAceValue)
         'H' : ns
             | all isDigit ns
             , not (null ns) ->
                 let n = read ns
-                 in if n >= 5 && n <= 21
+                 in if n >= 4 && n <= 21
                         then Right (H n)
                         else
                             Left $
@@ -97,7 +98,7 @@ parsePrefix lnum txt fullLine =
             | all isDigit ns
             , not (null ns) ->
                 let n = read ns
-                 in if n >= 5 && n <= 21
+                 in if n >= 4 && n <= 21
                         then Right (H n)
                         else
                             Left $

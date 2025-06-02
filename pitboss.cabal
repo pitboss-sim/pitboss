@@ -158,7 +158,8 @@ test-suite pitboss-test
         insert-ordered-containers,
         lens,
         mtl,
+        hspec,
         pitboss,
-        hspec
+        text,
     build-tool-depends:
         hspec-discover:hspec-discover

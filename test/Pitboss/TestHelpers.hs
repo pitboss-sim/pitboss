@@ -2,11 +2,14 @@
 
 module Pitboss.TestHelpers where
 
+import Control.Exception (SomeException, handle)
+import Data.Text.IO qualified as TIO
 import Pitboss.Agency.Archetype.Types
+import Pitboss.Blackjack.BasicStrategy.Chart.Overlay (overlayStrategy)
+import Pitboss.Blackjack.BasicStrategy.Chart.Parse (parseStrategyChart)
 import Pitboss.Blackjack.BasicStrategy.Chart.Types (StrategyChart)
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand
-import Pitboss.Blackjack.Offering.WellKnown (vegas6)
 import Pitboss.FSM.Bout
 import Pitboss.FSM.DealerHand
 import Pitboss.FSM.DealerRound
@@ -17,14 +20,41 @@ import Pitboss.FSM.PlayerTable
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 
--- Helper to create minimal valid archetype configurations
-mkTestBasicStrategy :: SomePlayerArchetype
-mkTestBasicStrategy =
-    SomePlayerBasicStrategy $
-        BasicStrategyArchetype
-            { bsConfig = BasicConfig emptyChart (MistakeProfile 0.0 emptyMistakeDistribution)
-            , bsState = BasicState 0 emptySessionStats
-            }
+loadCanonicalStrategy :: IO StrategyChart
+loadCanonicalStrategy = handle handleError $ do
+    baseline <- TIO.readFile "data/strategy/baseline.txt"
+    overlay <- TIO.readFile "data/strategy/bja-basic.txt"
+    case (parseStrategyChart baseline, parseStrategyChart overlay) of
+        (Right baseChart, Right overlayChart) ->
+            pure $ overlayStrategy baseChart overlayChart
+        (Left errs, _) ->
+            error $ "Failed to parse baseline strategy: " ++ show errs
+        (_, Left errs) ->
+            error $ "Failed to parse overlay strategy: " ++ show errs
+  where
+    handleError :: SomeException -> IO StrategyChart
+    handleError ex = error $ "Failed to load strategy files: " ++ show ex
+
+workingMistakeDistribution :: MistakeDistribution
+workingMistakeDistribution =
+    MistakeDistribution
+        { _hitInsteadOfStand = 0.0
+        , _standInsteadOfHit = 0.0
+        , _noDoubleWhenShould = 0.0
+        , _noSplitWhenShould = 0.0
+        , _doubleWhenShouldnt = 0.0
+        , _splitWhenShouldnt = 0.0
+        }
+
+mkTestBasicStrategy :: IO SomePlayerArchetype
+mkTestBasicStrategy = do
+    chart <- loadCanonicalStrategy
+    pure $
+        SomePlayerBasicStrategy $
+            BasicStrategyArchetype
+                { bsConfig = BasicConfig chart (MistakeProfile 0.0 workingMistakeDistribution)
+                , bsState = BasicState 0 emptySessionStats
+                }
 
 mkTestDealerArchetype :: SomeDealerArchetype
 mkTestDealerArchetype =
@@ -34,34 +64,28 @@ mkTestDealerArchetype =
             , btbState = ByTheBookState 0
             }
 
--- Helper empty/default values to avoid undefined
-emptyChart :: StrategyChart
-emptyChart = []
-
-emptyMistakeDistribution :: MistakeDistribution
-emptyMistakeDistribution = MistakeDistribution 0 0 0 0 0 0
-
--- Helper to create test entities
-mkTestPlayer :: EntityId 'Player -> String -> EntityState 'Player
-mkTestPlayer playerId name =
-    EPlayer
-        { _pAttrs =
-            PlayerAttrs
-                { _pAttrsName = name
-                , _pAttrsBankroll = Chips 1000
-                , _pAttrsArchetype = mkTestBasicStrategy
-                }
-        , _pModes =
-            PlayerModes
-                { _pModesPlayerTable = SomePlayerTableFSM IdleFSM
-                , _pModesPlayerSpot = SomePlayerSpotFSM SpotIdleFSM
-                , _pModesPlayerHand = SomePlayerHandFSM DecisionFSM
-                }
-        , _pRels = PlayerRels
-        }
+mkTestPlayer :: EntityId 'Player -> String -> IO (EntityState 'Player)
+mkTestPlayer _playerId name = do
+    archetype <- mkTestBasicStrategy
+    pure $
+        EPlayer
+            { _pAttrs =
+                PlayerAttrs
+                    { _pAttrsName = name
+                    , _pAttrsBankroll = Chips 1000
+                    , _pAttrsArchetype = archetype
+                    }
+            , _pModes =
+                PlayerModes
+                    { _pModesPlayerTable = SomePlayerTableFSM IdleFSM
+                    , _pModesPlayerSpot = SomePlayerSpotFSM SpotIdleFSM
+                    , _pModesPlayerHand = SomePlayerHandFSM DecisionFSM
+                    }
+            , _pRels = PlayerRels
+            }
 
 mkTestDealer :: EntityId 'Dealer -> String -> EntityState 'Dealer
-mkTestDealer dealerId name =
+mkTestDealer _dealerId name =
     EDealer
         { _dAttrs =
             DealerAttrs
@@ -78,7 +102,7 @@ mkTestDealer dealerId name =
         }
 
 mkTestPlayerHand :: EntityId 'PlayerHand -> EntityId 'PlayerSpot -> EntityId 'DealerRound -> EntityId 'Player -> EntityState 'PlayerHand
-mkTestPlayerHand handId spotId roundId playerId =
+mkTestPlayerHand _handId spotId roundId playerId =
     EPlayerHand
         { _phAttrs =
             PlayerHandAttrs
@@ -92,7 +116,7 @@ mkTestPlayerHand handId spotId roundId playerId =
         }
 
 mkTestDealerHand :: EntityId 'DealerHand -> EntityId 'DealerRound -> EntityId 'Dealer -> EntityState 'DealerHand
-mkTestDealerHand handId roundId dealerId =
+mkTestDealerHand _handId roundId dealerId =
     EDealerHand
         { _dhAttrs = DealerHandAttrs (characterize [])
         , _dhModes = DealerHandModes (SomeDealerHandFSM DealingFSM)
@@ -100,7 +124,7 @@ mkTestDealerHand handId roundId dealerId =
         }
 
 mkTestBout :: EntityId 'Bout -> EntityId 'PlayerHand -> EntityId 'DealerHand -> EntityId 'TableShoe -> EntityId 'Table -> EntityId 'DealerRound -> EntityState 'Bout
-mkTestBout boutId playerHandId dealerHandId shoeId tableId roundId =
+mkTestBout _boutId playerHandId dealerHandId shoeId tableId roundId =
     EBout
         { _boutAttrs = BoutAttrs Nothing
         , _boutModes = BoutModes (SomeBoutFSM AwaitingFirstCardFSM)

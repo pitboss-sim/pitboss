@@ -18,7 +18,6 @@ module Pitboss.FSM
 
     -- * Common Types
   , module Pitboss.FSM.Types
-  , module Pitboss.FSM.Types.Transitionable
   ) where
 
 -- Re-export entire modules
@@ -31,4 +30,3 @@ import Pitboss.FSM.DealerTable
 import Pitboss.FSM.Bout
 import Pitboss.FSM.Table
 import Pitboss.FSM.Types
-import Pitboss.FSM.Types.Transitionable

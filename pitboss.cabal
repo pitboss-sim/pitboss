@@ -53,13 +53,7 @@ library
                       Pitboss.Blackjack.Play
                       Pitboss.FSM
                       Pitboss.FSM.Bout
-                      Pitboss.FSM.Bout.FSM
-                      Pitboss.FSM.Bout.Phase
-                      Pitboss.FSM.Bout.Transition
                       Pitboss.FSM.DealerHand
-                      Pitboss.FSM.DealerHand.FSM
-                      Pitboss.FSM.DealerHand.Phase
-                      Pitboss.FSM.DealerHand.Transition
                       Pitboss.FSM.DealerRound
                       Pitboss.FSM.DealerRound.ENHC
                       Pitboss.FSM.DealerRound.ENHC.FSM
@@ -70,30 +64,15 @@ library
                       Pitboss.FSM.DealerRound.Peek.Phase
                       Pitboss.FSM.DealerRound.Peek.Transition
                       Pitboss.FSM.DealerRound.Phase
-                      Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
-                      Pitboss.FSM.DealerRound.Typeclass.PhaseTag
+                      Pitboss.FSM.DealerRound.Instances.AtDecisionPoint
+                      Pitboss.FSM.DealerRound.Instances.PhaseTag
                       Pitboss.FSM.DealerTable
-                      Pitboss.FSM.DealerTable.FSM
-                      Pitboss.FSM.DealerTable.Phase
-                      Pitboss.FSM.DealerTable.Transition
+                      Pitboss.FSM.Instances.Transitionable
                       Pitboss.FSM.PlayerHand
-                      Pitboss.FSM.PlayerHand.FSM
-                      Pitboss.FSM.PlayerHand.Phase
-                      Pitboss.FSM.PlayerHand.Transition
                       Pitboss.FSM.PlayerSpot
-                      Pitboss.FSM.PlayerSpot.FSM
-                      Pitboss.FSM.PlayerSpot.Phase
-                      Pitboss.FSM.PlayerSpot.Transition
                       Pitboss.FSM.PlayerTable
-                      Pitboss.FSM.PlayerTable.FSM
-                      Pitboss.FSM.PlayerTable.Phase
-                      Pitboss.FSM.PlayerTable.Transition
                       Pitboss.FSM.Table
-                      Pitboss.FSM.Table.FSM
-                      Pitboss.FSM.Table.Phase
-                      Pitboss.FSM.Table.Transition
                       Pitboss.FSM.Types
-                      Pitboss.FSM.Types.Transitionable
                       Pitboss.Sim.Engine.DeltaGen
                       Pitboss.Sim.Engine.Runtime
                       Pitboss.Sim.Types

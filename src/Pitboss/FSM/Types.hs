@@ -15,6 +15,5 @@ data InsuranceOutcome = Lost | Paid | PaidEvenMoney
 
 instance ToJSON InterruptReason
 instance FromJSON InterruptReason
-
 instance ToJSON InsuranceOutcome
 instance FromJSON InsuranceOutcome

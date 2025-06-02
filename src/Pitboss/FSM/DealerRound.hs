@@ -5,8 +5,6 @@ module Pitboss.FSM.DealerRound (
     module Pitboss.FSM.DealerRound.ENHC,
     module Pitboss.FSM.DealerRound.Peek,
     module Pitboss.FSM.DealerRound.Phase,
-    module Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint,
-    module Pitboss.FSM.DealerRound.Typeclass.PhaseTag,
     DealerRoundFSM (..),
     mkENHCDealerRound,
     mkPeekDealerRound,
@@ -22,11 +20,8 @@ import Pitboss.Blackjack hiding (Surrender)
 import Pitboss.FSM.DealerRound.ENHC
 import Pitboss.FSM.DealerRound.Peek
 import Pitboss.FSM.DealerRound.Phase
-import Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
-import Pitboss.FSM.DealerRound.Typeclass.PhaseTag
 import Pitboss.FSM.PlayerHand
 import Pitboss.FSM.Types
-import Pitboss.FSM.Types.Transitionable
 
 data DealerRoundFSM
     = PeekDealerRound SomePeekFSM
@@ -47,11 +42,6 @@ instance Show DealerRoundFSM where
     show = \case
         PeekDealerRound f -> "PeekDealerRound (" ++ show f ++ ")"
         ENHCDealerRound f -> "ENHCDealerRound (" ++ show f ++ ")"
-
-instance Transitionable DealerRoundFSM where
-    transitionType = \case
-        PeekDealerRound f -> transitionType f
-        ENHCDealerRound f -> transitionType f
 
 instance ToJSON DealerRoundFSM where
     toJSON = \case

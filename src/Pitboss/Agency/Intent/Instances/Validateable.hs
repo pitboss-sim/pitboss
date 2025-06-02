@@ -8,6 +8,7 @@ import Pitboss.Agency.Intent.Types
 import Pitboss.Blackjack
 import Pitboss.FSM
 import Pitboss.State.Types.Core
+import Pitboss.FSM.Instances.Transitionable
 
 class Validateable (k :: IntentKind) where
     validate :: IntentCtx k -> Either String ()
@@ -169,6 +170,12 @@ instance Validateable 'IDealerDeal where
 
         checkRoundPhaseAllowsDealing :: IntentCtx 'IDealerDeal -> Either String ()
         checkRoundPhaseAllowsDealing _ = Right ()
+
+        isHandTerminal :: SomePlayerHandFSM -> Bool
+        isHandTerminal (SomePlayerHandFSM fsm) =
+            case transitionType fsm of
+                TerminalPhase -> True
+                _ -> False
 
 instance Validateable 'IDealerSettleBout where
     validate _ = Left "Dealer settle bout not yet implemented"

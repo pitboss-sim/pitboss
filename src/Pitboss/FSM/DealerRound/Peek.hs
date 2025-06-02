@@ -13,7 +13,6 @@ import Data.Aeson
 import Pitboss.FSM.DealerRound.Peek.FSM
 import Pitboss.FSM.DealerRound.Peek.Phase
 import Pitboss.FSM.DealerRound.Peek.Transition
-import Pitboss.FSM.Types.Transitionable
 
 data SomePeekFSM = forall p. SomePeekFSM (PeekFSM p)
 
@@ -31,9 +30,6 @@ instance Eq SomePeekFSM where
         (PeekSettleFSM, PeekSettleFSM) -> True
         (PeekCompleteFSM, PeekCompleteFSM) -> True
         _ -> False
-
-instance Transitionable SomePeekFSM where
-    transitionType (SomePeekFSM fsm) = transitionType fsm
 
 instance Show SomePeekFSM where
     show (SomePeekFSM fsm) = show fsm

@@ -19,45 +19,40 @@ getBasicStrategyMove config ctx = do
         upcard = rank (_contextDealerUpcard ctx)
         offering = _contextOffering ctx
         decision = safeDecisionLookup chart hand upcard offering
-        baseMove = decisionToMove decision
+
+    let baseMove = case decision of
+            Always move -> move
+            Prefer primary (Else fallback) ->
+                if isLegalMove primary ctx then primary else fallback
 
     shouldMistake <- rollForMistake (bcMistakeProfile config)
     if shouldMistake
         then generateMistake (bcMistakeProfile config) ctx baseMove
         else pure baseMove
 
-decisionToMove :: Decision -> Move
-decisionToMove (Always move) = move
-decisionToMove (Prefer primary (Else _)) = primary
+isLegalMove :: Move -> GameContext -> Bool
+isLegalMove Double ctx = _contextCanDouble ctx
+isLegalMove Split ctx = _contextCanSplit ctx
+isLegalMove Surrender ctx = _contextCanSurrender ctx
+isLegalMove _ _ = True
 
 rollForMistake :: MistakeProfile -> State StdGen Bool
 rollForMistake profile = do
-    gen <- get
-    let rate = profile ^. mistakeRate
-        (roll, gen') = randomR (0.0, 1.0) gen
-    put gen'
-    pure (roll < rate)
+    roll <- state $ randomR (0.0, 1.0)
+    pure (roll < profile ^. mistakeRate)
 
 generateMistake :: MistakeProfile -> GameContext -> Move -> State StdGen Move
 generateMistake profile ctx correct = do
-    gen <- get
-    let dist = profile ^. mistakeDistribution
-        (roll, gen') = randomR (0.0, 1.0) gen
-    put gen'
-    pure $ selectMistakeType dist roll correct ctx
+    roll <- state $ randomR (0.0, 1.0)
+    pure $ selectMistakeType (profile ^. mistakeDistribution) roll correct ctx
 
 selectMistakeType :: MistakeDistribution -> Double -> Move -> GameContext -> Move
-selectMistakeType dist roll correct ctx =
-    case correct of
-        Stand | roll < dist ^. hitInsteadOfStand -> Hit
-        Hit | roll < dist ^. standInsteadOfHit -> Stand
-        Double
-            | roll < dist ^. noDoubleWhenShould ->
-                if ctx ^. contextCanDouble then Hit else Stand
-        Split
-            | roll < dist ^. noSplitWhenShould -> Hit
-        _
-            | roll < dist ^. doubleWhenShouldnt && ctx ^. contextCanDouble -> Double
-        _
-            | roll < dist ^. splitWhenShouldnt && ctx ^. contextCanSplit -> Split
-        _ -> correct
+selectMistakeType dist roll correct ctx = case correct of
+    Stand | roll < dist ^. hitInsteadOfStand -> Hit
+    Hit | roll < dist ^. standInsteadOfHit -> Stand
+    Double | roll < dist ^. noDoubleWhenShould -> Hit
+    Split | roll < dist ^. noSplitWhenShould -> Hit
+    _
+        | roll < dist ^. doubleWhenShouldnt && _contextCanDouble ctx -> Double
+        | roll < dist ^. splitWhenShouldnt && _contextCanSplit ctx -> Split
+        | otherwise -> correct

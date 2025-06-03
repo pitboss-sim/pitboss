@@ -127,11 +127,21 @@ executable pitboss
 test-suite pitboss-test
     import:           warnings
     default-language: GHC2021
-    -- other-modules:
+    other-modules:    Pitboss.TestHelpers
+                      Pitboss.Integration.BoutFlowSpec
+                      Pitboss.Integration.TimelineSpec
+                      Pitboss.Orchestration.DeltaGenSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
     build-depends:
         base,
-        pitboss
+        insert-ordered-containers,
+        lens,
+        mtl,
+        hspec,
+        pitboss,
+        text,
+    build-tool-depends:
+        hspec-discover:hspec-discover

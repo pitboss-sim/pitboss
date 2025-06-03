@@ -9,9 +9,9 @@ module Pitboss.State.Entity.Types where
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Blackjack hiding (HasWitness)
 import Pitboss.FSM
+import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.Occupancy

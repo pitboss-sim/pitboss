@@ -1,0 +1,42 @@
+# Blackjack Basic Strategy Chart (blended rules)
+# Attribution: Blackjack Apprenticeship
+#
+# Legend:
+#   H = Hit
+#   S = Stand
+#   D = Double (or Hit)
+#   d = Double (or Stand)
+#   V = Split
+#   v = Split (or Hit)
+#   r = Surrender (or Stand)
+#   . = Undefined (overridden later)
+#
+#  2 3 4 5 6 7 8 9 T A
+PA V V V V V V V V V V
+PT S S S S S S S S S S
+P9 V V V V V S V V S S
+P8 V V V V V V V V V V
+P7 V V V V V V H H H H
+P6 v V V V V H H H H H
+P5 D D D D D D D D H H
+P4 H H H v v H H H H H
+P3 v v V V V V H H H H
+P2 v v V V V V H H H H
+A9 S S S S S S S S S S
+A8 S S S S d S S S S S
+A7 d d d d d S S H H H
+A6 H D D D D H H H H H
+A5 H H D D D H H H H H
+A4 H H D D D H H H H H
+A3 H H H D D H H H H H
+A2 H H H D D H H H H H
+17 S S S S S S S S S S
+16 S S S S S H H r r r
+15 S S S S S H H r H H
+14 S S S S S H H H H H
+13 S S S S S H H H H H
+12 H H S S S H H H H H
+11 D D D D D D D D D D
+10 D D D D D D D D H H
+ 9 H D D D D H H H H H
+ 8 H H H H H H H H H H

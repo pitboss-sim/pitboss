@@ -54,6 +54,10 @@ library
                       Pitboss.Blackjack.Types.Offering
                       Pitboss.Blackjack.Types.Table
                       Pitboss.Blackjack.WellKnown
+                      Pitboss.Causality.Delta.Incremental
+                      Pitboss.Causality.Delta.IncrementalPart
+                      Pitboss.Causality.Delta.Reversible
+                      Pitboss.Causality.Delta.Types
                       Pitboss.Causality.Entity.Lenses
                       Pitboss.Causality.Entity.Types
                       Pitboss.Causality.Entity.Witnessable

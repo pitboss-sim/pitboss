@@ -3,7 +3,7 @@
 module Pitboss.Integration.TimelineSpec (spec) where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
-import Pitboss.Blackjack hiding (Stand)
+import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Test.Hspec

@@ -13,12 +13,8 @@ import Data.Aeson
 import Pitboss.FSM.DealerRound.ENHC.FSM
 import Pitboss.FSM.DealerRound.ENHC.Phase
 import Pitboss.FSM.DealerRound.ENHC.Transition
-import Pitboss.FSM.Types.Transitionable
 
 data SomeENHCFSM = forall p. SomeENHCFSM (ENHCFSM p)
-
-instance Transitionable SomeENHCFSM where
-    transitionType (SomeENHCFSM fsm) = transitionType fsm
 
 instance Show SomeENHCFSM where
     show (SomeENHCFSM fsm) = show fsm

@@ -2,8 +2,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+
+{-# HLINT ignore "Use newtype instead of data" #-}
 
 module Pitboss.State.Types.Core (
+    IntentKind (..),
+    HandTarget (..),
     EntityKind (..),
     EntityStatePart (..),
     EntityId (..),
@@ -12,9 +17,6 @@ module Pitboss.State.Types.Core (
     EntityRef (..),
     Tick (..),
     IntentType (..),
-    IntentDetails (..),
-    EventType (..),
-    EventDetails (..),
     OriginatingEntity (..),
     CardIx,
     CardState (..),
@@ -29,7 +31,7 @@ module Pitboss.State.Types.Core (
     parseDisplayUid,
 ) where
 
-import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey, withText)
+import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey (..), withText)
 import Data.Bits (Bits ((.|.)), shiftL)
 import Data.Char (toUpper)
 import Data.Data (Proxy (..))
@@ -41,10 +43,7 @@ import Data.Word (Word64)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
-import Pitboss.Blackjack.Materia.Card (Card)
-import Pitboss.Blackjack.Materia.Hand (SomeHand)
-import Pitboss.FSM.Bout (SomeBoutFSM)
-import Pitboss.State.Types.FiniteMap.BoundedEnum (BoundedEnum)
+import Pitboss.State.Types.FiniteMap.BoundedEnum
 import System.Random (Random (..), RandomGen)
 
 data EntityKind
@@ -65,24 +64,10 @@ data EntityKind
 data EntityStatePart = Attrs | Modes | Rels
     deriving (Eq, Show, Generic)
 
--- provenance
-
 data IntentType
     = PlayerIntent
     | DealerIntent
     | TableIntent
-    deriving (Eq, Show, Generic)
-
-data IntentDetails
-    = PlayerHitIntent
-    | PlayerStandIntent
-    | PlayerDoubleIntent
-    | PlayerSplitIntent
-    | PlayerSurrenderIntent
-    | DealerHitIntent
-    | DealerStandIntent
-    | TableDealCardIntent (EntityId 'PlayerHand)
-    | TableSettleBoutIntent (EntityId 'Bout)
     deriving (Eq, Show, Generic)
 
 data OriginatingEntity
@@ -93,34 +78,29 @@ data OriginatingEntity
 
 instance ToJSON IntentType
 instance FromJSON IntentType
-instance ToJSON IntentDetails
-instance FromJSON IntentDetails
 instance ToJSON OriginatingEntity
 instance FromJSON OriginatingEntity
 
-data EventType
-    = CardDealt
-    | HandScored
-    | BoutTransitioned
-    | IntentValidated
-    | IntentRejected
+data IntentKind
+    = IPlayerHit
+    | IPlayerStand
+    | IPlayerDouble
+    | IPlayerSplit
+    | IPlayerSurrender
+    | IDealerHit
+    | IDealerStand
+    | IDealerDeal
+    | IDealerSettleBout
+    | IDealerSettleInsurance
     deriving (Eq, Show, Generic)
 
-instance ToJSON EventType
-instance FromJSON EventType
+instance ToJSON IntentKind
+instance FromJSON IntentKind
 
-data EventDetails
-    = CardDealtDetails Card (EntityId 'PlayerHand)
-    | HandScoredDetails SomeHand Int
-    | BoutTransitionedDetails SomeBoutFSM SomeBoutFSM
-    | IntentValidatedDetails (EntityId 'Intent)
-    | IntentRejectedDetails (EntityId 'Intent) String
-    deriving (Eq, Show, Generic)
-
-instance ToJSON EventDetails
-instance FromJSON EventDetails
-
--- card state minutiae
+data HandTarget
+    = ToPlayer (EntityId 'PlayerHand)
+    | ToDealer (EntityId 'DealerHand)
+    deriving (Show, Eq)
 
 type CardIx = Int
 
@@ -132,8 +112,6 @@ data CardState
 
 instance ToJSON CardState
 instance FromJSON CardState
-
--- player spot minutiae
 
 data PlayerSpotIx
     = EPlayerSpot1
@@ -161,12 +139,8 @@ instance ToJSON PlayerSpotHandIx
 instance FromJSON PlayerSpotHandIx
 instance BoundedEnum PlayerSpotHandIx
 
--- time
-
 newtype Tick = Tick Word64
     deriving (Eq, Ord, Show, Hashable, ToJSON, FromJSON, ToJSONKey, FromJSONKey)
-
--- uid
 
 newtype EntityId (k :: EntityKind) = EntityId Word64
     deriving (Eq, Ord, Show, Generic)
@@ -177,7 +151,6 @@ newtype Uid (k :: EntityKind) = Uid (Tick, EntityId k)
 newtype EntityRef (k :: EntityKind) = EntityRef (Uid k)
     deriving (Eq, Ord, Show, Generic)
 
--- Helper functions
 uidTick :: Uid k -> Tick
 uidTick (Uid (tick, _)) = tick
 
@@ -274,6 +247,9 @@ instance forall k. (KnownSymbol (UidPrefix k)) => FromJSON (Uid k) where
         case parseDisplayUid (T.unpack t) of
             Just uid -> pure uid
             Nothing -> fail "Invalid prefixed UID format"
+
+instance ToJSONKey (EntityId k)
+instance FromJSONKey (EntityId k)
 
 instance ToJSON (EntityId k) where
     toJSON (EntityId entropy) = toJSON entropy

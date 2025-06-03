@@ -62,6 +62,7 @@ library
                       Pitboss.FSM.PlayerTable
                       Pitboss.FSM.Table
                       Pitboss.FSM.Types
+                      Pitboss.Causality
                       Pitboss.Causality.Delta.Instances.Incremental
                       Pitboss.Causality.Delta.Instances.Reversible
                       Pitboss.Causality.Delta.Types

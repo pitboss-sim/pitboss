@@ -19,14 +19,28 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Pitboss.Blackjack.Action
+                      Pitboss.Blackjack
+                      Pitboss.Blackjack.Action
+                      Pitboss.Blackjack.BasicStrategy.Chart
+                      Pitboss.Blackjack.BasicStrategy.Chart.Error
+                      Pitboss.Blackjack.BasicStrategy.Chart.Interpret
+                      Pitboss.Blackjack.BasicStrategy.Chart.Overlay
+                      Pitboss.Blackjack.BasicStrategy.Chart.Parse
+                      Pitboss.Blackjack.BasicStrategy.Chart.Types
+                      Pitboss.Blackjack.BasicStrategy.Chart.Validate
+                      Pitboss.Blackjack.BasicStrategy.Types
+                      Pitboss.Blackjack.Events
                       Pitboss.Blackjack.Materia.Card
                       Pitboss.Blackjack.Materia.Chips
                       Pitboss.Blackjack.Materia.Deck
                       Pitboss.Blackjack.Materia.Hand
                       Pitboss.Blackjack.Offering
-                      Pitboss.Blackjack.Offering.Matter
+                      Pitboss.Blackjack.Offering.Materia
                       Pitboss.Blackjack.Offering.RuleSet
+                      Pitboss.Blackjack.Offering.RuleSet.Game
+                      Pitboss.Blackjack.Offering.RuleSet.Table
                       Pitboss.Blackjack.Offering.WellKnown
+                      Pitboss.Blackjack.Outcome
                       Pitboss.Blackjack.Play
                       Pitboss.FSM
                       Pitboss.FSM.Bout
@@ -67,13 +81,6 @@ library
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum
                       Pitboss.State.Types.FiniteMap.Occupancy
-                      Pitboss.Strategy.Chart.Error
-                      Pitboss.Strategy.Chart.Interpret
-                      Pitboss.Strategy.Chart.Overlay
-                      Pitboss.Strategy.Chart.Parse
-                      Pitboss.Strategy.Chart.Types
-                      Pitboss.Strategy.Chart.Validate
-                      Pitboss.Strategy.Types
 
     -- other-modules:
     -- other-extensions:

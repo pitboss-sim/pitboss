@@ -62,6 +62,20 @@ library
                       Pitboss.FSM.PlayerTable
                       Pitboss.FSM.Table
                       Pitboss.FSM.Types
+                      Pitboss.Sim.Agency.Archetype.Dealer.Rules
+                      Pitboss.Sim.Agency.Archetype.Player.Advantage
+                      Pitboss.Sim.Agency.Archetype.Player.BasicStrategy
+                      Pitboss.Sim.Agency.Archetype.Player.Perfect
+                      Pitboss.Sim.Agency.Archetype.Player.Superstitious
+                      Pitboss.Sim.Agency.Archetype.Types
+                      Pitboss.Sim.Agency.Intent.Generate
+                      Pitboss.Sim.Agency.Intent.Instances.Validateable
+                      Pitboss.Sim.Agency.Intent.Types
+                      Pitboss.Sim.Agency.Types
+                      Pitboss.Sim.Engine.DeltaGen
+                      Pitboss.Sim.Engine.Runtime
+                      Pitboss.Sim.Event
+                      Pitboss.Sim.Types
                       Pitboss.State
                       Pitboss.State.Delta.Instances.Incremental
                       Pitboss.State.Delta.Instances.Reversible

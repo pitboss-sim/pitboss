@@ -1,10 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 
 module Pitboss.Sim.Event where
+
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack
 import Pitboss.State.Types.Core
-import GHC.Generics (Generic)
-import Data.Aeson (ToJSON, FromJSON)
 
 data BlackjackEvent
     = CardDealt Card CardDestination

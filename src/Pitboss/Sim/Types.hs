@@ -2,12 +2,12 @@
 
 module Pitboss.Sim.Types where
 
+import Data.HashMap.Strict.InsOrd
 import Data.Word (Word64)
+import Pitboss.Sim.Event
+import Pitboss.State (Trace)
 import Pitboss.State.Trace.Ops
 import Pitboss.State.Types.Core
-import Pitboss.Sim.Event
-import Data.HashMap.Strict.InsOrd
-import Pitboss.State (Trace)
 
 data SimState = SimState
     { simTrace :: Trace

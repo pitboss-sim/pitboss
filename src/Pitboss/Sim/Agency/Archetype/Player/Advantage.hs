@@ -4,9 +4,9 @@ module Pitboss.Sim.Agency.Archetype.Player.Advantage where
 
 import Control.Monad.State
 import Data.Map qualified as Map
+import Pitboss.Blackjack
 import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Agency.Types
-import Pitboss.Blackjack
 import System.Random
 
 getAdvantageMove :: ArchetypeConfig 'Advantage -> ArchetypeState 'Advantage -> GameContext -> State StdGen Move

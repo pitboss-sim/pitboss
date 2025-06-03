@@ -4,11 +4,11 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.State.Trace.Types where
+module Pitboss.Causality.Trace.Types where
 
 import Pitboss.Blackjack
+import Pitboss.Causality.Types.Core
 import Pitboss.FSM
-import Pitboss.State.Types.Core
 
 data family DeathReason (k :: EntityKind)
 

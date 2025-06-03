@@ -2,17 +2,17 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.State.Timeline.Reconstruction where
+module Pitboss.Causality.Timeline.Reconstruction where
 
 import Control.Monad (foldM)
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.List (sort)
 import Data.Maybe (fromMaybe)
-import Pitboss.State.Delta.Instances.Incremental
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.Timeline
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Delta.Instances.Incremental
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Timeline
+import Pitboss.Causality.Types.Core
 
 collectDeltasUpTo :: Timeline k (SomeDelta k) -> Tick -> [SomeDelta k]
 collectDeltasUpTo timeline targetTick =

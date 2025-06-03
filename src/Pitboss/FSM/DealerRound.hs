@@ -5,8 +5,6 @@ module Pitboss.FSM.DealerRound (
     module Pitboss.FSM.DealerRound.ENHC,
     module Pitboss.FSM.DealerRound.Peek,
     module Pitboss.FSM.DealerRound.Phase,
-    module Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint,
-    module Pitboss.FSM.DealerRound.Typeclass.PhaseTag,
     DealerRoundFSM (..),
     mkENHCDealerRound,
     mkPeekDealerRound,
@@ -18,14 +16,12 @@ where
 
 import Data.Aeson.Types
 import Data.Text qualified as T
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack hiding (Surrender)
 import Pitboss.FSM.DealerRound.ENHC
 import Pitboss.FSM.DealerRound.Peek
 import Pitboss.FSM.DealerRound.Phase
-import Pitboss.FSM.DealerRound.Typeclass.AtDecisionPoint
-import Pitboss.FSM.DealerRound.Typeclass.PhaseTag
 import Pitboss.FSM.PlayerHand
-import Pitboss.FSM.Types.Transitionable
+import Pitboss.FSM.Types
 
 data DealerRoundFSM
     = PeekDealerRound SomePeekFSM
@@ -47,11 +43,6 @@ instance Show DealerRoundFSM where
         PeekDealerRound f -> "PeekDealerRound (" ++ show f ++ ")"
         ENHCDealerRound f -> "ENHCDealerRound (" ++ show f ++ ")"
 
-instance Transitionable DealerRoundFSM where
-    transitionType = \case
-        PeekDealerRound f -> transitionType f
-        ENHCDealerRound f -> transitionType f
-
 instance ToJSON DealerRoundFSM where
     toJSON = \case
         PeekDealerRound peekFsm ->
@@ -67,20 +58,18 @@ instance FromJSON DealerRoundFSM where
             "ENHC" -> ENHCDealerRound <$> obj .: "state"
             other -> fail $ "Unknown flavor for DealerRoundFSM: " ++ T.unpack other
 
--- helpers
-
-abandonHandDueToSurrender :: RuleSet -> Bool -> SomePlayerHandFSM
+abandonHandDueToSurrender :: GameRuleSet -> Bool -> SomePlayerHandFSM
 abandonHandDueToSurrender _ early =
     SomePlayerHandFSM $
         if early
-            then AbandonedFSM (Surrender Early)
-            else AbandonedFSM (Surrender Late)
+            then PHAbandonedFSM (PHSurrender Early)
+            else PHAbandonedFSM (PHSurrender Late)
 
 abandonHandDueToInsurance :: Bool -> SomePlayerHandFSM
 abandonHandDueToInsurance evenMoney =
     SomePlayerHandFSM $
-        AbandonedFSM $
-            if evenMoney then Insurance PaidEvenMoney else Insurance Paid
+        PHAbandonedFSM $
+            if evenMoney then PHInsurance PaidEvenMoney else PHInsurance Paid
 
 atPlayersPhase :: DealerRoundFSM -> Bool
 atPlayersPhase = \case

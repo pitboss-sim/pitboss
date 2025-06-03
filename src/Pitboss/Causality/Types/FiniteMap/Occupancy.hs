@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Pitboss.State.Types.FiniteMap.Occupancy (
+module Pitboss.Causality.Types.FiniteMap.Occupancy (
     Occupancy (..),
     isPresent,
     isAbsent,

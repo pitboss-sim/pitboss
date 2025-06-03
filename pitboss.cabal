@@ -74,6 +74,20 @@ library
                       Pitboss.FSM.Table
                       Pitboss.FSM.Transitionable
                       Pitboss.FSM.Types
+                      Pitboss.Simulation.Agency.Archetype.Dealer.Rules
+                      Pitboss.Simulation.Agency.Archetype.Player.Advantage
+                      Pitboss.Simulation.Agency.Archetype.Player.BasicStrategy
+                      Pitboss.Simulation.Agency.Archetype.Player.Perfect
+                      Pitboss.Simulation.Agency.Archetype.Player.Superstitious
+                      Pitboss.Simulation.Agency.Archetype.Types
+                      Pitboss.Simulation.Agency.Intent.Generate
+                      Pitboss.Simulation.Agency.Intent.Instances.Validateable
+                      Pitboss.Simulation.Agency.Intent.Types
+                      Pitboss.Simulation.Agency.Types
+                      Pitboss.Simulation.Engine.DeltaGen
+                      Pitboss.Simulation.Engine.Runtime
+                      Pitboss.Simulation.Event
+                      Pitboss.Simulation.Types
     -- other-modules:
     -- other-extensions:
     build-depends:    base,

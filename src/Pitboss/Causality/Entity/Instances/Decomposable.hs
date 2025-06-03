@@ -1,12 +1,12 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.State.Entity.Instances.Decomposable (
+module Pitboss.Causality.Entity.Instances.Decomposable (
     Decomposable (..),
 ) where
 
-import Pitboss.State.Entity.Types
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Types.Core
 
 class Decomposable (k :: EntityKind) where
     type Attrs k

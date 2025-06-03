@@ -3,10 +3,10 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pitboss.State.Delta.Instances.Reversible where
+module Pitboss.Causality.Delta.Instances.Reversible where
 
-import Pitboss.State.Delta.Types
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Types.Core
 
 data InversionError
     = NotInvertible

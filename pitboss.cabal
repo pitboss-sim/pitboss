@@ -40,6 +40,9 @@ library
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Outcome
                       Pitboss.Blackjack.Play
+                      Pitboss.Causality.Delta.Instances.Incremental
+                      Pitboss.Causality.Delta.Instances.Reversible
+                      Pitboss.Causality.Delta.Types
                       Pitboss.Causality.Entity.Instances.Decomposable
                       Pitboss.Causality.Entity.Instances.Replaceable
                       Pitboss.Causality.Entity.Lenses

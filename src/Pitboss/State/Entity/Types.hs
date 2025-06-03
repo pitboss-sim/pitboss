@@ -11,7 +11,6 @@ import Data.Map.Strict
 import GHC.Generics (Generic)
 import Pitboss.Blackjack hiding (HasWitness)
 import Pitboss.FSM
-import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
 import Pitboss.State.Types.FiniteMap.Occupancy
@@ -76,7 +75,6 @@ instance HasWitness 'Bout where
 -- EDealer
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
-    , _dAttrsArchetype :: SomeDealerArchetype
     }
     deriving (Eq, Show, Generic)
 
@@ -159,7 +157,6 @@ instance HasWitness 'DealerRound where
 data PlayerAttrs = PlayerAttrs
     { _pAttrsName :: String
     , _pAttrsBankroll :: Chips
-    , _pAttrsArchetype :: SomePlayerArchetype
     }
     deriving (Eq, Show, Generic)
 

@@ -8,7 +8,6 @@ import Control.Lens hiding (ix)
 import Data.Map.Strict
 import Pitboss.Blackjack
 import Pitboss.FSM
-import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap
@@ -56,11 +55,8 @@ dModes f (EDealer a m r) = fmap (\m' -> EDealer a m' r) (f m)
 dRels :: Lens' (EntityState 'Dealer) DealerRels
 dRels f (EDealer a m r) = fmap (EDealer a m) (f r)
 
-dAttrsArchetype :: Lens' DealerAttrs SomeDealerArchetype
-dAttrsArchetype f (DealerAttrs name archetype) = fmap (DealerAttrs name) (f archetype)
-
 dAttrsName :: Lens' DealerAttrs String
-dAttrsName f (DealerAttrs name archetype) = fmap (`DealerAttrs` archetype) (f name)
+dAttrsName f (DealerAttrs name) = fmap DealerAttrs (f name)
 
 dModesDealerTable :: (Functor f) => (SomeDealerTableFSM -> f SomeDealerTableFSM) -> DealerModes -> f DealerModes
 dModesDealerTable f (DealerModes table round hand) = fmap (\t -> DealerModes t round hand) (f table)
@@ -132,13 +128,10 @@ pRels :: Lens' (EntityState 'Player) PlayerRels
 pRels f (EPlayer a m r) = fmap (EPlayer a m) (f r)
 
 pAttrsName :: Lens' PlayerAttrs String
-pAttrsName f (PlayerAttrs name bankroll archetype) = fmap (\n -> PlayerAttrs n bankroll archetype) (f name)
+pAttrsName f (PlayerAttrs name bankroll) = fmap (`PlayerAttrs` bankroll) (f name)
 
 pAttrsBankroll :: Lens' PlayerAttrs Chips
-pAttrsBankroll f (PlayerAttrs name bankroll archetype) = fmap (\b -> PlayerAttrs name b archetype) (f bankroll)
-
-pAttrsArchetype :: Lens' PlayerAttrs SomePlayerArchetype
-pAttrsArchetype f (PlayerAttrs name bankroll archetype) = fmap (PlayerAttrs name bankroll) (f archetype)
+pAttrsBankroll f (PlayerAttrs name bankroll) = fmap (PlayerAttrs name) (f bankroll)
 
 pModesPlayerTable :: Lens' PlayerModes SomePlayerTableFSM
 pModesPlayerTable f (PlayerModes table spot hand) = fmap (\t -> PlayerModes t spot hand) (f table)

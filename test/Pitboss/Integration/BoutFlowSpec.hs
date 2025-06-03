@@ -11,9 +11,9 @@ import Data.Word (Word64)
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.Sim.Engine.DeltaGen
-import Pitboss.Sim.Event
-import Pitboss.Sim.Types
+import Pitboss.Simulation.Engine.DeltaGen
+import Pitboss.Simulation.Event
+import Pitboss.Simulation.Types
 import Test.Hspec
 
 unTick :: Tick -> Word64

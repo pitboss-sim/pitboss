@@ -1,4 +1,5 @@
 .DS_Store
+.hpc
 .ignore
 *.swo
 *.swp
@@ -7,5 +8,7 @@ attic
 cabal.project.local
 coverage
 dist-*
+
+*.tix
 
 **/.claude/settings.local.json

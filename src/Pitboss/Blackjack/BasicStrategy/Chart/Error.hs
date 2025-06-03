@@ -3,8 +3,7 @@
 module Pitboss.Blackjack.BasicStrategy.Chart.Error where
 
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.Materia.Card
-import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack.Materia.Types.Core
 import Text.Printf (printf)
 
 data ChartParseErrorReason

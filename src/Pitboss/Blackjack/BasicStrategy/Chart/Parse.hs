@@ -6,7 +6,7 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import Pitboss.Blackjack.BasicStrategy.Chart.Error
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Types.Core
 
 parseStrategyChart :: Text -> Either [ChartParseError] StrategyChart
 parseStrategyChart input =

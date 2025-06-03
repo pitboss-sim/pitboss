@@ -2,7 +2,7 @@ module Pitboss.Blackjack.Materia.Deck where
 
 import Control.Monad.ST (ST, runST)
 import Data.Array.ST (STArray, getElems, newListArray, readArray, writeArray)
-import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Materia.Types.Core
 import Pitboss.Blackjack.Offering.Materia
 import System.Random (StdGen, randomR)
 

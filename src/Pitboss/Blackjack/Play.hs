@@ -5,8 +5,10 @@
 
 module Pitboss.Blackjack.Play where
 
-import Pitboss.Blackjack.Materia.Card
 import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack.Materia.Instances.Witnessable
+import Pitboss.Blackjack.Materia.Types
+import Pitboss.Blackjack.Materia.Types.Core
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Outcome
 

@@ -9,6 +9,8 @@ module Pitboss.Blackjack (
     module Pitboss.Blackjack.Materia.Card,
     module Pitboss.Blackjack.Materia.Hand,
     module Pitboss.Blackjack.Materia.Chips,
+    module Pitboss.Blackjack.Materia.Types,
+    module Pitboss.Blackjack.Materia.Types.Core,
 
     -- * Deck Operations
 
@@ -42,6 +44,8 @@ module Pitboss.Blackjack (
 import Pitboss.Blackjack.Materia.Card
 import Pitboss.Blackjack.Materia.Chips
 import Pitboss.Blackjack.Materia.Hand
+import Pitboss.Blackjack.Materia.Types
+import Pitboss.Blackjack.Materia.Types.Core
 
 import Pitboss.Blackjack.Materia.Deck (Deck, drawCard, fullDeck, mkDeck, shuffle)
 

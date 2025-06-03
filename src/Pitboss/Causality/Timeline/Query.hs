@@ -3,17 +3,17 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.State.Timeline.Query where
+module Pitboss.Causality.Timeline.Query where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
-import Pitboss.State.Delta.Instances.Incremental
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.Registry
-import Pitboss.State.Timeline
-import Pitboss.State.Timeline.Reconstruction
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Delta.Instances.Incremental
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Registry
+import Pitboss.Causality.Timeline
+import Pitboss.Causality.Timeline.Reconstruction
+import Pitboss.Causality.Types.Core
 
 uidToRegistryKey :: Uid k -> Word64
 uidToRegistryKey (Uid (_, EntityId entropy)) = entropy

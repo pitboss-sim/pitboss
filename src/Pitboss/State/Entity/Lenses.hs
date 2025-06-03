@@ -6,9 +6,9 @@ module Pitboss.State.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
-import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Blackjack
 import Pitboss.FSM
+import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 import Pitboss.State.Types.FiniteMap

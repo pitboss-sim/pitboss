@@ -77,6 +77,9 @@ library
                       Pitboss.Sim.Event
                       Pitboss.Sim.Types
                       Pitboss.Causality
+                      Pitboss.Causality.Delta.Instances.Incremental
+                      Pitboss.Causality.Delta.Instances.Reversible
+                      Pitboss.Causality.Delta.Types
                       Pitboss.Causality.Entity.Instances.Decomposable
                       Pitboss.Causality.Entity.Instances.Replaceable
                       Pitboss.Causality.Entity.Lenses

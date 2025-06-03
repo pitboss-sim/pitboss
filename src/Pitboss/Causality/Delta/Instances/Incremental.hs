@@ -5,7 +5,7 @@
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.State.Delta.Instances.Incremental (
+module Pitboss.Causality.Delta.Instances.Incremental (
     DeltaWrapper (..),
     Incremental (..),
     IncrementalWithWitness (..),
@@ -14,10 +14,10 @@ module Pitboss.State.Delta.Instances.Incremental (
 ) where
 
 import Data.Map.Strict qualified as Map
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.Types.Core
-import Pitboss.State.Types.FiniteMap
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Types.Core
+import Pitboss.Causality.Types.FiniteMap
 
 data DeltaWrapper k where
     DeltaAttrs :: Delta k (PartialUpdate 'Attrs) -> DeltaWrapper k

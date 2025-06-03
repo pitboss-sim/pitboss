@@ -5,6 +5,9 @@
 *.swp
 
 attic
+coverage
 dist-newstyle
+
+*.tix
 
 **/.claude/settings.local.json

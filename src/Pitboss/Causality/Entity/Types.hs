@@ -9,38 +9,13 @@ module Pitboss.Causality.Entity.Types where
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Blackjack hiding (HasWitness)
+import Pitboss.Blackjack
 import Pitboss.Causality.Types.Core
 import Pitboss.Causality.Types.FiniteMap
 import Pitboss.Causality.Types.FiniteMap.Occupancy
 import Pitboss.FSM
 
 data family EntityState (k :: EntityKind)
-
-data EntityKindWitness (k :: EntityKind) where
-    BoutWitness :: EntityKindWitness 'Bout
-    PlayerWitness :: EntityKindWitness 'Player
-    DealerWitness :: EntityKindWitness 'Dealer
-    PlayerHandWitness :: EntityKindWitness 'PlayerHand
-    DealerHandWitness :: EntityKindWitness 'DealerHand
-    PlayerSpotWitness :: EntityKindWitness 'PlayerSpot
-    DealerRoundWitness :: EntityKindWitness 'DealerRound
-    TableWitness :: EntityKindWitness 'Table
-    TableShoeWitness :: EntityKindWitness 'TableShoe
-
-instance Show (EntityKindWitness k) where
-    show BoutWitness = "BoutWitness"
-    show PlayerWitness = "PlayerWitness"
-    show DealerWitness = "DealerWitness"
-    show PlayerHandWitness = "PlayerHandWitness"
-    show DealerHandWitness = "DealerHandWitness"
-    show PlayerSpotWitness = "PlayerSpotWitness"
-    show DealerRoundWitness = "DealerRoundWitness"
-    show TableWitness = "TableWitness"
-    show TableShoeWitness = "TableShoeWitness"
-
-class HasWitness (k :: EntityKind) where
-    witness :: EntityState k -> EntityKindWitness k
 
 -- EBout
 data BoutAttrs = BoutAttrs
@@ -69,9 +44,6 @@ data instance EntityState 'Bout = EBout
     }
     deriving (Eq, Generic)
 
-instance HasWitness 'Bout where
-    witness _ = BoutWitness
-
 -- EDealer
 data DealerAttrs = DealerAttrs
     { _dAttrsName :: String
@@ -99,9 +71,6 @@ data instance EntityState 'Dealer = EDealer
     }
     deriving (Eq, Generic)
 
-instance HasWitness 'Dealer where
-    witness _ = DealerWitness
-
 -- EDealerHand
 data DealerHandAttrs = DealerHandAttrs
     {_dhAttrsHand :: SomeHand}
@@ -125,9 +94,6 @@ data instance EntityState 'DealerHand = EDealerHand
     }
     deriving (Eq, Generic)
 
-instance HasWitness 'DealerHand where
-    witness _ = DealerHandWitness
-
 -- EDealerRound
 data DealerRoundAttrs = DealerRoundAttrs
     { _drAttrsNumber :: Int
@@ -149,9 +115,6 @@ data instance EntityState 'DealerRound = EDealerRound
     , _drRels :: DealerRoundRels
     }
     deriving (Eq, Generic)
-
-instance HasWitness 'DealerRound where
-    witness _ = DealerRoundWitness
 
 -- EPlayer
 data PlayerAttrs = PlayerAttrs
@@ -176,9 +139,6 @@ data instance EntityState 'Player = EPlayer
     , _pRels :: PlayerRels
     }
     deriving (Eq, Generic)
-
-instance HasWitness 'Player where
-    witness _ = PlayerWitness
 
 -- EPlayerHand
 data PlayerHandAttrs = PlayerHandAttrs
@@ -209,9 +169,6 @@ data instance EntityState 'PlayerHand = EPlayerHand
     }
     deriving (Eq, Generic)
 
-instance HasWitness 'PlayerHand where
-    witness _ = PlayerHandWitness
-
 -- EPlayerSpot
 data PlayerSpotAttrs = PlayerSpotAttrs
     { _psAttrsSpotIndex :: PlayerSpotIx
@@ -238,9 +195,6 @@ data instance EntityState 'PlayerSpot = EPlayerSpot
     }
     deriving (Eq, Generic)
 
-instance HasWitness 'PlayerSpot where
-    witness _ = PlayerSpotWitness
-
 -- ETable
 data TableAttrs = TableAttrs
     { _tAttrsName :: String
@@ -266,9 +220,6 @@ data instance EntityState 'Table = ETable
     }
     deriving (Eq, Generic)
 
-instance HasWitness 'Table where
-    witness _ = TableWitness
-
 -- ETableShoe
 data TableShoeAttrs = TableShoeAttrs
     { _tsAttrsCards :: [Card]
@@ -290,9 +241,6 @@ data instance EntityState 'TableShoe = ETableShoe
     , _tsRels :: TableShoeRels
     }
     deriving (Eq, Generic)
-
-instance HasWitness 'TableShoe where
-    witness _ = TableShoeWitness
 
 instance ToJSON BoutAttrs
 instance FromJSON BoutAttrs

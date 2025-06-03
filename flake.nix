@@ -53,20 +53,26 @@
 
         in
         {
-          default = pkgs.mkShell {
-            buildInputs = [
-              cabal2nix
-              treefmt
-              claude-code
+          default =
+            let
+              coverage = pkgs.callPackage ./nix/coverage.nix {};
+            in
+            pkgs.mkShell {
+              buildInputs = [
+                cabal2nix
+                treefmt
+                claude-code
 
-              # from haskellPackages
-              ghc
-              cabal-fmt
-              cabal-install
-              ormolu
-              haskell-language-server
-            ];
-          };
+                coverage
+
+                # from haskellPackages
+                ghc
+                cabal-fmt
+                cabal-install
+                ormolu
+                haskell-language-server
+              ];
+            };
         }
       );
 

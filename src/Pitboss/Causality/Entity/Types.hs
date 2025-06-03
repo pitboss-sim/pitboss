@@ -4,16 +4,16 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.State.Entity.Types where
+module Pitboss.Causality.Entity.Types where
 
 import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Map.Strict
 import GHC.Generics (Generic)
 import Pitboss.Blackjack hiding (HasWitness)
+import Pitboss.Causality.Types.Core
+import Pitboss.Causality.Types.FiniteMap
+import Pitboss.Causality.Types.FiniteMap.Occupancy
 import Pitboss.FSM
-import Pitboss.State.Types.Core
-import Pitboss.State.Types.FiniteMap
-import Pitboss.State.Types.FiniteMap.Occupancy
 
 data family EntityState (k :: EntityKind)
 

@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.State.Types.FiniteMap (
+module Pitboss.Causality.Types.FiniteMap (
     FiniteMap (..),
     insertFiniteMap,
     lookupFiniteMap,
@@ -17,7 +17,7 @@ where
 import Control.Lens (At (..), Index, IxValue, Ixed (..))
 import Data.Aeson
 import Data.Map.Strict qualified as Map
-import Pitboss.State.Types.FiniteMap.BoundedEnum
+import Pitboss.Causality.Types.FiniteMap.BoundedEnum
 
 newtype FiniteMap k v = FiniteMap (Map.Map k v)
     deriving (Eq, Show, Functor)

@@ -14,7 +14,7 @@ extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common warnings
-    ghc-options: -Wall
+    ghc-options:      -Wall
 
 library
     import:           warnings
@@ -106,7 +106,6 @@ library
     default-language: GHC2021
 
 executable pitboss
-    import:           warnings
     main-is:          Main.hs
     -- other-modules:
     -- other-extensions:
@@ -118,13 +117,27 @@ executable pitboss
     default-language: GHC2021
 
 test-suite pitboss-test
-    import:           warnings
     default-language: GHC2021
-    -- other-modules:
+    other-modules:    Spec.Pitboss.Helpers
+                      Spec.Pitboss.Integration.BoutFlowSpec
+                      Spec.Pitboss.Integration.DealerBlackjackInsuranceSpec
+                      Spec.Pitboss.Integration.TimelineSpec
+                      Spec.Pitboss.Orchestration.DeltaGenSpec
+                      Spec.Pitboss.Simulation.DealerPlaySpec
+                      Spec.Pitboss.Simulation.DealerRulesSpec
+                      Spec.Pitboss.Simulation.IntentToEventSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
     build-depends:
         base,
-        pitboss
+        insert-ordered-containers,
+        lens,
+        mtl,
+        hspec,
+        pitboss,
+        random,
+        text,
+    build-tool-depends:
+        hspec-discover:hspec-discover

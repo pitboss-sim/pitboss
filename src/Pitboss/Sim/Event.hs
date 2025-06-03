@@ -5,7 +5,7 @@ module Pitboss.Sim.Event where
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
 import Pitboss.Blackjack
-import Pitboss.State
+import Pitboss.Causality
 
 data BlackjackEvent
     = CardDealt Card CardDestination

@@ -1,4 +1,4 @@
-module Pitboss.State.Types.FiniteMap.BoundedEnum (
+module Pitboss.Causality.Types.FiniteMap.BoundedEnum (
     BoundedEnum,
     universe,
 ) where

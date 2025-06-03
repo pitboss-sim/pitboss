@@ -6,7 +6,7 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.State.Types.Core (
+module Pitboss.Causality.Types.Core (
     IntentKind (..),
     HandTarget (..),
     EntityKind (..),
@@ -43,7 +43,7 @@ import Data.Word (Word64)
 import GHC.Generics (Generic)
 import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
-import Pitboss.State.Types.FiniteMap.BoundedEnum
+import Pitboss.Causality.Types.FiniteMap.BoundedEnum
 import System.Random (Random (..), RandomGen)
 
 data EntityKind

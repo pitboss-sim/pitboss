@@ -4,14 +4,14 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.State.Entity.Instances.Replaceable (
+module Pitboss.Causality.Entity.Instances.Replaceable (
     ReplaceableAttrs (..),
     ReplaceableModes (..),
     ReplaceableRels (..),
 ) where
 
-import Pitboss.State.Entity.Types
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Types.Core
 
 class ReplaceableAttrs (k :: EntityKind) where
     replaceAttrs :: EntityState k -> EntityState k -> EntityState k

@@ -2,16 +2,16 @@
 -- EBout
 {-# LANGUAGE RankNTypes #-}
 
-module Pitboss.State.Entity.Lenses where
+module Pitboss.Causality.Entity.Lenses where
 
 import Control.Lens hiding (ix)
 import Data.Map.Strict
 import Pitboss.Blackjack
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Types.Core
+import Pitboss.Causality.Types.FiniteMap
+import Pitboss.Causality.Types.FiniteMap.Occupancy
 import Pitboss.FSM
-import Pitboss.State.Entity.Types
-import Pitboss.State.Types.Core
-import Pitboss.State.Types.FiniteMap
-import Pitboss.State.Types.FiniteMap.Occupancy
 import Prelude hiding (round)
 
 bAttrs :: Lens' (EntityState 'Bout) BoutAttrs

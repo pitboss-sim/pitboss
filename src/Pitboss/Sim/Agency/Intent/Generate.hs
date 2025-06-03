@@ -17,30 +17,26 @@ import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Agency.Types
 import Pitboss.Sim.Event
 import Pitboss.State
-import Pitboss.State.Entity.Types
 import System.Random (StdGen)
 
 generatePlayerHandIntent ::
+    SomePlayerArchetype ->
     EntityId 'Player ->
     EntityId 'PlayerHand ->
     StdGen ->
     Reader TickCacheContext (Maybe BlackjackEvent)
-generatePlayerHandIntent playerId handId gen = do
+generatePlayerHandIntent archetype playerId handId gen = do
     maybeHand <- deref handId
     case maybeHand of
         Nothing -> pure Nothing
         Just hand -> case _phFsm (_phModes hand) of
             SomePlayerHandFSM PHDecisionFSM -> do
-                maybePlayer <- deref playerId
-                case maybePlayer of
+                contextM <- buildContext hand
+                case contextM of
                     Nothing -> pure Nothing
-                    Just player -> do
-                        contextM <- buildContext hand
-                        case contextM of
-                            Nothing -> pure Nothing
-                            Just ctx -> do
-                                let move = evalState (decideByArchetype (_pAttrsArchetype (_pAttrs player)) ctx) gen
-                                pure $ Just $ moveToEvent playerId handId move
+                    Just ctx -> do
+                        let move = evalState (decideByArchetype archetype ctx) gen
+                        pure $ Just $ moveToEvent playerId handId move
             _ -> pure Nothing
 
 buildContext :: EntityState 'PlayerHand -> Reader TickCacheContext (Maybe GameContext)

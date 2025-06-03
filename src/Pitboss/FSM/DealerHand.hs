@@ -8,6 +8,7 @@ module Pitboss.FSM.DealerHand where
 import Data.Aeson.Types
 import GHC.Generics (Generic)
 import Pitboss.Blackjack
+import Pitboss.Blackjack.Materia.Instances.Witnessable
 import Pitboss.FSM.Types
 
 data DealerHandResolution

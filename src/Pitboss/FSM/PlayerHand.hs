@@ -11,6 +11,7 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack hiding (HandPhase)
+import Pitboss.Blackjack.Materia.Instances.Witnessable
 import Pitboss.FSM.Types
 
 data HandPhase

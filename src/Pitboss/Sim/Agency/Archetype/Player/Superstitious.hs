@@ -4,11 +4,11 @@
 module Pitboss.Sim.Agency.Archetype.Player.Superstitious where
 
 import Control.Monad.State
-import Pitboss.Sim.Agency.Archetype.Types
-import Pitboss.Sim.Agency.Types
 import Pitboss.Blackjack
 import Pitboss.Blackjack.BasicStrategy.Chart
 import Pitboss.Blackjack.BasicStrategy.Types
+import Pitboss.Sim.Agency.Archetype.Types
+import Pitboss.Sim.Agency.Types
 import System.Random
 
 getSuperstitiousMove :: ArchetypeConfig 'Superstitious -> GameContext -> State StdGen Move

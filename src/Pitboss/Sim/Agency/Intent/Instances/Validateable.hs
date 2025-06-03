@@ -4,10 +4,10 @@
 
 module Pitboss.Sim.Agency.Intent.Instances.Validateable where
 
-import Pitboss.Sim.Agency.Intent.Types
 import Pitboss.Blackjack
 import Pitboss.FSM
 import Pitboss.FSM.Instances.Transitionable
+import Pitboss.Sim.Agency.Intent.Types
 import Pitboss.State.Types.Core
 
 class Validateable (k :: IntentKind) where

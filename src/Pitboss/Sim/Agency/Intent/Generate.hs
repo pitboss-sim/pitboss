@@ -7,18 +7,18 @@ module Pitboss.Sim.Agency.Intent.Generate where
 import Control.Monad.Reader
 import Control.Monad.State
 
+import Pitboss.Blackjack
+import Pitboss.FSM
 import Pitboss.Sim.Agency.Archetype.Player.Advantage
 import Pitboss.Sim.Agency.Archetype.Player.BasicStrategy
 import Pitboss.Sim.Agency.Archetype.Player.Perfect
 import Pitboss.Sim.Agency.Archetype.Player.Superstitious
 import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Agency.Types
-import Pitboss.Blackjack
-import Pitboss.FSM
-import Pitboss.State.Entity.Types
-import System.Random (StdGen)
 import Pitboss.Sim.Event
 import Pitboss.State
+import Pitboss.State.Entity.Types
+import System.Random (StdGen)
 
 generatePlayerHandIntent ::
     EntityId 'Player ->

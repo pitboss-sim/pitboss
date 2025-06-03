@@ -76,6 +76,7 @@ library
                       Pitboss.Sim.Engine.Runtime
                       Pitboss.Sim.Event
                       Pitboss.Sim.Types
+                      Pitboss.Causality
                       Pitboss.Causality.Delta.Instances.Incremental
                       Pitboss.Causality.Delta.Instances.Reversible
                       Pitboss.Causality.Delta.Types

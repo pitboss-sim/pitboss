@@ -10,7 +10,6 @@ import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
 import Pitboss.Blackjack
 import Pitboss.FSM
-import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Engine.DeltaGen
 import Pitboss.Sim.Event
 import Pitboss.Sim.Types
@@ -34,12 +33,11 @@ mkInitialTrace startTick =
                     PlayerAttrs
                         { _pAttrsName = "Test Player"
                         , _pAttrsBankroll = Chips 1000
-                        , _pAttrsArchetype =
-                            SomePlayerBasicStrategy $
-                                BasicStrategyArchetype
-                                    { bsConfig = BasicConfig undefined (MistakeProfile 0 undefined)
-                                    , bsState = BasicState 0 emptySessionStats
-                                    }
+                            -- SomePlayerBasicStrategy $
+                            --     BasicStrategyArchetype
+                            --         { bsConfig = BasicConfig undefined (MistakeProfile 0 undefined)
+                            --         , bsState = BasicState 0 emptySessionStats
+                            --         }
                         }
                 , _pModes = PlayerModes undefined undefined undefined
                 , _pRels = PlayerRels
@@ -50,12 +48,11 @@ mkInitialTrace startTick =
                 { _dAttrs =
                     DealerAttrs
                         { _dAttrsName = "Test Dealer"
-                        , _dAttrsArchetype =
-                            SomeDealerByTheBook $
-                                ByTheBookDealerArchetype
-                                    { btbConfig = ByTheBookConfig (PenetrationProfile 0.75 0.05) (PaceProfile 100 10)
-                                    , btbState = ByTheBookState 0
-                                    }
+                            -- SomeDealerByTheBook $
+                            --     ByTheBookDealerArchetype
+                            --         { btbConfig = ByTheBookConfig (PenetrationProfile 0.75 0.05) (PaceProfile 100 10)
+                            --         , btbState = ByTheBookState 0
+                            --         }
                         }
                 , _dModes = DealerModes undefined undefined undefined
                 , _dRels = DealerRels Nothing Nothing Nothing

@@ -56,14 +56,12 @@ mkTestDealerArchetype =
 
 mkTestPlayer :: EntityId 'Player -> String -> IO (EntityState 'Player)
 mkTestPlayer _playerId name = do
-    archetype <- mkTestBasicStrategy
     pure $
         EPlayer
             { _pAttrs =
                 PlayerAttrs
                     { _pAttrsName = name
                     , _pAttrsBankroll = Chips 1000
-                    , _pAttrsArchetype = archetype
                     }
             , _pModes =
                 PlayerModes
@@ -80,7 +78,7 @@ mkTestDealer _dealerId name =
         { _dAttrs =
             DealerAttrs
                 { _dAttrsName = name
-                , _dAttrsArchetype = mkTestDealerArchetype
+                -- , _dAttrsArchetype = mkTestDealerArchetype
                 }
         , _dModes =
             DealerModes

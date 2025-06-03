@@ -1,0 +1,428 @@
+[
+    {
+        "contents": {
+            "entityId": 1200,
+            "kind": "Player",
+            "state": {
+                "_pAttrs": {
+                    "_pAttrsBankroll": 1000,
+                    "_pAttrsName": "Test Player"
+                },
+                "_pModes": {
+                    "_pModesPlayerFSM": {
+                        "tag": "PlayingHand"
+                    }
+                },
+                "_pRels": {
+                    "_pRelsActiveRound": {
+                        "tag": "Absent"
+                    },
+                    "_pRelsActiveTable": {
+                        "tag": "Absent"
+                    }
+                }
+            },
+            "type": "EntityCreated"
+        },
+        "tag": "Lifecycle"
+    },
+    {
+        "contents": {
+            "entityId": 200,
+            "kind": "Dealer",
+            "state": {
+                "_dAttrs": {
+                    "_dAttrsName": "Test Dealer",
+                    "_dAttrsStagedCard": {
+                        "tag": "Absent"
+                    }
+                },
+                "_dModes": {
+                    "_dModesDealerTable": {
+                        "tag": "OffDuty"
+                    },
+                    "_dModesRound": {
+                        "contents": {
+                            "tag": "PeekAwaiting"
+                        },
+                        "tag": "PeekRound"
+                    }
+                },
+                "_dRels": {
+                    "_dRelsActiveRound": {
+                        "tag": "Absent"
+                    },
+                    "_dRelsActiveTable": {
+                        "tag": "Absent"
+                    }
+                }
+            },
+            "type": "EntityCreated"
+        },
+        "tag": "Lifecycle"
+    },
+    {
+        "contents": {
+            "entityId": 800,
+            "kind": "Table",
+            "state": {
+                "_tAttrs": {
+                    "_tAttrsName": "Test Table",
+                    "_tAttrsOffering": {
+                        "gameRuleSet": {
+                            "das": "DAS",
+                            "doubling": "DoubleAny",
+                            "holeCardRule": "Peek",
+                            "payout": "P3_2",
+                            "pen": {
+                                "contents": [
+                                    5,
+                                    6
+                                ],
+                                "tag": "PenFrac"
+                            },
+                            "resplitAcesAllowed": "ResplitAces",
+                            "soft17": "StandSoft17",
+                            "splitAcesAllowed": "SplitAces",
+                            "splitAcesFrozen": "FullPlay",
+                            "splitHands": "SP4",
+                            "surrender": "Late"
+                        },
+                        "materia": {
+                            "matterDealt": "FaceUp",
+                            "matterDecks": "D6"
+                        },
+                        "tableRuleSet": {
+                            "burnPolicy": {
+                                "tag": "SingleCardBurn"
+                            },
+                            "maxBet": 5000,
+                            "maxBoutsPerPlayer": 2,
+                            "midShoeEntry": "AllowMidShoe",
+                            "minBet": 25,
+                            "multiSpotMinBetPolicy": {
+                                "contents": 2,
+                                "tag": "MultipliedMinBet"
+                            },
+                            "standardPenetration": 0.75
+                        }
+                    },
+                    "_tAttrsSeats": [
+                        [
+                            "TableSpot1",
+                            {
+                                "contents": {
+                                    "_seatOccupant": 1200,
+                                    "_seatReserved": false
+                                },
+                                "tag": "Present"
+                            }
+                        ],
+                        [
+                            "TableSpot2",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot3",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot4",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot5",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot6",
+                            {
+                                "tag": "Absent"
+                            }
+                        ]
+                    ]
+                },
+                "_tModes": {
+                    "_tModesFSM": {
+                        "tag": "RoundInProgress"
+                    }
+                },
+                "_tRels": {
+                    "_tRelsActiveDealer": {
+                        "contents": 200,
+                        "tag": "Present"
+                    },
+                    "_tRelsActiveRound": {
+                        "contents": 700,
+                        "tag": "Present"
+                    }
+                }
+            },
+            "type": "EntityCreated"
+        },
+        "tag": "Lifecycle"
+    },
+    {
+        "contents": {
+            "entityId": 700,
+            "kind": "Round",
+            "state": {
+                "_rAttrs": {
+                    "_rAttrsActiveSpotIx": {
+                        "tag": "Absent"
+                    },
+                    "_rAttrsNumber": 1
+                },
+                "_rModes": [],
+                "_rRels": {
+                    "_rRelsBouts": [
+                        [
+                            "TableSpot1",
+                            {
+                                "contents": 100,
+                                "tag": "Present"
+                            }
+                        ],
+                        [
+                            "TableSpot2",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot3",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot4",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot5",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "TableSpot6",
+                            {
+                                "tag": "Absent"
+                            }
+                        ]
+                    ],
+                    "_rRelsShoe": 900,
+                    "_rRelsTable": 800
+                }
+            },
+            "type": "EntityCreated"
+        },
+        "tag": "Lifecycle"
+    },
+    {
+        "contents": {
+            "entityId": 900,
+            "kind": "Shoe",
+            "state": {
+                "_sAttrs": {
+                    "_sAttrsCardStates": {},
+                    "_sAttrsCards": [
+                        {
+                            "rank": "Ten",
+                            "suit": "Hearts"
+                        },
+                        {
+                            "rank": "Six",
+                            "suit": "Diamonds"
+                        },
+                        {
+                            "rank": "Seven",
+                            "suit": "Spades"
+                        },
+                        {
+                            "rank": "King",
+                            "suit": "Clubs"
+                        },
+                        {
+                            "rank": "Four",
+                            "suit": "Hearts"
+                        }
+                    ]
+                },
+                "_sModes": [],
+                "_sRels": {
+                    "_sRelsTable": 800
+                }
+            },
+            "type": "EntityCreated"
+        },
+        "tag": "Lifecycle"
+    },
+    {
+        "contents": {
+            "entityId": 100,
+            "kind": "Bout",
+            "state": {
+                "_bAttrs": {
+                    "_bAttrsActiveHandIx": "Hand1",
+                    "_bAttrsDealerHand": {
+                        "cards": [],
+                        "witness": {
+                            "availableActions": [],
+                            "completeness": "NoneWitness",
+                            "numericValue": 0,
+                            "structure": {
+                                "tag": "EmptyWitness"
+                            },
+                            "valueType": "HardWitness"
+                        }
+                    },
+                    "_bAttrsOutcome": {
+                        "tag": "Absent"
+                    },
+                    "_bAttrsPlayerHand": {
+                        "cards": [],
+                        "witness": {
+                            "availableActions": [],
+                            "completeness": "NoneWitness",
+                            "numericValue": 0,
+                            "structure": {
+                                "tag": "EmptyWitness"
+                            },
+                            "valueType": "HardWitness"
+                        }
+                    }
+                },
+                "_bModes": {
+                    "_bModesBoutFSM": {
+                        "tag": "PlayerTurn"
+                    },
+                    "_bModesDealerHandFSM": {
+                        "tag": "Evaluating"
+                    },
+                    "_bModesPlayerHandFSM": {
+                        "tag": "Decision"
+                    }
+                },
+                "_bRels": {
+                    "_bRelsDealer": 200,
+                    "_bRelsPlayer": 1200,
+                    "_bRelsPlayerBouts": [
+                        [
+                            "Hand1",
+                            {
+                                "contents": 100,
+                                "tag": "Present"
+                            }
+                        ],
+                        [
+                            "Hand2",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "Hand3",
+                            {
+                                "tag": "Absent"
+                            }
+                        ],
+                        [
+                            "Hand4",
+                            {
+                                "tag": "Absent"
+                            }
+                        ]
+                    ],
+                    "_bRelsRound": 700,
+                    "_bRelsTable": 800
+                }
+            },
+            "type": "EntityCreated"
+        },
+        "tag": "Lifecycle"
+    },
+    {
+        "contents": {
+            "contents": [
+                {
+                    "rank": "Ten",
+                    "suit": "Hearts"
+                },
+                100
+            ],
+            "tag": "BoutPlayerCardDealt"
+        },
+        "tag": "Game"
+    },
+    {
+        "contents": {
+            "contents": [
+                {
+                    "rank": "Ace",
+                    "suit": "Spades"
+                },
+                100
+            ],
+            "tag": "BoutDealerCardDealt"
+        },
+        "tag": "Game"
+    },
+    {
+        "contents": {
+            "contents": [
+                {
+                    "rank": "Nine",
+                    "suit": "Diamonds"
+                },
+                100
+            ],
+            "tag": "BoutPlayerCardDealt"
+        },
+        "tag": "Game"
+    },
+    {
+        "contents": {
+            "contents": [
+                {
+                    "rank": "King",
+                    "suit": "Clubs"
+                },
+                100
+            ],
+            "tag": "BoutDealerCardDealt"
+        },
+        "tag": "Game"
+    },
+    {
+        "contents": {
+            "contents": 100,
+            "tag": "BoutDealerRevealed"
+        },
+        "tag": "Game"
+    },
+    {
+        "contents": {
+            "contents": [
+                100,
+                {
+                    "outcome": "BoutDealerWin",
+                    "reason": "NaturalBlackjack"
+                }
+            ],
+            "tag": "BoutSettled"
+        },
+        "tag": "Game"
+    }
+]

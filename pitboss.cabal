@@ -14,7 +14,7 @@ extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common warnings
-    ghc-options: -Wall
+    ghc-options:      -Wall
 
 library
     import:           warnings
@@ -140,7 +140,6 @@ library
     default-language: GHC2021
 
 executable pitboss
-    import:           warnings
     main-is:          Main.hs
     -- other-modules:
     -- other-extensions:
@@ -152,12 +151,54 @@ executable pitboss
     default-language: GHC2021
 
 test-suite pitboss-test
-    import:           warnings
     default-language: GHC2021
-    -- other-modules:
+    other-modules:    Test.Pitboss.Integration.BoutFlowSpec
+                      Test.Pitboss.Integration.DealerBlackjackSpec
+                      Test.Pitboss.Integration.DoubleDownSpec
+                      Test.Pitboss.Integration.BoutPlayerDecisionFlowSpec
+                      Test.Pitboss.Integration.SplitHandSpec
+                      Test.Pitboss.Integration.FullBoutSimulationRoundtripSpec
+                      Test.Pitboss.Integration.TimelineReconstructionSpec
+                      Test.Pitboss.Integration.PlayerDoubleDownWinSpec
+                      Test.Pitboss.Integration.PlayerSplitAcesSpec
+                      Test.Pitboss.Integration.PlayerBlackjackVsDealerSpec
+                      Test.Pitboss.Integration.DealerSoft17HitBustSpec
+                      Test.Pitboss.Integration.ComplexPushVariationsSpec
+                      Test.Pitboss.Integration.PlayerSurrenderSpec
+                      Test.Pitboss.Integration.SoftHandConversionSpec
+                      Test.Pitboss.Integration.PlayerSplitPairsSpec
+                      Test.Pitboss.Integration.InsuranceScenarioSpec
+                      Test.Pitboss.Integration.MultiSplitScenarioSpec
+                      Test.Pitboss.Property.ChipPropertySpec
+                      Test.Pitboss.Property.HandPropertySpec
+                      Test.Pitboss.TestUtils
+                      Test.Pitboss.Matchers
+                      Test.Pitboss.Unit.Causality.DeltaSpec
+                      Test.Pitboss.Unit.Causality.FiniteMapSpec
+                      Test.Pitboss.Unit.Causality.UidSpec
+                      Test.Pitboss.Unit.Domain.HandSpec
+                      Test.Pitboss.Unit.Domain.RulesSpec
+                      Test.Pitboss.Unit.FSM.BoutPlayerHandSpec
+                      Test.Pitboss.Unit.Serialization.JsonSpec
+                      Test.Pitboss.Unit.Intent.ValidationSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
-    build-depends:    base,
+    build-depends:    aeson,
+                      aeson-pretty,
+                      base,
+                      bytestring,
+                      containers,
+                      directory,
+                      insert-ordered-containers,
+                      lens,
+                      mtl,
+                      hspec,
                       pitboss,
+                      QuickCheck,
+                      random,
+                      temporary,
+                      text,
+    build-tool-depends:
+        hspec-discover:hspec-discover

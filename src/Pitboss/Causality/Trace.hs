@@ -4,7 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
-module Pitboss.State.Trace (
+module Pitboss.Causality.Trace (
     Trace (..),
     emptyTrace,
     bouts,
@@ -21,9 +21,9 @@ module Pitboss.State.Trace (
 import Control.Lens (makeLenses)
 import Data.Aeson
 import GHC.Generics (Generic)
-import Pitboss.State.Delta.Types
-import Pitboss.State.Registry
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Registry
+import Pitboss.Causality.Types.Core
 
 data Trace = Trace
     { _bouts :: Registry 'Bout (SomeDelta 'Bout)

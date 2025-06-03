@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.State.Timeline (
+module Pitboss.Causality.Timeline (
     Timeline (..),
     Meta (..),
     mkTimeline,
@@ -12,8 +12,8 @@ module Pitboss.State.Timeline (
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import GHC.Generics (Generic)
-import Pitboss.State.Entity.Types
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Types.Core
 import Prelude hiding (id)
 
 mkTimeline :: EntityId k -> Tick -> EntityState k -> Timeline k a

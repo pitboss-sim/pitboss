@@ -4,17 +4,17 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Pitboss.State.Trace.Ops where
+module Pitboss.Causality.Trace.Ops where
 
 import Control.Lens
 import Data.HashMap.Strict.InsOrd qualified as IHM
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.Registry
-import Pitboss.State.Timeline
-import Pitboss.State.Trace
-import Pitboss.State.Trace.Types
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Registry
+import Pitboss.Causality.Timeline
+import Pitboss.Causality.Trace
+import Pitboss.Causality.Trace.Types
+import Pitboss.Causality.Types.Core
 
 data TraceOp where
     BirthOp :: EntityKindWitness k -> EntityId k -> EntityState k -> TraceOp

@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Sim.Agency.Intent.Generate where
+module Pitboss.Simulation.Agency.Intent.Generate where
 
 import Control.Monad.Reader
 import Control.Monad.State
@@ -10,13 +10,13 @@ import Control.Monad.State
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.Sim.Agency.Archetype.Player.Advantage
-import Pitboss.Sim.Agency.Archetype.Player.BasicStrategy
-import Pitboss.Sim.Agency.Archetype.Player.Perfect
-import Pitboss.Sim.Agency.Archetype.Player.Superstitious
-import Pitboss.Sim.Agency.Archetype.Types
-import Pitboss.Sim.Agency.Types
-import Pitboss.Sim.Event
+import Pitboss.Simulation.Agency.Archetype.Player.Advantage
+import Pitboss.Simulation.Agency.Archetype.Player.BasicStrategy
+import Pitboss.Simulation.Agency.Archetype.Player.Perfect
+import Pitboss.Simulation.Agency.Archetype.Player.Superstitious
+import Pitboss.Simulation.Agency.Archetype.Types
+import Pitboss.Simulation.Agency.Types
+import Pitboss.Simulation.Event
 import System.Random (StdGen)
 
 generatePlayerHandIntent ::

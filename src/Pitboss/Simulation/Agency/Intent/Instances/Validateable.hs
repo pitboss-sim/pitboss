@@ -2,13 +2,13 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.Sim.Agency.Intent.Instances.Validateable where
+module Pitboss.Simulation.Agency.Intent.Instances.Validateable where
 
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.FSM.Instances.Transitionable
-import Pitboss.Sim.Agency.Intent.Types
+import Pitboss.Simulation.Agency.Intent.Types
 
 class Validateable (k :: IntentKind) where
     validate :: IntentCtx k -> Either String ()

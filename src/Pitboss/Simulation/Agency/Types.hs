@@ -1,7 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Pitboss.Sim.Agency.Types where
+module Pitboss.Simulation.Agency.Types where
 
 import Control.Lens
 import Data.Aeson

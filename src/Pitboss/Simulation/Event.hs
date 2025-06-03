@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Sim.Event where
+module Pitboss.Simulation.Event where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

@@ -1,11 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Sim.Agency.Archetype.Player.Perfect where
+module Pitboss.Simulation.Agency.Archetype.Player.Perfect where
 
 import Control.Monad.State
 import Pitboss.Blackjack
-import Pitboss.Sim.Agency.Archetype.Types
-import Pitboss.Sim.Agency.Types
+import Pitboss.Simulation.Agency.Archetype.Types
+import Pitboss.Simulation.Agency.Types
 import System.Random
 
 getPerfectMove :: ArchetypeConfig 'Perfect -> GameContext -> State StdGen Move

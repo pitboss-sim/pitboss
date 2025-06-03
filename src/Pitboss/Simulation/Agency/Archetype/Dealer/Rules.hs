@@ -1,12 +1,12 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Sim.Agency.Archetype.Dealer.Rules where
+module Pitboss.Simulation.Agency.Archetype.Dealer.Rules where
 
 import Pitboss.Blackjack
 import Pitboss.Blackjack.Materia.Instances.Witnessable
-import Pitboss.Sim.Agency.Archetype.Types
-import Pitboss.Sim.Agency.Types
+import Pitboss.Simulation.Agency.Archetype.Types
+import Pitboss.Simulation.Agency.Types
 
 data DealerRequiredAction
     = MustHit

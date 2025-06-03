@@ -1,4 +1,4 @@
-module Pitboss.Sim.Engine.Runtime where
+module Pitboss.Simulation.Engine.Runtime where
 
 import Data.Word (Word64)
 import Pitboss.Causality

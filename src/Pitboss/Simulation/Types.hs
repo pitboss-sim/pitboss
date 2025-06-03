@@ -1,11 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Sim.Types where
+module Pitboss.Simulation.Types where
 
 import Data.HashMap.Strict.InsOrd
 import Data.Word (Word64)
 import Pitboss.Causality
-import Pitboss.Sim.Event
+import Pitboss.Simulation.Event
 
 data SimState = SimState
     { simTrace :: Trace

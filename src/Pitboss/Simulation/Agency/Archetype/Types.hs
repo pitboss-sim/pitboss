@@ -11,7 +11,7 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.Sim.Agency.Archetype.Types where
+module Pitboss.Simulation.Agency.Archetype.Types where
 
 import Control.Lens hiding ((.=))
 import Data.Aeson

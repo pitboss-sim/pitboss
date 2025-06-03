@@ -39,6 +39,9 @@ library
                       Pitboss.Blackjack.Types
                       Pitboss.Blackjack.Types.Core
                       Pitboss.Blackjack.WellKnown
+                      Pitboss.Causality.Delta.Incremental
+                      Pitboss.Causality.Delta.Reversible
+                      Pitboss.Causality.Delta.Types
                       Pitboss.Causality.Entity.Decomposable
                       Pitboss.Causality.Entity.Lenses
                       Pitboss.Causality.Entity.Replaceable

@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
-module Pitboss.State.TickCache (
+module Pitboss.Causality.TickCache (
     TickCache (..),
     TickCacheContext (..),
     Deref (..),
@@ -20,12 +20,12 @@ import Control.Lens
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
 
-import Pitboss.State.Delta.Instances.Incremental
-import Pitboss.State.Delta.Types
-import Pitboss.State.Entity.Types
-import Pitboss.State.Registry
-import Pitboss.State.Timeline.Reconstruction
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Delta.Instances.Incremental
+import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Registry
+import Pitboss.Causality.Timeline.Reconstruction
+import Pitboss.Causality.Types.Core
 import Prelude hiding (round)
 
 data TickCache = TickCache

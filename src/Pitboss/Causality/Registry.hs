@@ -5,14 +5,14 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.State.Registry (
+module Pitboss.Causality.Registry (
     Registry (..),
 ) where
 
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
-import Pitboss.State.Timeline
-import Pitboss.State.Types.Core
+import Pitboss.Causality.Timeline
+import Pitboss.Causality.Types.Core
 
 newtype Registry (k :: EntityKind) delta = Registry
     { unRegistry :: InsOrdHashMap (EntityId k) (Timeline k delta)

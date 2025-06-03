@@ -51,6 +51,11 @@
             haskell-language-server
             ;
 
+          test-coverage = pkgs.writeShellScriptBin "test-coverage" ''
+            #!${pkgs.bash}/bin/bash
+            cabal test --enable-coverage --test-option=--color 2>&1 | \
+              ${pkgs.gnused}/bin/sed -e '/Writing: /d' -e '/Generating coverage report/d'
+          '';
         in
         {
           default = pkgs.mkShell {
@@ -58,6 +63,7 @@
               cabal2nix
               treefmt
               claude-code
+              test-coverage
 
               # from haskellPackages
               ghc

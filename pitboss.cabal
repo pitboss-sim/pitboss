@@ -58,6 +58,7 @@ library
                       Pitboss.Causality.Timeline.Query
                       Pitboss.Causality.Timeline.Reconstruction
                       Pitboss.Causality.Trace
+                      Pitboss.Causality.Trace.Instances.Registrable
                       Pitboss.Causality.Trace.Ops
                       Pitboss.Causality.Trace.Types
                       Pitboss.Causality.Types.Core

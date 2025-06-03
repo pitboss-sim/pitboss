@@ -9,10 +9,12 @@ module Pitboss.Causality.Trace.Ops where
 import Control.Lens
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Causality.Delta.Types
+import Pitboss.Causality.Entity.Instances.Witnessable
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Registry
 import Pitboss.Causality.Timeline
 import Pitboss.Causality.Trace
+import Pitboss.Causality.Trace.Instances.Registrable
 import Pitboss.Causality.Trace.Types
 import Pitboss.Causality.Types.Core
 
@@ -21,44 +23,14 @@ data TraceOp where
     MutationOp :: EntityKindWitness k -> EntityId k -> SomeDelta k -> TraceOp
     DeathOp :: EntityKindWitness k -> EntityId k -> DeathReason k -> TraceOp
 
-class HasRegistry (k :: EntityKind) where
-    registryLens :: Lens' Trace (Registry k (SomeDelta k))
-
-instance HasRegistry 'Bout where
-    registryLens = bouts
-
-instance HasRegistry 'Table where
-    registryLens = tables
-
-instance HasRegistry 'TableShoe where
-    registryLens = tableShoes
-
-instance HasRegistry 'Dealer where
-    registryLens = dealers
-
-instance HasRegistry 'DealerHand where
-    registryLens = dealerHands
-
-instance HasRegistry 'DealerRound where
-    registryLens = dealerRounds
-
-instance HasRegistry 'Player where
-    registryLens = players
-
-instance HasRegistry 'PlayerSpot where
-    registryLens = playerSpots
-
-instance HasRegistry 'PlayerHand where
-    registryLens = playerHands
-
-applyBirthTyped :: forall k. (HasRegistry k) => EntityId k -> EntityState k -> Tick -> Trace -> Trace
+applyBirthTyped :: forall k. (Registrable k) => EntityId k -> EntityState k -> Tick -> Trace -> Trace
 applyBirthTyped eid state tick trace =
     let timeline = mkTimeline eid tick state
         Registry reg = trace ^. registryLens @k
         updatedReg = Registry $ IHM.insert eid timeline reg
      in trace & registryLens @k .~ updatedReg
 
-applyMutationTyped :: forall k. (HasRegistry k) => EntityId k -> SomeDelta k -> Tick -> Trace -> Trace
+applyMutationTyped :: forall k. (Registrable k) => EntityId k -> SomeDelta k -> Tick -> Trace -> Trace
 applyMutationTyped eid someDelta tick trace =
     let Registry reg = trace ^. registryLens @k
      in case IHM.lookup eid reg of
@@ -104,11 +76,11 @@ instance Show TraceOp where
     show (DeathOp witness' eid _reason) =
         "DeathOp " ++ show witness' ++ " " ++ show eid ++ " <reason>"
 
-createBirth :: (HasWitness k) => EntityId k -> EntityState k -> TraceOp
+createBirth :: (Witnessable k) => EntityId k -> EntityState k -> TraceOp
 createBirth eid state = BirthOp (witness state) eid state
 
-createMutation :: (HasWitness k) => EntityId k -> EntityState k -> SomeDelta k -> TraceOp
+createMutation :: (Witnessable k) => EntityId k -> EntityState k -> SomeDelta k -> TraceOp
 createMutation eid state = MutationOp (witness state) eid
 
-createDeath :: (HasWitness k) => EntityId k -> EntityState k -> DeathReason k -> TraceOp
+createDeath :: (Witnessable k) => EntityId k -> EntityState k -> DeathReason k -> TraceOp
 createDeath eid state = DeathOp (witness state) eid

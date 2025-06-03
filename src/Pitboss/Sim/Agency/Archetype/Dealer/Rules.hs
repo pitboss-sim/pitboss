@@ -4,6 +4,7 @@
 module Pitboss.Sim.Agency.Archetype.Dealer.Rules where
 
 import Pitboss.Blackjack
+import Pitboss.Blackjack.Materia.Instances.Witnessable
 import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Agency.Types
 

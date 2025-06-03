@@ -5,8 +5,8 @@
 module Pitboss.Sim.Agency.Intent.Types where
 
 import Pitboss.Blackjack
+import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.State
 
 data family IntentCtx (k :: IntentKind)
 

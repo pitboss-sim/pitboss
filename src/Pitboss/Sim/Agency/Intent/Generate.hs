@@ -8,6 +8,7 @@ import Control.Monad.Reader
 import Control.Monad.State
 
 import Pitboss.Blackjack
+import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Sim.Agency.Archetype.Player.Advantage
 import Pitboss.Sim.Agency.Archetype.Player.BasicStrategy
@@ -16,7 +17,6 @@ import Pitboss.Sim.Agency.Archetype.Player.Superstitious
 import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Agency.Types
 import Pitboss.Sim.Event
-import Pitboss.State
 import System.Random (StdGen)
 
 generatePlayerHandIntent ::

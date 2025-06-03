@@ -4,8 +4,8 @@ module Pitboss.Sim.Types where
 
 import Data.HashMap.Strict.InsOrd
 import Data.Word (Word64)
+import Pitboss.Causality
 import Pitboss.Sim.Event
-import Pitboss.State
 
 data SimState = SimState
     { simTrace :: Trace

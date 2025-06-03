@@ -1,4 +1,4 @@
-module Pitboss.Blackjack.Offering.Matter where
+module Pitboss.Blackjack.Offering.Materia where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
@@ -9,7 +9,7 @@ data DeckCount = D1 | D2 | D6 | D8
 data Dealt = Pitch | FaceUp
     deriving (Show, Eq, Generic)
 
-data Matter = Matter
+data Materia = Materia
     { matterDecks :: DeckCount
     , matterDealt :: Dealt
     }
@@ -26,5 +26,5 @@ instance FromJSON DeckCount
 instance ToJSON Dealt
 instance FromJSON Dealt
 
-instance ToJSON Matter
-instance FromJSON Matter
+instance ToJSON Materia
+instance FromJSON Materia

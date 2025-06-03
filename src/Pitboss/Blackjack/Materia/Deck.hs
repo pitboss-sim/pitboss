@@ -2,8 +2,8 @@ module Pitboss.Blackjack.Materia.Deck where
 
 import Control.Monad.ST (ST, runST)
 import Data.Array.ST (STArray, getElems, newListArray, readArray, writeArray)
-import Pitboss.Blackjack.Materia.Card (Card (..), Rank (..), Suit (..))
-import Pitboss.Blackjack.Offering.Matter (DeckCount (..), Matter (..))
+import Pitboss.Blackjack.Materia.Card
+import Pitboss.Blackjack.Offering.Materia
 import System.Random (StdGen, randomR)
 
 newtype CutPoint = CutPoint Int
@@ -18,8 +18,8 @@ data Deck = Deck
 fullDeck :: [Card]
 fullDeck = [Card r s | r <- [Two .. Ace], s <- [Hearts .. Spades]]
 
-mkDeck :: Matter -> Deck
-mkDeck (Matter decks _) =
+mkDeck :: Materia -> Deck
+mkDeck (Materia decks _) =
     let copies = case decks of
             D1 -> 1
             D2 -> 2

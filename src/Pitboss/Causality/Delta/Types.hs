@@ -5,7 +5,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.State.Delta.Types (
+module Pitboss.Causality.Delta.Types (
     DeltaSemantics (..),
     SomeDelta (..),
     CausalHistory (..),
@@ -28,9 +28,9 @@ import Data.Map.Strict (Map)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack
+import Pitboss.Causality.Types.Core
+import Pitboss.Causality.Types.FiniteMap.Occupancy
 import Pitboss.FSM
-import Pitboss.State.Types.Core
-import Pitboss.State.Types.FiniteMap.Occupancy
 
 data SomeDelta k where
     AttrsDelta :: CausalHistory -> Delta k ('PartialUpdate 'Attrs) -> SomeDelta k

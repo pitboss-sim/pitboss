@@ -12,53 +12,58 @@ module Pitboss.State.Timeline (
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)
 import GHC.Generics (Generic)
-import GHC.TypeLits (KnownSymbol)
+import Pitboss.State.Entity.Types
 import Pitboss.State.Types.Core
 import Prelude hiding (id)
 
-mkTimeline :: Uid k -> Tick -> Timeline k a
-mkTimeline id birthTick =
+mkTimeline :: EntityId k -> Tick -> EntityState k -> Timeline k a
+mkTimeline entityId birthTick initialState =
     Timeline
-        { timelineMeta = Meta id birthTick Nothing
+        { timelineMeta = Meta entityId birthTick Nothing
+        , timelineInitialState = Just initialState
         , timelineDeltas = mempty
         }
 
 data family Meta (k :: EntityKind)
 
 data instance Meta k = Meta
-    { _metaId :: Uid k
+    { _metaId :: EntityId k
     , _metaBornAt :: Tick
-    , _metaDiedAt :: Maybe Tick -- temporal bigotry :(
+    , _metaDiedAt :: Maybe Tick
     }
     deriving (Generic, Show, Eq)
 
-instance (KnownSymbol (UidPrefix k)) => ToJSON (Meta k) where
-    toJSON (Meta uid born died) =
+instance ToJSON (Meta k) where
+    toJSON (Meta entityId born died) =
         object
-            [ "uid" .= uid
+            [ "entityId" .= entityId
             , "bornAt" .= born
             , "diedAt" .= died
             ]
 
-instance (KnownSymbol (UidPrefix k)) => FromJSON (Meta k) where
+instance FromJSON (Meta k) where
     parseJSON = withObject "Meta" $ \o ->
         Meta
-            <$> o .: "uid"
+            <$> o .: "entityId"
             <*> o .: "bornAt"
             <*> o .: "diedAt"
+
 data Timeline (k :: EntityKind) a = Timeline
     { timelineMeta :: Meta k
+    , timelineInitialState :: Maybe (EntityState k)
     , timelineDeltas :: InsOrdHashMap Tick [a]
     }
-    deriving (Generic, Show, Eq)
+
+deriving instance (Eq a, Eq (EntityState k)) => Eq (Timeline k a)
+deriving instance (Show a, Show (EntityState k)) => Show (Timeline k a)
 
 instance Semigroup (Timeline k a) where
-    Timeline meta1 deltas1 <> Timeline _meta2 deltas2 =
-        Timeline meta1 (deltas1 <> deltas2)
+    Timeline meta1 initialState1 deltas1 <> Timeline _meta2 _initiatState2 deltas2 =
+        Timeline meta1 initialState1 (deltas1 <> deltas2)
 
-instance (ToJSON a, KnownSymbol (UidPrefix k)) => ToJSON (Timeline k a) where
-    toJSON (Timeline meta deltas) = object ["meta" .= meta, "deltas" .= deltas]
+instance (ToJSON a, ToJSON (EntityState k)) => ToJSON (Timeline k a) where
+    toJSON (Timeline meta initialState deltas) = object ["meta" .= meta, "initialState" .= initialState, "deltas" .= deltas]
 
-instance (FromJSON a, KnownSymbol (UidPrefix k)) => FromJSON (Timeline k a) where
+instance (FromJSON a, FromJSON (EntityState k)) => FromJSON (Timeline k a) where
     parseJSON = withObject "Timeline" $ \o ->
-        Timeline <$> o .: "meta" <*> o .: "deltas"
+        Timeline <$> o .: "meta" <*> o .: "initialState" <*> o .: "deltas"

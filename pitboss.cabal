@@ -76,6 +76,8 @@ library
                       Pitboss.State.Timeline.Query
                       Pitboss.State.Timeline.Reconstruction
                       Pitboss.State.Trace
+                      Pitboss.State.Trace.Ops
+                      Pitboss.State.Trace.Types
                       Pitboss.State.Types.Core
                       Pitboss.State.Types.FiniteMap
                       Pitboss.State.Types.FiniteMap.BoundedEnum

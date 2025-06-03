@@ -1,9 +1,13 @@
 .DS_Store
+.hpc
 .ignore
 *.swo
 *.swp
 
 attic
+coverage
 dist-*
+
+*.tix
 
 **/.claude/settings.local.json

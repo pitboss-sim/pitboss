@@ -8,9 +8,9 @@ module Pitboss.Integration.BoutFlowSpec (spec) where
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
-import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Blackjack
 import Pitboss.FSM
+import Pitboss.Sim.Agency.Archetype.Types
 import Pitboss.Sim.Engine.DeltaGen
 import Pitboss.Sim.Event
 import Pitboss.Sim.Types

@@ -4,10 +4,10 @@ module Pitboss.Orchestration.DeltaGenSpec (spec) where
 
 import Control.Monad.Reader
 import Pitboss.Sim.Engine.DeltaGen
+import Pitboss.Sim.Event
 import Pitboss.State
 import Pitboss.TestHelpers
 import Test.Hspec
-import Pitboss.Sim.Event
 
 mkTestTrace :: Tick -> IO Trace
 mkTestTrace startTick = do

@@ -4,9 +4,9 @@ module Pitboss.Blackjack.Events where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.State.Types.Core
 import Pitboss.Blackjack.Materia.Card
 import Pitboss.Blackjack.Outcome
+import Pitboss.State.Types.Core
 
 data BlackjackEvent
     = CardDealt Card CardDestination

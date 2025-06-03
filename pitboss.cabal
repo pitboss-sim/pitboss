@@ -18,10 +18,36 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:
+    exposed-modules:  Pitboss.Blackjack
+                      Pitboss.Blackjack.Actions
+                      Pitboss.Blackjack.Deck
+                      Pitboss.Blackjack.Outcomes
+                      Pitboss.Blackjack.Play
+                      Pitboss.Blackjack.Rules
+                      Pitboss.Blackjack.Rules.Dealer
+                      Pitboss.Blackjack.Rules.Game
+                      Pitboss.Blackjack.Rules.Offering
+                      Pitboss.Blackjack.Rules.Table
+                      Pitboss.Blackjack.Strategy.Chart
+                      Pitboss.Blackjack.Strategy.Chart.Error
+                      Pitboss.Blackjack.Strategy.Chart.Interpret
+                      Pitboss.Blackjack.Strategy.Chart.Overlay
+                      Pitboss.Blackjack.Strategy.Chart.Parse
+                      Pitboss.Blackjack.Strategy.Chart.Types
+                      Pitboss.Blackjack.Strategy.Chart.Validate
+                      Pitboss.Blackjack.Strategy.Types
+                      Pitboss.Blackjack.Types
+                      Pitboss.Blackjack.Types.Core
+                      Pitboss.Blackjack.WellKnown
     -- other-modules:
     -- other-extensions:
     build-depends:    base,
+                      aeson,
+                      aeson-pretty,
+                      array,
+                      containers,
+                      random,
+                      text,
     hs-source-dirs:   src
     default-language: GHC2021
 

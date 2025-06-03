@@ -31,7 +31,6 @@ module Pitboss.Blackjack (
 
     -- * Actions and Events
     module Pitboss.Blackjack.Action,
-    module Pitboss.Blackjack.Events,
 
     -- * Game Outcomes
     module Pitboss.Blackjack.Outcome,
@@ -53,6 +52,5 @@ import Pitboss.Blackjack.Offering.RuleSet
 import Pitboss.Blackjack.Offering.WellKnown (downtownSingleDeck, vegas6)
 
 import Pitboss.Blackjack.Action
-import Pitboss.Blackjack.Events
 import Pitboss.Blackjack.Outcome
 import Pitboss.Blackjack.Play

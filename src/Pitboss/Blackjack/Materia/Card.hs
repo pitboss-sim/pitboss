@@ -1,6 +1,6 @@
 module Pitboss.Blackjack.Materia.Card where
 
-import Data.Aeson (FromJSON, ToJSON)
+import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import GHC.Generics (Generic)
 
 data Suit = Hearts | Diamonds | Clubs | Spades
@@ -17,6 +17,8 @@ instance FromJSON Suit
 
 instance ToJSON Rank
 instance FromJSON Rank
+instance ToJSONKey Rank
+instance FromJSONKey Rank
 
 instance ToJSON Card
 instance FromJSON Card

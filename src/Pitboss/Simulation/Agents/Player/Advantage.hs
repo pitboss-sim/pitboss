@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Simulation.Agents.Archetype.Player.Advantage where
+module Pitboss.Simulation.Agents.Player.Advantage where
 
 import Control.Monad.State
 import Data.Map qualified as Map

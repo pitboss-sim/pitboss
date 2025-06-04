@@ -10,10 +10,10 @@ import Control.Monad.State
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.Simulation.Agents.Archetype.Player.Advantage
-import Pitboss.Simulation.Agents.Archetype.Player.BasicStrategy
-import Pitboss.Simulation.Agents.Archetype.Player.Perfect
-import Pitboss.Simulation.Agents.Archetype.Player.Superstitious
+import Pitboss.Simulation.Agents.Player.Advantage
+import Pitboss.Simulation.Agents.Player.Basic
+import Pitboss.Simulation.Agents.Player.Perfect
+import Pitboss.Simulation.Agents.Player.Superstitious
 import Pitboss.Simulation.Agents.Types
 import Pitboss.Simulation.Event
 import System.Random (StdGen)

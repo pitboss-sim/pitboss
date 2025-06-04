@@ -6,10 +6,7 @@ you can still import the specific sub-modules directly.
 -}
 module Pitboss.Blackjack (
     -- * Cards and Hands
-    module Pitboss.Blackjack.Materia.Card,
-    module Pitboss.Blackjack.Materia.Hand,
-    module Pitboss.Blackjack.Materia.Chips,
-    module Pitboss.Blackjack.Materia.Types,
+    module Pitboss.Blackjack.Types,
     module Pitboss.Blackjack.Types.Core,
 
     -- * Deck Operations
@@ -41,13 +38,10 @@ module Pitboss.Blackjack (
     module Pitboss.Blackjack.Play,
 ) where
 
-import Pitboss.Blackjack.Materia.Card
-import Pitboss.Blackjack.Materia.Chips
-import Pitboss.Blackjack.Materia.Hand
-import Pitboss.Blackjack.Materia.Types
+import Pitboss.Blackjack.Types
 import Pitboss.Blackjack.Types.Core
 
-import Pitboss.Blackjack.Materia.Deck (Deck, drawCard, fullDeck, mkDeck, shuffle)
+import Pitboss.Blackjack.Deck (Deck, drawCard, fullDeck, mkDeck, shuffle)
 
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Offering.Materia

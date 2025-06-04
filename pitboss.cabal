@@ -75,6 +75,7 @@ library
                       Pitboss.FSM.Table
                       Pitboss.FSM.Transitionable
                       Pitboss.FSM.Types
+                      Pitboss.Simulation
                       Pitboss.Simulation.Agents.Dealer
                       Pitboss.Simulation.Agents.Player.Advantage
                       Pitboss.Simulation.Agents.Player.Basic

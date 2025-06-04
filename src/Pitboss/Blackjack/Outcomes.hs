@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Pitboss.Blackjack.Outcome where
+module Pitboss.Blackjack.Outcomes where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

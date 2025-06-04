@@ -27,10 +27,10 @@ module Pitboss.Blackjack (
     downtownSingleDeck,
 
     -- * Actions and Events
-    module Pitboss.Blackjack.Action,
+    module Pitboss.Blackjack.Actions,
 
     -- * Game Outcomes
-    module Pitboss.Blackjack.Outcome,
+    module Pitboss.Blackjack.Outcomes,
 
     -- * Game Logic
     module Pitboss.Blackjack.Play,
@@ -43,8 +43,8 @@ import Pitboss.Blackjack.Deck (Deck, drawCard, fullDeck, mkDeck, shuffle)
 
 import Pitboss.Blackjack.Rules
 
-import Pitboss.Blackjack.Offering.WellKnown (downtownSingleDeck, vegas6)
+import Pitboss.Blackjack.WellKnown (downtownSingleDeck, vegas6)
 
-import Pitboss.Blackjack.Action
-import Pitboss.Blackjack.Outcome
+import Pitboss.Blackjack.Actions
+import Pitboss.Blackjack.Outcomes
 import Pitboss.Blackjack.Play

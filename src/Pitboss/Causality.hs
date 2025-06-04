@@ -8,8 +8,6 @@ module Pitboss.Causality (
     -- * Core Types
     module Pitboss.Causality.Types.Core,
     module Pitboss.Causality.Types.FiniteMap,
-    module Pitboss.Causality.Types.FiniteMap.BoundedEnum,
-    module Pitboss.Causality.Types.FiniteMap.Occupancy,
 
     -- * Entity System
     module Pitboss.Causality.Entity.Types,
@@ -36,8 +34,6 @@ module Pitboss.Causality (
 -- Core types
 import Pitboss.Causality.Types.Core
 import Pitboss.Causality.Types.FiniteMap
-import Pitboss.Causality.Types.FiniteMap.BoundedEnum
-import Pitboss.Causality.Types.FiniteMap.Occupancy
 
 -- Entity system
 

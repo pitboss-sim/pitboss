@@ -1,11 +1,11 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Pitboss.Blackjack.BasicStrategy.Chart.Types where
+module Pitboss.Blackjack.Strategy.Chart.Types where
 
 import Data.Aeson
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 data HandPrefix
     = PA

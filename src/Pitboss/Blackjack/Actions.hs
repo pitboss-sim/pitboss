@@ -1,4 +1,4 @@
-module Pitboss.Blackjack.Action where
+module Pitboss.Blackjack.Actions where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

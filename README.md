@@ -4,6 +4,8 @@ A blackjack system written in Haskell, designed for both realistic gameplay and 
 
 ## Overview
 
+*Note: Pitboss is in active development - see Status section for current implementation state.*
+
 Pitboss is a dual-purpose blackjack system that aims to serve both as a realistic game implementation and a simulation framework. The project takes an unconventional approach by modeling blackjack as multiplexed 1v1 "bouts" between dealer and player hands, emphasizing correctness through careful domain modeling.
 
 A "bout" represents the fundamental interaction in blackjack: a single player hand competing against the dealer's hand. While blackjack appears to be one dealer versus multiple players, it's actually several independent competitions happening in parallel. This bout-centric modeling simplifies simulation logic, enables more efficient parallelization, and makes it easier to analyze individual hand outcomes without the complexity of table-level interactions.
@@ -55,6 +57,25 @@ A longer-term aspiration is to enable causal analysis of blackjack decisions—u
 
 This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) only.
 
-## Status
+## Status & Current State
 
-Pitboss is under active development. The core domain model and basic game flow are in place. The event sourcing pipeline and simulation framework are works in progress.
+Pitboss is under active development. The core domain model and basic game flow are in place, with the event sourcing pipeline and simulation framework as works in progress.
+
+### Implemented
+- Core game flow for hit/stand decisions
+- Basic strategy with chart parsing and overlay system
+- Event sourcing foundation (intent → event → delta → trace)
+- Bout-based domain model with type-safe FSMs
+- Peek/ENHC and H17/S17 rule variations
+
+### In Progress
+- Split, surrender, and insurance mechanics
+- Timeline reconstruction and "time-travel" debugging
+- Additional player archetypes (Perfect, Advantage, Superstitious)
+- Comprehensive test coverage
+
+### Planned
+- Performance optimization for million-hand simulations
+- Parallel bout processing
+- Analysis and debugging tools
+- Production-ready error handling

@@ -1,9 +1,9 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.FSM.DealerRound.Peek.FSM where
+module Pitboss.FSM.Dealer.Round.Peek.FSM where
 
-import Pitboss.FSM.DealerRound.Peek.Phase
+import Pitboss.FSM.Dealer.Round.Peek.Phase
 import Pitboss.FSM.Types
 
 data PeekFSM (p :: PeekPhase) where

@@ -3,7 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.FSM.DealerHand where
+module Pitboss.FSM.Dealer.Hand where
 
 import Data.Aeson.Types
 import GHC.Generics (Generic)

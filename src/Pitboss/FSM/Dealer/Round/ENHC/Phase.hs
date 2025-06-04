@@ -1,4 +1,4 @@
-module Pitboss.FSM.DealerRound.ENHC.Phase where
+module Pitboss.FSM.Dealer.Round.ENHC.Phase where
 
 data ENHCPhase
     = ENHCAwaiting

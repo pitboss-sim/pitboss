@@ -1,18 +1,18 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Pitboss.FSM.DealerRound.ENHC (
-    module Pitboss.FSM.DealerRound.ENHC.FSM,
-    module Pitboss.FSM.DealerRound.ENHC.Phase,
-    module Pitboss.FSM.DealerRound.ENHC.Transition,
+module Pitboss.FSM.Dealer.Round.ENHC (
+    module Pitboss.FSM.Dealer.Round.ENHC.FSM,
+    module Pitboss.FSM.Dealer.Round.ENHC.Phase,
+    module Pitboss.FSM.Dealer.Round.ENHC.Transition,
     SomeENHCFSM (..),
 )
 where
 
 import Data.Aeson
-import Pitboss.FSM.DealerRound.ENHC.FSM
-import Pitboss.FSM.DealerRound.ENHC.Phase
-import Pitboss.FSM.DealerRound.ENHC.Transition
+import Pitboss.FSM.Dealer.Round.ENHC.FSM
+import Pitboss.FSM.Dealer.Round.ENHC.Phase
+import Pitboss.FSM.Dealer.Round.ENHC.Transition
 
 data SomeENHCFSM = forall p. SomeENHCFSM (ENHCFSM p)
 

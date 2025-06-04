@@ -3,11 +3,11 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.FSM.DealerRound.Peek.Transition where
+module Pitboss.FSM.Dealer.Round.Peek.Transition where
 
 import Pitboss.Blackjack
-import Pitboss.FSM.DealerRound.Peek.FSM
-import Pitboss.FSM.DealerRound.Peek.Phase
+import Pitboss.FSM.Dealer.Round.Peek.FSM
+import Pitboss.FSM.Dealer.Round.Peek.Phase
 
 type family ValidPeekTransition (from :: PeekPhase) (to :: PeekPhase) :: Bool where
     ValidPeekTransition 'PeekAwaiting 'PeekBets = 'True

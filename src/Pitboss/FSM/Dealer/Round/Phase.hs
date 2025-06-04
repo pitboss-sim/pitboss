@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.FSM.DealerRound.Phase where
+module Pitboss.FSM.Dealer.Round.Phase where
 
 import Data.Aeson.Types
 import GHC.Generics

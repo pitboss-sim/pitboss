@@ -19,39 +19,34 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Pitboss.Blackjack
-                      Pitboss.Blackjack.Action
-                      Pitboss.Blackjack.BasicStrategy.Chart
-                      Pitboss.Blackjack.BasicStrategy.Chart.Error
-                      Pitboss.Blackjack.BasicStrategy.Chart.Interpret
-                      Pitboss.Blackjack.BasicStrategy.Chart.Overlay
-                      Pitboss.Blackjack.BasicStrategy.Chart.Parse
-                      Pitboss.Blackjack.BasicStrategy.Chart.Types
-                      Pitboss.Blackjack.BasicStrategy.Chart.Validate
-                      Pitboss.Blackjack.BasicStrategy.Types
-                      Pitboss.Blackjack.Materia.Card
-                      Pitboss.Blackjack.Materia.Chips
-                      Pitboss.Blackjack.Materia.Deck
-                      Pitboss.Blackjack.Materia.Hand
-                      Pitboss.Blackjack.Materia.Instances.Witnessable
-                      Pitboss.Blackjack.Materia.Types
-                      Pitboss.Blackjack.Materia.Types.Core
-                      Pitboss.Blackjack.Offering
-                      Pitboss.Blackjack.Offering.Materia
-                      Pitboss.Blackjack.Offering.RuleSet
-                      Pitboss.Blackjack.Offering.RuleSet.Game
-                      Pitboss.Blackjack.Offering.RuleSet.Table
-                      Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.Blackjack.Outcome
+                      Pitboss.Blackjack.Actions
+                      Pitboss.Blackjack.Deck
+                      Pitboss.Blackjack.Outcomes
+                      Pitboss.Blackjack.Strategy.Chart
+                      Pitboss.Blackjack.Strategy.Chart.Error
+                      Pitboss.Blackjack.Strategy.Chart.Interpret
+                      Pitboss.Blackjack.Strategy.Chart.Overlay
+                      Pitboss.Blackjack.Strategy.Chart.Parse
+                      Pitboss.Blackjack.Strategy.Chart.Types
+                      Pitboss.Blackjack.Strategy.Chart.Validate
+                      Pitboss.Blackjack.Strategy.Types
+                      Pitboss.Blackjack.Types
+                      Pitboss.Blackjack.WellKnown
                       Pitboss.Blackjack.Play
+                      Pitboss.Blackjack.Rules
+                      Pitboss.Blackjack.Rules.Game
+                      Pitboss.Blackjack.Rules.Offering
+                      Pitboss.Blackjack.Rules.Table
+                      Pitboss.Blackjack.Types.Core
                       Pitboss.Causality
-                      Pitboss.Causality.Delta.Instances.Incremental
-                      Pitboss.Causality.Delta.Instances.Reversible
+                      Pitboss.Causality.Delta.Incremental
+                      Pitboss.Causality.Delta.Reversible
                       Pitboss.Causality.Delta.Types
-                      Pitboss.Causality.Entity.Instances.Decomposable
-                      Pitboss.Causality.Entity.Instances.Replaceable
-                      Pitboss.Causality.Entity.Instances.Witnessable
+                      Pitboss.Causality.Entity.Decomposable
                       Pitboss.Causality.Entity.Lenses
+                      Pitboss.Causality.Entity.Replaceable
                       Pitboss.Causality.Entity.Types
+                      Pitboss.Causality.Entity.Witnessable
                       Pitboss.Causality.Registry
                       Pitboss.Causality.TickCache
                       Pitboss.Causality.Timeline
@@ -63,8 +58,6 @@ library
                       Pitboss.Causality.Trace.Types
                       Pitboss.Causality.Types.Core
                       Pitboss.Causality.Types.FiniteMap
-                      Pitboss.Causality.Types.FiniteMap.BoundedEnum
-                      Pitboss.Causality.Types.FiniteMap.Occupancy
                       Pitboss.FSM
                       Pitboss.FSM.Bout
                       Pitboss.FSM.DealerHand

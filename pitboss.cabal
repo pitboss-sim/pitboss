@@ -75,9 +75,6 @@ library
                       Pitboss.FSM.Transitionable
                       Pitboss.FSM.Types
                       Pitboss.Simulation.Agents.Dealer
-                      Pitboss.Simulation.Agents.Intent.Generate
-                      Pitboss.Simulation.Agents.Intent.Instances.Validateable
-                      Pitboss.Simulation.Agents.Intent.Types
                       Pitboss.Simulation.Agents.Player.Advantage
                       Pitboss.Simulation.Agents.Player.Basic
                       Pitboss.Simulation.Agents.Player.Perfect
@@ -85,6 +82,9 @@ library
                       Pitboss.Simulation.Agents.Types
                       Pitboss.Simulation.Engine.DeltaGen
                       Pitboss.Simulation.Engine.Runtime
+                      Pitboss.Simulation.Intent.Generate
+                      Pitboss.Simulation.Intent.Types
+                      Pitboss.Simulation.Intent.Validate
                       Pitboss.Simulation.Event
                       Pitboss.Simulation.Types
     -- other-modules:

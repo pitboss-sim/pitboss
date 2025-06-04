@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Simulation.Agents.Intent.Generate where
+module Pitboss.Simulation.Intent.Generate where
 
 import Control.Monad.Reader
 import Control.Monad.State

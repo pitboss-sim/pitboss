@@ -5,7 +5,7 @@
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Causality.Delta.Instances.Incremental (
+module Pitboss.Causality.Delta.Incremental (
     DeltaWrapper (..),
     Incremental (..),
     IncrementalWithWitness (..),

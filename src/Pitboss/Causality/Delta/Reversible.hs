@@ -3,7 +3,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pitboss.Causality.Delta.Instances.Reversible where
+module Pitboss.Causality.Delta.Reversible where
 
 import Pitboss.Causality.Delta.Types
 import Pitboss.Causality.Types.Core

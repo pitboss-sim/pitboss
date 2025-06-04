@@ -28,11 +28,11 @@ module Pitboss.Blackjack (
     module Pitboss.Blackjack.Play,
 ) where
 
-import Pitboss.Blackjack.Types
-import Pitboss.Blackjack.Types.Core
-import Pitboss.Blackjack.Deck
-import Pitboss.Blackjack.Rules
-import Pitboss.Blackjack.WellKnown
 import Pitboss.Blackjack.Actions
+import Pitboss.Blackjack.Deck
 import Pitboss.Blackjack.Outcomes
 import Pitboss.Blackjack.Play
+import Pitboss.Blackjack.Rules
+import Pitboss.Blackjack.Types
+import Pitboss.Blackjack.Types.Core
+import Pitboss.Blackjack.WellKnown

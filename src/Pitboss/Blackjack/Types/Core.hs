@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE GADTs #-}
 
 module Pitboss.Blackjack.Types.Core where
 
@@ -12,6 +13,14 @@ data HandKindWitness (k :: HandKind) where
     HardWitness :: HandKindWitness 'HardHand
     PairWitness :: HandKindWitness 'PairHand
     BustWitness :: HandKindWitness 'BustHand
+
+instance Show (HandKindWitness k) where
+    show BlackjackWitness = "BlackjackWitness"
+    show TwentyOneWitness = "TwentyOneWitness"
+    show SoftWitness = "SoftWitness"
+    show HardWitness = "HardWitness"
+    show PairWitness = "PairWitness"
+    show BustWitness = "BustWitness"
 
 data HandKind
     = BlackjackHand

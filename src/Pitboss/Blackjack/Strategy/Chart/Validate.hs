@@ -1,8 +1,8 @@
-module Pitboss.Blackjack.BasicStrategy.Chart.Validate where
+module Pitboss.Blackjack.Strategy.Chart.Validate where
 
 import Data.Map.Strict (toList)
-import Pitboss.Blackjack.BasicStrategy.Chart.Error
-import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Strategy.Chart.Error
+import Pitboss.Blackjack.Strategy.Chart.Types
 import Pitboss.Blackjack.Types.Core
 
 validateStrategyChart :: [ChartEntry] -> [(HandKind, Maybe Int, Rank)]

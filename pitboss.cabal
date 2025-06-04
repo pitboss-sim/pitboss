@@ -22,16 +22,16 @@ library
                       Pitboss.Blackjack.Actions
                       Pitboss.Blackjack.Deck
                       Pitboss.Blackjack.Outcomes
+                      Pitboss.Blackjack.Strategy.Chart
+                      Pitboss.Blackjack.Strategy.Chart.Error
+                      Pitboss.Blackjack.Strategy.Chart.Interpret
+                      Pitboss.Blackjack.Strategy.Chart.Overlay
+                      Pitboss.Blackjack.Strategy.Chart.Parse
+                      Pitboss.Blackjack.Strategy.Chart.Types
+                      Pitboss.Blackjack.Strategy.Chart.Validate
+                      Pitboss.Blackjack.Strategy.Types
                       Pitboss.Blackjack.Types
                       Pitboss.Blackjack.WellKnown
-                      Pitboss.Blackjack.BasicStrategy.Chart
-                      Pitboss.Blackjack.BasicStrategy.Chart.Error
-                      Pitboss.Blackjack.BasicStrategy.Chart.Interpret
-                      Pitboss.Blackjack.BasicStrategy.Chart.Overlay
-                      Pitboss.Blackjack.BasicStrategy.Chart.Parse
-                      Pitboss.Blackjack.BasicStrategy.Chart.Types
-                      Pitboss.Blackjack.BasicStrategy.Chart.Validate
-                      Pitboss.Blackjack.BasicStrategy.Types
                       Pitboss.Blackjack.Play
                       Pitboss.Blackjack.Rules
                       Pitboss.Blackjack.Rules.Game

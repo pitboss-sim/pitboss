@@ -1,11 +1,11 @@
 {-# LANGUAGE TupleSections #-}
 
-module Pitboss.Blackjack.BasicStrategy.Chart.Overlay where
+module Pitboss.Blackjack.Strategy.Chart.Overlay where
 
 import Control.Category ((>>>))
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
-import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Strategy.Chart.Types
 import Pitboss.Blackjack.Types.Core
 
 indexEntries :: [ChartEntry] -> Map (HandKind, Maybe Int, Rank) MoveCode

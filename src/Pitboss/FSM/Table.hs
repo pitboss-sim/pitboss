@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -8,6 +9,7 @@ module Pitboss.FSM.Table where
 import Data.Aeson
 import Data.Text qualified as T
 import GHC.Generics (Generic)
+import Pitboss.FSM.Transitionable
 
 data TInterruptReason
     = TAttendingToPlayer
@@ -15,6 +17,9 @@ data TInterruptReason
     | TBanking
     | TEnvironment
     deriving (Eq, Show, Generic)
+
+instance ToJSON TInterruptReason
+instance FromJSON TInterruptReason
 
 data TablePhase
     = TClosed
@@ -25,23 +30,10 @@ data TablePhase
     | TClosing
     deriving (Eq, Show, Generic)
 
-instance ToJSON TInterruptReason
-instance FromJSON TInterruptReason
 instance ToJSON TablePhase
 instance FromJSON TablePhase
 
 data SomeTableFSM = forall p. SomeTableFSM (TableFSM p)
-
-data TableFSM (p :: TablePhase) where
-    TClosedFSM :: TableFSM 'TClosed
-    TOpeningFSM :: TableFSM 'TOpening
-    TRoundInProgressFSM :: TableFSM 'TRoundInProgress
-    TIntermissionFSM :: TableFSM 'TIntermission
-    TInterruptedFSM :: TInterruptReason -> TableFSM ('TInterrupted r)
-    TClosingFSM :: TableFSM 'TClosing
-
-deriving instance Show (TableFSM p)
-deriving instance Eq (TableFSM p)
 
 instance Show SomeTableFSM where
     show (SomeTableFSM fsm) = show fsm
@@ -76,6 +68,29 @@ instance FromJSON SomeTableFSM where
             "Closing" -> pure $ SomeTableFSM TClosingFSM
             "Interrupted" -> SomeTableFSM . TInterruptedFSM <$> obj .: "reason"
             other -> fail $ "Unknown tag for SomeTableFSM: " ++ T.unpack other
+
+instance Transitionable SomeTableFSM where
+    transitionType (SomeTableFSM fsm) = transitionType fsm
+
+data TableFSM (p :: TablePhase) where
+    TClosedFSM :: TableFSM 'TClosed
+    TOpeningFSM :: TableFSM 'TOpening
+    TRoundInProgressFSM :: TableFSM 'TRoundInProgress
+    TIntermissionFSM :: TableFSM 'TIntermission
+    TInterruptedFSM :: TInterruptReason -> TableFSM ('TInterrupted r)
+    TClosingFSM :: TableFSM 'TClosing
+
+deriving instance Show (TableFSM p)
+deriving instance Eq (TableFSM p)
+
+instance Transitionable (TableFSM p) where
+    transitionType = \case
+        TClosedFSM -> AwaitInput
+        TOpeningFSM -> AutoAdvance
+        TRoundInProgressFSM -> AwaitInput
+        TIntermissionFSM -> AutoAdvance
+        TInterruptedFSM _ -> AwaitInput
+        TClosingFSM -> AutoAdvance
 
 type family ValidTableTransition (from :: TablePhase) (to :: TablePhase) :: Bool where
     ValidTableTransition 'TClosed 'TOpening = 'True

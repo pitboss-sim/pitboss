@@ -12,7 +12,6 @@ import GHC.Generics (Generic)
 import Pitboss.Blackjack
 import Pitboss.Causality.Types.Core
 import Pitboss.Causality.Types.FiniteMap
-import Pitboss.Causality.Types.FiniteMap.Occupancy
 import Pitboss.FSM
 
 data family EntityState (k :: EntityKind)

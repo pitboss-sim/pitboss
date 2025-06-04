@@ -4,7 +4,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Causality.Entity.Instances.Replaceable (
+module Pitboss.Causality.Entity.Replaceable (
     ReplaceableAttrs (..),
     ReplaceableModes (..),
     ReplaceableRels (..),

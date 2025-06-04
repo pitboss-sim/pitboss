@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.Causality.Entity.Instances.Witnessable where
+module Pitboss.Causality.Entity.Witnessable where
 
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Types.Core

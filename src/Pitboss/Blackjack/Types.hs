@@ -3,14 +3,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Pitboss.Blackjack.Materia.Types where
+module Pitboss.Blackjack.Types where
 
+import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import Data.Aeson.Types (Parser)
 import Data.Text hiding (filter, length, map)
-import Pitboss.Blackjack.Materia.Card
-import Pitboss.Blackjack.Materia.Instances.Witnessable
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Offering.Materia
+import Pitboss.Blackjack.Types.Core
 
 data SomeHand where
     SomeHand :: (Witnessable k) => Hand k -> SomeHand
@@ -123,3 +123,53 @@ bestAceValue nonAceSum aceCount
     | aceCount == 0 = (nonAceSum, False)
     | nonAceSum + 11 + (aceCount - 1) <= 21 = (nonAceSum + 11 + (aceCount - 1), True)
     | otherwise = (nonAceSum + aceCount, False)
+
+mkValidatedHand :: Materia -> [Card] -> Maybe SomeHand
+mkValidatedHand matter cards = do
+    guard (length cards <= maxCardsFor (matterDecks matter))
+    pure (characterize cards)
+  where
+    maxCardsFor :: DeckCount -> Int
+    maxCardsFor d = case d of
+        D1 -> 11
+        D2 -> 14
+        D6 -> 21
+        D8 -> 21
+
+handScore :: SomeHand -> Int
+handScore (SomeHand hand) = case witness hand of
+    BlackjackWitness -> 21
+    TwentyOneWitness -> 21
+    SoftWitness -> extractScore hand
+    HardWitness -> extractScore hand
+    PairWitness -> extractScore hand
+    BustWitness -> 0
+
+extractScore :: Hand k -> Int
+extractScore (Hand cards) = _value (analyzeHand cards)
+
+extractPairRank :: SomeHand -> Maybe Rank
+extractPairRank (SomeHand (Hand cards)) = case cards of
+    [Card r1 _, Card r2 _] | r1 == r2 -> Just r1
+    _ -> Nothing
+
+class Witnessable (k :: HandKind) where
+    witness :: Hand k -> HandKindWitness k
+
+instance Witnessable 'BlackjackHand where
+    witness _ = BlackjackWitness
+
+instance Witnessable 'TwentyOneHand where
+    witness _ = TwentyOneWitness
+
+instance Witnessable 'SoftHand where
+    witness _ = SoftWitness
+
+instance Witnessable 'HardHand where
+    witness _ = HardWitness
+
+instance Witnessable 'PairHand where
+    witness _ = PairWitness
+
+instance Witnessable 'BustHand where
+    witness _ = BustWitness

@@ -1,12 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Simulation.Agency.Archetype.Player.Advantage where
+module Pitboss.Simulation.Agents.Archetype.Player.Advantage where
 
 import Control.Monad.State
 import Data.Map qualified as Map
 import Pitboss.Blackjack
-import Pitboss.Simulation.Agency.Archetype.Types
-import Pitboss.Simulation.Agency.Types
+import Pitboss.Simulation.Agents.Types
 import System.Random
 
 getAdvantageMove :: ArchetypeConfig 'Advantage -> ArchetypeState 'Advantage -> GameContext -> State StdGen Move

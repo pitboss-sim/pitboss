@@ -1,14 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Simulation.Agency.Archetype.Player.Superstitious where
+module Pitboss.Simulation.Agents.Archetype.Player.Superstitious where
 
 import Control.Monad.State
 import Pitboss.Blackjack
 import Pitboss.Blackjack.Strategy.Chart
 import Pitboss.Blackjack.Strategy.Types
-import Pitboss.Simulation.Agency.Archetype.Types
-import Pitboss.Simulation.Agency.Types
+import Pitboss.Simulation.Agents.Types
 import System.Random
 
 getSuperstitiousMove :: ArchetypeConfig 'Superstitious -> GameContext -> State StdGen Move

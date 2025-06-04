@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Simulation.Agency.Intent.Generate where
+module Pitboss.Simulation.Agents.Intent.Generate where
 
 import Control.Monad.Reader
 import Control.Monad.State
@@ -10,12 +10,11 @@ import Control.Monad.State
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.Simulation.Agency.Archetype.Player.Advantage
-import Pitboss.Simulation.Agency.Archetype.Player.BasicStrategy
-import Pitboss.Simulation.Agency.Archetype.Player.Perfect
-import Pitboss.Simulation.Agency.Archetype.Player.Superstitious
-import Pitboss.Simulation.Agency.Archetype.Types
-import Pitboss.Simulation.Agency.Types
+import Pitboss.Simulation.Agents.Archetype.Player.Advantage
+import Pitboss.Simulation.Agents.Archetype.Player.BasicStrategy
+import Pitboss.Simulation.Agents.Archetype.Player.Perfect
+import Pitboss.Simulation.Agents.Archetype.Player.Superstitious
+import Pitboss.Simulation.Agents.Types
 import Pitboss.Simulation.Event
 import System.Random (StdGen)
 

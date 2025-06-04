@@ -1,14 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Simulation.Agency.Archetype.Player.BasicStrategy where
+module Pitboss.Simulation.Agents.Archetype.Player.BasicStrategy where
 
 import Control.Lens
 import Control.Monad.State
 import Pitboss.Blackjack
 import Pitboss.Blackjack.Strategy.Chart
 import Pitboss.Blackjack.Strategy.Types
-import Pitboss.Simulation.Agency.Archetype.Types
-import Pitboss.Simulation.Agency.Types
+import Pitboss.Simulation.Agents.Types
 import System.Random
 
 getBasicStrategyMove :: ArchetypeConfig 'BasicStrategy -> GameContext -> State StdGen Move

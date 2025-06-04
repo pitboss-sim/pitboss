@@ -20,6 +20,8 @@ library
     import:           warnings
     exposed-modules:  Pitboss.Blackjack
                       Pitboss.Blackjack.Action
+                      Pitboss.Blackjack.Deck
+                      Pitboss.Blackjack.Types
                       Pitboss.Blackjack.BasicStrategy.Chart
                       Pitboss.Blackjack.BasicStrategy.Chart.Error
                       Pitboss.Blackjack.BasicStrategy.Chart.Interpret
@@ -28,12 +30,6 @@ library
                       Pitboss.Blackjack.BasicStrategy.Chart.Types
                       Pitboss.Blackjack.BasicStrategy.Chart.Validate
                       Pitboss.Blackjack.BasicStrategy.Types
-                      Pitboss.Blackjack.Materia.Card
-                      Pitboss.Blackjack.Materia.Chips
-                      Pitboss.Blackjack.Materia.Deck
-                      Pitboss.Blackjack.Materia.Hand
-                      Pitboss.Blackjack.Materia.Instances.Witnessable
-                      Pitboss.Blackjack.Materia.Types
                       Pitboss.Blackjack.Offering
                       Pitboss.Blackjack.Offering.Materia
                       Pitboss.Blackjack.Offering.RuleSet

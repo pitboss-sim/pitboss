@@ -1,4 +1,4 @@
-module Pitboss.Blackjack.Materia.Deck where
+module Pitboss.Blackjack.Deck where
 
 import Control.Monad.ST (ST, runST)
 import Data.Array.ST (STArray, getElems, newListArray, readArray, writeArray)

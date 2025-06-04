@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Causality.Trace.Instances.Registrable where
+module Pitboss.Causality.Trace.Registrable where
 
 import Control.Lens (Lens')
 import Pitboss.Causality.Delta.Types

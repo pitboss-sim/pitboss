@@ -9,12 +9,12 @@ module Pitboss.Causality.Trace.Ops where
 import Control.Lens
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Causality.Delta.Types
-import Pitboss.Causality.Entity.Instances.Witnessable
 import Pitboss.Causality.Entity.Types
+import Pitboss.Causality.Entity.Witnessable
 import Pitboss.Causality.Registry
 import Pitboss.Causality.Timeline
 import Pitboss.Causality.Trace
-import Pitboss.Causality.Trace.Instances.Registrable
+import Pitboss.Causality.Trace.Registrable
 import Pitboss.Causality.Trace.Types
 import Pitboss.Causality.Types.Core
 

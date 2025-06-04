@@ -19,7 +19,11 @@ common warnings
 library
     import:           warnings
     exposed-modules:  Pitboss.Blackjack
-                      Pitboss.Blackjack.Action
+                      Pitboss.Blackjack.Actions
+                      Pitboss.Blackjack.Deck
+                      Pitboss.Blackjack.Outcomes
+                      Pitboss.Blackjack.Types
+                      Pitboss.Blackjack.WellKnown
                       Pitboss.Blackjack.BasicStrategy.Chart
                       Pitboss.Blackjack.BasicStrategy.Chart.Error
                       Pitboss.Blackjack.BasicStrategy.Chart.Interpret
@@ -28,21 +32,12 @@ library
                       Pitboss.Blackjack.BasicStrategy.Chart.Types
                       Pitboss.Blackjack.BasicStrategy.Chart.Validate
                       Pitboss.Blackjack.BasicStrategy.Types
-                      Pitboss.Blackjack.Materia.Card
-                      Pitboss.Blackjack.Materia.Chips
-                      Pitboss.Blackjack.Materia.Deck
-                      Pitboss.Blackjack.Materia.Hand
-                      Pitboss.Blackjack.Materia.Instances.Witnessable
-                      Pitboss.Blackjack.Materia.Types
-                      Pitboss.Blackjack.Materia.Types.Core
-                      Pitboss.Blackjack.Offering
-                      Pitboss.Blackjack.Offering.Materia
-                      Pitboss.Blackjack.Offering.RuleSet
-                      Pitboss.Blackjack.Offering.RuleSet.Game
-                      Pitboss.Blackjack.Offering.RuleSet.Table
-                      Pitboss.Blackjack.Offering.WellKnown
-                      Pitboss.Blackjack.Outcome
                       Pitboss.Blackjack.Play
+                      Pitboss.Blackjack.Rules
+                      Pitboss.Blackjack.Rules.Game
+                      Pitboss.Blackjack.Rules.Offering
+                      Pitboss.Blackjack.Rules.Table
+                      Pitboss.Blackjack.Types.Core
                       Pitboss.Causality
                       Pitboss.Causality.Delta.Instances.Incremental
                       Pitboss.Causality.Delta.Instances.Reversible

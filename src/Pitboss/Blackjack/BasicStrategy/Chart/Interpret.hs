@@ -8,7 +8,6 @@ import Data.Map.Strict qualified as Map
 import Pitboss.Blackjack
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
 import Pitboss.Blackjack.BasicStrategy.Types
-import Pitboss.Blackjack.Materia.Instances.Witnessable
 
 lookupDecisionTyped :: StrategyChart -> SomeHand -> Rank -> Offering -> Maybe Decision
 lookupDecisionTyped chart hand upcard offering = do

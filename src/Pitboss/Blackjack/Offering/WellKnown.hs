@@ -2,7 +2,9 @@
 
 module Pitboss.Blackjack.Offering.WellKnown where
 
-import Pitboss.Blackjack.Offering
+import Pitboss.Blackjack.Rules.Game
+import Pitboss.Blackjack.Rules.Offering
+import Pitboss.Blackjack.Rules.Table
 
 vegas6 :: Offering
 vegas6 =

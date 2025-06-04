@@ -20,9 +20,7 @@ module Pitboss.Blackjack (
     fullDeck,
 
     -- * Game Rules and Offerings
-    module Pitboss.Blackjack.Offering,
-    module Pitboss.Blackjack.Offering.Materia,
-    module Pitboss.Blackjack.Offering.RuleSet,
+    module Pitboss.Blackjack.Rules,
 
     -- * Well-known Configurations
     vegas6,
@@ -43,9 +41,7 @@ import Pitboss.Blackjack.Types.Core
 
 import Pitboss.Blackjack.Deck (Deck, drawCard, fullDeck, mkDeck, shuffle)
 
-import Pitboss.Blackjack.Offering
-import Pitboss.Blackjack.Offering.Materia
-import Pitboss.Blackjack.Offering.RuleSet
+import Pitboss.Blackjack.Rules
 
 import Pitboss.Blackjack.Offering.WellKnown (downtownSingleDeck, vegas6)
 

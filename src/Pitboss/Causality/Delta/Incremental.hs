@@ -5,13 +5,7 @@
 {-# OPTIONS_GHC -Wno-overlapping-patterns #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Causality.Delta.Incremental (
-    DeltaWrapper (..),
-    Incremental (..),
-    IncrementalWithWitness (..),
-    PartWitness (..),
-    mkEntityRef,
-) where
+module Pitboss.Causality.Delta.Incremental where
 
 import Data.Map.Strict qualified as Map
 import Pitboss.Causality.Delta.Types

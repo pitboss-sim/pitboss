@@ -5,15 +5,7 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Causality.Delta.Types (
-    DeltaSemantics (..),
-    SomeDelta (..),
-    CausalHistory (..),
-    Delta (..),
-    extractCausalHistory,
-    extractCausalIntent,
-    extractCausalEvent,
-) where
+module Pitboss.Causality.Delta.Types where
 
 import Data.Aeson (
     FromJSON (..),

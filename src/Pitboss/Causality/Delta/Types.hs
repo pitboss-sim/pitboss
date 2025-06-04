@@ -29,7 +29,7 @@ import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack
 import Pitboss.Causality.Types.Core
-import Pitboss.Causality.Types.FiniteMap.Occupancy
+import Pitboss.Causality.Types.FiniteMap
 import Pitboss.FSM
 
 data SomeDelta k where

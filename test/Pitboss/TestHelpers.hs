@@ -5,7 +5,7 @@ module Pitboss.TestHelpers where
 import Control.Exception (SomeException, handle)
 import Data.Text.IO qualified as TIO
 import Pitboss.Blackjack
-import Pitboss.Blackjack.BasicStrategy.Chart
+import Pitboss.Blackjack.Strategy.Chart
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation.Agency.Archetype.Types

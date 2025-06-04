@@ -3,11 +3,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Causality.Timeline (
-    Timeline (..),
-    Meta (..),
-    mkTimeline,
-) where
+module Pitboss.Causality.Timeline where
 
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)

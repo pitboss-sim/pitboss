@@ -4,19 +4,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
-module Pitboss.Causality.Trace (
-    Trace (..),
-    emptyTrace,
-    bouts,
-    tables,
-    tableShoes,
-    dealers,
-    dealerHands,
-    dealerRounds,
-    players,
-    playerSpots,
-    playerHands,
-) where
+module Pitboss.Causality.Trace where
 
 import Control.Lens (makeLenses)
 import Data.Aeson

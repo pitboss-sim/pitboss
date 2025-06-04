@@ -5,16 +5,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unused-top-binds #-}
 
-module Pitboss.Causality.TickCache (
-    TickCache (..),
-    TickCacheContext (..),
-    Deref (..),
-    mkTickCache,
-    populateTickCache,
-    withTickCache,
-    ctxTickCache,
-    ctxTick,
-) where
+module Pitboss.Causality.TickCache where
 
 import Control.Lens
 import Control.Monad.Reader

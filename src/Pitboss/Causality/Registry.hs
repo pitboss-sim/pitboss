@@ -5,9 +5,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Causality.Registry (
-    Registry (..),
-) where
+module Pitboss.Causality.Registry where
 
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd (InsOrdHashMap)

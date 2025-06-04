@@ -11,24 +11,22 @@ import Data.Text (Text)
 import Data.Text qualified as T
 import GHC.Generics (Generic)
 import Pitboss.Blackjack hiding (HandPhase)
+import Pitboss.FSM.Transitionable
 import Pitboss.FSM.Types
-
-data HandPhase
-    = PHAbandoned AbandonedReason
-    | PHNaturalBlackjack
-    | PHDecision
-    | PHHitting
-    | PHOneCardDraw OneCardDrawReason
-    | PHResolved PlayerHandResolution
-    deriving (Eq, Show, Generic)
 
 data AbandonedReason
     = PHSurrender Surrender
     | PHInsurance InsuranceOutcome
     deriving (Eq, Show, Generic)
 
+instance ToJSON AbandonedReason
+instance FromJSON AbandonedReason
+
 data OneCardDrawReason = PHDouble | PHSplitAce
     deriving (Eq, Show, Generic)
+
+instance ToJSON OneCardDrawReason
+instance FromJSON OneCardDrawReason
 
 data PlayerHandResolution
     = PHSurrendered
@@ -42,7 +40,22 @@ data PlayerHandResolution
     | PHVoid BankrollImpact
     deriving (Eq, Show, Generic)
 
+instance ToJSON PlayerHandResolution
+instance FromJSON PlayerHandResolution
+
 data BankrollImpact = Loss | Refund
+    deriving (Eq, Show, Generic)
+
+instance ToJSON BankrollImpact
+instance FromJSON BankrollImpact
+
+data HandPhase
+    = PHAbandoned AbandonedReason
+    | PHNaturalBlackjack
+    | PHDecision
+    | PHHitting
+    | PHOneCardDraw OneCardDrawReason
+    | PHResolved PlayerHandResolution
     deriving (Eq, Show, Generic)
 
 instance ToJSON HandPhase where
@@ -66,31 +79,7 @@ instance FromJSON HandPhase where
             "Resolved" -> PHResolved <$> obj .: "resolution"
             _ -> fail $ "Unknown HandPhase tag: " ++ T.unpack tag
 
-instance ToJSON AbandonedReason
-instance FromJSON AbandonedReason
-instance ToJSON OneCardDrawReason
-instance FromJSON OneCardDrawReason
-instance ToJSON BankrollImpact
-instance FromJSON BankrollImpact
-instance ToJSON PlayerHandResolution
-instance FromJSON PlayerHandResolution
-
 data SomePlayerHandFSM = forall p h d s. SomePlayerHandFSM (PlayerHandFSM p h d s)
-
-data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
-    PHAbandonedFSM :: AbandonedReason -> PlayerHandFSM ('PHAbandoned reason) 'NoHit 'NoDbl 'NoSpl
-    PHBlackjackFSM :: PlayerHandFSM 'PHNaturalBlackjack 'NoHit 'NoDbl 'NoSpl
-    PHDecisionFSM :: PlayerHandFSM 'PHDecision h d s
-    PHHittingFSM :: PlayerHandFSM 'PHHitting h d s
-    PHOneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('PHOneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
-    PHResolvedFSM :: PlayerHandResolution -> PlayerHandFSM ('PHResolved res) 'NoHit 'NoDbl 'NoSpl
-
-data OHit = OKHit | NoHit
-data ODbl = OKDbl | NoDbl
-data OSpl = OKSpl | NoSpl
-
-deriving instance Show (PlayerHandFSM p h d s)
-deriving instance Eq (PlayerHandFSM p h d s)
 
 instance Show SomePlayerHandFSM where
     show (SomePlayerHandFSM fsm) = "SomePlayerHandFSM (" ++ show fsm ++ ")"
@@ -131,6 +120,33 @@ instance FromJSON SomePlayerHandFSM where
             "OneCardDraw" -> SomePlayerHandFSM . PHOneCardDrawFSM <$> obj .: "reason"
             "Resolved" -> SomePlayerHandFSM . PHResolvedFSM <$> obj .: "resolution"
             _ -> fail $ "Unknown tag for SomePlayerHandFSM: " ++ T.unpack tag
+
+instance Transitionable SomePlayerHandFSM where
+    transitionType (SomePlayerHandFSM fsm) = transitionType fsm
+
+data PlayerHandFSM (p :: HandPhase) (h :: OHit) (d :: ODbl) (s :: OSpl) where
+    PHAbandonedFSM :: AbandonedReason -> PlayerHandFSM ('PHAbandoned reason) 'NoHit 'NoDbl 'NoSpl
+    PHBlackjackFSM :: PlayerHandFSM 'PHNaturalBlackjack 'NoHit 'NoDbl 'NoSpl
+    PHDecisionFSM :: PlayerHandFSM 'PHDecision h d s
+    PHHittingFSM :: PlayerHandFSM 'PHHitting h d s
+    PHOneCardDrawFSM :: OneCardDrawReason -> PlayerHandFSM ('PHOneCardDraw reason) 'NoHit 'NoDbl 'NoSpl
+    PHResolvedFSM :: PlayerHandResolution -> PlayerHandFSM ('PHResolved res) 'NoHit 'NoDbl 'NoSpl
+
+deriving instance Show (PlayerHandFSM p h d s)
+deriving instance Eq (PlayerHandFSM p h d s)
+
+instance Transitionable (PlayerHandFSM p h d s) where
+    transitionType = \case
+        PHDecisionFSM -> AwaitInput
+        PHHittingFSM -> AwaitInput
+        PHOneCardDrawFSM _ -> AutoAdvance
+        PHResolvedFSM _ -> TerminalPhase
+        PHAbandonedFSM _ -> TerminalPhase
+        PHBlackjackFSM -> TerminalPhase
+
+data OHit = OKHit | NoHit
+data ODbl = OKDbl | NoDbl
+data OSpl = OKSpl | NoSpl
 
 resolutionImpact :: PlayerHandResolution -> Maybe BankrollImpact
 resolutionImpact = \case

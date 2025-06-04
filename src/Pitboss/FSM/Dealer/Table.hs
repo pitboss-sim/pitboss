@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -7,6 +8,7 @@ module Pitboss.FSM.Dealer.Table where
 
 import Data.Aeson.Types
 import GHC.Generics (Generic)
+import Pitboss.FSM.Transitionable
 
 data DealerTask
     = DTCleanup
@@ -16,6 +18,9 @@ data DealerTask
     | DTRespondToEnvironment
     deriving (Eq, Show, Generic)
 
+instance ToJSON DealerTask
+instance FromJSON DealerTask
+
 data DealerTablePhase
     = DTOffDuty
     | DTPushing
@@ -24,22 +29,13 @@ data DealerTablePhase
     | DTLeaving
     deriving (Eq, Show, Generic)
 
-instance ToJSON DealerTask
-instance FromJSON DealerTask
 instance ToJSON DealerTablePhase
 instance FromJSON DealerTablePhase
 
 data SomeDealerTableFSM = forall p. SomeDealerTableFSM (DealerTableFSM p)
 
-data DealerTableFSM (p :: DealerTablePhase) where
-    DTOffDutyFSM :: DealerTableFSM 'DTOffDuty
-    DTPushingFSM :: DealerTableFSM 'DTPushing
-    DTOnDutyFSM :: DealerTableFSM 'DTOnDuty
-    DTTaskingFSM :: DealerTask -> DealerTableFSM ('DTTasking task)
-    DTLeavingFSM :: DealerTableFSM 'DTLeaving
-
-deriving instance Eq (DealerTableFSM p)
-deriving instance Show (DealerTableFSM p)
+instance Transitionable SomeDealerTableFSM where
+    transitionType (SomeDealerTableFSM fsm) = transitionType fsm
 
 instance Eq SomeDealerTableFSM where
     (SomeDealerTableFSM f1) == (SomeDealerTableFSM f2) = case (f1, f2) of
@@ -71,6 +67,24 @@ instance FromJSON SomeDealerTableFSM where
             "Tasking" -> SomeDealerTableFSM . DTTaskingFSM <$> obj .: "task"
             "Leaving" -> pure $ SomeDealerTableFSM DTLeavingFSM
             other -> fail $ "Unknown tag for SomeDealerTableFSM: " ++ other
+
+data DealerTableFSM (p :: DealerTablePhase) where
+    DTOffDutyFSM :: DealerTableFSM 'DTOffDuty
+    DTPushingFSM :: DealerTableFSM 'DTPushing
+    DTOnDutyFSM :: DealerTableFSM 'DTOnDuty
+    DTTaskingFSM :: DealerTask -> DealerTableFSM ('DTTasking task)
+    DTLeavingFSM :: DealerTableFSM 'DTLeaving
+
+deriving instance Eq (DealerTableFSM p)
+deriving instance Show (DealerTableFSM p)
+
+instance Transitionable (DealerTableFSM p) where
+    transitionType = \case
+        DTOffDutyFSM -> AwaitInput
+        DTPushingFSM -> AutoAdvance
+        DTOnDutyFSM -> AwaitInput
+        DTTaskingFSM _ -> AwaitInput
+        DTLeavingFSM -> AutoAdvance
 
 type family ValidDealerTableTransition (from :: DealerTablePhase) (to :: DealerTablePhase) :: Bool where
     ValidDealerTableTransition 'DTOffDuty 'DTOnDuty = 'True

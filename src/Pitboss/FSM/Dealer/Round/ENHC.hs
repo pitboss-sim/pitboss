@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -20,6 +21,7 @@ where
 
 import Data.Aeson
 import Pitboss.Blackjack
+import Pitboss.FSM.Transitionable
 import Pitboss.FSM.Types
 
 data ENHCPhase
@@ -76,6 +78,9 @@ instance FromJSON SomeENHCFSM where
             "ENHCComplete" -> pure $ SomeENHCFSM ENHCCompleteFSM
             _ -> fail $ "Unknown ENHCFSM tag: " ++ tag
 
+instance Transitionable SomeENHCFSM where
+    transitionType (SomeENHCFSM fsm) = transitionType fsm
+
 data ENHCFSM (p :: ENHCPhase) where
     ENHCAwaitingFSM :: ENHCFSM 'ENHCAwaiting
     ENHCBetsFSM :: ENHCFSM 'ENHCBets
@@ -89,6 +94,18 @@ data ENHCFSM (p :: ENHCPhase) where
 
 deriving instance Eq (ENHCFSM p)
 deriving instance Show (ENHCFSM p)
+
+instance Transitionable (ENHCFSM p) where
+    transitionType = \case
+        ENHCAwaitingFSM -> AwaitInput
+        ENHCBetsFSM -> AwaitInput
+        ENHCDealFSM -> AutoAdvance
+        ENHCEarlySurrenderFSM -> AwaitInput
+        ENHCPlayersFSM -> AwaitInput
+        ENHCDealingFSM -> AutoAdvance
+        ENHCSettleFSM -> AutoAdvance
+        ENHCCompleteFSM -> TerminalPhase
+        ENHCInterruptedFSM _ -> AwaitInput
 
 type family ValidENHCTransition (from :: ENHCPhase) (to :: ENHCPhase) :: Bool where
     ValidENHCTransition 'ENHCAwaiting 'ENHCBets = 'True

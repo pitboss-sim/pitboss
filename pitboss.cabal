@@ -65,14 +65,14 @@ library
                       Pitboss.FSM.Dealer.Round.ENHC
                       Pitboss.FSM.Dealer.Round.Peek
                       Pitboss.FSM.Dealer.Round.Phase
-                      Pitboss.FSM.Dealer.Round.Instances.AtDecisionPoint
-                      Pitboss.FSM.Dealer.Round.Instances.PhaseTag
+                      Pitboss.FSM.Dealer.Round.AtDecisionPoint
+                      Pitboss.FSM.Dealer.Round.PhaseTag
                       Pitboss.FSM.Dealer.Table
-                      Pitboss.FSM.Instances.Transitionable
                       Pitboss.FSM.Player.Hand
                       Pitboss.FSM.Player.Spot
                       Pitboss.FSM.Player.Table
                       Pitboss.FSM.Table
+                      Pitboss.FSM.Transitionable
                       Pitboss.FSM.Types
                       Pitboss.Simulation.Agency.Archetype.Dealer.Rules
                       Pitboss.Simulation.Agency.Archetype.Player.Advantage

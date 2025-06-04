@@ -1,12 +1,14 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.FSM.PlayerTable where
+module Pitboss.FSM.Player.Table where
 
 import Data.Aeson.Types
 import GHC.Generics (Generic)
+import Pitboss.FSM.Transitionable
 
 data PlayerTablePhase
     = PTIdle
@@ -22,16 +24,8 @@ instance FromJSON PlayerTablePhase
 
 data SomePlayerTableFSM = forall p. SomePlayerTableFSM (PlayerTableFSM p)
 
-data PlayerTableFSM (p :: PlayerTablePhase) where
-    PTIdleFSM :: PlayerTableFSM 'PTIdle
-    PTChoosingTableFSM :: PlayerTableFSM 'PTChoosingTable
-    PTPlacingBetFSM :: PlayerTableFSM 'PTPlacingBet
-    PTPlayingHandFSM :: PlayerTableFSM 'PTPlayingHand
-    PTObservingFSM :: PlayerTableFSM 'PTObserving
-    PTDoneFSM :: PlayerTableFSM 'PTDone
-
-deriving instance Show (PlayerTableFSM p)
-deriving instance Eq (PlayerTableFSM p)
+instance Transitionable SomePlayerTableFSM where
+    transitionType (SomePlayerTableFSM fsm) = transitionType fsm
 
 instance Show SomePlayerTableFSM where
     show (SomePlayerTableFSM fsm) = show fsm
@@ -66,6 +60,26 @@ instance FromJSON SomePlayerTableFSM where
             "Observing" -> pure $ SomePlayerTableFSM PTObservingFSM
             "Done" -> pure $ SomePlayerTableFSM PTDoneFSM
             _ -> fail $ "Unknown tag for SomePlayerTableFSM: " ++ tag
+
+data PlayerTableFSM (p :: PlayerTablePhase) where
+    PTIdleFSM :: PlayerTableFSM 'PTIdle
+    PTChoosingTableFSM :: PlayerTableFSM 'PTChoosingTable
+    PTPlacingBetFSM :: PlayerTableFSM 'PTPlacingBet
+    PTPlayingHandFSM :: PlayerTableFSM 'PTPlayingHand
+    PTObservingFSM :: PlayerTableFSM 'PTObserving
+    PTDoneFSM :: PlayerTableFSM 'PTDone
+
+deriving instance Show (PlayerTableFSM p)
+deriving instance Eq (PlayerTableFSM p)
+
+instance Transitionable (PlayerTableFSM p) where
+    transitionType = \case
+        PTIdleFSM -> AwaitInput
+        PTChoosingTableFSM -> AwaitInput
+        PTPlacingBetFSM -> AwaitInput
+        PTPlayingHandFSM -> AwaitInput
+        PTObservingFSM -> AutoAdvance
+        PTDoneFSM -> TerminalPhase
 
 type family ValidPlayerTableTransition (from :: PlayerTablePhase) (to :: PlayerTablePhase) :: Bool where
     ValidPlayerTableTransition 'PTIdle 'PTChoosingTable = 'True

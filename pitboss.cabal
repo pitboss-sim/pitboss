@@ -38,64 +38,22 @@ library
                       Pitboss.Blackjack.Types
                       Pitboss.Blackjack.Types.Core
                       Pitboss.Blackjack.WellKnown
-                      Pitboss.Causality
-                      Pitboss.Causality.Delta.Instances.Incremental
-                      Pitboss.Causality.Delta.Instances.Reversible
-                      Pitboss.Causality.Delta.Types
-                      Pitboss.Causality.Entity.Instances.Decomposable
-                      Pitboss.Causality.Entity.Instances.Replaceable
-                      Pitboss.Causality.Entity.Instances.Witnessable
-                      Pitboss.Causality.Entity.Lenses
-                      Pitboss.Causality.Entity.Types
-                      Pitboss.Causality.Registry
-                      Pitboss.Causality.TickCache
-                      Pitboss.Causality.Timeline
-                      Pitboss.Causality.Timeline.Query
-                      Pitboss.Causality.Timeline.Reconstruction
-                      Pitboss.Causality.Trace
-                      Pitboss.Causality.Trace.Instances.Registrable
-                      Pitboss.Causality.Trace.Ops
-                      Pitboss.Causality.Trace.Types
-                      Pitboss.Causality.Types.Core
-                      Pitboss.Causality.Types.FiniteMap
-                      Pitboss.Causality.Types.FiniteMap.BoundedEnum
-                      Pitboss.Causality.Types.FiniteMap.Occupancy
                       Pitboss.FSM
                       Pitboss.FSM.Bout
-                      Pitboss.FSM.DealerHand
-                      Pitboss.FSM.DealerRound
-                      Pitboss.FSM.DealerRound.ENHC
-                      Pitboss.FSM.DealerRound.ENHC.FSM
-                      Pitboss.FSM.DealerRound.ENHC.Phase
-                      Pitboss.FSM.DealerRound.ENHC.Transition
-                      Pitboss.FSM.DealerRound.Peek
-                      Pitboss.FSM.DealerRound.Peek.FSM
-                      Pitboss.FSM.DealerRound.Peek.Phase
-                      Pitboss.FSM.DealerRound.Peek.Transition
-                      Pitboss.FSM.DealerRound.Phase
-                      Pitboss.FSM.DealerRound.Instances.AtDecisionPoint
-                      Pitboss.FSM.DealerRound.Instances.PhaseTag
-                      Pitboss.FSM.DealerTable
-                      Pitboss.FSM.Instances.Transitionable
-                      Pitboss.FSM.PlayerHand
-                      Pitboss.FSM.PlayerSpot
-                      Pitboss.FSM.PlayerTable
+                      Pitboss.FSM.Dealer.Hand
+                      Pitboss.FSM.Dealer.Round
+                      Pitboss.FSM.Dealer.Round.ENHC
+                      Pitboss.FSM.Dealer.Round.Peek
+                      Pitboss.FSM.Dealer.Round.Phase
+                      Pitboss.FSM.Dealer.Round.AtDecisionPoint
+                      Pitboss.FSM.Dealer.Round.PhaseTag
+                      Pitboss.FSM.Dealer.Table
+                      Pitboss.FSM.Player.Hand
+                      Pitboss.FSM.Player.Spot
+                      Pitboss.FSM.Player.Table
                       Pitboss.FSM.Table
+                      Pitboss.FSM.Transitionable
                       Pitboss.FSM.Types
-                      Pitboss.Simulation.Agency.Archetype.Dealer.Rules
-                      Pitboss.Simulation.Agency.Archetype.Player.Advantage
-                      Pitboss.Simulation.Agency.Archetype.Player.BasicStrategy
-                      Pitboss.Simulation.Agency.Archetype.Player.Perfect
-                      Pitboss.Simulation.Agency.Archetype.Player.Superstitious
-                      Pitboss.Simulation.Agency.Archetype.Types
-                      Pitboss.Simulation.Agency.Intent.Generate
-                      Pitboss.Simulation.Agency.Intent.Instances.Validateable
-                      Pitboss.Simulation.Agency.Intent.Types
-                      Pitboss.Simulation.Agency.Types
-                      Pitboss.Simulation.Engine.DeltaGen
-                      Pitboss.Simulation.Engine.Runtime
-                      Pitboss.Simulation.Event
-                      Pitboss.Simulation.Types
     -- other-modules:
     -- other-extensions:
     build-depends:    base,

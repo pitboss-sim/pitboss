@@ -14,7 +14,7 @@ import Pitboss.Causality.Entity.Witnessable
 import Pitboss.Causality.Registry
 import Pitboss.Causality.Timeline
 import Pitboss.Causality.Trace
-import Pitboss.Causality.Trace.Instances.Registrable
+import Pitboss.Causality.Trace.Registrable
 import Pitboss.Causality.Trace.Types
 import Pitboss.Causality.Types.Core
 

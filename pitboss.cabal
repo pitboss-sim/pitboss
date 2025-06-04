@@ -58,8 +58,6 @@ library
                       Pitboss.Causality.Trace.Types
                       Pitboss.Causality.Types.Core
                       Pitboss.Causality.Types.FiniteMap
-                      Pitboss.Causality.Types.FiniteMap.BoundedEnum
-                      Pitboss.Causality.Types.FiniteMap.Occupancy
                       Pitboss.FSM
                       Pitboss.FSM.Bout
                       Pitboss.FSM.DealerHand

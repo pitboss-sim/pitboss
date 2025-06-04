@@ -10,7 +10,6 @@ import Pitboss.Blackjack
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Types.Core
 import Pitboss.Causality.Types.FiniteMap
-import Pitboss.Causality.Types.FiniteMap.Occupancy
 import Pitboss.FSM
 import Prelude hiding (round)
 

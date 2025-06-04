@@ -11,13 +11,18 @@ module Pitboss.Causality.Types.FiniteMap (
     toListFiniteMap,
     mapFiniteMapWithKey,
     singletonFiniteMap,
+    BoundedEnum,
+    universe,
+    Occupancy (..),
+    isPresent,
+    isAbsent,
 )
 where
 
 import Control.Lens (At (..), Index, IxValue, Ixed (..))
 import Data.Aeson
 import Data.Map.Strict qualified as Map
-import Pitboss.Causality.Types.FiniteMap.BoundedEnum
+import GHC.Generics (Generic)
 
 newtype FiniteMap k v = FiniteMap (Map.Map k v)
     deriving (Eq, Show, Functor)
@@ -70,3 +75,31 @@ mapFiniteMapWithKey f (FiniteMap m) = FiniteMap (Map.mapWithKey f m)
 
 singletonFiniteMap :: (BoundedEnum k, Ord k) => k -> v -> v -> FiniteMap k v
 singletonFiniteMap key val defaultVal = insertFiniteMap key val (emptyFiniteMap defaultVal)
+
+class (Enum a, Bounded a) => BoundedEnum a
+
+universe :: (BoundedEnum a) => [a]
+universe = [minBound .. maxBound]
+
+data Occupancy a
+    = Absent
+    | Present a
+    deriving (Eq, Show, Functor, Generic)
+
+instance (ToJSON a) => ToJSON (Occupancy a)
+instance (FromJSON a) => FromJSON (Occupancy a)
+
+instance Semigroup (Occupancy a) where
+    Absent <> x = x
+    x <> Absent = x
+    Present a <> Present _ = Present a
+
+instance Monoid (Occupancy a) where
+    mempty = Absent
+
+isPresent :: Occupancy a -> Bool
+isPresent (Present _) = True
+isPresent Absent = False
+
+isAbsent :: Occupancy a -> Bool
+isAbsent = not . isPresent

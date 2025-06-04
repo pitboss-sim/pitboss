@@ -1,6 +1,6 @@
 module Pitboss.Blackjack.BasicStrategy.Types where
 
-import Pitboss.Blackjack.Action
+import Pitboss.Blackjack.Actions
 
 newtype Fallback
     = Else Move

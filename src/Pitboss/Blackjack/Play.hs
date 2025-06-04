@@ -5,7 +5,7 @@
 
 module Pitboss.Blackjack.Play where
 
-import Pitboss.Blackjack.Outcome
+import Pitboss.Blackjack.Outcomes
 import Pitboss.Blackjack.Rules.Game
 import Pitboss.Blackjack.Rules.Offering
 import Pitboss.Blackjack.Types

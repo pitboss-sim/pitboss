@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Blackjack.Offering.WellKnown where
+module Pitboss.Blackjack.WellKnown where
 
 import Pitboss.Blackjack.Rules.Game
 import Pitboss.Blackjack.Rules.Offering

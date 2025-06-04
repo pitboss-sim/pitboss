@@ -1,8 +1,8 @@
-module Pitboss.Blackjack.Offering.RuleSet.Table where
+module Pitboss.Blackjack.Rules.Table where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Chips
+import Pitboss.Blackjack.Types.Core
 
 data TableRuleSet = TableRuleSet
     { minBet :: Chips

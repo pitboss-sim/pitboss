@@ -1,10 +1,10 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Pitboss.FSM.DealerRound (
-    module Pitboss.FSM.DealerRound.ENHC,
-    module Pitboss.FSM.DealerRound.Peek,
-    module Pitboss.FSM.DealerRound.Phase,
+module Pitboss.FSM.Dealer.Round (
+    module Pitboss.FSM.Dealer.Round.ENHC,
+    module Pitboss.FSM.Dealer.Round.Peek,
+    module Pitboss.FSM.Dealer.Round.Phase,
     DealerRoundFSM (..),
     mkENHCDealerRound,
     mkPeekDealerRound,
@@ -17,10 +17,10 @@ where
 import Data.Aeson.Types
 import Data.Text qualified as T
 import Pitboss.Blackjack hiding (Surrender)
-import Pitboss.FSM.DealerRound.ENHC
-import Pitboss.FSM.DealerRound.Peek
-import Pitboss.FSM.DealerRound.Phase
-import Pitboss.FSM.PlayerHand
+import Pitboss.FSM.Dealer.Round.ENHC
+import Pitboss.FSM.Dealer.Round.Peek
+import Pitboss.FSM.Dealer.Round.Phase
+import Pitboss.FSM.Player.Hand
 import Pitboss.FSM.Types
 
 data DealerRoundFSM

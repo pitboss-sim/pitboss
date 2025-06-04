@@ -1,18 +1,18 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Pitboss.FSM.DealerRound.Peek (
-    module Pitboss.FSM.DealerRound.Peek.FSM,
-    module Pitboss.FSM.DealerRound.Peek.Phase,
-    module Pitboss.FSM.DealerRound.Peek.Transition,
+module Pitboss.FSM.Dealer.Round.Peek (
+    module Pitboss.FSM.Dealer.Round.Peek.FSM,
+    module Pitboss.FSM.Dealer.Round.Peek.Phase,
+    module Pitboss.FSM.Dealer.Round.Peek.Transition,
     SomePeekFSM (..),
 )
 where
 
 import Data.Aeson
-import Pitboss.FSM.DealerRound.Peek.FSM
-import Pitboss.FSM.DealerRound.Peek.Phase
-import Pitboss.FSM.DealerRound.Peek.Transition
+import Pitboss.FSM.Dealer.Round.Peek.FSM
+import Pitboss.FSM.Dealer.Round.Peek.Phase
+import Pitboss.FSM.Dealer.Round.Peek.Transition
 
 data SomePeekFSM = forall p. SomePeekFSM (PeekFSM p)
 

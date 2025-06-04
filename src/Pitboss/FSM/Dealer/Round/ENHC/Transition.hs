@@ -3,11 +3,11 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.FSM.DealerRound.ENHC.Transition where
+module Pitboss.FSM.Dealer.Round.ENHC.Transition where
 
 import Pitboss.Blackjack
-import Pitboss.FSM.DealerRound.ENHC.FSM
-import Pitboss.FSM.DealerRound.ENHC.Phase
+import Pitboss.FSM.Dealer.Round.ENHC.FSM
+import Pitboss.FSM.Dealer.Round.ENHC.Phase
 
 type family ValidENHCTransition (from :: ENHCPhase) (to :: ENHCPhase) :: Bool where
     ValidENHCTransition 'ENHCAwaiting 'ENHCBets = 'True

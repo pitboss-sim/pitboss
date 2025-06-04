@@ -1,9 +1,9 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.FSM.DealerRound.ENHC.FSM where
+module Pitboss.FSM.Dealer.Round.ENHC.FSM where
 
-import Pitboss.FSM.DealerRound.ENHC.Phase
+import Pitboss.FSM.Dealer.Round.ENHC.Phase
 import Pitboss.FSM.Types
 
 data ENHCFSM (p :: ENHCPhase) where

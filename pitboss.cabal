@@ -60,24 +60,24 @@ library
                       Pitboss.Causality.Types.FiniteMap
                       Pitboss.FSM
                       Pitboss.FSM.Bout
-                      Pitboss.FSM.DealerHand
-                      Pitboss.FSM.DealerRound
-                      Pitboss.FSM.DealerRound.ENHC
-                      Pitboss.FSM.DealerRound.ENHC.FSM
-                      Pitboss.FSM.DealerRound.ENHC.Phase
-                      Pitboss.FSM.DealerRound.ENHC.Transition
-                      Pitboss.FSM.DealerRound.Peek
-                      Pitboss.FSM.DealerRound.Peek.FSM
-                      Pitboss.FSM.DealerRound.Peek.Phase
-                      Pitboss.FSM.DealerRound.Peek.Transition
-                      Pitboss.FSM.DealerRound.Phase
-                      Pitboss.FSM.DealerRound.Instances.AtDecisionPoint
-                      Pitboss.FSM.DealerRound.Instances.PhaseTag
-                      Pitboss.FSM.DealerTable
+                      Pitboss.FSM.Dealer.Hand
+                      Pitboss.FSM.Dealer.Round
+                      Pitboss.FSM.Dealer.Round.ENHC
+                      Pitboss.FSM.Dealer.Round.ENHC.FSM
+                      Pitboss.FSM.Dealer.Round.ENHC.Phase
+                      Pitboss.FSM.Dealer.Round.ENHC.Transition
+                      Pitboss.FSM.Dealer.Round.Peek
+                      Pitboss.FSM.Dealer.Round.Peek.FSM
+                      Pitboss.FSM.Dealer.Round.Peek.Phase
+                      Pitboss.FSM.Dealer.Round.Peek.Transition
+                      Pitboss.FSM.Dealer.Round.Phase
+                      Pitboss.FSM.Dealer.Round.Instances.AtDecisionPoint
+                      Pitboss.FSM.Dealer.Round.Instances.PhaseTag
+                      Pitboss.FSM.Dealer.Table
                       Pitboss.FSM.Instances.Transitionable
-                      Pitboss.FSM.PlayerHand
-                      Pitboss.FSM.PlayerSpot
-                      Pitboss.FSM.PlayerTable
+                      Pitboss.FSM.Player.Hand
+                      Pitboss.FSM.Player.Spot
+                      Pitboss.FSM.Player.Table
                       Pitboss.FSM.Table
                       Pitboss.FSM.Types
                       Pitboss.Simulation.Agency.Archetype.Dealer.Rules

@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.FSM.PlayerSpot where
+module Pitboss.FSM.Player.Spot where
 
 import Data.Aeson.Types
 import Data.Text qualified as T

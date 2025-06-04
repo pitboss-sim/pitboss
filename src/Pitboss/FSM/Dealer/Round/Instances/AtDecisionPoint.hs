@@ -1,7 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.FSM.DealerRound.Instances.AtDecisionPoint where
+module Pitboss.FSM.Dealer.Round.Instances.AtDecisionPoint where
 
 import Pitboss.FSM
 

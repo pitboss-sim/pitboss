@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.FSM.DealerRound.Instances.PhaseTag where
+module Pitboss.FSM.Dealer.Round.Instances.PhaseTag where
 
 import Pitboss.FSM
 

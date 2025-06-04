@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.FSM.PlayerHand where
+module Pitboss.FSM.Player.Hand where
 
 import Data.Aeson.Types
 import Data.Text (Text)

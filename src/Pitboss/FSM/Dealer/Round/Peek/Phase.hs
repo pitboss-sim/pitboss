@@ -1,4 +1,4 @@
-module Pitboss.FSM.DealerRound.Peek.Phase where
+module Pitboss.FSM.Dealer.Round.Peek.Phase where
 
 data PeekPhase
     = PeekAwaiting

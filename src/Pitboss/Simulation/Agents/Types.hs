@@ -11,14 +11,32 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.Simulation.Agency.Archetype.Types where
+module Pitboss.Simulation.Agents.Types where
 
 import Control.Lens hiding ((.=))
 import Data.Aeson
 import Data.Aeson.Types (Parser)
 import Data.Map (Map)
 import GHC.Generics (Generic)
+import Pitboss.Blackjack
 import Pitboss.Blackjack.Strategy.Chart
+
+data GameContext = GameContext
+    { _contextPlayerHand :: SomeHand
+    , _contextDealerUpcard :: Card
+    , _contextOffering :: Offering
+    , _contextCanDouble :: Bool
+    , _contextCanSplit :: Bool
+    , _contextCanSurrender :: Bool
+    , _contextHandNumber :: Int
+    , _contextSplitCount :: Int
+    }
+    deriving (Eq, Show, Generic)
+
+makeLenses ''GameContext
+
+instance ToJSON GameContext
+instance FromJSON GameContext
 
 data PlayerArchetypeKind
     = BasicStrategy

@@ -1,7 +1,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Simulation.Agents.Archetype.Dealer.Rules where
+module Pitboss.Simulation.Agents.Dealer where
 
 import Pitboss.Blackjack
 import Pitboss.Simulation.Agents.Types

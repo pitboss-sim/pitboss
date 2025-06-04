@@ -53,29 +53,36 @@ extractCards (PartialLifecycleHand cards) = cards
 extractCards (FullLifecycleHand cards) = cards
 extractCards (ActedUponLifecycleHand cards) = cards
 
-isBusted :: SomeHand -> Bool
-isBusted hand = handScore hand > 21
-
 characterizeHand :: (CanCharacterize phase ~ 'True) => LifecycleHand phase -> SomeHand
 characterizeHand hand = characterize (extractCards hand)
 
 boutResolution :: SomeHand -> SomeHand -> DetailedOutcome
 boutResolution playerHand dealerHand
-    | isBusted playerHand = dealerWinsPlayerBust
-    | isBusted dealerHand = playerWinsDealerBust
+    | isPlayerBust = dealerWinsPlayerBust
+    | isDealerBust = playerWinsDealerBust
     | isBlackjack playerHand && not (isBlackjack dealerHand) = playerWinsBlackjack
     | isBlackjack dealerHand && not (isBlackjack playerHand) = dealerWinsBlackjack
     | playerScore > dealerScore = playerWinsHigher
     | dealerScore > playerScore = dealerWinsHigher
     | otherwise = pushOutcome
   where
-    playerScore = handScore playerHand
-    dealerScore = handScore dealerHand
+    isPlayerBust = case playerHand of
+        SomeHand hand -> case witness hand of
+            BustWitness -> True
+            _ -> False
+
+    isDealerBust = case dealerHand of
+        SomeHand hand -> case witness hand of
+            BustWitness -> True
+            _ -> False
 
     isBlackjack :: SomeHand -> Bool
     isBlackjack (SomeHand hand) = case witness hand of
         BlackjackWitness -> True
         _ -> False
+
+    playerScore = handScore playerHand
+    dealerScore = handScore dealerHand
 
 simpleBoutResolution :: SomeHand -> SomeHand -> BoutOutcome
 simpleBoutResolution playerHand dealerHand =

@@ -81,6 +81,10 @@ library
                       Pitboss.Simulation.Agents.Player.Perfect
                       Pitboss.Simulation.Agents.Player.Superstitious
                       Pitboss.Simulation.Agents.Types
+                      Pitboss.Simulation.Event
+                      Pitboss.Simulation.Intent.Generate
+                      Pitboss.Simulation.Intent.Types
+                      Pitboss.Simulation.Intent.Validate
     -- other-modules:
     -- other-extensions:
     build-depends:    base,

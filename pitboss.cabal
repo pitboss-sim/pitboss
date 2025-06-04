@@ -32,7 +32,6 @@ library
                       Pitboss.Blackjack.BasicStrategy.Chart.Types
                       Pitboss.Blackjack.BasicStrategy.Chart.Validate
                       Pitboss.Blackjack.BasicStrategy.Types
-                      Pitboss.Blackjack.Offering.Materia
                       Pitboss.Blackjack.Play
                       Pitboss.Blackjack.Rules
                       Pitboss.Blackjack.Rules.Game

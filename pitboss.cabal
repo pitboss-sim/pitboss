@@ -109,12 +109,19 @@ library
                       Pitboss.Simulation.Agents.Player.Perfect
                       Pitboss.Simulation.Agents.Player.Superstitious
                       Pitboss.Simulation.Agents.Types
+                      Pitboss.Simulation.Delta.Bout
+                      Pitboss.Simulation.Delta.Dealer
+                      Pitboss.Simulation.Delta.Economy
+                      Pitboss.Simulation.Delta.Generate
+                      Pitboss.Simulation.Engine.Generate
+                      Pitboss.Simulation.Engine.Runtime
                       Pitboss.Simulation.Event
                       Pitboss.Simulation.Event.Generate
                       Pitboss.Simulation.Intent.Context.Types.Core
                       Pitboss.Simulation.Intent.Generate
                       Pitboss.Simulation.Intent.Types
                       Pitboss.Simulation.Intent.Validate
+                      Pitboss.Simulation.Types
     -- other-modules:
     -- other-extensions:
     build-depends:    base,

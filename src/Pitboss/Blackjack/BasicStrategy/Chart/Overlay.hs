@@ -6,7 +6,7 @@ import Control.Category ((>>>))
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 indexEntries :: [ChartEntry] -> Map (HandKind, Maybe Int, Rank) MoveCode
 indexEntries =

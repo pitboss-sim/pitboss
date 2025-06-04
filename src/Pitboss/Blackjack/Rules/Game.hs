@@ -1,4 +1,4 @@
-module Pitboss.Blackjack.Offering.RuleSet.Game where
+module Pitboss.Blackjack.Rules.Game where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

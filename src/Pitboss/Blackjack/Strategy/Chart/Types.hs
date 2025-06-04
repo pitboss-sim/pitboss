@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
-module Pitboss.Blackjack.BasicStrategy.Chart.Types where
+module Pitboss.Blackjack.Strategy.Chart.Types where
 
 import Data.Aeson
 import Data.Map.Strict

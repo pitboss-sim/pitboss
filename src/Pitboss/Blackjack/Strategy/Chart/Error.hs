@@ -1,8 +1,8 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Blackjack.BasicStrategy.Chart.Error where
+module Pitboss.Blackjack.Strategy.Chart.Error where
 
-import Pitboss.Blackjack.BasicStrategy.Chart.Types
+import Pitboss.Blackjack.Strategy.Chart.Types
 import Pitboss.Blackjack.Types.Core
 import Text.Printf (printf)
 

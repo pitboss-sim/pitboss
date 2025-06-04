@@ -1,6 +1,6 @@
 module Pitboss.Blackjack.Materia.Card where
 
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 value :: Card -> Int
 value (Card Two _) = 2

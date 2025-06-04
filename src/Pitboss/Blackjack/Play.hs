@@ -8,9 +8,9 @@ module Pitboss.Blackjack.Play where
 import Pitboss.Blackjack.Materia.Hand
 import Pitboss.Blackjack.Materia.Instances.Witnessable
 import Pitboss.Blackjack.Materia.Types
-import Pitboss.Blackjack.Materia.Types.Core
 import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Outcome
+import Pitboss.Blackjack.Types.Core
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)

@@ -10,7 +10,7 @@ import Data.Aeson.Types (Parser)
 import Data.Text hiding (filter, length, map)
 import Pitboss.Blackjack.Materia.Card
 import Pitboss.Blackjack.Materia.Instances.Witnessable
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 data SomeHand where
     SomeHand :: (Witnessable k) => Hand k -> SomeHand

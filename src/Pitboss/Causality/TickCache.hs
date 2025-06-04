@@ -20,7 +20,7 @@ import Control.Lens
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
 
-import Pitboss.Causality.Delta.Instances.Incremental
+import Pitboss.Causality.Delta.Incremental
 import Pitboss.Causality.Delta.Types
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Registry

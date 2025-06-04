@@ -30,14 +30,13 @@ library
                       Pitboss.Blackjack.BasicStrategy.Chart.Types
                       Pitboss.Blackjack.BasicStrategy.Chart.Validate
                       Pitboss.Blackjack.BasicStrategy.Types
-                      Pitboss.Blackjack.Offering
-                      Pitboss.Blackjack.Offering.Materia
-                      Pitboss.Blackjack.Offering.RuleSet
-                      Pitboss.Blackjack.Offering.RuleSet.Game
-                      Pitboss.Blackjack.Offering.RuleSet.Table
                       Pitboss.Blackjack.Offering.WellKnown
                       Pitboss.Blackjack.Outcome
                       Pitboss.Blackjack.Play
+                      Pitboss.Blackjack.Rules
+                      Pitboss.Blackjack.Rules.Game
+                      Pitboss.Blackjack.Rules.Offering
+                      Pitboss.Blackjack.Rules.Table
                       Pitboss.Blackjack.Types.Core
                       Pitboss.Causality
                       Pitboss.Causality.Delta.Instances.Incremental

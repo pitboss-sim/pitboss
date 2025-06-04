@@ -2,9 +2,9 @@ module Pitboss.Blackjack.Deck where
 
 import Control.Monad.ST (ST, runST)
 import Data.Array.ST (STArray, getElems, newListArray, readArray, writeArray)
-import Pitboss.Blackjack.Offering.Materia
 import Pitboss.Blackjack.Types.Core
 import System.Random (StdGen, randomR)
+import Pitboss.Blackjack.Rules.Offering
 
 newtype CutPoint = CutPoint Int
     deriving (Show, Eq)

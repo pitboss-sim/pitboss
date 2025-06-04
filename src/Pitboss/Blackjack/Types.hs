@@ -9,8 +9,8 @@ import Control.Monad (guard)
 import Data.Aeson (FromJSON (..), ToJSON (..), object, withObject, (.:), (.=))
 import Data.Aeson.Types (Parser)
 import Data.Text hiding (filter, length, map)
-import Pitboss.Blackjack.Offering.Materia
 import Pitboss.Blackjack.Types.Core
+import Pitboss.Blackjack.Rules.Offering
 
 data SomeHand where
     SomeHand :: (Witnessable k) => Hand k -> SomeHand

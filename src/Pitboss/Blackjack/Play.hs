@@ -5,10 +5,11 @@
 
 module Pitboss.Blackjack.Play where
 
-import Pitboss.Blackjack.Offering
 import Pitboss.Blackjack.Outcome
 import Pitboss.Blackjack.Types
 import Pitboss.Blackjack.Types.Core
+import Pitboss.Blackjack.Rules.Offering
+import Pitboss.Blackjack.Rules.Game
 
 data HandPhase = Empty | Partial | Full | ActedUpon
     deriving (Eq, Show)

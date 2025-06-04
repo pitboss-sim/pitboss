@@ -1,12 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Orchestration.DeltaGenSpec (spec) where
+module Pitboss.Orchestration.DeltaGenSpec where
 
 import Control.Monad.Reader
 import Pitboss.Causality
-import Pitboss.Causality.Entity.Witnessable
-import Pitboss.Simulation.Engine.DeltaGen
-import Pitboss.Simulation.Event
+import Pitboss.Simulation
 import Pitboss.TestHelpers
 import Test.Hspec
 

@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Integration.TimelineSpec (spec) where
+module Pitboss.Integration.TimelineSpec where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Blackjack

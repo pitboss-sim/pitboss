@@ -3,21 +3,15 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pitboss.Integration.BoutFlowSpec (spec) where
+module Pitboss.Integration.BoutFlowSpec where
 
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
-import Data.Word (Word64)
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.Simulation.Engine.DeltaGen
-import Pitboss.Simulation.Event
-import Pitboss.Simulation.Types
+import Pitboss.Simulation
 import Test.Hspec
-
-unTick :: Tick -> Word64
-unTick (Tick w) = w
 
 mkInitialTrace :: Tick -> Trace
 mkInitialTrace startTick =

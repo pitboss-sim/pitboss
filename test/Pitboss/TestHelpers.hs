@@ -8,7 +8,7 @@ import Pitboss.Blackjack
 import Pitboss.Blackjack.Strategy.Chart
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.Simulation.Agents.Types
+import Pitboss.Simulation
 
 loadCanonicalStrategy :: IO StrategyChart
 loadCanonicalStrategy = handle handleError $ do

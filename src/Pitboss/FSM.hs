@@ -18,6 +18,7 @@ module Pitboss.FSM (
     module Pitboss.FSM.Table,
 
     -- * Common Types
+    module Pitboss.FSM.Transitionable,
     module Pitboss.FSM.Types,
 ) where
 
@@ -31,4 +32,5 @@ import Pitboss.FSM.Player.Hand
 import Pitboss.FSM.Player.Spot
 import Pitboss.FSM.Player.Table
 import Pitboss.FSM.Table
+import Pitboss.FSM.Transitionable
 import Pitboss.FSM.Types

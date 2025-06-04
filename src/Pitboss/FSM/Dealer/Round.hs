@@ -21,11 +21,17 @@ import Pitboss.FSM.Dealer.Round.ENHC
 import Pitboss.FSM.Dealer.Round.Peek
 import Pitboss.FSM.Dealer.Round.Phase
 import Pitboss.FSM.Player.Hand
+import Pitboss.FSM.Transitionable
 import Pitboss.FSM.Types
 
 data DealerRoundFSM
     = PeekDealerRound SomePeekFSM
     | ENHCDealerRound SomeENHCFSM
+
+instance Transitionable DealerRoundFSM where
+    transitionType = \case
+        PeekDealerRound f -> transitionType f
+        ENHCDealerRound f -> transitionType f
 
 mkENHCDealerRound :: ENHCFSM p -> DealerRoundFSM
 mkENHCDealerRound = ENHCDealerRound . SomeENHCFSM

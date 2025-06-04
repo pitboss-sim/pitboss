@@ -1,11 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Pitboss.FSM.Bout where
 
 import Data.Aeson (FromJSON (..), ToJSON (..), Value (..), object, withObject, (.:), (.=))
+import Pitboss.FSM.Transitionable
 
 data BoutPhase
     = BAwaitingFirstCard
@@ -15,17 +17,6 @@ data BoutPhase
     | BSettlement
     | BDone
     deriving (Eq, Show)
-
-data BoutFSM (p :: BoutPhase) where
-    BAwaitingFirstCardFSM :: BoutFSM 'BAwaitingFirstCard
-    BAwaitingSecondCardFSM :: BoutFSM 'BAwaitingSecondCard
-    BPlayerTurnFSM :: BoutFSM 'BPlayerTurn
-    BDealerTurnFSM :: BoutFSM 'BDealerTurn
-    BSettlementFSM :: BoutFSM 'BSettlement
-    BDoneFSM :: BoutFSM 'BDone
-
-deriving instance Show (BoutFSM p)
-deriving instance Eq (BoutFSM p)
 
 data SomeBoutFSM = forall p. SomeBoutFSM (BoutFSM p)
 
@@ -62,6 +53,29 @@ instance FromJSON SomeBoutFSM where
             "Settlement" -> pure $ SomeBoutFSM BSettlementFSM
             "Done" -> pure $ SomeBoutFSM BDoneFSM
             _ -> fail $ "Unknown BoutFSM tag: " ++ tag
+
+instance Transitionable SomeBoutFSM where
+    transitionType (SomeBoutFSM fsm) = transitionType fsm
+
+data BoutFSM (p :: BoutPhase) where
+    BAwaitingFirstCardFSM :: BoutFSM 'BAwaitingFirstCard
+    BAwaitingSecondCardFSM :: BoutFSM 'BAwaitingSecondCard
+    BPlayerTurnFSM :: BoutFSM 'BPlayerTurn
+    BDealerTurnFSM :: BoutFSM 'BDealerTurn
+    BSettlementFSM :: BoutFSM 'BSettlement
+    BDoneFSM :: BoutFSM 'BDone
+
+deriving instance Show (BoutFSM p)
+deriving instance Eq (BoutFSM p)
+
+instance Transitionable (BoutFSM p) where
+    transitionType = \case
+        BAwaitingFirstCardFSM -> AwaitInput
+        BAwaitingSecondCardFSM -> AwaitInput
+        BPlayerTurnFSM -> AwaitInput
+        BDealerTurnFSM -> AutoAdvance
+        BSettlementFSM -> AutoAdvance
+        BDoneFSM -> TerminalPhase
 
 type family ValidBoutTransition (from :: BoutPhase) (to :: BoutPhase) :: Bool where
     ValidBoutTransition 'BAwaitingFirstCard 'BAwaitingSecondCard = 'True

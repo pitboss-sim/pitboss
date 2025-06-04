@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -25,6 +26,7 @@ where
 
 import Data.Aeson
 import Pitboss.Blackjack
+import Pitboss.FSM.Transitionable
 import Pitboss.FSM.Types
 
 data PeekPhase
@@ -60,6 +62,9 @@ instance Eq SomePeekFSM where
 
 instance Show SomePeekFSM where
     show (SomePeekFSM fsm) = show fsm
+
+instance Transitionable SomePeekFSM where
+    transitionType (SomePeekFSM fsm) = transitionType fsm
 
 instance ToJSON SomePeekFSM where
     toJSON (SomePeekFSM fsm) = case fsm of
@@ -109,6 +114,21 @@ data PeekFSM (p :: PeekPhase) where
 
 deriving instance Eq (PeekFSM p)
 deriving instance Show (PeekFSM p)
+
+instance Transitionable (PeekFSM p) where
+    transitionType = \case
+        PeekAwaitingFSM -> AwaitInput
+        PeekBetsFSM -> AwaitInput
+        PeekDealFSM -> AutoAdvance
+        PeekEarlySurrenderFSM -> AwaitInput
+        PeekPeekFSM -> AwaitInput
+        PeekInsuranceDecisionFSM -> AwaitInput
+        PeekInsuranceSettledFSM -> AutoAdvance
+        PeekPlayersFSM -> AwaitInput
+        PeekDealingFSM -> AutoAdvance
+        PeekSettleFSM -> AutoAdvance
+        PeekCompleteFSM -> TerminalPhase
+        PeekInterruptedFSM _ -> AwaitInput
 
 type family ValidPeekTransition (from :: PeekPhase) (to :: PeekPhase) :: Bool where
     ValidPeekTransition 'PeekAwaiting 'PeekBets = 'True

@@ -9,6 +9,7 @@ module Pitboss.FSM.Player.Spot where
 import Data.Aeson.Types
 import Data.Text qualified as T
 import GHC.Generics (Generic)
+import Pitboss.FSM.Transitionable
 import Pitboss.FSM.Types
 
 data PlayerSpotPhase
@@ -39,17 +40,6 @@ instance FromJSON PlayerSpotPhase where
             _ -> fail $ "Unknown tag in PlayerSpotPhase object: " ++ T.unpack tag
 
 data SomePlayerSpotFSM = forall p. SomePlayerSpotFSM (PlayerSpotFSM p)
-
-data PlayerSpotFSM (p :: PlayerSpotPhase) where
-    PSIdleFSM :: PlayerSpotFSM 'PSIdle
-    PSEngagedFSM :: PlayerSpotFSM 'PSEngaged
-    PSWaitingForHandsFSM :: PlayerSpotFSM 'PSWaitingForHands
-    PSResolvedFSM :: PlayerSpotFSM 'PSResolved
-    PSInterruptedFSM :: InterruptReason -> PlayerSpotFSM ('PSInterrupted r)
-
-deriving instance Show (PlayerSpotFSM p)
-
-deriving instance Eq (PlayerSpotFSM p)
 
 instance Show SomePlayerSpotFSM where
     show (SomePlayerSpotFSM fsm) = show fsm
@@ -87,6 +77,27 @@ instance FromJSON SomePlayerSpotFSM where
                 reason <- obj .: "reason"
                 pure $ SomePlayerSpotFSM (PSInterruptedFSM reason)
             other -> fail $ "Unknown tag for SomePlayerSpotFSM: " ++ T.unpack other
+
+instance Transitionable SomePlayerSpotFSM where
+    transitionType (SomePlayerSpotFSM fsm) = transitionType fsm
+
+data PlayerSpotFSM (p :: PlayerSpotPhase) where
+    PSIdleFSM :: PlayerSpotFSM 'PSIdle
+    PSEngagedFSM :: PlayerSpotFSM 'PSEngaged
+    PSWaitingForHandsFSM :: PlayerSpotFSM 'PSWaitingForHands
+    PSResolvedFSM :: PlayerSpotFSM 'PSResolved
+    PSInterruptedFSM :: InterruptReason -> PlayerSpotFSM ('PSInterrupted r)
+
+deriving instance Show (PlayerSpotFSM p)
+deriving instance Eq (PlayerSpotFSM p)
+
+instance Transitionable (PlayerSpotFSM p) where
+    transitionType = \case
+        PSIdleFSM -> AwaitInput
+        PSEngagedFSM -> AwaitInput
+        PSWaitingForHandsFSM -> AwaitInput
+        PSResolvedFSM -> TerminalPhase
+        PSInterruptedFSM _ -> AwaitInput
 
 type family ValidPlayerSpotTransition (from :: PlayerSpotPhase) (to :: PlayerSpotPhase) :: Bool where
     ValidPlayerSpotTransition 'PSIdle 'PSEngaged = 'True

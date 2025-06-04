@@ -39,8 +39,8 @@ library
                       Pitboss.Blackjack.Rules.Table
                       Pitboss.Blackjack.Types.Core
                       Pitboss.Causality
-                      Pitboss.Causality.Delta.Instances.Incremental
-                      Pitboss.Causality.Delta.Instances.Reversible
+                      Pitboss.Causality.Delta.Incremental
+                      Pitboss.Causality.Delta.Reversible
                       Pitboss.Causality.Delta.Types
                       Pitboss.Causality.Entity.Decomposable
                       Pitboss.Causality.Entity.Lenses

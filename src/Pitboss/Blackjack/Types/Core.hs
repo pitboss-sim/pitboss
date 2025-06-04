@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Blackjack.Materia.Types.Core where
+module Pitboss.Blackjack.Types.Core where
 
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import GHC.Generics (Generic)

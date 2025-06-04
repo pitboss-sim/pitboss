@@ -2,7 +2,7 @@
 
 module Pitboss.Blackjack.Materia.Instances.Witnessable where
 
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 class Witnessable (k :: HandKind) where
     witness :: Hand k -> HandKindWitness k

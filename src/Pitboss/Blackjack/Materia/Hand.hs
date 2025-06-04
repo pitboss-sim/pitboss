@@ -8,8 +8,8 @@ module Pitboss.Blackjack.Materia.Hand where
 import Control.Monad (guard)
 import Pitboss.Blackjack.Materia.Instances.Witnessable
 import Pitboss.Blackjack.Materia.Types
-import Pitboss.Blackjack.Materia.Types.Core
 import Pitboss.Blackjack.Offering.Materia
+import Pitboss.Blackjack.Types.Core
 
 mkValidatedHand :: Materia -> [Card] -> Maybe SomeHand
 mkValidatedHand matter cards = do

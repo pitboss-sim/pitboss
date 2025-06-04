@@ -3,7 +3,7 @@ module Pitboss.Blackjack.BasicStrategy.Chart.Validate where
 import Data.Map.Strict (toList)
 import Pitboss.Blackjack.BasicStrategy.Chart.Error
 import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 validateStrategyChart :: [ChartEntry] -> [(HandKind, Maybe Int, Rank)]
 validateStrategyChart =

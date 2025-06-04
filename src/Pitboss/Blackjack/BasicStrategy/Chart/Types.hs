@@ -5,7 +5,7 @@ module Pitboss.Blackjack.BasicStrategy.Chart.Types where
 import Data.Aeson
 import Data.Map.Strict
 import GHC.Generics (Generic)
-import Pitboss.Blackjack.Materia.Types.Core
+import Pitboss.Blackjack.Types.Core
 
 data HandPrefix
     = PA

@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE LambdaCase #-}
 
-module Pitboss.Simulation.Agents.Archetype.Player.Superstitious where
+module Pitboss.Simulation.Agents.Player.Superstitious where
 
 import Control.Monad.State
 import Pitboss.Blackjack

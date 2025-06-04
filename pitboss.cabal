@@ -74,14 +74,14 @@ library
                       Pitboss.FSM.Table
                       Pitboss.FSM.Transitionable
                       Pitboss.FSM.Types
-                      Pitboss.Simulation.Agents.Archetype.Dealer.Rules
-                      Pitboss.Simulation.Agents.Archetype.Player.Advantage
-                      Pitboss.Simulation.Agents.Archetype.Player.BasicStrategy
-                      Pitboss.Simulation.Agents.Archetype.Player.Perfect
-                      Pitboss.Simulation.Agents.Archetype.Player.Superstitious
+                      Pitboss.Simulation.Agents.Dealer
                       Pitboss.Simulation.Agents.Intent.Generate
                       Pitboss.Simulation.Agents.Intent.Instances.Validateable
                       Pitboss.Simulation.Agents.Intent.Types
+                      Pitboss.Simulation.Agents.Player.Advantage
+                      Pitboss.Simulation.Agents.Player.Basic
+                      Pitboss.Simulation.Agents.Player.Perfect
+                      Pitboss.Simulation.Agents.Player.Superstitious
                       Pitboss.Simulation.Agents.Types
                       Pitboss.Simulation.Engine.DeltaGen
                       Pitboss.Simulation.Engine.Runtime

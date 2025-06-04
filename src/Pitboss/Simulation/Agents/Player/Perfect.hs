@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Simulation.Agents.Archetype.Player.Perfect where
+module Pitboss.Simulation.Agents.Player.Perfect where
 
 import Control.Monad.State
 import Pitboss.Blackjack

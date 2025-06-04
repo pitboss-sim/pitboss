@@ -1,6 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Simulation.Agents.Archetype.Player.BasicStrategy where
+module Pitboss.Simulation.Agents.Player.Basic where
 
 import Control.Lens
 import Control.Monad.State

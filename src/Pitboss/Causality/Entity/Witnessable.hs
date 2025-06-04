@@ -9,28 +9,6 @@ import Pitboss.Causality.Types.Core
 class Witnessable (k :: EntityKind) where
     witness :: EntityState k -> EntityKindWitness k
 
-data EntityKindWitness (k :: EntityKind) where
-    BoutWitness :: EntityKindWitness 'Bout
-    PlayerWitness :: EntityKindWitness 'Player
-    DealerWitness :: EntityKindWitness 'Dealer
-    PlayerHandWitness :: EntityKindWitness 'PlayerHand
-    DealerHandWitness :: EntityKindWitness 'DealerHand
-    PlayerSpotWitness :: EntityKindWitness 'PlayerSpot
-    DealerRoundWitness :: EntityKindWitness 'DealerRound
-    TableWitness :: EntityKindWitness 'Table
-    TableShoeWitness :: EntityKindWitness 'TableShoe
-
-instance Show (EntityKindWitness k) where
-    show BoutWitness = "BoutWitness"
-    show PlayerWitness = "PlayerWitness"
-    show DealerWitness = "DealerWitness"
-    show PlayerHandWitness = "PlayerHandWitness"
-    show DealerHandWitness = "DealerHandWitness"
-    show PlayerSpotWitness = "PlayerSpotWitness"
-    show DealerRoundWitness = "DealerRoundWitness"
-    show TableWitness = "TableWitness"
-    show TableShoeWitness = "TableShoeWitness"
-
 instance Witnessable 'Bout where
     witness _ = BoutWitness
 

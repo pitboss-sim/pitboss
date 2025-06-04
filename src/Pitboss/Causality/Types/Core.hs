@@ -6,30 +6,7 @@
 
 {-# HLINT ignore "Use newtype instead of data" #-}
 
-module Pitboss.Causality.Types.Core (
-    IntentKind (..),
-    HandTarget (..),
-    EntityKind (..),
-    EntityStatePart (..),
-    EntityId (..),
-    Uid (..),
-    UidPrefix,
-    EntityRef (..),
-    Tick (..),
-    IntentType (..),
-    OriginatingEntity (..),
-    CardIx,
-    CardState (..),
-    PlayerSpotIx (..),
-    PlayerSpotHandIx (..),
-    uidTick,
-    uidEntityId,
-    entityRefTick,
-    entityRefId,
-    generateUid,
-    displayUid,
-    parseDisplayUid,
-) where
+module Pitboss.Causality.Types.Core where
 
 import Data.Aeson (FromJSON (..), FromJSONKey, ToJSON (..), ToJSONKey (..), withText)
 import Data.Bits (Bits ((.|.)), shiftL)
@@ -45,6 +22,28 @@ import GHC.TypeLits (KnownSymbol, Symbol, symbolVal)
 import Numeric (showIntAtBase)
 import Pitboss.Causality.Types.FiniteMap
 import System.Random (Random (..), RandomGen)
+
+data EntityKindWitness (k :: EntityKind) where
+    BoutWitness :: EntityKindWitness 'Bout
+    PlayerWitness :: EntityKindWitness 'Player
+    DealerWitness :: EntityKindWitness 'Dealer
+    PlayerHandWitness :: EntityKindWitness 'PlayerHand
+    DealerHandWitness :: EntityKindWitness 'DealerHand
+    PlayerSpotWitness :: EntityKindWitness 'PlayerSpot
+    DealerRoundWitness :: EntityKindWitness 'DealerRound
+    TableWitness :: EntityKindWitness 'Table
+    TableShoeWitness :: EntityKindWitness 'TableShoe
+
+instance Show (EntityKindWitness k) where
+    show BoutWitness = "BoutWitness"
+    show PlayerWitness = "PlayerWitness"
+    show DealerWitness = "DealerWitness"
+    show PlayerHandWitness = "PlayerHandWitness"
+    show DealerHandWitness = "DealerHandWitness"
+    show PlayerSpotWitness = "PlayerSpotWitness"
+    show DealerRoundWitness = "DealerRoundWitness"
+    show TableWitness = "TableWitness"
+    show TableShoeWitness = "TableShoeWitness"
 
 data EntityKind
     = Intent

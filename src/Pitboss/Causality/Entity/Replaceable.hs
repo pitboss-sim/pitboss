@@ -4,11 +4,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 
-module Pitboss.Causality.Entity.Replaceable (
-    ReplaceableAttrs (..),
-    ReplaceableModes (..),
-    ReplaceableRels (..),
-) where
+module Pitboss.Causality.Entity.Replaceable where
 
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Types.Core

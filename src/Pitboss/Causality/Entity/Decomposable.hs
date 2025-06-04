@@ -1,9 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.Causality.Entity.Decomposable (
-    Decomposable (..),
-) where
+module Pitboss.Causality.Entity.Decomposable where
 
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Types.Core

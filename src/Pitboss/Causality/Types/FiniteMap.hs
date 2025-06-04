@@ -3,21 +3,7 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-module Pitboss.Causality.Types.FiniteMap (
-    FiniteMap (..),
-    insertFiniteMap,
-    lookupFiniteMap,
-    keysFiniteMap,
-    toListFiniteMap,
-    mapFiniteMapWithKey,
-    singletonFiniteMap,
-    BoundedEnum,
-    universe,
-    Occupancy (..),
-    isPresent,
-    isAbsent,
-)
-where
+module Pitboss.Causality.Types.FiniteMap where
 
 import Control.Lens (At (..), Index, IxValue, Ixed (..))
 import Data.Aeson

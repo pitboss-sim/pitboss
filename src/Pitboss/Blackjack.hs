@@ -10,21 +10,13 @@ module Pitboss.Blackjack (
     module Pitboss.Blackjack.Types.Core,
 
     -- * Deck Operations
-
-    -- | Only the most common deck operations are re-exported.
-    -- Import "Pitboss.Blackjack.Materia.Deck" for full API.
-    Deck,
-    mkDeck,
-    drawCard,
-    shuffle,
-    fullDeck,
+    module Pitboss.Blackjack.Deck,
 
     -- * Game Rules and Offerings
     module Pitboss.Blackjack.Rules,
 
     -- * Well-known Configurations
-    vegas6,
-    downtownSingleDeck,
+    module Pitboss.Blackjack.WellKnown,
 
     -- * Actions and Events
     module Pitboss.Blackjack.Actions,
@@ -38,13 +30,9 @@ module Pitboss.Blackjack (
 
 import Pitboss.Blackjack.Types
 import Pitboss.Blackjack.Types.Core
-
-import Pitboss.Blackjack.Deck (Deck, drawCard, fullDeck, mkDeck, shuffle)
-
+import Pitboss.Blackjack.Deck
 import Pitboss.Blackjack.Rules
-
-import Pitboss.Blackjack.WellKnown (downtownSingleDeck, vegas6)
-
+import Pitboss.Blackjack.WellKnown
 import Pitboss.Blackjack.Actions
 import Pitboss.Blackjack.Outcomes
 import Pitboss.Blackjack.Play

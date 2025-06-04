@@ -1,11 +1,4 @@
-module Pitboss.Blackjack.Rules.Offering (
-    Offering (..),
-    DeckCount (..),
-    Dealt (..),
-    Materia (..),
-    mkOffering,
-    defaultDealt,
-) where
+module Pitboss.Blackjack.Rules.Offering where
 
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)

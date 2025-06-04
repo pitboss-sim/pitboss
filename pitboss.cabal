@@ -42,11 +42,11 @@ library
                       Pitboss.Causality.Delta.Instances.Incremental
                       Pitboss.Causality.Delta.Instances.Reversible
                       Pitboss.Causality.Delta.Types
-                      Pitboss.Causality.Entity.Instances.Decomposable
-                      Pitboss.Causality.Entity.Instances.Replaceable
-                      Pitboss.Causality.Entity.Instances.Witnessable
+                      Pitboss.Causality.Entity.Decomposable
                       Pitboss.Causality.Entity.Lenses
+                      Pitboss.Causality.Entity.Replaceable
                       Pitboss.Causality.Entity.Types
+                      Pitboss.Causality.Entity.Witnessable
                       Pitboss.Causality.Registry
                       Pitboss.Causality.TickCache
                       Pitboss.Causality.Timeline

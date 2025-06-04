@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.Causality.Entity.Instances.Decomposable (
+module Pitboss.Causality.Entity.Decomposable (
     Decomposable (..),
 ) where
 

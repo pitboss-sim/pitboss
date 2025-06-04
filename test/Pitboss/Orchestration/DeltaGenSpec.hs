@@ -4,7 +4,7 @@ module Pitboss.Orchestration.DeltaGenSpec (spec) where
 
 import Control.Monad.Reader
 import Pitboss.Causality
-import Pitboss.Causality.Entity.Instances.Witnessable
+import Pitboss.Causality.Entity.Witnessable
 import Pitboss.Simulation.Engine.DeltaGen
 import Pitboss.Simulation.Event
 import Pitboss.TestHelpers

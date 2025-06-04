@@ -7,7 +7,7 @@ module Pitboss.Causality.Timeline.Query where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Data.Word (Word64)
-import Pitboss.Causality.Delta.Instances.Incremental
+import Pitboss.Causality.Delta.Incremental
 import Pitboss.Causality.Delta.Types
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Registry

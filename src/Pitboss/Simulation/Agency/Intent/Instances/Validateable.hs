@@ -7,7 +7,6 @@ module Pitboss.Simulation.Agency.Intent.Instances.Validateable where
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
-import Pitboss.FSM.Instances.Transitionable
 import Pitboss.Simulation.Agency.Intent.Types
 
 class Validateable (k :: IntentKind) where

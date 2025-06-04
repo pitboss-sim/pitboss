@@ -1,14 +1,13 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.Blackjack.BasicStrategy.Chart.Interpret where
+module Pitboss.Blackjack.Strategy.Chart.Interpret where
 
 import Data.List (find)
 import Data.Map.Strict qualified as Map
 import Pitboss.Blackjack
-import Pitboss.Blackjack.BasicStrategy.Chart.Types
-import Pitboss.Blackjack.BasicStrategy.Types
-import Pitboss.Blackjack.Materia.Instances.Witnessable
+import Pitboss.Blackjack.Strategy.Chart.Types
+import Pitboss.Blackjack.Strategy.Types
 
 lookupDecisionTyped :: StrategyChart -> SomeHand -> Rank -> Offering -> Maybe Decision
 lookupDecisionTyped chart hand upcard offering = do

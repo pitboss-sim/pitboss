@@ -5,8 +5,8 @@ module Pitboss.Simulation.Agency.Archetype.Player.Superstitious where
 
 import Control.Monad.State
 import Pitboss.Blackjack
-import Pitboss.Blackjack.BasicStrategy.Chart
-import Pitboss.Blackjack.BasicStrategy.Types
+import Pitboss.Blackjack.Strategy.Chart
+import Pitboss.Blackjack.Strategy.Types
 import Pitboss.Simulation.Agency.Archetype.Types
 import Pitboss.Simulation.Agency.Types
 import System.Random

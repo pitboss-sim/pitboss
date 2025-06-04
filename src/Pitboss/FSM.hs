@@ -4,14 +4,14 @@ This module re-exports all FSM modules for convenient access.
 -}
 module Pitboss.FSM (
     -- * Player State Machines
-    module Pitboss.FSM.PlayerHand,
-    module Pitboss.FSM.PlayerSpot,
-    module Pitboss.FSM.PlayerTable,
+    module Pitboss.FSM.Player.Hand,
+    module Pitboss.FSM.Player.Spot,
+    module Pitboss.FSM.Player.Table,
 
     -- * Dealer State Machines
-    module Pitboss.FSM.DealerHand,
-    module Pitboss.FSM.DealerRound,
-    module Pitboss.FSM.DealerTable,
+    module Pitboss.FSM.Dealer.Hand,
+    module Pitboss.FSM.Dealer.Round,
+    module Pitboss.FSM.Dealer.Table,
 
     -- * Game State Machines
     module Pitboss.FSM.Bout,
@@ -24,11 +24,11 @@ module Pitboss.FSM (
 -- Re-export entire modules
 
 import Pitboss.FSM.Bout
-import Pitboss.FSM.DealerHand
-import Pitboss.FSM.DealerRound
-import Pitboss.FSM.DealerTable
-import Pitboss.FSM.PlayerHand
-import Pitboss.FSM.PlayerSpot
-import Pitboss.FSM.PlayerTable
+import Pitboss.FSM.Dealer.Hand
+import Pitboss.FSM.Dealer.Round
+import Pitboss.FSM.Dealer.Table
+import Pitboss.FSM.Player.Hand
+import Pitboss.FSM.Player.Spot
+import Pitboss.FSM.Player.Table
 import Pitboss.FSM.Table
 import Pitboss.FSM.Types

@@ -2,7 +2,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.Simulation.Agents.Intent.Types where
+module Pitboss.Simulation.Intent.Types where
 
 import Pitboss.Blackjack
 import Pitboss.Causality

@@ -4,25 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.FSM.Dealer.Round.Peek (
-    SomePeekFSM (..),
-    PeekPhase (..),
-    PeekFSM (..),
-    beginPeek,
-    betsPlacedPeek,
-    dealCardsPeek,
-    earlySurrenderBlackjackPeek,
-    resolveEarlySurrenderPeek,
-    dealerBlackjackPeek,
-    dealerNoBlackjackPeek,
-    maybeEnterEarlySurrenderPeek,
-    insuranceDecidedPeek,
-    proceedToPlayersPeek,
-    finishPlayersPeek,
-    finishDealerPeek,
-    resolvePayoutsPeek,
-)
-where
+module Pitboss.FSM.Dealer.Round.Peek where
 
 import Data.Aeson
 import Pitboss.Blackjack

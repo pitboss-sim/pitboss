@@ -4,20 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Pitboss.FSM.Dealer.Round.ENHC (
-    SomeENHCFSM (..),
-    ENHCPhase (..),
-    ENHCFSM (..),
-    beginENHC,
-    betsPlacedENHC,
-    dealCardsENHC,
-    maybeEnterEarlySurrenderENHC,
-    insuranceDecidedENHC,
-    finishPlayersENHC,
-    finishDealerENHC,
-    resolvePayoutsENHC,
-)
-where
+module Pitboss.FSM.Dealer.Round.ENHC where
 
 import Data.Aeson
 import Pitboss.Blackjack

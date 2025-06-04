@@ -22,8 +22,6 @@ module Pitboss.FSM (
     module Pitboss.FSM.Types,
 ) where
 
--- Re-export entire modules
-
 import Pitboss.FSM.Bout
 import Pitboss.FSM.Dealer.Hand
 import Pitboss.FSM.Dealer.Round

@@ -10,10 +10,11 @@ data InterruptReason
     | Environment
     deriving (Eq, Show, Generic)
 
+instance ToJSON InterruptReason
+instance FromJSON InterruptReason
+
 data InsuranceOutcome = Lost | Paid | PaidEvenMoney
     deriving (Eq, Show, Generic)
 
-instance ToJSON InterruptReason
-instance FromJSON InterruptReason
 instance ToJSON InsuranceOutcome
 instance FromJSON InsuranceOutcome

@@ -28,9 +28,10 @@ instance Validateable 'IPlayerHit where
 
         checkHandNotBusted :: IntentCtx 'IPlayerHit -> Either String ()
         checkHandNotBusted ctx' =
-            if not (isBusted (phICtxPlayerHand ctx'))
-                then Right ()
-                else Left "Cannot hit on busted hand"
+            case phICtxPlayerHand ctx' of
+                SomeHand hand -> case witness hand of
+                    BustWitness -> Left "Cannot hit on busted hand"
+                    _ -> Right ()
 
         checkCanMakeDecision :: IntentCtx 'IPlayerHit -> Either String ()
         checkCanMakeDecision ctx' = case phICtxPlayerHandFSM ctx' of
@@ -64,9 +65,10 @@ instance Validateable 'IPlayerStand where
 
         checkHandNotBusted :: IntentCtx 'IPlayerStand -> Either String ()
         checkHandNotBusted ctx' =
-            if not (isBusted (psICtxPlayerHand ctx'))
-                then Right ()
-                else Left "Cannot stand on busted hand"
+            case psICtxPlayerHand ctx' of
+                SomeHand hand -> case witness hand of
+                    BustWitness -> Left "Cannot stand on busted hand"
+                    _ -> Right ()
 
         checkCanMakeDecision :: IntentCtx 'IPlayerStand -> Either String ()
         checkCanMakeDecision ctx' = case psICtxPlayerHandFSM ctx' of

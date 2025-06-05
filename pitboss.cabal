@@ -14,7 +14,7 @@ extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common warnings
-    ghc-options: -Wall
+    ghc-options:      -Wall -fhpc
 
 library
     import:           warnings
@@ -105,7 +105,7 @@ library
     default-language: GHC2021
 
 executable pitboss
-    import:           warnings
+    ghc-options:      -fhpc
     main-is:          Main.hs
     -- other-modules:
     -- other-extensions:
@@ -117,12 +117,13 @@ executable pitboss
     default-language: GHC2021
 
 test-suite pitboss-test
-    import:           warnings
+    ghc-options:      -fhpc
     default-language: GHC2021
     other-modules:    Pitboss.TestHelpers
                       Pitboss.Integration.BoutFlowSpec
                       Pitboss.Integration.TimelineSpec
                       Pitboss.Orchestration.DeltaGenSpec
+                      Pitboss.Simulation.IntentToEventSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
@@ -134,6 +135,7 @@ test-suite pitboss-test
         mtl,
         hspec,
         pitboss,
+        random,
         text,
     build-tool-depends:
         hspec-discover:hspec-discover

@@ -6,7 +6,7 @@
 
 attic
 coverage
-dist-newstyle
+dist-*
 
 *.tix
 

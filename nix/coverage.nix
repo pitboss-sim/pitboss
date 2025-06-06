@@ -1,6 +1,7 @@
 { pkgs }:
 pkgs.writeShellScriptBin "coverage" ''
   time cabal test \
+    --builddir=dist-coverage \
     --enable-coverage \
     --enable-executable-dynamic \
     --disable-library-vanilla \

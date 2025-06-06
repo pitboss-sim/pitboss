@@ -1,11 +1,11 @@
 {-# LANGUAGE DataKinds #-}
 
-module Pitboss.Orchestration.DeltaGenSpec where
+module Spec.Pitboss.Orchestration.DeltaGenSpec where
 
 import Control.Monad.Reader
 import Pitboss.Causality
 import Pitboss.Simulation
-import Pitboss.TestHelpers
+import Spec.Pitboss.Helpers
 import Test.Hspec
 
 mkTestTrace :: Tick -> IO Trace

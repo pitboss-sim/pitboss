@@ -28,8 +28,8 @@ instance Reversible (Delta 'Intent (PartialUpdate 'Modes)) where
     invert _ = Left (CustomReason "Intent modes have no reversible operations")
 
 instance Reversible (Delta 'Intent (PartialUpdate 'Rels)) where
-    invert (DIntentSetOriginatingEntity a b) = Right (DIntentSetOriginatingEntity b a)
-    invert (DIntentSetTargetBout a b) = Right (DIntentSetTargetBout b a)
+    invert (DIntentSetOriginatingEntity old new) = Right (DIntentSetOriginatingEntity new old)
+    invert (DIntentSetTargetBout old new) = Right (DIntentSetTargetBout new old)
 
 -- DBout
 instance Reversible (Delta 'Bout (PartialUpdate 'Attrs)) where
@@ -39,11 +39,11 @@ instance Reversible (Delta 'Bout (PartialUpdate 'Modes)) where
     invert (DBoutSetFSM old new) = Right (DBoutSetFSM new old)
 
 instance Reversible (Delta 'Bout (PartialUpdate 'Rels)) where
-    invert (DBoutSetPlayerHand a b) = Right (DBoutSetPlayerHand b a)
-    invert (DBoutSetDealerHand a b) = Right (DBoutSetDealerHand b a)
-    invert (DBoutSetTableShoe a b) = Right (DBoutSetTableShoe b a)
-    invert (DBoutSetTable a b) = Right (DBoutSetTable b a)
-    invert (DBoutSetDealerRound a b) = Right (DBoutSetDealerRound b a)
+    invert (DBoutSetPlayerHand old new) = Right (DBoutSetPlayerHand new old)
+    invert (DBoutSetDealerHand old new) = Right (DBoutSetDealerHand new old)
+    invert (DBoutSetTableShoe old new) = Right (DBoutSetTableShoe new old)
+    invert (DBoutSetTable old new) = Right (DBoutSetTable new old)
+    invert (DBoutSetDealerRound old new) = Right (DBoutSetDealerRound new old)
 
 -- DDealer
 instance Reversible (Delta 'Dealer (PartialUpdate 'Attrs)) where
@@ -55,9 +55,9 @@ instance Reversible (Delta 'Dealer (PartialUpdate 'Modes)) where
     invert (DDealerSetHandFSM old new) = Right (DDealerSetHandFSM new old)
 
 instance Reversible (Delta 'Dealer (PartialUpdate 'Rels)) where
-    invert (DDealerSetActiveTable a b) = Right (DDealerSetActiveTable b a)
-    invert (DDealerSetActiveRound a b) = Right (DDealerSetActiveRound b a)
-    invert (DDealerSetActiveHand a b) = Right (DDealerSetActiveHand b a)
+    invert (DDealerSetActiveTable old new) = Right (DDealerSetActiveTable new old)
+    invert (DDealerSetActiveRound old new) = Right (DDealerSetActiveRound new old)
+    invert (DDealerSetActiveHand old new) = Right (DDealerSetActiveHand new old)
 
 -- DDealerHand
 instance Reversible (Delta 'DealerHand (PartialUpdate 'Attrs)) where
@@ -67,8 +67,8 @@ instance Reversible (Delta 'DealerHand (PartialUpdate 'Modes)) where
     invert (DDealerHandSetFSM old new) = Right (DDealerHandSetFSM new old)
 
 instance Reversible (Delta 'DealerHand (PartialUpdate 'Rels)) where
-    invert (DDealerHandSetRound a b) = Right (DDealerHandSetRound b a)
-    invert (DDealerHandSetDealer a b) = Right (DDealerHandSetDealer b a)
+    invert (DDealerHandSetRound old new) = Right (DDealerHandSetRound new old)
+    invert (DDealerHandSetDealer old new) = Right (DDealerHandSetDealer new old)
 
 -- DDealerRound
 instance Reversible (Delta 'DealerRound (PartialUpdate 'Attrs)) where
@@ -78,7 +78,7 @@ instance Reversible (Delta 'DealerRound (PartialUpdate 'Modes)) where
     invert _ = Left (CustomReason "DealerRound modes have no reversible operations")
 
 instance Reversible (Delta 'DealerRound (PartialUpdate 'Rels)) where
-    invert (DDealerRoundSetTableShoe a b) = Right (DDealerRoundSetTableShoe b a)
+    invert (DDealerRoundSetTableShoe old new) = Right (DDealerRoundSetTableShoe new old)
 
 -- DPlayer
 instance Reversible (Delta 'Player (PartialUpdate 'Attrs)) where
@@ -86,9 +86,9 @@ instance Reversible (Delta 'Player (PartialUpdate 'Attrs)) where
     invert (DPlayerSetBankroll old new) = Right (DPlayerSetBankroll new old)
 
 instance Reversible (Delta 'Player (PartialUpdate 'Modes)) where
-    invert (DPlayerSetTable a b) = Right (DPlayerSetTable b a)
-    invert (DPlayerSetSpot a b) = Right (DPlayerSetSpot b a)
-    invert (DPlayerSetHand a b) = Right (DPlayerSetHand b a)
+    invert (DPlayerSetTable old new) = Right (DPlayerSetTable new old)
+    invert (DPlayerSetSpot old new) = Right (DPlayerSetSpot new old)
+    invert (DPlayerSetHand old new) = Right (DPlayerSetHand new old)
 
 instance Reversible (Delta 'Player (PartialUpdate 'Rels)) where
     invert _ = Left (CustomReason "Player relations have no reversible operations")
@@ -103,7 +103,7 @@ instance Reversible (Delta 'PlayerHand (PartialUpdate 'Modes)) where
     invert (DPlayerHandSetPlayerHandFSM old new) = Right (DPlayerHandSetPlayerHandFSM new old)
 
 instance Reversible (Delta 'PlayerHand (PartialUpdate 'Rels)) where
-    invert (DPlayerHandSetPlayerSpot a b) = Right (DPlayerHandSetPlayerSpot b a)
+    invert (DPlayerHandSetPlayerSpot old new) = Right (DPlayerHandSetPlayerSpot new old)
 
 -- DPlayerSpot
 instance Reversible (Delta 'PlayerSpot (PartialUpdate 'Attrs)) where
@@ -113,9 +113,9 @@ instance Reversible (Delta 'PlayerSpot (PartialUpdate 'Modes)) where
     invert (DPlayerSpotSetFSM old new) = Right (DPlayerSpotSetFSM new old)
 
 instance Reversible (Delta 'PlayerSpot (PartialUpdate 'Rels)) where
-    invert (DPlayerSpotSetPlayer a b) = Right (DPlayerSpotSetPlayer b a)
-    invert (DPlayerSpotSetRound a b) = Right (DPlayerSpotSetRound b a)
-    invert (DPlayerSpotSetHandOccupancy a b) = Right (DPlayerSpotSetHandOccupancy b a)
+    invert (DPlayerSpotSetPlayer old new) = Right (DPlayerSpotSetPlayer new old)
+    invert (DPlayerSpotSetRound old new) = Right (DPlayerSpotSetRound new old)
+    invert (DPlayerSpotSetHandOccupancy old new) = Right (DPlayerSpotSetHandOccupancy new old)
 
 -- DTable
 instance Reversible (Delta 'Table (PartialUpdate 'Attrs)) where
@@ -126,7 +126,7 @@ instance Reversible (Delta 'Table (PartialUpdate 'Modes)) where
     invert _ = Left (CustomReason "Table modes have no reversible operations")
 
 instance Reversible (Delta 'Table (PartialUpdate 'Rels)) where
-    invert (DTableSetDealer a b) = Right (DTableSetDealer b a)
+    invert (DTableSetDealer old new) = Right (DTableSetDealer new old)
 
 -- DTableShoe
 instance Reversible (Delta 'TableShoe (PartialUpdate 'Attrs)) where
@@ -137,4 +137,4 @@ instance Reversible (Delta 'TableShoe (PartialUpdate 'Modes)) where
     invert _ = Left (CustomReason "TableShoe modes have no reversible operations")
 
 instance Reversible (Delta 'TableShoe (PartialUpdate 'Rels)) where
-    invert (DTableShoeSetTable a b) = Right (DTableShoeSetTable b a)
+    invert (DTableShoeSetTable old new) = Right (DTableShoeSetTable new old)

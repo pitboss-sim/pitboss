@@ -112,9 +112,9 @@ instance Incremental DealerRels where
 instance Incremental DealerHandAttrs where
     type Applicable DealerHandAttrs = Delta 'DealerHand (PartialUpdate 'Attrs)
 
-    apply (DDealerHandSetHand _ newHand) attrs = attrs{_dhAttrsHand = newHand}
+    apply (DDealerHandSetHand new _) attrs = attrs{_dhAttrsHand = new}
 
-    describe (DDealerHandSetHand newHand oldHand) _ = "Set dealer hand: " ++ show oldHand ++ " → " ++ show newHand
+    describe (DDealerHandSetHand new old) _ = "Set dealer hand: " ++ show old ++ " → " ++ show new
 
 instance Incremental DealerHandModes where
     type Applicable DealerHandModes = Delta 'DealerHand (PartialUpdate 'Modes)
@@ -191,11 +191,11 @@ instance Incremental PlayerHandAttrs where
 
     apply (DPlayerHandSetPlayerHandIx new _) attrs = attrs{_phAttrsHandIx = new}
     apply (DPlayerHandSetSplitDepth new _) attrs = attrs{_phAttrsSplitDepth = new}
-    apply (DPlayerHandSetHand _ newHand) attrs = attrs{_phAttrsHand = newHand}
+    apply (DPlayerHandSetHand new _) attrs = attrs{_phAttrsHand = new}
 
     describe (DPlayerHandSetPlayerHandIx new old) _ = "Set player hand index: " ++ show old ++ " → " ++ show new
     describe (DPlayerHandSetSplitDepth new old) _ = "Set player hand split depth: " ++ show old ++ " → " ++ show new
-    describe (DPlayerHandSetHand newHand oldHand) _ = "Set player hand: " ++ show oldHand ++ " → " ++ show newHand
+    describe (DPlayerHandSetHand new old) _ = "Set player hand: " ++ show old ++ " → " ++ show new
 
 instance Incremental PlayerHandModes where
     type Applicable PlayerHandModes = Delta 'PlayerHand (PartialUpdate 'Modes)

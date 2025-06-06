@@ -39,6 +39,7 @@ library
                       Pitboss.Blackjack.Types
                       Pitboss.Blackjack.Types.Core
                       Pitboss.Blackjack.WellKnown
+                      Pitboss.FSM
                       Pitboss.FSM.Bout
                       Pitboss.FSM.Dealer.Hand
                       Pitboss.FSM.Dealer.Round

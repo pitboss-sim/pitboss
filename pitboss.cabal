@@ -54,6 +54,7 @@ library
                       Pitboss.Blackjack.Types.Offering
                       Pitboss.Blackjack.Types.Table
                       Pitboss.Blackjack.WellKnown
+                      Pitboss.FSM
                       Pitboss.FSM.Bout
                       Pitboss.FSM.Dealer
                       Pitboss.FSM.DealerHand

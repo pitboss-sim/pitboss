@@ -40,4 +40,3 @@ dealerUpcard :: SomeHand -> Maybe Card
 dealerUpcard (SomeHand hand) = case handCards hand of
     (card : _) -> Just card
     _ -> Nothing
-

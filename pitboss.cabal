@@ -24,6 +24,7 @@ library
                       Pitboss.Blackjack.Outcomes
                       Pitboss.Blackjack.Play
                       Pitboss.Blackjack.Rules
+                      Pitboss.Blackjack.Rules.Dealer
                       Pitboss.Blackjack.Rules.Game
                       Pitboss.Blackjack.Rules.Offering
                       Pitboss.Blackjack.Rules.Table

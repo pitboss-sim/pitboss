@@ -12,23 +12,12 @@ data DealerRequiredAction
     | MustDeal
     | MustSettle
 
-determineRequiredDealerAction :: GameContext -> SomeHand -> DealerRequiredAction
+determineRequiredDealerAction :: BoutContext -> SomeHand -> DealerRequiredAction
 determineRequiredDealerAction ctx dealerHand =
     let rules = gameRuleSet (_contextOffering ctx)
      in if dealerShouldHit rules dealerHand
             then MustHit
             else MustStand
-
-dealerShouldHit :: GameRuleSet -> SomeHand -> Bool
-dealerShouldHit ruleset (SomeHand hand) = case witness hand of
-    BlackjackWitness -> False
-    TwentyOneWitness -> False
-    BustWitness -> False
-    HardWitness -> handScore (SomeHand hand) < 17
-    SoftWitness ->
-        let score = handScore (SomeHand hand)
-         in score < 17 || (score == 17 && isH17 ruleset)
-    PairWitness -> handScore (SomeHand hand) < 17
 
 applyDealerArchetypeVariation :: SomeDealerArchetype -> DealerRequiredAction -> IO ()
 applyDealerArchetypeVariation = \case

@@ -8,19 +8,19 @@ import Pitboss.Blackjack
 import Pitboss.Simulation.Agents.Types
 import System.Random
 
-getAdvantageMove :: ArchetypeConfig 'Advantage -> ArchetypeState 'Advantage -> GameContext -> State StdGen Move
+getAdvantageMove :: ArchetypeConfig 'Advantage -> ArchetypeState 'Advantage -> BoutContext -> State StdGen Move
 getAdvantageMove config state' ctx = do
     let tc = round (asTrueCount state') :: Int
         baseMove = calculateBaseMove ctx
         deviatedMove = applyDeviations (acDeviationChart config) tc baseMove ctx
     applyCoverPlay (acBettingSpread config) deviatedMove ctx
 
-calculateBaseMove :: GameContext -> Move
+calculateBaseMove :: BoutContext -> Move
 calculateBaseMove ctx =
     let score = handScore (_contextPlayerHand ctx)
      in if score < 17 then Hit else Stand
 
-applyDeviations :: DeviationChart -> Int -> Move -> GameContext -> Move
+applyDeviations :: DeviationChart -> Int -> Move -> BoutContext -> Move
 applyDeviations (DeviationChart deviationMap) trueCount baseMove ctx =
     case Map.lookup trueCount deviationMap of
         Nothing -> baseMove
@@ -29,7 +29,7 @@ applyDeviations (DeviationChart deviationMap) trueCount baseMove ctx =
                 Nothing -> baseMove
                 Just deviation -> applyDeviation deviation baseMove
 
-findApplicableDeviation :: [Deviation] -> GameContext -> Maybe Deviation
+findApplicableDeviation :: [Deviation] -> BoutContext -> Maybe Deviation
 findApplicableDeviation deviations ctx =
     let playerTotal = handScore (_contextPlayerHand ctx)
      in listToMaybe [d | d <- deviations, devPlayerTotal d == playerTotal]
@@ -44,7 +44,7 @@ applyDeviation (Deviation _ _ action) _ =
         DevHitInsteadOfStand -> Hit
         DevDoubleInsteadOfHit -> Double
 
-applyCoverPlay :: BettingSpread -> Move -> GameContext -> State StdGen Move
+applyCoverPlay :: BettingSpread -> Move -> BoutContext -> State StdGen Move
 applyCoverPlay spread move _ = do
     case spread of
         FlatBetting -> pure move

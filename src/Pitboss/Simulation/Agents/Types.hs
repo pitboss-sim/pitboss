@@ -21,7 +21,7 @@ import GHC.Generics (Generic)
 import Pitboss.Blackjack
 import Pitboss.Blackjack.Strategy.Chart
 
-data GameContext = GameContext
+data BoutContext = BoutContext
     { _contextPlayerHand :: SomeHand
     , _contextDealerUpcard :: Card
     , _contextOffering :: Offering
@@ -33,10 +33,10 @@ data GameContext = GameContext
     }
     deriving (Eq, Show, Generic)
 
-makeLenses ''GameContext
+makeLenses ''BoutContext
 
-instance ToJSON GameContext
-instance FromJSON GameContext
+instance ToJSON BoutContext
+instance FromJSON BoutContext
 
 data PlayerArchetypeKind
     = BasicStrategy

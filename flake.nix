@@ -51,28 +51,28 @@
             haskell-language-server
             ;
 
+          test-coverage = pkgs.writeShellScriptBin "test-coverage" ''
+            #!${pkgs.bash}/bin/bash
+            cabal test --enable-coverage --test-option=--color 2>&1 | \
+              ${pkgs.gnused}/bin/sed -e '/Writing: /d' -e '/Generating coverage report/d'
+          '';
         in
         {
-          default =
-            let
-              coverage = pkgs.callPackage ./nix/coverage.nix { };
-            in
-            pkgs.mkShell {
-              buildInputs = [
-                cabal2nix
-                treefmt
-                claude-code
+          default = pkgs.mkShell {
+            buildInputs = [
+              cabal2nix
+              treefmt
+              claude-code
+              test-coverage
 
-                coverage
-
-                # from haskellPackages
-                ghc
-                cabal-fmt
-                cabal-install
-                ormolu
-                haskell-language-server
-              ];
-            };
+              # from haskellPackages
+              ghc
+              cabal-fmt
+              cabal-install
+              ormolu
+              haskell-language-server
+            ];
+          };
         }
       );
 

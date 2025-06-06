@@ -14,7 +14,7 @@ extra-doc-files:    CHANGELOG.md
 -- extra-source-files:
 
 common warnings
-    ghc-options:      -Wall -fhpc
+    ghc-options:      -Wall
 
 library
     import:           warnings
@@ -105,7 +105,6 @@ library
     default-language: GHC2021
 
 executable pitboss
-    ghc-options:      -fhpc
     main-is:          Main.hs
     -- other-modules:
     -- other-extensions:
@@ -117,7 +116,6 @@ executable pitboss
     default-language: GHC2021
 
 test-suite pitboss-test
-    ghc-options:      -fhpc
     default-language: GHC2021
     other-modules:    Pitboss.TestHelpers
                       Pitboss.Integration.BoutFlowSpec

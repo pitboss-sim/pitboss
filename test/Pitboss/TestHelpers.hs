@@ -78,7 +78,6 @@ mkTestDealer _dealerId name =
         { _dAttrs =
             DealerAttrs
                 { _dAttrsName = name
-                -- , _dAttrsArchetype = mkTestDealerArchetype
                 }
         , _dModes =
             DealerModes

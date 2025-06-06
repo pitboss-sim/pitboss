@@ -108,16 +108,15 @@ mkInitialTrace startTick =
                 , _tRels = TableRels (Just dealerId)
                 }
 
-        -- Create a shoe with a known sequence of cards
         shoeState =
             ETableShoe
                 { _tsAttrs =
                     TableShoeAttrs
-                        [ Card Ten Hearts -- Player first
-                        , Card Six Diamonds -- Dealer first
-                        , Card Seven Spades -- Player second
-                        , Card King Clubs -- Dealer second (hidden)
-                        , Card Four Hearts -- Player hit card
+                        [ Card Ten Hearts
+                        , Card Six Diamonds
+                        , Card Seven Spades
+                        , Card King Clubs
+                        , Card Four Hearts
                         ]
                         mempty
                 , _tsModes = TableShoeModes
@@ -249,25 +248,20 @@ spec = describe "Bout Flow Integration" $ do
             playerHandId = EntityId 400 :: EntityId 'PlayerHand
             dealerHandId = EntityId 500 :: EntityId 'DealerHand
 
-        -- Deal initial cards: Player gets 10-7 (17), Dealer gets 6-K (16)
         let state1 = runEvent (CardDealt (Card Ten Hearts) (ToPlayerHand playerHandId)) state0
             state2 = runEvent (CardDealt (Card Six Diamonds) (ToDealerHand dealerHandId)) state1
             state3 = runEvent (CardDealt (Card Seven Spades) (ToPlayerHand playerHandId)) state2
             state4 = runEvent (CardDealt (Card King Clubs) (ToDealerHand dealerHandId)) state3
 
-        -- Check player hand after dealing
         let playerHandAfterDeal = withSimCache state4 $ deref playerHandId
         case playerHandAfterDeal of
             Just hand -> do
-                -- Player should have hard 17
                 handScore (_phAttrsHand (_phAttrs hand)) `shouldBe` 17
                 _phFsm (_phModes hand) `shouldBe` SomePlayerHandFSM PHDecisionFSM
             Nothing -> expectationFailure "Player hand not found after dealing"
 
-        -- Player stands on 17 (correct basic strategy vs dealer 6)
         let state5 = runEvent (PlayerStood playerId playerHandId) state4
 
-        -- Verify player hand is resolved
         let playerHandAfterStand = withSimCache state5 $ deref playerHandId
         case playerHandAfterStand of
             Just hand ->
@@ -283,12 +277,10 @@ spec = describe "Bout Flow Integration" $ do
             playerHandId = EntityId 400 :: EntityId 'PlayerHand
             dealerHandId = EntityId 500 :: EntityId 'DealerHand
 
-        -- Deal blackjack to player: A-K
         let state1 = runEvent (CardDealt (Card Ace Hearts) (ToPlayerHand playerHandId)) state0
             state2 = runEvent (CardDealt (Card Nine Diamonds) (ToDealerHand dealerHandId)) state1
             state3 = runEvent (CardDealt (Card King Spades) (ToPlayerHand playerHandId)) state2
 
-        -- Check player has blackjack
         let playerHand = withSimCache state3 $ deref playerHandId
         case playerHand of
             Just hand -> do
@@ -303,15 +295,12 @@ spec = describe "Bout Flow Integration" $ do
             playerId = EntityId 100 :: EntityId 'Player
             playerHandId = EntityId 400 :: EntityId 'PlayerHand
 
-        -- Deal 10-6 to player
         let state1 = runEvent (CardDealt (Card Ten Hearts) (ToPlayerHand playerHandId)) state0
             state2 = runEvent (CardDealt (Card Six Spades) (ToPlayerHand playerHandId)) state1
 
-        -- Player hits and gets a King (busts with 26)
         let state3 = runEvent (PlayerHit playerId playerHandId) state2
             state4 = runEvent (CardDealt (Card King Clubs) (ToPlayerHand playerHandId)) state3
 
-        -- Check player busted
         let playerHand = withSimCache state4 $ deref playerHandId
         case playerHand of
             Just hand -> do

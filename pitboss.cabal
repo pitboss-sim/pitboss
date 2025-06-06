@@ -54,6 +54,34 @@ library
                       Pitboss.Blackjack.Types.Offering
                       Pitboss.Blackjack.Types.Table
                       Pitboss.Blackjack.WellKnown
+                      Pitboss.FSM.Bout
+                      Pitboss.FSM.Dealer
+                      Pitboss.FSM.DealerHand
+                      Pitboss.FSM.Player
+                      Pitboss.FSM.PlayerHand
+                      Pitboss.FSM.Round
+                      Pitboss.FSM.Round.AtDecisionPoint
+                      Pitboss.FSM.Round.ENHC
+                      Pitboss.FSM.Round.Peek
+                      Pitboss.FSM.Round.PhaseTag
+                      Pitboss.FSM.Table
+                      Pitboss.FSM.Transitionable
+                      Pitboss.FSM.Types
+                      Pitboss.FSM.Types.Bout
+                      Pitboss.FSM.Types.Core
+                      Pitboss.FSM.Types.Core.Bout
+                      Pitboss.FSM.Types.Core.Dealer
+                      Pitboss.FSM.Types.Core.DealerHand
+                      Pitboss.FSM.Types.Core.Player
+                      Pitboss.FSM.Types.Core.PlayerHand
+                      Pitboss.FSM.Types.Core.Round
+                      Pitboss.FSM.Types.Core.Table
+                      Pitboss.FSM.Types.Dealer
+                      Pitboss.FSM.Types.DealerHand
+                      Pitboss.FSM.Types.Player
+                      Pitboss.FSM.Types.PlayerHand
+                      Pitboss.FSM.Types.Round
+                      Pitboss.FSM.Types.Table
     -- other-modules:
     -- other-extensions:
     build-depends:    base,

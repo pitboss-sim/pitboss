@@ -5,6 +5,7 @@
 *.swp
 
 attic
+cabal.project.local
 coverage
 dist-*
 

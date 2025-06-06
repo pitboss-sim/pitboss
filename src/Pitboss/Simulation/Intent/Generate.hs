@@ -7,6 +7,7 @@ module Pitboss.Simulation.Intent.Generate where
 import Control.Monad.Reader
 import Control.Monad.State
 
+import Data.Maybe (fromJust)
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
@@ -17,7 +18,6 @@ import Pitboss.Simulation.Agents.Player.Superstitious
 import Pitboss.Simulation.Agents.Types
 import Pitboss.Simulation.Event
 import System.Random (StdGen)
-import Data.Maybe (fromJust)
 
 generatePlayerHandIntent ::
     SomePlayerArchetype ->

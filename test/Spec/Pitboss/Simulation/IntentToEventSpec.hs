@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Pitboss.Simulation.IntentToEventSpec where
+module Spec.Pitboss.Simulation.IntentToEventSpec where
 
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
@@ -12,7 +12,7 @@ import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
-import Pitboss.TestHelpers
+import Spec.Pitboss.Helpers
 
 spec :: Spec
 spec = describe "Intent to Event" $ do

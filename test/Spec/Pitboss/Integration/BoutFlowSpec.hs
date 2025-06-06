@@ -3,7 +3,7 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Pitboss.Integration.BoutFlowSpec where
+module Spec.Pitboss.Integration.BoutFlowSpec where
 
 import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
@@ -11,7 +11,7 @@ import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
-import Pitboss.TestHelpers
+import Spec.Pitboss.Helpers
 import Test.Hspec
 
 mkInitialTrace :: Tick -> Trace
@@ -145,68 +145,6 @@ mkInitialSimState =
             , simIntentLog = IntentLog IHM.empty
             , simTick = startTick
             }
-
-runEvent :: BlackjackEvent -> SimState -> SimState
-runEvent event state =
-    let tick = simTick state
-        Tick tickNum = tick
-        nextTick = Tick (tickNum + 1)
-
-        simEvent =
-            SimEvent
-                { eventId = unTick tick
-                , eventOccurred = event
-                , eventTimestamp = tick
-                , eventCausingIntent = Nothing
-                }
-
-        cache =
-            populateTickCache
-                (_bouts $ simTrace state)
-                (_players $ simTrace state)
-                (_playerHands $ simTrace state)
-                (_playerSpots $ simTrace state)
-                (_dealers $ simTrace state)
-                (_dealerHands $ simTrace state)
-                (_dealerRounds $ simTrace state)
-                (_tables $ simTrace state)
-                (_tableShoes $ simTrace state)
-                tick
-
-        traceOps =
-            withTickCache cache $
-                generateDeltas event (CausalHistory Nothing (Just $ EntityId $ eventId simEvent))
-
-        newTrace = foldl (flip $ \op' -> applyTraceOp op' tick) (simTrace state) traceOps
-
-        newEventLog =
-            EventLog $
-                IHM.insertWith
-                    (++)
-                    tick
-                    [simEvent]
-                    (eventLogEvents $ simEventLog state)
-     in state
-            { simTrace = newTrace
-            , simEventLog = newEventLog
-            , simTick = nextTick
-            }
-
-withSimCache :: SimState -> Reader TickCacheContext a -> a
-withSimCache state computation =
-    let cache =
-            populateTickCache
-                (_bouts $ simTrace state)
-                (_players $ simTrace state)
-                (_playerHands $ simTrace state)
-                (_playerSpots $ simTrace state)
-                (_dealers $ simTrace state)
-                (_dealerHands $ simTrace state)
-                (_dealerRounds $ simTrace state)
-                (_tables $ simTrace state)
-                (_tableShoes $ simTrace state)
-                (simTick state)
-     in withTickCache cache computation
 
 spec :: Spec
 spec = describe "Bout Flow Integration" $ do

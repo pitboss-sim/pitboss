@@ -117,11 +117,13 @@ executable pitboss
 
 test-suite pitboss-test
     default-language: GHC2021
-    other-modules:    Pitboss.TestHelpers
-                      Pitboss.Integration.BoutFlowSpec
-                      Pitboss.Integration.TimelineSpec
-                      Pitboss.Orchestration.DeltaGenSpec
-                      Pitboss.Simulation.IntentToEventSpec
+    other-modules:    Spec.Pitboss.Helpers
+                      Spec.Pitboss.Integration.BoutFlowSpec
+                      Spec.Pitboss.Integration.TimelineSpec
+                      Spec.Pitboss.Orchestration.DeltaGenSpec
+                      Spec.Pitboss.Simulation.DealerPlaySpec
+                      Spec.Pitboss.Simulation.DealerRulesSpec
+                      Spec.Pitboss.Simulation.IntentToEventSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test

@@ -17,6 +17,7 @@ import Pitboss.Simulation.Agents.Player.Superstitious
 import Pitboss.Simulation.Agents.Types
 import Pitboss.Simulation.Event
 import System.Random (StdGen)
+import Data.Maybe (fromJust)
 
 generatePlayerHandIntent ::
     SomePlayerArchetype ->
@@ -38,7 +39,7 @@ generatePlayerHandIntent archetype playerId handId gen = do
                         pure $ Just $ moveToEvent playerId handId move
             _ -> pure Nothing
 
-buildContext :: EntityState 'PlayerHand -> Reader TickCacheContext (Maybe GameContext)
+buildContext :: EntityState 'PlayerHand -> Reader TickCacheContext (Maybe BoutContext)
 buildContext hand = do
     let boutId = _phRelsBelongsToBout (_phRels hand)
     maybeBout <- deref boutId
@@ -54,19 +55,14 @@ buildContext hand = do
 
             case (maybeDealerHand, maybeTable) of
                 (Just dealerHand, Just table) -> do
-                    let dealerCards = case _dhAttrsHand (_dhAttrs dealerHand) of
-                            SomeHand hand' -> handCards hand'
-                        dealerUpcard = case dealerCards of
-                            (c : _) -> c
-                            [] -> error "Dealer hand has no cards - invalid game state"
-
+                    let dealerCards = _dhAttrsHand (_dhAttrs dealerHand)
                         offering = _tAttrsOffering (_tAttrs table)
 
                     pure $
                         Just
-                            GameContext
+                            BoutContext
                                 { _contextPlayerHand = _phAttrsHand (_phAttrs hand)
-                                , _contextDealerUpcard = dealerUpcard
+                                , _contextDealerUpcard = fromJust $ dealerUpcard dealerCards -- invariant
                                 , _contextOffering = offering
                                 , _contextCanDouble = _phAttrsHandIx (_phAttrs hand) == 0
                                 , _contextCanSplit = case extractPairRank (_phAttrsHand (_phAttrs hand)) of
@@ -86,7 +82,7 @@ moveToEvent playerId handId = \case
     Split -> PlayerSplit playerId handId
     Surrender -> PlayerSurrender playerId handId
 
-decideByArchetype :: SomePlayerArchetype -> GameContext -> State StdGen Move
+decideByArchetype :: SomePlayerArchetype -> BoutContext -> State StdGen Move
 decideByArchetype archetype ctx = case archetype of
     SomePlayerBasicStrategy arch ->
         getBasicStrategyMove (bsConfig arch) ctx

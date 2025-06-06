@@ -1,0 +1,49 @@
+# Minimal Baseline Strategy Chart
+# Rule-agnostic: only includes universal or near-universal actions
+#
+# Legend:
+#   H = Hit
+#   S = Stand
+#   D = Double (or Hit)
+#   d = Double (or Stand)
+#   V = Split
+#   v = Split (or Hit)
+#   r = Surrender (or Stand)
+#   . = Undefined (overridden later)
+#
+#  2 3 4 5 6 7 8 9 T A
+PA V V V V V V V V V V # comments are allowed here, too!
+PT S S S S S S S S S S
+P9 . . . . . . . . . .
+P8 V V V V V V V V V V
+P7 . . . . . . . . . .
+P6 . . . . . . . . . .
+P5 . . . . . . . . . .
+P4 . . . . . . . . . .
+P3 . . . . . . . . . .
+P2 . . . . . . . . . .
+A9 S S S S S S S S S S
+A8 . . . . . . . . . .
+A7 . . . . . . . . . .
+A6 . . . . . . . . . .
+A5 . . . . . . . . . .
+A4 . . . . . . . . . .
+A3 . . . . . . . . . .
+A2 . . . . . . . . . .
+20 S S S S S S S S S S
+19 S S S S S S S S S S
+18 S S S S S S S S S S
+17 S S S S S S S S S S
+16 . . . . . . . . . .
+15 . . . . . . . . . .
+14 . . . . . . . . . .
+13 . . . . . . . . . .
+12 . . . . . . . . . .
+11 D D D D D D D D D D
+10 D D D D D D D D . .
+ 9 . D D D D . . . . .
+ 8 H H H H H H H H H H
+ 7 H H H H H H H H H H
+ 6 H H H H H H H H H H
+ 5 H H H H H H H H H H
+ 4 H H H H H H H H H H

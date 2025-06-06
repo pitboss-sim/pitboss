@@ -10,13 +10,13 @@ import Pitboss.Blackjack.Strategy.Types
 import Pitboss.Simulation.Agents.Types
 import System.Random
 
-getSuperstitiousMove :: ArchetypeConfig 'Superstitious -> GameContext -> State StdGen Move
+getSuperstitiousMove :: ArchetypeConfig 'Superstitious -> BoutContext -> State StdGen Move
 getSuperstitiousMove config ctx =
     case findApplicableSuperstition (scBeliefs config) ctx of
         Just forcedMove -> pure forcedMove
         Nothing -> pure $ lookupFallbackStrategy (scFallbackChart config) ctx
 
-findApplicableSuperstition :: [Superstition] -> GameContext -> Maybe Move
+findApplicableSuperstition :: [Superstition] -> BoutContext -> Maybe Move
 findApplicableSuperstition beliefs ctx =
     let hand = _contextPlayerHand ctx
         dealerCard = _contextDealerUpcard ctx
@@ -47,7 +47,7 @@ superstitionMove = \case
     NeverDoubleDown -> Hit
     StandOn12VsDealer2Or3 -> Stand
 
-lookupFallbackStrategy :: StrategyChart -> GameContext -> Move
+lookupFallbackStrategy :: StrategyChart -> BoutContext -> Move
 lookupFallbackStrategy chart ctx =
     let hand = _contextPlayerHand ctx
         upcard = rank (_contextDealerUpcard ctx)

@@ -10,7 +10,7 @@ import Pitboss.Blackjack.Strategy.Types
 import Pitboss.Simulation.Agents.Types
 import System.Random
 
-getBasicStrategyMove :: ArchetypeConfig 'BasicStrategy -> GameContext -> State StdGen Move
+getBasicStrategyMove :: ArchetypeConfig 'BasicStrategy -> BoutContext -> State StdGen Move
 getBasicStrategyMove config ctx = do
     let chart = bcStrategyChart config
         hand = _contextPlayerHand ctx
@@ -28,7 +28,7 @@ getBasicStrategyMove config ctx = do
         then generateMistake (bcMistakeProfile config) ctx baseMove
         else pure baseMove
 
-isLegalMove :: Move -> GameContext -> Bool
+isLegalMove :: Move -> BoutContext -> Bool
 isLegalMove Double ctx = _contextCanDouble ctx
 isLegalMove Split ctx = _contextCanSplit ctx
 isLegalMove Surrender ctx = _contextCanSurrender ctx
@@ -39,12 +39,12 @@ rollForMistake profile = do
     roll <- state $ randomR (0.0, 1.0)
     pure (roll < profile ^. mistakeRate)
 
-generateMistake :: MistakeProfile -> GameContext -> Move -> State StdGen Move
+generateMistake :: MistakeProfile -> BoutContext -> Move -> State StdGen Move
 generateMistake profile ctx correct = do
     roll <- state $ randomR (0.0, 1.0)
     pure $ selectMistakeType (profile ^. mistakeDistribution) roll correct ctx
 
-selectMistakeType :: MistakeDistribution -> Double -> Move -> GameContext -> Move
+selectMistakeType :: MistakeDistribution -> Double -> Move -> BoutContext -> Move
 selectMistakeType dist roll correct ctx = case correct of
     Stand | roll < dist ^. hitInsteadOfStand -> Hit
     Hit | roll < dist ^. standInsteadOfHit -> Stand

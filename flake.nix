@@ -55,7 +55,7 @@
         {
           default =
             let
-              coverage = pkgs.callPackage ./nix/coverage.nix {};
+              coverage = pkgs.callPackage ./nix/coverage.nix { };
             in
             pkgs.mkShell {
               buildInputs = [

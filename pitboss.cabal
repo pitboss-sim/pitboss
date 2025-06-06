@@ -18,7 +18,8 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  Pitboss.Blackjack.Actions
+    exposed-modules:  Pitboss.Blackjack
+                      Pitboss.Blackjack.Actions
                       Pitboss.Blackjack.Deck
                       Pitboss.Blackjack.Outcomes
                       Pitboss.Blackjack.Play

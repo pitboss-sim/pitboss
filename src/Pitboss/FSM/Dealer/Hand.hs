@@ -119,17 +119,6 @@ resumeFromInterruptTyped ::
     DealerHandFSM 'DHDealing
 resumeFromInterruptTyped _hand (DHInterruptedFSM _) = DHDealingFSM
 
-dealerShouldHit :: GameRuleSet -> SomeHand -> Bool
-dealerShouldHit ruleset (SomeHand hand) = case witness hand of
-    BlackjackWitness -> False
-    TwentyOneWitness -> False
-    BustWitness -> False
-    HardWitness -> handScore (SomeHand hand) < 17
-    SoftWitness ->
-        let score = handScore (SomeHand hand)
-         in score < 17 || score == 17 && isH17 ruleset
-    PairWitness -> handScore (SomeHand hand) < 17
-
 resolveDealerHand :: SomeHand -> DealerHandResolution
 resolveDealerHand (SomeHand hand) = case witness hand of
     BlackjackWitness -> DHDealerBlackjack

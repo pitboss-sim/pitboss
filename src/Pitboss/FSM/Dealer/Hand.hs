@@ -41,6 +41,7 @@ instance Eq SomeDealerHandFSM where
         (DHDealingFSM, DHDealingFSM) -> True
         (DHEvaluatingFSM, DHEvaluatingFSM) -> True
         (DHResolvedFSM r1, DHResolvedFSM r2) -> r1 == r2
+        (DHInterruptedFSM r1, DHInterruptedFSM r2) -> r1 == r2
         _ -> False
 
 instance ToJSON SomeDealerHandFSM where
@@ -59,6 +60,9 @@ instance FromJSON SomeDealerHandFSM where
             "Resolved" -> do
                 r <- obj .: "resolution"
                 pure $ SomeDealerHandFSM (DHResolvedFSM r)
+            "Interrupted" -> do
+                r <- obj .: "reason"
+                pure $ SomeDealerHandFSM (DHInterruptedFSM r)
             other -> fail $ "Unknown tag for SomeDealerHandFSM: " ++ other
 
 instance Transitionable SomeDealerHandFSM where

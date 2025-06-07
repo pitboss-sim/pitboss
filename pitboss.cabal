@@ -120,6 +120,7 @@ test-suite pitboss-test
     default-language: GHC2021
     other-modules:    Spec.Pitboss.Helpers
                       Spec.Pitboss.Integration.BoutFlowSpec
+                      Spec.Pitboss.Integration.DealerBlackjackInsuranceSpec
                       Spec.Pitboss.Integration.TimelineSpec
                       Spec.Pitboss.Orchestration.DeltaGenSpec
                       Spec.Pitboss.Simulation.DealerPlaySpec

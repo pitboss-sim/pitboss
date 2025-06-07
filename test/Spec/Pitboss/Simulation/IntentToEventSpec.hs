@@ -3,7 +3,6 @@
 
 module Spec.Pitboss.Simulation.IntentToEventSpec where
 
-import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import System.Random (mkStdGen)
 import Test.Hspec
@@ -25,7 +24,7 @@ spec = describe "Intent to Event" $ do
                 tableId = EntityId 700
 
             let playerHand =
-                    (mkTestPlayerHand handId (EntityId 0) (EntityId 0) playerId boutId)
+                    (mkTestPlayerHand (EntityId 0) (EntityId 0) playerId boutId)
                         { _phAttrs =
                             PlayerHandAttrs
                                 { _phAttrsHand = characterize [Card Ten Hearts, Card Six Spades]
@@ -37,14 +36,14 @@ spec = describe "Intent to Event" $ do
                         }
 
             let dealerHand =
-                    (mkTestDealerHand dealerHandId (EntityId 0) (EntityId 0))
+                    (mkTestDealerHand (EntityId 0) (EntityId 0))
                         { _dhAttrs =
                             DealerHandAttrs
                                 { _dhAttrsHand = characterize [Card Ten Diamonds]
                                 }
                         }
 
-            let bout = mkTestBout boutId handId dealerHandId (EntityId 0) tableId (EntityId 0)
+            let bout = mkTestBout handId dealerHandId (EntityId 0) tableId (EntityId 0)
 
             let table =
                     ETable
@@ -72,8 +71,6 @@ spec = describe "Intent to Event" $ do
                         , _cacheDealerRound = IHM.empty
                         , _cachePlayerSpot = IHM.empty
                         , _cacheTableShoe = IHM.empty
-                        , _cacheIntent = IHM.empty
-                        , _cacheEvent = IHM.empty
                         , _cacheTick = tick
                         }
 
@@ -97,7 +94,7 @@ spec = describe "Intent to Event" $ do
                 tableId = EntityId 701
 
             let playerHand =
-                    (mkTestPlayerHand handId (EntityId 0) (EntityId 0) playerId boutId)
+                    (mkTestPlayerHand (EntityId 0) (EntityId 0) playerId boutId)
                         { _phAttrs =
                             PlayerHandAttrs
                                 { _phAttrsHand = characterize [Card Five Hearts, Card Seven Spades]
@@ -109,14 +106,14 @@ spec = describe "Intent to Event" $ do
                         }
 
             let dealerHand =
-                    (mkTestDealerHand dealerHandId (EntityId 0) (EntityId 0))
+                    (mkTestDealerHand (EntityId 0) (EntityId 0))
                         { _dhAttrs =
                             DealerHandAttrs
                                 { _dhAttrsHand = characterize [Card Three Diamonds]
                                 }
                         }
 
-            let bout = mkTestBout boutId handId dealerHandId (EntityId 0) tableId (EntityId 0)
+            let bout = mkTestBout handId dealerHandId (EntityId 0) tableId (EntityId 0)
 
             let table =
                     ETable
@@ -144,8 +141,6 @@ spec = describe "Intent to Event" $ do
                         , _cacheDealerRound = IHM.empty
                         , _cachePlayerSpot = IHM.empty
                         , _cacheTableShoe = IHM.empty
-                        , _cacheIntent = IHM.empty
-                        , _cacheEvent = IHM.empty
                         , _cacheTick = tick
                         }
 
@@ -169,7 +164,7 @@ spec = describe "Intent to Event" $ do
                 tableId = EntityId 702
 
             let playerHand =
-                    (mkTestPlayerHand handId (EntityId 0) (EntityId 0) playerId boutId)
+                    (mkTestPlayerHand (EntityId 0) (EntityId 0) playerId boutId)
                         { _phAttrs =
                             PlayerHandAttrs
                                 { _phAttrsHand = characterize [Card King Hearts, Card Nine Spades]
@@ -181,14 +176,14 @@ spec = describe "Intent to Event" $ do
                         }
 
             let dealerHand =
-                    (mkTestDealerHand dealerHandId (EntityId 0) (EntityId 0))
+                    (mkTestDealerHand (EntityId 0) (EntityId 0))
                         { _dhAttrs =
                             DealerHandAttrs
                                 { _dhAttrsHand = characterize [Card Six Diamonds]
                                 }
                         }
 
-            let bout = mkTestBout boutId handId dealerHandId (EntityId 0) tableId (EntityId 0)
+            let bout = mkTestBout handId dealerHandId (EntityId 0) tableId (EntityId 0)
 
             let table =
                     ETable
@@ -216,8 +211,6 @@ spec = describe "Intent to Event" $ do
                         , _cacheDealerRound = IHM.empty
                         , _cachePlayerSpot = IHM.empty
                         , _cacheTableShoe = IHM.empty
-                        , _cacheIntent = IHM.empty
-                        , _cacheEvent = IHM.empty
                         , _cacheTick = tick
                         }
 
@@ -241,7 +234,7 @@ spec = describe "Intent to Event" $ do
                 tableId = EntityId 703
 
             let playerHand =
-                    (mkTestPlayerHand handId (EntityId 0) (EntityId 0) playerId boutId)
+                    (mkTestPlayerHand (EntityId 0) (EntityId 0) playerId boutId)
                         { _phAttrs =
                             PlayerHandAttrs
                                 { _phAttrsHand = characterize [Card Six Hearts, Card Five Spades]
@@ -253,14 +246,14 @@ spec = describe "Intent to Event" $ do
                         }
 
             let dealerHand =
-                    (mkTestDealerHand dealerHandId (EntityId 0) (EntityId 0))
+                    (mkTestDealerHand (EntityId 0) (EntityId 0))
                         { _dhAttrs =
                             DealerHandAttrs
                                 { _dhAttrsHand = characterize [Card Six Diamonds]
                                 }
                         }
 
-            let bout = mkTestBout boutId handId dealerHandId (EntityId 0) tableId (EntityId 0)
+            let bout = mkTestBout handId dealerHandId (EntityId 0) tableId (EntityId 0)
 
             let table =
                     ETable
@@ -288,8 +281,6 @@ spec = describe "Intent to Event" $ do
                         , _cacheDealerRound = IHM.empty
                         , _cachePlayerSpot = IHM.empty
                         , _cacheTableShoe = IHM.empty
-                        , _cacheIntent = IHM.empty
-                        , _cacheEvent = IHM.empty
                         , _cacheTick = tick
                         }
 
@@ -311,7 +302,7 @@ spec = describe "Intent to Event" $ do
                 boutId = EntityId 304
 
             let playerHand =
-                    (mkTestPlayerHand handId (EntityId 0) (EntityId 0) playerId boutId)
+                    (mkTestPlayerHand (EntityId 0) (EntityId 0) playerId boutId)
                         { _phAttrs =
                             PlayerHandAttrs
                                 { _phAttrsHand = characterize [Card King Hearts, Card Nine Spades]
@@ -336,8 +327,6 @@ spec = describe "Intent to Event" $ do
                         , _cacheDealerRound = IHM.empty
                         , _cachePlayerSpot = IHM.empty
                         , _cacheTableShoe = IHM.empty
-                        , _cacheIntent = IHM.empty
-                        , _cacheEvent = IHM.empty
                         , _cacheTick = tick
                         }
 

@@ -1,10 +1,8 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedRecordDot #-}
 
 module Spec.Pitboss.Simulation.DealerRulesSpec where
 
 import Pitboss.Blackjack
-import Pitboss.FSM
 import Test.Hspec
 
 mkS17Rules :: GameRuleSet

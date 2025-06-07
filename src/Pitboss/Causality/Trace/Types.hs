@@ -6,11 +6,11 @@
 
 module Pitboss.Causality.Trace.Types where
 
+import Data.Aeson (FromJSON, ToJSON)
+import GHC.Generics (Generic)
 import Pitboss.Blackjack
 import Pitboss.Causality.Types.Core
 import Pitboss.FSM
-import GHC.Generics (Generic)
-import Data.Aeson (ToJSON, FromJSON)
 
 data family DeathReason (k :: EntityKind)
 

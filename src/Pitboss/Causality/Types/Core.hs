@@ -186,8 +186,9 @@ generateUid _ tick gen =
 encodeUid :: Tick -> EntityId k -> String
 encodeUid (Tick tickWord) (EntityId entropy) =
     let tickInt = fromIntegral tickWord `mod` (32 ^ (6 :: Int))
+        entropyInt = fromIntegral entropy `mod` (32 ^ (8 :: Int))
         tsPart = showPaddedBase32 tickInt 6
-        rndPart = showPaddedBase32 (fromIntegral entropy) 8
+        rndPart = showPaddedBase32 entropyInt 8
      in tsPart ++ "-" ++ rndPart
 
 decodeUid :: String -> Maybe (Tick, EntityId k)
@@ -212,7 +213,10 @@ showPaddedBase32 n width =
             | otherwise = error $ "Invalid base32 digit: " ++ show i
         result = showIntAtBase 32 showBase32Digit n ""
         padLeft c w s = replicate (w - length s) c ++ s
-     in padLeft '0' width result
+     in -- Take only the rightmost 'width' characters if result is too long
+        if length result > width
+            then drop (length result - width) result
+            else padLeft '0' width result
 
 isBase32Char :: Char -> Bool
 isBase32Char c = toUpper c `elem` ("0123456789ABCDEFGHJKMNPQRSTVWXYZ" :: String)

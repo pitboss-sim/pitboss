@@ -3,15 +3,15 @@
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-module Spec.Pitboss.Integration.BoutFlowSpec where
+module Test.Pitboss.Integration.BoutFlowSpec where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
-import Spec.Pitboss.Helpers
 import Test.Hspec
+import Test.Pitboss.TestUtils
 
 mkInitialSimState :: SimState
 mkInitialSimState =

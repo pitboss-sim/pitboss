@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Spec.Pitboss.Helpers where
+module Test.Pitboss.TestUtils where
 
 import Control.Exception (SomeException, handle)
 import Control.Monad.Reader (Reader)

@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE TypeApplications #-}
 
-module Spec.Pitboss.UidEncodingSpec where
+module Test.Pitboss.Unit.Causality.UidSpec where
 
 import Data.Word (Word64)
 import Pitboss.Causality.Types.Core

@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module Spec.Pitboss.JsonRoundtripSpec where
+module Test.Pitboss.Unit.Serialization.JsonSpec where
 
 import Data.Aeson
 import Data.HashMap.Strict.InsOrd qualified as IHM
@@ -15,7 +15,7 @@ import Pitboss.Blackjack.Strategy.Chart.Types
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
-import Spec.Pitboss.Helpers
+import Test.Pitboss.TestUtils
 
 -- Test helper
 roundtrips :: (Eq a, Show a, ToJSON a, FromJSON a) => a -> Bool
@@ -246,8 +246,6 @@ spec = describe "JSON Roundtrip Tests" $ do
             roundtrips (Tick maxBound) `shouldBe` True
             roundtrips (Chips 0) `shouldBe` True
             roundtrips (Chips (-100)) `shouldBe` True
-
-        -- Add to Spec.Pitboss.JsonRoundtripSpec
 
         describe "Game Rules Types" $ do
             it "GameRuleSet roundtrips" $ do

@@ -1,15 +1,15 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Spec.Pitboss.Integration.DealerBlackjackInsuranceSpec where
+module Test.Pitboss.Integration.DealerBlackjackSpec where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
-import Spec.Pitboss.Helpers
 import Test.Hspec
+import Test.Pitboss.TestUtils
 
 mkDealerBlackjackScenario :: Offering -> [Card] -> [Card] -> IO SimState
 mkDealerBlackjackScenario offering playerCards dealerCards = do

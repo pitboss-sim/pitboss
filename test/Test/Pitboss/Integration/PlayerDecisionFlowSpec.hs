@@ -1,7 +1,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE GADTs #-}
 
-module Spec.Pitboss.Simulation.IntentToEventSpec where
+module Test.Pitboss.Integration.PlayerDecisionFlowSpec where
 
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import System.Random (mkStdGen)
@@ -11,7 +11,7 @@ import Pitboss.Blackjack
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
-import Spec.Pitboss.Helpers
+import Test.Pitboss.TestUtils
 
 spec :: Spec
 spec = describe "Intent to Event" $ do

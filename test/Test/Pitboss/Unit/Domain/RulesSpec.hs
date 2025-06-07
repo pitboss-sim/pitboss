@@ -1,15 +1,26 @@
-{-# LANGUAGE DataKinds #-}
-
-module Spec.Pitboss.Simulation.DealerRulesSpec where
+module Test.Pitboss.Unit.Domain.RulesSpec where
 
 import Pitboss.Blackjack
-import Spec.Pitboss.Helpers
 import Test.Hspec
+import Test.Pitboss.TestUtils
 
 spec :: Spec
-spec = describe "Dealer S17/H17 Rules" $ do
-    describe "dealerShouldHit with Stand Soft 17 (S17)" $ do
-        let rules = mkS17Rules
+spec = describe "Dealer Rules" $ do
+    describe "S17 (Stand on Soft 17)" $ do
+        let rules =
+                GameRuleSet
+                    { soft17 = StandSoft17
+                    , holeCardRule = Peek
+                    , das = DAS
+                    , doubling = DoubleAny
+                    , splitAcesAllowed = SplitAces
+                    , resplitAcesAllowed = NoResplitAces
+                    , splitAcesFrozen = OneCardOnly
+                    , splitHands = SP4
+                    , surrender = Late
+                    , payout = P3_2
+                    , pen = PenFrac 5 6
+                    }
 
         it "hits on hard 16" $ do
             let hand = characterize [Card Ten Hearts, Card Six Spades]
@@ -47,8 +58,21 @@ spec = describe "Dealer S17/H17 Rules" $ do
             let hand = characterize [Card Ace Hearts, Card Two Spades, Card Four Clubs]
             dealerShouldHit rules hand `shouldBe` False
 
-    describe "dealerShouldHit with Hit Soft 17 (H17)" $ do
-        let rules = mkH17Rules
+    describe "H17 (Hit on Soft 17)" $ do
+        let rules =
+                GameRuleSet
+                    { soft17 = HitSoft17
+                    , holeCardRule = Peek
+                    , das = DAS
+                    , doubling = DoubleAny
+                    , splitAcesAllowed = SplitAces
+                    , resplitAcesAllowed = NoResplitAces
+                    , splitAcesFrozen = OneCardOnly
+                    , splitHands = SP4
+                    , surrender = Late
+                    , payout = P3_2
+                    , pen = PenFrac 5 6
+                    }
 
         it "hits on hard 16" $ do
             let hand = characterize [Card Ten Hearts, Card Six Spades]
@@ -97,17 +121,46 @@ spec = describe "Dealer S17/H17 Rules" $ do
 
         it "handles A-A-A-A-3 (soft 17) correctly" $ do
             let hand = characterize [Card Ace Hearts, Card Ace Spades, Card Ace Clubs, Card Ace Diamonds, Card Three Hearts]
-
             dealerShouldHit s17Rules hand `shouldBe` False
             dealerShouldHit h17Rules hand `shouldBe` True
 
         it "handles hard 17 from many small cards" $ do
             let hand = characterize [Card Two Hearts, Card Three Spades, Card Four Clubs, Card Four Diamonds, Card Four Hearts]
-
             dealerShouldHit s17Rules hand `shouldBe` False
             dealerShouldHit h17Rules hand `shouldBe` False
 
-    describe "Rule detection" $ do
+    describe "Peek rules" $ do
+        let peekRules =
+                GameRuleSet
+                    { soft17 = StandSoft17
+                    , holeCardRule = Peek
+                    , das = DAS
+                    , doubling = DoubleAny
+                    , splitAcesAllowed = SplitAces
+                    , resplitAcesAllowed = NoResplitAces
+                    , splitAcesFrozen = OneCardOnly
+                    , splitHands = SP4
+                    , surrender = Late
+                    , payout = P3_2
+                    , pen = PenFrac 5 6
+                    }
+        let enhcRules = peekRules{holeCardRule = ENHC}
+
+        it "peeks when showing Ace" $ do
+            dealerShouldPeek peekRules (Card Ace Hearts) `shouldBe` True
+
+        it "peeks when showing 10-value card" $ do
+            dealerShouldPeek peekRules (Card Ten Hearts) `shouldBe` True
+            dealerShouldPeek peekRules (Card King Spades) `shouldBe` True
+
+        it "does not peek when showing non-10/A" $ do
+            dealerShouldPeek peekRules (Card Seven Diamonds) `shouldBe` False
+
+        it "ENHC never peeks" $ do
+            dealerShouldPeek enhcRules (Card Ace Hearts) `shouldBe` False
+            dealerShouldPeek enhcRules (Card Ten Hearts) `shouldBe` False
+
+    describe "Rule detection helpers" $ do
         it "correctly identifies S17 rules" $ do
             isH17 mkS17Rules `shouldBe` False
 

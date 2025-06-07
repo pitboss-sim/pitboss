@@ -51,15 +51,6 @@ data DeltaSemantics
     = TransactionBoundary
     | PartialUpdate EntityStatePart
 
-data CausalHistory = CausalHistory
-    { causalIntent :: Maybe (EntityId 'Intent)
-    , causalEvent :: Maybe (EntityId 'Event)
-    }
-    deriving (Eq, Show, Generic)
-
-instance ToJSON CausalHistory
-instance FromJSON CausalHistory
-
 data family Delta (k :: EntityKind) (s :: DeltaSemantics)
 
 extractCausalHistory :: SomeDelta k -> CausalHistory
@@ -67,38 +58,6 @@ extractCausalHistory (AttrsDelta causal _) = causal
 extractCausalHistory (ModesDelta causal _) = causal
 extractCausalHistory (RelsDelta causal _) = causal
 extractCausalHistory (BoundaryDelta causal _) = causal
-
-extractCausalIntent :: SomeDelta k -> Maybe (EntityId 'Intent)
-extractCausalIntent = causalIntent . extractCausalHistory
-
-extractCausalEvent :: SomeDelta k -> Maybe (EntityId 'Event)
-extractCausalEvent = causalEvent . extractCausalHistory
-
--- DIntent
-data instance Delta 'Intent ('PartialUpdate 'Attrs)
-    = DIntentSetType IntentType IntentType
-    | DIntentSetKind IntentKind IntentKind
-    | DIntentSetTimestamp Tick Tick
-    | DIntentSetDescription String String
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Intent ('PartialUpdate 'Modes)
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Intent ('PartialUpdate 'Rels)
-    = DIntentSetOriginatingEntity OriginatingEntity OriginatingEntity
-    | DIntentSetTargetBout (Maybe (EntityId 'Bout)) (Maybe (EntityId 'Bout))
-    deriving (Eq, Show, Generic)
-
--- DEvent
-data instance Delta 'Event ('PartialUpdate 'Attrs)
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Event ('PartialUpdate 'Modes)
-    deriving (Eq, Show, Generic)
-
-data instance Delta 'Event ('PartialUpdate 'Rels)
-    deriving (Eq, Show, Generic)
 
 -- DBout
 data instance Delta 'Bout ('PartialUpdate 'Attrs)
@@ -266,24 +225,6 @@ instance
             "RelsDelta" -> RelsDelta <$> v .: "history" <*> v .: "delta"
             "BoundaryDelta" -> BoundaryDelta <$> v .: "history" <*> v .: "delta"
             _ -> fail $ "Unknown type: " ++ T.unpack typ
-
-instance ToJSON (Delta 'Intent 'TransactionBoundary)
-instance FromJSON (Delta 'Intent 'TransactionBoundary)
-instance ToJSON (Delta 'Intent ('PartialUpdate 'Attrs))
-instance FromJSON (Delta 'Intent ('PartialUpdate 'Attrs))
-instance ToJSON (Delta 'Intent ('PartialUpdate 'Modes))
-instance FromJSON (Delta 'Intent ('PartialUpdate 'Modes))
-instance ToJSON (Delta 'Intent ('PartialUpdate 'Rels))
-instance FromJSON (Delta 'Intent ('PartialUpdate 'Rels))
-
-instance ToJSON (Delta 'Event 'TransactionBoundary)
-instance FromJSON (Delta 'Event 'TransactionBoundary)
-instance ToJSON (Delta 'Event ('PartialUpdate 'Attrs))
-instance FromJSON (Delta 'Event ('PartialUpdate 'Attrs))
-instance ToJSON (Delta 'Event ('PartialUpdate 'Modes))
-instance FromJSON (Delta 'Event ('PartialUpdate 'Modes))
-instance ToJSON (Delta 'Event ('PartialUpdate 'Rels))
-instance FromJSON (Delta 'Event ('PartialUpdate 'Rels))
 
 instance ToJSON (Delta 'Bout 'TransactionBoundary)
 instance FromJSON (Delta 'Bout 'TransactionBoundary)

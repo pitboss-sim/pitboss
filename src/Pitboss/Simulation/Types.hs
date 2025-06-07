@@ -23,7 +23,7 @@ newtype IntentLog = IntentLog
     }
 
 data SimIntent = SimIntent
-    { intentId :: Word64
+    { intentId :: IntentId
     , intentActor :: ActorId
     , intentDesiredEvent :: BlackjackEvent
     , intentTimestamp :: Tick
@@ -32,7 +32,7 @@ data SimIntent = SimIntent
 deriving instance Show SimIntent
 
 data SimEvent = SimEvent
-    { eventId :: Word64
+    { eventId :: EventId
     , eventOccurred :: BlackjackEvent
     , eventTimestamp :: Tick
     , eventCausingIntent :: Maybe Word64

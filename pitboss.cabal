@@ -130,14 +130,16 @@ test-suite pitboss-test
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test
     main-is:          Main.hs
-    build-depends:
-        base,
-        insert-ordered-containers,
-        lens,
-        mtl,
-        hspec,
-        pitboss,
-        random,
-        text,
+    build-depends:    aeson,
+                      base,
+                      containers,
+                      insert-ordered-containers,
+                      lens,
+                      mtl,
+                      hspec,
+                      pitboss,
+                      QuickCheck,
+                      random,
+                      text,
     build-tool-depends:
         hspec-discover:hspec-discover

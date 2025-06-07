@@ -2,12 +2,12 @@
 
 module Pitboss.Simulation.Types where
 
+import Data.Aeson (FromJSON, ToJSON)
 import Data.HashMap.Strict.InsOrd
 import Data.Word (Word64)
+import GHC.Generics (Generic)
 import Pitboss.Causality
 import Pitboss.Simulation.Event
-import GHC.Generics (Generic)
-import Data.Aeson (ToJSON, FromJSON)
 
 data SimState = SimState
     { simTrace :: Trace

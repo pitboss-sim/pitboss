@@ -4,8 +4,8 @@
 module Test.Pitboss.Property.ChipPropertySpec where
 
 import Pitboss.Blackjack
-import Test.Pitboss.TestUtils ()
 import Test.Hspec
+import Test.Pitboss.TestUtils ()
 import Test.QuickCheck hiding (witness)
 
 -- Generators

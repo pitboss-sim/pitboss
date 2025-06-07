@@ -4,8 +4,8 @@
 module Test.Pitboss.Property.HandPropertySpec where
 
 import Pitboss.Blackjack
-import Test.Pitboss.TestUtils ()
 import Test.Hspec
+import Test.Pitboss.TestUtils ()
 import Test.QuickCheck hiding (witness)
 
 -- Generators
@@ -46,4 +46,3 @@ spec = describe "Hand Property Tests" $ do
                         SomeHand h -> case witness h of
                             BlackjackWitness -> length cards == 2
                             _ -> True
-

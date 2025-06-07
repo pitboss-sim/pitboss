@@ -5,8 +5,8 @@ module Test.Pitboss.Unit.Causality.FiniteMapSpec where
 
 import Pitboss.Blackjack
 import Pitboss.Causality
-import Test.Pitboss.TestUtils ()
 import Test.Hspec
+import Test.Pitboss.TestUtils ()
 import Test.QuickCheck hiding (witness)
 
 -- Generators
@@ -34,4 +34,3 @@ spec = describe "Property Tests" $ do
                     insertFiniteMap ix (Present val2) fm1 ::
                         FiniteMap PlayerSpotHandIx (Occupancy (EntityId 'PlayerHand))
              in lookupFiniteMap ix fm2 == Just (Present val2)
-

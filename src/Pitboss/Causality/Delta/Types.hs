@@ -193,6 +193,24 @@ data instance Delta 'TableShoe ('PartialUpdate 'Rels)
     deriving (Eq, Show, Generic)
 
 instance
+    ( Show (Delta k ('PartialUpdate 'Attrs))
+    , Show (Delta k ('PartialUpdate 'Modes))
+    , Show (Delta k ('PartialUpdate 'Rels))
+    , Show (Delta k 'TransactionBoundary)
+    , Show CausalHistory
+    ) =>
+    Show (SomeDelta k)
+    where
+    show (AttrsDelta history delta) =
+        "AttrsDelta " ++ show history ++ " (" ++ show delta ++ ")"
+    show (ModesDelta history delta) =
+        "ModesDelta " ++ show history ++ " (" ++ show delta ++ ")"
+    show (RelsDelta history delta) =
+        "RelsDelta " ++ show history ++ " (" ++ show delta ++ ")"
+    show (BoundaryDelta history delta) =
+        "BoundaryDelta " ++ show history ++ " (" ++ show delta ++ ")"
+
+instance
     ( ToJSON (Delta k ('PartialUpdate 'Attrs))
     , ToJSON (Delta k ('PartialUpdate 'Modes))
     , ToJSON (Delta k ('PartialUpdate 'Rels))

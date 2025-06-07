@@ -119,6 +119,9 @@ executable pitboss
 test-suite pitboss-test
     default-language: GHC2021
     other-modules:    Spec.Pitboss.Helpers
+                      Spec.Pitboss.JsonRoundtripSpec
+                      Spec.Pitboss.PropertySpec
+                      Spec.Pitboss.UidEncodingSpec
                       Spec.Pitboss.Integration.BoutFlowSpec
                       Spec.Pitboss.Integration.DealerBlackjackInsuranceSpec
                       Spec.Pitboss.Integration.TimelineSpec
@@ -131,12 +134,15 @@ test-suite pitboss-test
     hs-source-dirs:   test
     main-is:          Main.hs
     build-depends:
+        aeson,
         base,
+        containers,
         insert-ordered-containers,
         lens,
         mtl,
         hspec,
         pitboss,
+        QuickCheck,
         random,
         text,
     build-tool-depends:

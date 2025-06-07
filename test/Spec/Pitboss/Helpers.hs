@@ -1,4 +1,5 @@
 {-# LANGUAGE DataKinds #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Spec.Pitboss.Helpers where
 
@@ -11,6 +12,53 @@ import Pitboss.Blackjack.Strategy.Chart
 import Pitboss.Causality
 import Pitboss.FSM
 import Pitboss.Simulation
+import Test.QuickCheck (Arbitrary (..), elements, oneof)
+
+-- QuickCheck generators
+instance Arbitrary Rank where
+    arbitrary = elements [Two .. Ace]
+
+instance Arbitrary Suit where
+    arbitrary = elements [Hearts .. Spades]
+
+instance Arbitrary Card where
+    arbitrary = Card <$> arbitrary <*> arbitrary
+
+instance Arbitrary Chips where
+    arbitrary = Chips . abs <$> arbitrary
+
+instance Arbitrary (EntityId k) where
+    arbitrary = EntityId . abs <$> arbitrary
+
+instance Arbitrary Tick where
+    arbitrary = Tick . abs <$> arbitrary
+
+instance Arbitrary IntentId where
+    arbitrary = IntentId . abs <$> arbitrary
+
+instance Arbitrary EventId where
+    arbitrary = EventId . abs <$> arbitrary
+
+instance Arbitrary CausalHistory where
+    arbitrary = CausalHistory <$> arbitrary <*> arbitrary
+
+instance Arbitrary PlayerSpotIx where
+    arbitrary = elements [EPlayerSpot1 .. EPlayerSpot4]
+
+instance Arbitrary PlayerSpotHandIx where
+    arbitrary = elements [EPlayerSpotHand1 .. EPlayerSpotHand4]
+
+instance Arbitrary DetailedOutcome where
+    arbitrary =
+        oneof
+            [ pure playerWinsHigher
+            , pure playerWinsDealerBust
+            , pure playerWinsBlackjack
+            , pure dealerWinsHigher
+            , pure dealerWinsPlayerBust
+            , pure dealerWinsBlackjack
+            , pure pushOutcome
+            ]
 
 loadCanonicalStrategy :: IO StrategyChart
 loadCanonicalStrategy = handle handleError $ do
@@ -214,3 +262,143 @@ runEvent event state =
             , simEventLog = newEventLog
             , simTick = nextTick
             }
+
+mkS17Rules :: GameRuleSet
+mkS17Rules =
+    GameRuleSet
+        { soft17 = StandSoft17
+        , holeCardRule = Peek
+        , das = DAS
+        , doubling = DoubleAny
+        , splitAcesAllowed = SplitAces
+        , resplitAcesAllowed = NoResplitAces
+        , splitAcesFrozen = OneCardOnly
+        , splitHands = SP4
+        , surrender = Late
+        , payout = P3_2
+        , pen = PenFrac 5 6
+        }
+
+mkH17Rules :: GameRuleSet
+mkH17Rules = mkS17Rules{soft17 = HitSoft17}
+
+mkInitialTrace :: Tick -> Trace
+mkInitialTrace startTick =
+    let playerId = EntityId 100
+        dealerId = EntityId 200
+        boutId = EntityId 300
+        playerHandId = EntityId 400
+        dealerHandId = EntityId 500
+        playerSpotId = EntityId 600
+        dealerRoundId = EntityId 700
+        tableId = EntityId 800
+        shoeId = EntityId 900
+
+        playerState =
+            EPlayer
+                { _pAttrs =
+                    PlayerAttrs
+                        { _pAttrsName = "Test Player"
+                        , _pAttrsBankroll = Chips 1000
+                        }
+                , _pModes =
+                    PlayerModes
+                        (SomePlayerTableFSM PTPlayingHandFSM)
+                        (SomePlayerSpotFSM PSWaitingForHandsFSM)
+                        (SomePlayerHandFSM PHDecisionFSM)
+                , _pRels = PlayerRels
+                }
+
+        dealerState =
+            EDealer
+                { _dAttrs =
+                    DealerAttrs
+                        { _dAttrsName = "Test Dealer"
+                        }
+                , _dModes =
+                    DealerModes
+                        (SomeDealerTableFSM DTOnDutyFSM)
+                        (PeekDealerRound (SomePeekFSM PeekPlayersFSM))
+                        (SomeDealerHandFSM DHDealingFSM)
+                , _dRels = DealerRels (Just tableId) (Just dealerRoundId) (Just dealerHandId)
+                }
+
+        boutState =
+            EBout
+                { _boutAttrs = BoutAttrs Nothing
+                , _boutModes = BoutModes (SomeBoutFSM BAwaitingFirstCardFSM)
+                , _boutRels = BoutRels playerHandId dealerHandId shoeId tableId dealerRoundId
+                }
+
+        playerHandState =
+            EPlayerHand
+                { _phAttrs =
+                    PlayerHandAttrs
+                        { _phAttrsHand = characterize []
+                        , _phAttrsOriginalBet = Chips 100
+                        , _phAttrsSplitDepth = 0
+                        , _phAttrsHandIx = 0
+                        }
+                , _phModes = PlayerHandModes (SomePlayerHandFSM PHDecisionFSM)
+                , _phRels = PlayerHandRels playerSpotId dealerRoundId playerId boutId
+                }
+
+        dealerHandState =
+            EDealerHand
+                { _dhAttrs = DealerHandAttrs (characterize [])
+                , _dhModes = DealerHandModes (SomeDealerHandFSM DHDealingFSM)
+                , _dhRels = DealerHandRels dealerRoundId dealerId
+                }
+
+        playerSpotState =
+            EPlayerSpot
+                { _psAttrs = PlayerSpotAttrs EPlayerSpot1 (Chips 100)
+                , _psModes = PlayerSpotModes (SomePlayerSpotFSM PSWaitingForHandsFSM)
+                , _psRels = PlayerSpotRels playerId dealerRoundId (emptyFiniteMap Absent)
+                }
+
+        dealerRoundState =
+            EDealerRound
+                { _drAttrs = DealerRoundAttrs 1 True
+                , _drModes = DealerRoundModes
+                , _drRels = DealerRoundRels shoeId
+                }
+
+        tableState =
+            ETable
+                { _tAttrs =
+                    TableAttrs
+                        { _tAttrsName = "Test Table"
+                        , _tAttrsCurrentRound = Just dealerRoundId
+                        , _tAttrsOffering = vegas6
+                        }
+                , _tModes = TableModes (SomeTableFSM TRoundInProgressFSM)
+                , _tRels = TableRels (Just dealerId)
+                }
+
+        shoeState =
+            ETableShoe
+                { _tsAttrs =
+                    TableShoeAttrs
+                        [ Card Ten Hearts
+                        , Card Six Diamonds
+                        , Card Seven Spades
+                        , Card King Clubs
+                        , Card Four Hearts
+                        ]
+                        mempty
+                , _tsModes = TableShoeModes
+                , _tsRels = TableShoeRels tableId
+                }
+
+        trace0 = emptyTrace
+        trace1 = applyTraceOp (createBirth playerId playerState) startTick trace0
+        trace2 = applyTraceOp (createBirth dealerId dealerState) startTick trace1
+        trace3 = applyTraceOp (createBirth boutId boutState) startTick trace2
+        trace4 = applyTraceOp (createBirth playerHandId playerHandState) startTick trace3
+        trace5 = applyTraceOp (createBirth dealerHandId dealerHandState) startTick trace4
+        trace6 = applyTraceOp (createBirth playerSpotId playerSpotState) startTick trace5
+        trace7 = applyTraceOp (createBirth dealerRoundId dealerRoundState) startTick trace6
+        trace8 = applyTraceOp (createBirth tableId tableState) startTick trace7
+        trace9 = applyTraceOp (createBirth shoeId shoeState) startTick trace8
+     in trace9

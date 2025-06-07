@@ -3,26 +3,8 @@
 module Spec.Pitboss.Simulation.DealerRulesSpec where
 
 import Pitboss.Blackjack
+import Spec.Pitboss.Helpers
 import Test.Hspec
-
-mkS17Rules :: GameRuleSet
-mkS17Rules =
-    GameRuleSet
-        { soft17 = StandSoft17
-        , holeCardRule = Peek
-        , das = DAS
-        , doubling = DoubleAny
-        , splitAcesAllowed = SplitAces
-        , resplitAcesAllowed = NoResplitAces
-        , splitAcesFrozen = OneCardOnly
-        , splitHands = SP4
-        , surrender = Late
-        , payout = P3_2
-        , pen = PenFrac 5 6
-        }
-
-mkH17Rules :: GameRuleSet
-mkH17Rules = mkS17Rules{soft17 = HitSoft17}
 
 spec :: Spec
 spec = describe "Dealer S17/H17 Rules" $ do

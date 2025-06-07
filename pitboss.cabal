@@ -118,14 +118,19 @@ executable pitboss
 
 test-suite pitboss-test
     default-language: GHC2021
-    other-modules:    Spec.Pitboss.Helpers
-                      Spec.Pitboss.Integration.BoutFlowSpec
-                      Spec.Pitboss.Integration.DealerBlackjackInsuranceSpec
-                      Spec.Pitboss.Integration.TimelineSpec
-                      Spec.Pitboss.Orchestration.DeltaGenSpec
-                      Spec.Pitboss.Simulation.DealerPlaySpec
-                      Spec.Pitboss.Simulation.DealerRulesSpec
-                      Spec.Pitboss.Simulation.IntentToEventSpec
+    other-modules:    Test.Pitboss.Integration.BoutFlowSpec
+                      Test.Pitboss.Integration.DealerBlackjackSpec
+                      Test.Pitboss.Integration.PlayerDecisionFlowSpec
+                      Test.Pitboss.Integration.TimelineReconstructionSpec
+                      Test.Pitboss.Property.ChipPropertySpec
+                      Test.Pitboss.Property.HandPropertySpec
+                      Test.Pitboss.TestUtils
+                      Test.Pitboss.Unit.Causality.DeltaSpec
+                      Test.Pitboss.Unit.Causality.FiniteMapSpec
+                      Test.Pitboss.Unit.Causality.UidSpec
+                      Test.Pitboss.Unit.Domain.HandSpec
+                      Test.Pitboss.Unit.Domain.RulesSpec
+                      Test.Pitboss.Unit.Serialization.JsonSpec
     -- other-extensions:
     type:             exitcode-stdio-1.0
     hs-source-dirs:   test

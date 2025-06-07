@@ -1,13 +1,18 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Pitboss.Causality.Trace.Ops where
 
+import Control.Lens ((&), (.~), (^.))
+import Data.Aeson (FromJSON (..), ToJSON (..), Value (..), object, withObject, (.:), (.=))
+import Data.Aeson.Types (Parser)
 import Data.HashMap.Strict.InsOrd qualified as IHM
+import Data.Text (Text)
+import Data.Text qualified as T
 import Pitboss.Causality.Delta.Types
 import Pitboss.Causality.Entity.Types
 import Pitboss.Causality.Entity.Witnessable
@@ -17,11 +22,6 @@ import Pitboss.Causality.Trace
 import Pitboss.Causality.Trace.Registrable
 import Pitboss.Causality.Trace.Types
 import Pitboss.Causality.Types.Core
-import Data.Text (Text)
-import Data.Aeson (FromJSON(..), ToJSON(..), Value(..), object, withObject, (.:), (.=))
-import qualified Data.Text as T
-import Control.Lens ((^.), (&), (.~))
-import Data.Aeson.Types (Parser)
 
 data TraceOp where
     BirthOp :: EntityKindWitness k -> EntityId k -> EntityState k -> TraceOp
@@ -50,7 +50,6 @@ instance Eq TraceOp where
             (TableShoeWitness, TableShoeWitness) ->
                 eid1 == eid2 && state1 == state2
             _ -> False
-
     (MutationOp w1 eid1 delta1) == (MutationOp w2 eid2 delta2) =
         case (w1, w2) of
             (BoutWitness, BoutWitness) ->
@@ -72,7 +71,6 @@ instance Eq TraceOp where
             (TableShoeWitness, TableShoeWitness) ->
                 eid1 == eid2 && delta1 == delta2
             _ -> False
-
     (DeathOp w1 eid1 reason1) == (DeathOp w2 eid2 reason2) =
         case (w1, w2) of
             (BoutWitness, BoutWitness) ->
@@ -80,7 +78,6 @@ instance Eq TraceOp where
             (PlayerHandWitness, PlayerHandWitness) ->
                 eid1 == eid2 && reason1 == reason2
             _ -> False
-
     _ == _ = False
 
 instance ToJSON TraceOp where
@@ -94,12 +91,10 @@ instance ToJSON TraceOp where
         DealerRoundWitness -> object ["type" .= String "BirthOp", "kind" .= String "DealerRound", "entityId" .= eid, "state" .= state]
         TableWitness -> object ["type" .= String "BirthOp", "kind" .= String "Table", "entityId" .= eid, "state" .= state]
         TableShoeWitness -> object ["type" .= String "BirthOp", "kind" .= String "TableShoe", "entityId" .= eid, "state" .= state]
-
     toJSON (MutationOp witness' eid delta) = case witness' of
         BoutWitness -> object ["type" .= String "MutationOp", "kind" .= String "Bout", "entityId" .= eid, "delta" .= delta]
         PlayerWitness -> object ["type" .= String "MutationOp", "kind" .= String "Player", "entityId" .= eid, "delta" .= delta]
         _ -> object []
-
     toJSON (DeathOp witness' eid reason) = case witness' of
         BoutWitness -> object ["type" .= String "DeathOp", "kind" .= String "Bout", "entityId" .= eid, "reason" .= reason]
         PlayerHandWitness -> object ["type" .= String "DeathOp", "kind" .= String "PlayerHand", "entityId" .= eid, "reason" .= reason]
@@ -122,7 +117,6 @@ instance FromJSON TraceOp where
                     "Table" -> BirthOp TableWitness <$> obj .: "entityId" <*> obj .: "state"
                     "TableShoe" -> BirthOp TableShoeWitness <$> obj .: "entityId" <*> obj .: "state"
                     _ -> fail $ "Unknown BirthOp kind: " ++ T.unpack kind
-
             "MutationOp" -> do
                 kind <- obj .: "kind" :: Parser Text
                 case kind of
@@ -136,14 +130,12 @@ instance FromJSON TraceOp where
                     "Table" -> MutationOp TableWitness <$> obj .: "entityId" <*> obj .: "delta"
                     "TableShoe" -> MutationOp TableShoeWitness <$> obj .: "entityId" <*> obj .: "delta"
                     _ -> fail $ "Unknown MutationOp kind: " ++ T.unpack kind
-
             "DeathOp" -> do
                 kind <- obj .: "kind" :: Parser Text
                 case kind of
                     "Bout" -> DeathOp BoutWitness <$> obj .: "entityId" <*> obj .: "reason"
                     "PlayerHand" -> DeathOp PlayerHandWitness <$> obj .: "entityId" <*> obj .: "reason"
                     _ -> fail $ "Unknown or unsupported DeathOp kind: " ++ T.unpack kind
-
             _ -> fail $ "Unknown TraceOp type: " ++ T.unpack opType
 
 applyBirthTyped :: forall k. (Registrable k) => EntityId k -> EntityState k -> Tick -> Trace -> Trace

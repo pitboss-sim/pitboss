@@ -20,9 +20,7 @@ import Pitboss.Causality.Types.Core
 import Prelude hiding (round)
 
 data TickCache = TickCache
-    { _cacheIntent :: IHM.InsOrdHashMap (EntityId 'Intent) (EntityState 'Intent)
-    , _cacheEvent :: IHM.InsOrdHashMap (EntityId 'Event) (EntityState 'Event)
-    , _cacheBout :: IHM.InsOrdHashMap (EntityId 'Bout) (EntityState 'Bout)
+    { _cacheBout :: IHM.InsOrdHashMap (EntityId 'Bout) (EntityState 'Bout)
     , _cacheDealer :: IHM.InsOrdHashMap (EntityId 'Dealer) (EntityState 'Dealer)
     , _cachePlayer :: IHM.InsOrdHashMap (EntityId 'Player) (EntityState 'Player)
     , _cacheDealerHand :: IHM.InsOrdHashMap (EntityId 'DealerHand) (EntityState 'DealerHand)
@@ -55,14 +53,6 @@ derefHelper ::
 derefHelper cacheLens entityId = do
     cache <- view ctxTickCache
     pure $ IHM.lookup entityId (cache ^. cacheLens)
-
-instance (MonadReader TickCacheContext m) => Deref (EntityId 'Intent) m where
-    type DerefTarget (EntityId 'Intent) = EntityState 'Intent
-    deref = derefHelper cacheIntent
-
-instance (MonadReader TickCacheContext m) => Deref (EntityId 'Event) m where
-    type DerefTarget (EntityId 'Event) = EntityState 'Event
-    deref = derefHelper cacheEvent
 
 instance (MonadReader TickCacheContext m) => Deref (EntityId 'Bout) m where
     type DerefTarget (EntityId 'Bout) = EntityState 'Bout
@@ -103,9 +93,7 @@ instance (MonadReader TickCacheContext m) => Deref (EntityId 'TableShoe) m where
 mkTickCache :: Tick -> TickCache
 mkTickCache tick =
     TickCache
-        { _cacheIntent = IHM.empty
-        , _cacheEvent = IHM.empty
-        , _cacheBout = IHM.empty
+        { _cacheBout = IHM.empty
         , _cacheDealer = IHM.empty
         , _cachePlayer = IHM.empty
         , _cacheDealerHand = IHM.empty

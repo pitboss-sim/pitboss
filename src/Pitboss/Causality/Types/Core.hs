@@ -23,6 +23,21 @@ import Numeric (showIntAtBase)
 import Pitboss.Causality.Types.FiniteMap
 import System.Random (Random (..), RandomGen)
 
+newtype IntentId = IntentId Word64
+    deriving (Eq, Show, Ord, Generic, ToJSON, FromJSON, Hashable)
+
+newtype EventId = EventId Word64
+    deriving (Eq, Show, Ord, Generic, ToJSON, FromJSON, Hashable)
+
+data CausalHistory = CausalHistory
+    { causalIntent :: Maybe IntentId
+    , causalEvent :: Maybe EventId
+    }
+    deriving (Eq, Show, Generic)
+
+instance ToJSON CausalHistory
+instance FromJSON CausalHistory
+
 data EntityKindWitness (k :: EntityKind) where
     BoutWitness :: EntityKindWitness 'Bout
     PlayerWitness :: EntityKindWitness 'Player
@@ -209,8 +224,6 @@ decodeBase32Char = (`Map.lookup` base32Map) . toUpper
     base32Map = Map.fromList $ zip "0123456789ABCDEFGHJKMNPQRSTVWXYZ" [0 .. 31]
 
 type family UidPrefix (k :: EntityKind) :: Symbol where
-    UidPrefix 'Intent = "INT"
-    UidPrefix 'Event = "EVT"
     UidPrefix 'Bout = "BOT"
     UidPrefix 'Player = "PLR"
     UidPrefix 'Dealer = "DLR"

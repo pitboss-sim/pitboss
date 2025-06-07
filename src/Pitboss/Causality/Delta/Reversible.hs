@@ -17,20 +17,6 @@ data InversionError
 class Reversible d where
     invert :: d -> Either InversionError d
 
--- DIntent
-instance Reversible (Delta 'Intent (PartialUpdate 'Attrs)) where
-    invert (DIntentSetType old new) = Right (DIntentSetType new old)
-    invert (DIntentSetKind old new) = Right (DIntentSetKind new old)
-    invert (DIntentSetTimestamp old new) = Right (DIntentSetTimestamp new old)
-    invert (DIntentSetDescription old new) = Right (DIntentSetDescription new old)
-
-instance Reversible (Delta 'Intent (PartialUpdate 'Modes)) where
-    invert _ = Left (CustomReason "Intent modes have no reversible operations")
-
-instance Reversible (Delta 'Intent (PartialUpdate 'Rels)) where
-    invert (DIntentSetOriginatingEntity old new) = Right (DIntentSetOriginatingEntity new old)
-    invert (DIntentSetTargetBout old new) = Right (DIntentSetTargetBout new old)
-
 -- DBout
 instance Reversible (Delta 'Bout (PartialUpdate 'Attrs)) where
     invert (DBoutSetOutcome old new) = Right (DBoutSetOutcome new old)

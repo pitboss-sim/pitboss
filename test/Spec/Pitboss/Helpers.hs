@@ -56,8 +56,8 @@ mkTestDealerArchetype =
             , btbState = ByTheBookState 0
             }
 
-mkTestPlayer :: EntityId 'Player -> String -> IO (EntityState 'Player)
-mkTestPlayer _playerId name = do
+mkTestPlayer :: String -> IO (EntityState 'Player)
+mkTestPlayer name =
     pure $
         EPlayer
             { _pAttrs =
@@ -74,8 +74,8 @@ mkTestPlayer _playerId name = do
             , _pRels = PlayerRels
             }
 
-mkTestDealer :: EntityId 'Dealer -> String -> EntityState 'Dealer
-mkTestDealer _dealerId name =
+mkTestDealer :: String -> EntityState 'Dealer
+mkTestDealer name =
     EDealer
         { _dAttrs =
             DealerAttrs
@@ -91,13 +91,12 @@ mkTestDealer _dealerId name =
         }
 
 mkTestPlayerHand ::
-    EntityId 'PlayerHand ->
     EntityId 'PlayerSpot ->
     EntityId 'DealerRound ->
     EntityId 'Player ->
     EntityId 'Bout ->
     EntityState 'PlayerHand
-mkTestPlayerHand _handId spotId roundId playerId boutId =
+mkTestPlayerHand spotId roundId playerId boutId =
     EPlayerHand
         { _phAttrs =
             PlayerHandAttrs
@@ -110,16 +109,16 @@ mkTestPlayerHand _handId spotId roundId playerId boutId =
         , _phRels = PlayerHandRels spotId roundId playerId boutId
         }
 
-mkTestDealerHand :: EntityId 'DealerHand -> EntityId 'DealerRound -> EntityId 'Dealer -> EntityState 'DealerHand
-mkTestDealerHand _handId roundId dealerId =
+mkTestDealerHand :: EntityId 'DealerRound -> EntityId 'Dealer -> EntityState 'DealerHand
+mkTestDealerHand roundId dealerId =
     EDealerHand
         { _dhAttrs = DealerHandAttrs (characterize [])
         , _dhModes = DealerHandModes (SomeDealerHandFSM DHDealingFSM)
         , _dhRels = DealerHandRels roundId dealerId
         }
 
-mkTestBout :: EntityId 'Bout -> EntityId 'PlayerHand -> EntityId 'DealerHand -> EntityId 'TableShoe -> EntityId 'Table -> EntityId 'DealerRound -> EntityState 'Bout
-mkTestBout _boutId playerHandId dealerHandId shoeId tableId roundId =
+mkTestBout :: EntityId 'PlayerHand -> EntityId 'DealerHand -> EntityId 'TableShoe -> EntityId 'Table -> EntityId 'DealerRound -> EntityState 'Bout
+mkTestBout playerHandId dealerHandId shoeId tableId roundId =
     EBout
         { _boutAttrs = BoutAttrs Nothing
         , _boutModes = BoutModes (SomeBoutFSM BAwaitingFirstCardFSM)
@@ -177,7 +176,7 @@ runEvent event state =
 
         simEvent =
             SimEvent
-                { eventId = unTick tick
+                { eventId = EventId $ unTick tick
                 , eventOccurred = event
                 , eventTimestamp = tick
                 , eventCausingIntent = Nothing
@@ -198,7 +197,8 @@ runEvent event state =
 
         traceOps =
             withTickCache cache $
-                generateDeltas event (CausalHistory Nothing (Just $ EntityId $ eventId simEvent))
+                generateDeltas event $
+                    CausalHistory Nothing (Just $ eventId simEvent)
 
         newTrace = foldl (flip $ \op' -> applyTraceOp op' tick) (simTrace state) traceOps
 

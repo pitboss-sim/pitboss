@@ -42,7 +42,7 @@ spec = describe "Timeline Integration" $ do
 
             standDelta =
                 ModesDelta
-                    (CausalHistory (Just (EntityId 100)) (Just (EntityId 200)))
+                    (CausalHistory (Just (IntentId 100)) (Just (EventId 200)))
                     ( DPlayerHandSetPlayerHandFSM
                         (SomePlayerHandFSM (PHResolvedFSM PHStand))
                         (SomePlayerHandFSM PHDecisionFSM)

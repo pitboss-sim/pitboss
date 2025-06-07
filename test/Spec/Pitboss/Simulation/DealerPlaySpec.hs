@@ -16,7 +16,6 @@ mkDealerPlayState rules dealerCards upcomingCards = do
     let startTick = Tick 1000
         dealerId = EntityId 200
         dealerHandId = EntityId 500
-        boutId = EntityId 300
         tableId = EntityId 800
         shoeId = EntityId 900
         dealerRoundId = EntityId 700
@@ -162,7 +161,7 @@ spec = describe "Dealer Play Within Framework" $ do
                         h <- deref (handId :: EntityId 'DealerHand)
                         d <- deref (dealerId :: EntityId 'Dealer)
                         case (h, d) of
-                            (Just hand, Just dealer) -> do
+                            (_, Just dealer) -> do
                                 let tableId = _dRelsActiveTable (_dRels dealer)
                                 t <- case tableId of
                                     Just tid -> deref tid

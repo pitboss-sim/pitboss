@@ -16,9 +16,9 @@ mkTestTrace startTick = do
     let boutId = EntityId 300
     let roundId = EntityId 600
 
-    playerState <- mkTestPlayer playerId "Test Player"
+    playerState <- mkTestPlayer "Test Player"
 
-    let handState = mkTestPlayerHand handId spotId roundId playerId boutId
+    let handState = mkTestPlayerHand spotId roundId playerId boutId
     let trace0 = emptyTrace
     let trace1 = applyTraceOp (createBirth playerId playerState) startTick trace0
     let trace2 = applyTraceOp (createBirth handId handState) startTick trace1
@@ -49,8 +49,8 @@ spec = describe "DeltaGen" $ do
 
             causalHistory =
                 CausalHistory
-                    { causalIntent = Just (EntityId 123)
-                    , causalEvent = Just (EntityId 456)
+                    { causalIntent = Just (IntentId 123)
+                    , causalEvent = Just (EventId 456)
                     }
 
             cache = mkCacheFromTrace trace tick
@@ -67,8 +67,8 @@ spec = describe "DeltaGen" $ do
                     eid `shouldBe` handId
                     case someDelta of
                         ModesDelta hist _delta -> do
-                            causalIntent hist `shouldBe` Just (EntityId 123)
-                            causalEvent hist `shouldBe` Just (EntityId 456)
+                            causalIntent hist `shouldBe` Just (IntentId 123)
+                            causalEvent hist `shouldBe` Just (EventId 456)
                             pure ()
                         _ -> expectationFailure "Expected modes delta"
                 _ -> expectationFailure "Expected mutation operation"

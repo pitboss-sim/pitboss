@@ -5,7 +5,6 @@
 
 module Spec.Pitboss.Integration.BoutFlowSpec where
 
-import Control.Monad.Reader
 import Data.HashMap.Strict.InsOrd qualified as IHM
 import Pitboss.Blackjack
 import Pitboss.Causality
@@ -182,7 +181,6 @@ spec = describe "Bout Flow Integration" $ do
     it "simulates a complete blackjack hand" $ do
         let state0 = mkInitialSimState
             playerId = EntityId 100 :: EntityId 'Player
-            dealerId = EntityId 200 :: EntityId 'Dealer
             playerHandId = EntityId 400 :: EntityId 'PlayerHand
             dealerHandId = EntityId 500 :: EntityId 'DealerHand
 
@@ -211,7 +209,6 @@ spec = describe "Bout Flow Integration" $ do
 
     it "handles player blackjack" $ do
         let state0 = mkInitialSimState
-            playerId = EntityId 100 :: EntityId 'Player
             playerHandId = EntityId 400 :: EntityId 'PlayerHand
             dealerHandId = EntityId 500 :: EntityId 'DealerHand
 
